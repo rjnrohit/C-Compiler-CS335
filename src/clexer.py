@@ -16,13 +16,23 @@ class Tokens:
         pass
 
     #bag of datatypes in dictionary form
-    dataTypes ={
-        
+    data_types ={
+        'int':'INT',
+        'long':'LONG',
+        'char':'CHAR',
+        'float':'FLOAT',
+        'double':'DOUBLE',
+        'void':'VOID',
+        'bool': 'BOOL',
+        'short':'SHORT',
+        'signed':'SIGNED',
+        'unsigned':'UNSIGNED',
+        'enum':'ENUM'
     }
 
     #reserved keyword in dicitionary form
     reserved_keywords={
-
+        
     }
 
     #list of operators
