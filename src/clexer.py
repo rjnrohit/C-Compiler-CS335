@@ -19,7 +19,18 @@ class Tokens:
 
     #init function specification
     def __init__(self):
-        pass
+        self.reserved = self.get_reserved()
+        self.tokens = self.get_tokens()
+
+    def get_tokens(self):
+        """function to return all type
+        of tokens"""
+        return self.operators + self.separators + self.other_tokens + list(self.get_reserved().values())
+
+    def get_reserved(self):
+        """function to get reserved keywords
+        including data_types and keywords"""
+        return dict(list(self.data_types.items()) + list(self.reserved_keywords.items()))
 
     #bag of datatypes in dictionary form
     data_types ={
@@ -129,6 +140,9 @@ class Tokens:
         'BLOCK_COMMENT',
         'NULL'
     ]
+
+reversed = Tokens().reserved #dict of reserved keywords
+tokens = Tokens().tokens #list of all tokens
 
 ######## regular expressions ###################
 """
