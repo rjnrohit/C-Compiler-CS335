@@ -21,4 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         cd src/
-        pylint --fail-under=8 `ls -R|grep .py$|xargs`
+        pylint --fail-under=8 --disable=C0103 `ls -R|grep .py$|xargs`
