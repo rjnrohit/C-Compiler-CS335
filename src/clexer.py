@@ -71,11 +71,13 @@ class Tokens:
         'extern':'EXTERN',
         'for':'FOR',
         'goto':'GOTO',
-        'if':'IF'
+        'if':'IF',
+        'NULL' : 'NULL',
     }
 
     #list of operators
     operators =[
+        'ARROW',
         'ADD',
         'SUBSTRACT',
         'MULTIPLY',
@@ -107,10 +109,9 @@ class Tokens:
         'LEFT_SHIFT_ASSIGNMENT',
         'RIGHT_SHIFT_ASSIGNMENT',
         'BITWISE_AND_ASSIGNMENT',
-        'BITWISE_EXCLUSIVE_OR_ASSIGNMENT',
-        'BITWISE_INCLUSIVE_OR_ASSIGNMENT',
-        'TERNARY',
-        'ARROW',
+        'BITWISE_XOR_ASSIGNMENT',
+        'BITWISE_OR_ASSIGNMENT',
+        'QUES_MARK',
         'DOT'
     ]
 
@@ -124,24 +125,23 @@ class Tokens:
         'R_BRACES',
         'L_SQBR',
         'R_SQBR',
-        'SINGLE_QUOTE',
-        'DOUBLE_QUOTE',
-        'COLON'
+        'COLON',
     ]
 
     #list of other miscllaneous tokens
     other_tokens = [
         'IDENTIFIER',
         'INT_CONSTANT',
+        'HEX_CONSTANT',
+        'OCTAL_CONSTANT',
         'REAL_CONSTANT',
         'CHAR_CONSTANT',
         'STR_CONSTANT',
         'INLINE_COMMENT',
         'BLOCK_COMMENT',
-        'NULL'
     ]
 
-reversed = Tokens().reserved #dict of reserved keywords
+reserved = Tokens().reserved #dict of reserved keywords
 tokens = Tokens().tokens #list of all tokens
 
 ######## regular expressions ###################
@@ -150,7 +150,106 @@ Regular expression defined using the prefix 't_' followed by token name
 It can be functions or regular expression(string represntation)
 """
 
+L = r'[a-zA-Z_]'
+H = r'[a-fA-F0-9]'
+Fs = r'(f|F|l|L)'
+Is = r'(u|U|l|L)*'
 
+# need to add exponents
+def t_REAL_CONSTANT(t):
+    r'\d*\.\d+'
+    t.value = float(t.value)
+    return t
+
+def t_HEX_CONSTANT(t):
+    r'0[xX]'+H+r'+' + Is
+    t.value = int(t.value,base=16)
+    return t
+
+def t_OCTAL_CONSTANT(t):
+    r'0\d+'+Is
+    t.value = int(t.value,base=8)
+    return t
+
+def t_INT_CONSTANT(t):
+    r'\d+'+Is
+    t.value = int(t.value)
+    return t
+
+t_CHAR_CONSTANT = r"\'([^\\\n]|(\\.))?\'"
+t_STR_CONSTANT = r"[a-zA-Z_]?\"([^\\\n]|(\\.))*?\""
+
+#seperators
+t_SEMI_COLON = r';'
+t_COMMA = r','
+t_L_PAREN = r'\('
+t_R_PAREN = r'\)'
+t_L_BRACES = r'\{'
+t_R_BRACES = r'\}'
+t_L_SQBR = r'\['
+t_R_SQBR = r'\]'
+t_COLON = r':'
+
+#operators
+t_ARROW = r'->'
+t_ADD = r'\+'
+t_SUBSTRACT = r'-' 
+t_MULTIPLY = r'\*'
+t_DIVIDE = r'/'
+t_MODULUS = r'%'
+t_INCREMENT = r'\+\+'
+t_DECREMENT = r'--'
+t_EQUALS = r'=='
+t_NOT_EQUALS = r'!='
+t_GREATER = r'>'
+t_LESS = r'<'
+t_GREATER_EQUALS = r'>='
+t_LESS_EQUALS = r'<='
+t_LOGICAL_AND = r'&&'
+t_LOGICAL_OR = r'\|\|'
+t_LOGICAL_NOT = r'!'
+t_BITWISE_AND = r'&'
+t_BITWISE_OR = r'\|'
+t_BITWISE_XOR = r'\^'
+t_BITWISE_ONE_COMPLEMENT = r'~' 
+t_LEFT_SHIFT = r'<<'
+t_RIGHT_SHIFT = r'>>'
+t_ASSIGNMENT = r'='
+t_ADD_ASSIGNMENT = r'\+='
+t_SUBSTRACT_ASSIGNMENT = r'-=' 
+t_MULTIPLY_ASSIGNMENT = r'\*='
+t_DIVIDE_ASSIGNMENT = r'/='
+t_MODULUS_ASSIGNMENT = r'%='
+t_LEFT_SHIFT_ASSIGNMENT = r'<<='
+t_RIGHT_SHIFT_ASSIGNMENT = r'>>='
+t_BITWISE_AND_ASSIGNMENT = r'&='
+t_BITWISE_XOR_ASSIGNMENT = r'^=' 
+t_BITWISE_OR_ASSIGNMENT = r'\|='
+t_QUES_MARK = r'\?'
+t_DOT = r'\.'
+
+def t_IDENTIFIER(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'IDENTIFIER')
+    return t
+
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+t_INLINE_COMMENT = r'//.*'
+
+def t_BLOCK_COMMENT(t):
+    r'/\*(.|\n)*?\*/'
+    t.lexer.lineno += t.value.count('\n')
+    return t
+
+t_ignore = ' \t'
+
+def t_error(t):
+    print("Invalid Token: "+t.value)
+    t.lexer.skip(1)
+    
 ####### end of regular expressions #############
 
 ######### building lexer ##########
