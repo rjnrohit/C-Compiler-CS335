@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """This Script for lexical Analysis of C code
 provided by user"""
 
