@@ -152,16 +152,12 @@ Regular expression defined using the prefix 't_' followed by token name
 It can be functions or regular expression(string represntation)
 """
 
-L = r'[a-zA-Z_]'
-H = r'[a-fA-F0-9]'
-Fs = r'(f|F|l|L)'
-Is = r'(u|U|l|L)*'
-
-# def t_EXPONENT_CONSTANT(t):
-#     r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
-#     t.value = float(t.value)
-#     return t
-
+# All tokens defined by functions are added in the same order as they appear in the lexer file.
+def t_EXPONENT_CONSTANT(t):
+    r'((\d*\.\d+)|(\d+\.\d*)|(\d+))[Ee][+-]?\d+(f|F|l|L)?'
+    # .value = re.match(r'((\d*\.\d+)|(\d+\.\d*)|(\d+))[Ee][+-]?\d+',t.value).group(0)
+    # t.value = float(t.value)
+    return t
 
 def t_REAL_CONSTANT(t):
     r'((\d*\.\d+)|(\d+\.\d*))(f|F|l|L)?'
@@ -186,6 +182,7 @@ def t_INT_CONSTANT(t):
     # t.value = re.match(r'\d+',t.value).group(0)
     # t.value = int(t.value)
     return t
+
 
 t_CHAR_CONSTANT = r"\'([^\\\n]|(\\.))?\'"
 t_STR_CONSTANT = r"[a-zA-Z_]?\"([^\\\n]|(\\.))*?\""
