@@ -33,7 +33,8 @@ class Tokens:
         'short':'SHORT',
         'signed':'SIGNED',
         'unsigned':'UNSIGNED',
-        'enum':'ENUM'
+        'enum':'ENUM',
+        'register':'REGISTER',
     }
 
     #reserved keyword in dicitionary form
@@ -46,7 +47,6 @@ class Tokens:
         'default':'DEFAULT',
         'do':'DO',
         'long':'LONG',
-        'register':'REGISTER',
         'return':'RETURN',
         'sizeof':'SIZEOF',
         'static':'STATIC',
@@ -135,8 +135,6 @@ class Tokens:
 Regular expression defined using the prefix 't_' followed by token name
 It can be functions or regular expression(string represntation)
 """
-
-
 
 
 ####### end of regular expressions #############
