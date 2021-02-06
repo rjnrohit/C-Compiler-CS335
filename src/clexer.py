@@ -9,7 +9,7 @@ import ply.lex as lex
 #read source code provided by user
 try:
     source_code = open(sys.argv[1],"r").read()
-except:
+except FileNotFoundError:
     print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
     sys.exit(-1)
 

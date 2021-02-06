@@ -21,4 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         cd src/
-        pylint `ls -R|grep .py$|xargs`
+        pylint --fail-under=7 `ls -R|grep .py$|xargs`
