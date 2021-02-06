@@ -5,6 +5,7 @@ provided by user"""
 
 import sys
 import ply.lex as lex
+import re
 
 #read source code provided by user
 try:
@@ -156,29 +157,33 @@ H = r'[a-fA-F0-9]'
 Fs = r'(f|F|l|L)'
 Is = r'(u|U|l|L)*'
 
-def t_EXPONENT_CONSTANT(t):
-    r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
-    t.value = float(t.value)
-    return t
+# def t_EXPONENT_CONSTANT(t):
+#     r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
+#     t.value = float(t.value)
+#     return t
 
 
 def t_REAL_CONSTANT(t):
-    r'\d*\.\d+'
+    r'((\d*\.\d+)|(\d+\.\d*))(f|F|l|L)?'
+    t.value = re.match(r'((\d*\.\d+)|(\d+\.\d*))',t.value).group(0)
     t.value = float(t.value)
     return t
 
 def t_HEX_CONSTANT(t):
     r'0[xX][a-fA-F0-9]+(u|U|l|L)*'
+    t.value = re.match(r'0[xX][a-fA-F0-9]+',t.value).group(0)
     t.value = int(t.value,base=16)
     return t
 
 def t_OCTAL_CONSTANT(t):
     r'0\d+(u|U|l|L)*'
+    t.value = re.match(r'0\d+',t.value).group(0)
     t.value = int(t.value,base=8)
     return t
 
 def t_INT_CONSTANT(t):
     r'\d+(u|U|l|L)*'
+    t.value = re.match(r'\d+',t.value).group(0)
     t.value = int(t.value)
     return t
 
@@ -274,9 +279,11 @@ def main():
     """The Driver function will print
     the tokens with lexeme, line number and 
     column number"""
-    print("Token \t Lexeme \t Line# \t Column#")
+    # print("Token \t Lexeme \t Line# \t Column#")
+    print('{:20s}  {:30s}  {:4s} {:6s}'.format("Token","Lexeme","Line","Column"))
     for tok in lexer:
-        print(tok.type, tok.value, tok.lineno, find_column(tok), sep = '\t')
+        # print(tok.type, tok.value, tok.lineno, find_column(tok), sep = '\t')
+        print('{:20s}  {:30s}  {:4s} {:6s}'.format(tok.type, str(tok.value), str(tok.lineno), str(find_column(tok))))
 
 
 if __name__ == "__main__":
