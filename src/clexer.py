@@ -162,17 +162,17 @@ def t_REAL_CONSTANT(t):
     return t
 
 def t_HEX_CONSTANT(t):
-    r'0[xX]'+H+r'+' + Is
+    r'0[xX][a-fA-F0-9]+(u|U|l|L)*'
     t.value = int(t.value,base=16)
     return t
 
 def t_OCTAL_CONSTANT(t):
-    r'0\d+'+Is
+    r'0\d+(u|U|l|L)*'
     t.value = int(t.value,base=8)
     return t
 
 def t_INT_CONSTANT(t):
-    r'\d+'+Is
+    r'\d+(u|U|l|L)*'
     t.value = int(t.value)
     return t
 
