@@ -134,6 +134,7 @@ class Tokens:
         'INT_CONSTANT',
         'HEX_CONSTANT',
         'OCTAL_CONSTANT',
+        'EXPONENT_CONSTANT',
         'REAL_CONSTANT',
         'CHAR_CONSTANT',
         'STR_CONSTANT',
@@ -141,8 +142,8 @@ class Tokens:
         'BLOCK_COMMENT',
     ]
 
-reserved = Tokens().reserved #dict of reserved keywords
-tokens = Tokens().tokens #list of all tokens
+reserved = Tokens().reserved    #dict of reserved keywords
+tokens = Tokens().tokens        #list of all tokens
 
 ######## regular expressions ###################
 """
@@ -155,7 +156,12 @@ H = r'[a-fA-F0-9]'
 Fs = r'(f|F|l|L)'
 Is = r'(u|U|l|L)*'
 
-# need to add exponents
+def t_EXPONENT_CONSTANT(t):
+    r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
+    t.value = float(t.value)
+    return t
+
+
 def t_REAL_CONSTANT(t):
     r'\d*\.\d+'
     t.value = float(t.value)
@@ -252,6 +258,12 @@ def t_error(t):
     
 ####### end of regular expressions #############
 
+def find_column(token, input=source_code):
+    """function to compute the column 
+    position of any token"""
+    line_start = input.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
 ######### building lexer ##########
 lexer = lex.lex()
 lexer.input(source_code)
@@ -259,10 +271,12 @@ lexer.input(source_code)
 
 
 def main():
-    """
-    Driver code goes here
-    """
-    pass
+    """The Driver function will print
+    the tokens with lexeme, line number and 
+    column number"""
+    print("Token \t Lexeme \t Line# \t Column#")
+    for tok in lexer:
+        print(tok.type, tok.value, tok.lineno, find_column(tok), sep = '\t')
 
 
 if __name__ == "__main__":
