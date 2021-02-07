@@ -43,7 +43,7 @@ jobs:
       - name: Running test on lexer
         run: |
           chmod +x test.sh
-          ./test.sh
+          sudo ./test.sh
           if [[ $? -ne 0 ]];
           then
             echo "PROGRAM FAILED ON TEST CASES"
