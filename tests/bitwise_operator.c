@@ -11,10 +11,10 @@ int main(){
         printf("%d", a|b);
     }
     else if(operator=='&'){
-        printf("%d", a|b);
+        printf("%d", a&b);
     }
     else if(operator=='^'){
-        printf("%d", a|b);
+        printf("%d", a^b);
     }
     else if(operator=='~'){
         printf("%d %d", ~a, ~b);
