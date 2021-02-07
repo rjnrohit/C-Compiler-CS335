@@ -1,10 +1,10 @@
 all:
 	rm -rf bin
 	mkdir bin
-	cp src/clexer.py bin/clexer
-	chmod +x bin/clexer
+	cp src/clexer.py bin/lexer
+	chmod +x bin/lexer
 
-test:
+run_test:
 	./test.sh
 clean:
 	rm -rf bin
