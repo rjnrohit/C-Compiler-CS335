@@ -43,6 +43,7 @@ jobs:
       - name: Running test on lexer
         run: |
           chmod +x test.sh
+          chmod +x bin/lexer
           sudo chown -R  root *
           sudo ./test.sh
           if [[ $? -ne 0 ]];
