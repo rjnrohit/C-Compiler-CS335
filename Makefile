@@ -3,7 +3,6 @@ all:
 	mkdir bin
 	cp src/clexer.py bin/lexer
 	chmod +x bin/lexer
-	chmod 777 bin/lexer
 run_test:
 	./test.sh
 clean:
