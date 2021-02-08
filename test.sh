@@ -1,18 +1,19 @@
 #!/bin/bash
 
-cd tests/
+cd test/
 for test in *
 do
     fname=${test%.*}
-    if [ $fname.c  = test ]
+    if [ $fname.c  = $test ]
     then
-        ../bin/clexer $fname > $fname.txt
+        python3 ../bin/lexer $test > $fname.txt
     else 
         continue
     fi
-    if [ -f $fname\_ouput.txt ]
+    
+    if [ -f $fname\_output.txt ]
     then
-        STATUS="$(cmp --silent $fname.txt $fname\_ouput.txt; echo $?)" 
+        STATUS="$(cmp --silent $fname.txt $fname\_output.txt; echo $?)" 
         if [[ $STATUS -ne 0 ]]; 
         then
             echo "Test failed with file $test"
