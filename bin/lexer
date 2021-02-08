@@ -5,8 +5,8 @@ provided by user"""
 
 import sys
 import ply.lex as lex
-import re
 import argparse
+import re
 
 #read source code provided by user
 parser = argparse.ArgumentParser(description="Lexer for Source Language C")
