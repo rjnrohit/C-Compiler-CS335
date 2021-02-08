@@ -6,7 +6,7 @@ do
     fname=${test%.*}
     if [ $fname.c  = $test ]
     then
-        ../bin/lexer $test > $fname.txt
+        python3 ../bin/lexer $test > $fname.txt
     else 
         continue
     fi
