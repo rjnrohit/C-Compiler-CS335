@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 """This Script for lexical Analysis of C code
 provided by user"""
 
@@ -10,7 +10,7 @@ import argparse
 
 #read source code provided by user
 parser = argparse.ArgumentParser(description="Lexer for Source Language C")
-parser.add_argument('source_code',help="source code file address")
+parser.add_argument('source_code',help="source code file location")
 parser.add_argument('-t',action='store_false',help=" not print tokens")
 args = parser.parse_args()
 
