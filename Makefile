@@ -1,5 +1,5 @@
 all: bin/lexer
-	
+
 bin/lexer : src/clexer.py
 	rm -rf bin
 	mkdir bin
