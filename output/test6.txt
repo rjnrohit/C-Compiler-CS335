@@ -9,9 +9,9 @@ IDENTIFIER            operator                        2      10
 SEMI_COLON            ;                               2      18     
 IDENTIFIER            printf                          3      5      
 L_PAREN               (                               3      11     
-STR_CONSTANT          "Enter a bitwise operator (&, |, ^, ~, <<, >>): "  3      12     
-R_PAREN               )                               3      61     
-SEMI_COLON            ;                               3      62     
+STR_CONSTANT          "Enter a bitwise operator (&, |, ^, ~, <, >): "  3      12     
+R_PAREN               )                               3      59     
+SEMI_COLON            ;                               3      60     
 IDENTIFIER            scanf                           4      5      
 L_PAREN               (                               4      10     
 STR_CONSTANT          "%c"                            4      11     
@@ -131,11 +131,9 @@ IF                    if                              22     10
 L_PAREN               (                               22     12     
 IDENTIFIER            operator                        22     13     
 EQUALS                ==                              22     22     
-Invalid Token: '
-LEFT_SHIFT            <<                              22     26     
-Invalid Token: '
-R_PAREN               )                               22     29     
-L_BRACES              {                               22     30     
+CHAR_CONSTANT         '<'                             22     25     
+R_PAREN               )                               22     28     
+L_BRACES              {                               22     29     
 IDENTIFIER            printf                          23     9      
 L_PAREN               (                               23     15     
 STR_CONSTANT          "%d %d"                         23     16     
@@ -155,11 +153,9 @@ IF                    if                              25     10
 L_PAREN               (                               25     12     
 IDENTIFIER            operator                        25     13     
 EQUALS                ==                              25     22     
-Invalid Token: '
-RIGHT_SHIFT           >>                              25     26     
-Invalid Token: '
-R_PAREN               )                               25     29     
-L_BRACES              {                               25     30     
+CHAR_CONSTANT         '>'                             25     25     
+R_PAREN               )                               25     28     
+L_BRACES              {                               25     29     
 IDENTIFIER            printf                          26     9      
 L_PAREN               (                               26     15     
 STR_CONSTANT          "%d %d"                         26     16     

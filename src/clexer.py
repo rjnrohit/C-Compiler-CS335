@@ -6,10 +6,17 @@ provided by user"""
 import sys
 import ply.lex as lex
 import re
+import argparse
 
 #read source code provided by user
+parser = argparse.ArgumentParser(description="Lexer for Source Language C")
+parser.add_argument('source_code',help="source code file address")
+parser.add_argument('-t',action='store_false',help=" not print tokens")
+args = parser.parse_args()
+
 try:
-    source_code = open(sys.argv[1],"r").read()
+    # source_code = open(sys.argv[1],"r").read()
+    source_code = open(args.source_code,"r").read()
 except FileNotFoundError:
     print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
     sys.exit(-1)
@@ -257,7 +264,7 @@ def t_BLOCK_COMMENT(t):
 t_ignore = ' \t'
 
 def t_error(t):
-    print("Invalid Token: "+t.value[0])
+    print("Invalid Token: \""+t.value[0]+"\" at line "+str(t.lexer.lineno))
     t.lexer.skip(1)
     
 ####### end of regular expressions #############
@@ -285,7 +292,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if(args.t): main()
 
 
 """

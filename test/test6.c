@@ -1,6 +1,6 @@
 int main(){
     char operator;
-    printf("Enter a bitwise operator (&, |, ^, ~, <<, >>): ");
+    printf("Enter a bitwise operator (&, |, ^, ~, <, >): ");
     scanf("%c", &operator);
 
     long a = 0x56a, b = 0x44f;
@@ -19,10 +19,10 @@ int main(){
     else if(operator == '~'){
         printf("%d %d", ~a, ~b);
     }
-    else if(operator == '<<'){
+    else if(operator == '<'){
         printf("%d %d", a<<1, b<<2);
     }
-    else if(operator == '>>'){
+    else if(operator == '>'){
         printf("%d %d", a>>1, b>>2);
     }
     
