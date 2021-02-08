@@ -28,3 +28,9 @@ optional arguments:
   -h, --help   show this help message and exit
   -t           not print tokens
 ```
+
+Run tests from test/
+```
+chmod +x test.sh
+./test.sh
+```
