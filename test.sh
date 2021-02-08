@@ -19,7 +19,7 @@ do
             echo "Test failed with file $test"
             exit 1
         else
-            echo "Test Passed"
+            echo "Test Passed for file $test"
         fi
     else
         echo "Please add expected output text file for test $test"
