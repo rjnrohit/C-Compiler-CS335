@@ -3,6 +3,15 @@ Course Project , C-compiler implemented in Python , CS335, IIT Kanpur
 <br>
 [Milestone1 Report (Latex)](https://github.com/RohitRanjangit/C-Compiler-CS335/blob/main/Documentation/CS335_Project_Milestone1.pdf)
 
+environment-setup:
+**Choose your default version to python3**
+```
+#upgrade to latest version of pip
+python3 -m pip install --upgrade pip
+pip install -U -r requirements.txt
+```
+
+
 build: 
 ```
 make
