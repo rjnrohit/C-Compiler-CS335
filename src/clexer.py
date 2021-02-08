@@ -286,13 +286,13 @@ def main():
     the tokens with lexeme, line number and 
     column number"""
    
-    print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
+    if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
     for tok in lexer:
-        print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok))))
+        if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok))))
 
 
 if __name__ == "__main__":
-    if(args.t): main()
+    main()
 
 
 """
