@@ -66,7 +66,7 @@ SEMI_COLON            ;                               22     22
 BOOL                  bool                            23     5      
 IDENTIFIER            logic1                          23     10     
 ASSIGNMENT            =                               23     17     
-IDENTIFIER            true                            23     19     
+TRUE                  true                            23     19     
 SEMI_COLON            ;                               23     23     
 IDENTIFIER            hex_num                         24     5      
 LEFT_SHIFT            <<                              24     13     
@@ -74,9 +74,9 @@ INT_CONSTANT          1                               24     16
 SEMI_COLON            ;                               24     17     
 IDENTIFIER            logic1                          25     5      
 ASSIGNMENT            =                               25     12     
-IDENTIFIER            true                            25     14     
+TRUE                  true                            25     14     
 LOGICAL_AND           &&                              25     19     
-IDENTIFIER            false                           25     22     
+FALSE                 false                           25     22     
 LOGICAL_OR            ||                              25     28     
 L_PAREN               (                               25     31     
 IDENTIFIER            logic1                          25     32     

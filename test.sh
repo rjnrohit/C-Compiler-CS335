@@ -6,14 +6,14 @@ do
     fname=${test%.*}
     if [ $fname.c  = $test ]
     then
-        python3 ../bin/lexer $test > $fname.txt
+        python3 ../bin/lexer $test > ../output/$fname.txt
     else 
         continue
     fi
     
-    if [ -f $fname\_output.txt ]
+    if [ -f ../output/$fname\_output.txt ]
     then
-        STATUS="$(cmp --silent $fname.txt $fname\_output.txt; echo $?)" 
+        STATUS="$(cmp --silent ../output/$fname.txt ../output/$fname\_output.txt; echo $?)" 
         if [[ $STATUS -ne 0 ]]; 
         then
             echo "Test failed with file $test"
@@ -22,7 +22,8 @@ do
             echo "Test Passed for file $test"
         fi
     else
-        echo "Please add expected output text file for test $test"
+        python3 ../bin/lexer $test > ../output/$fname\_output.txt
+        echo "Please check the expected output text file for test $test"
     fi
 done
 cd ..

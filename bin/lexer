@@ -74,6 +74,8 @@ class Tokens:
         'goto':'GOTO',
         'if':'IF',
         'NULL' : 'NULL',
+        'true' : 'TRUE',
+        'false' : 'FALSE',
     }
 
     #list of operators
