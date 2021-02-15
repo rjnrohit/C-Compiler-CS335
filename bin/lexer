@@ -154,7 +154,7 @@ class Tokens:
 
 reserved = Tokens().reserved    #dict of reserved keywords
 tokens = Tokens().tokens        #list of all tokens
-
+lex.LexToken.lexeme=""          #create a new attribute for token class
 ######## regular expressions ###################
 """
 Regular expression defined using the prefix 't_' followed by token name
@@ -164,32 +164,37 @@ It can be functions or regular expression(string represntation)
 # All tokens defined by functions are added in the same order as they appear in the lexer file.
 def t_EXPONENT_CONSTANT(t):
     r'((\d*\.\d+)|(\d+\.\d*)|(\d+))[Ee][+-]?\d+(f|F|l|L)?'
-    # .value = re.match(r'((\d*\.\d+)|(\d+\.\d*)|(\d+))[Ee][+-]?\d+',t.value).group(0)
-    # t.value = float(t.value)
+    t.lexeme = t.value
+    t.value = re.match(r'((\d*\.\d+)|(\d+\.\d*)|(\d+))[Ee][+-]?\d+',t.value).group(0)
+    t.value = float(t.value)
     return t
 
 def t_REAL_CONSTANT(t):
     r'((\d*\.\d+)|(\d+\.\d*))(f|F|l|L)?'
-    # t.value = re.match(r'((\d*\.\d+)|(\d+\.\d*))',t.value).group(0)
-    # t.value = float(t.value)
+    t.lexeme = t.value
+    t.value = re.match(r'((\d*\.\d+)|(\d+\.\d*))',t.value).group(0)
+    t.value = float(t.value)
     return t
 
 def t_HEX_CONSTANT(t):
     r'0[xX][a-fA-F0-9]+(u|U|l|L)*'
-    # t.value = re.match(r'0[xX][a-fA-F0-9]+',t.value).group(0)
-    # t.value = int(t.value,base=16)
+    t.lexeme = t.value
+    t.value = re.match(r'0[xX][a-fA-F0-9]+',t.value).group(0)
+    t.value = int(t.value,base=16)
     return t
 
 def t_OCTAL_CONSTANT(t):
     r'0\d+(u|U|l|L)*'
-    # t.value = re.match(r'0\d+',t.value).group(0)
-    # t.value = int(t.value,base=8)
+    t.lexeme = t.value
+    t.value = re.match(r'0\d+',t.value).group(0)
+    t.value = int(t.value,base=8)
     return t
 
 def t_INT_CONSTANT(t):
     r'\d+(u|U|l|L)*'
-    # t.value = re.match(r'\d+',t.value).group(0)
-    # t.value = int(t.value)
+    t.lexeme = t.value
+    t.value = re.match(r'\d+',t.value).group(0)
+    t.value = int(t.value)
     return t
 
 
@@ -286,13 +291,17 @@ def main():
     the tokens with lexeme, line number and 
     column number"""
    
-    print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
+    if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
     for tok in lexer:
-        print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok))))
+        if(args.t): 
+            if tok.lexeme:
+                print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok))))
+            else:
+                print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok))))
 
 
 if __name__ == "__main__":
-    if(args.t): main()
+    main()
 
 
 """
