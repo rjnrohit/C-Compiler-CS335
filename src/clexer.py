@@ -282,7 +282,6 @@ def find_column(token, input=source_code):
 
 ######### building lexer ##########
 lexer = lex.lex()
-lexer.input(source_code)
 ###################################
 
 
@@ -290,7 +289,7 @@ def main():
     """The Driver function will print
     the tokens with lexeme, line number and 
     column number"""
-   
+    lexer.input(source_code)                   #read input from file
     if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
     for tok in lexer:
         if(args.t): 
