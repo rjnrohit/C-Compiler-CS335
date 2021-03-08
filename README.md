@@ -10,6 +10,7 @@ environment-setup:
 ```
 #upgrade to latest version of pip
 python3 -m pip install --upgrade pip
+sudo apt-get install graphviz graphviz-dev
 pip install -U -r requirements.txt
 ```
 
