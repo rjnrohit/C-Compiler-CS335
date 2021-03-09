@@ -97,6 +97,8 @@ def p_primary_expression(p):
                        | REAL_CONSTANT
                        | CHAR_CONSTANT
                        | STR_CONSTANT
+                       | TRUE
+                       | FALSE
                        | L_PAREN expression R_PAREN
                        | TRUE
                        | FALSE
@@ -169,7 +171,7 @@ def p_unary_operator(p):
 def p_cast_expression(p):
     '''
     cast_expression : unary_expression
-	                | L_PAREN type_specifier R_PAREN cast_expression
+	                | L_PAREN type_name R_PAREN cast_expression
     '''
     if len(p) == 2:
         p[0] = p[1]
