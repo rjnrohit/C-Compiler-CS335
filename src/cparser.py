@@ -100,6 +100,8 @@ def p_primary_expression(p):
                        | TRUE
                        | FALSE
                        | L_PAREN expression R_PAREN
+                       | TRUE
+                       | FALSE
     '''
     if len(p) == 2:
         p[0] = Node("primary_exp", value = p[1], children=None)
@@ -348,10 +350,10 @@ def p_expression(p):
         p[0] = p[1]
     else:
         if isinstance(p[1],Node) and p[1].type == "expression":
-            p[1].addChild(p[2])
+            p[1].addChild(p[3])
             p[0] = p[1]
         else:
-            p[0] = Node("expression",children=[p[1],p[2]])
+            p[0] = Node("expression",children=[p[1],p[3]])
     
 
 def p_constant_expression(p):
@@ -662,7 +664,7 @@ def p_initializer_list(p):
     initializer_list : initializer
 	                 | initializer_list COMMA initializer
     '''
-    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
 
 def p_statement(p):
     '''
@@ -696,15 +698,13 @@ def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
 	                   | L_BRACES statement_list R_BRACES
-	                   | L_BRACES declaration_list R_BRACES
-	                   | L_BRACES declaration_list statement_list R_BRACES
     '''
     if len(p) == 3:
         p[0] = Node("compound_statement","{}")
-    elif len(p) == 4:
-        p[0] = Node("compound_statement","{}",children=p[2])
+    # elif len(p) == 4:
+    #     p[0] = Node("compound_statement","{}",children=p[2])
     else:
-        p[0] = Node("compound_statement","{}",children=p[2]+p[3])
+        p[0] = Node("compound_statement","{}",children=p[2])
 
 
 def p_declaration_list(p):
@@ -717,7 +717,9 @@ def p_declaration_list(p):
 def p_statement_list(p):
     '''
     statement_list : statement
+                   | declaration
 	               | statement_list statement
+                   | statement_list declaration
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
         
