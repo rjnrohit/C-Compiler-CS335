@@ -62,8 +62,8 @@ def p_external_declaration(p):
                          | declaration
     '''
     p[0] = [p[1]]
-
-def p_function_definition(p):
+##########################################
+def p_function_definition_1(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
 			            | declaration_specifiers declarator compound_statement
@@ -71,6 +71,21 @@ def p_function_definition(p):
 			            | declarator compound_statement
     
     '''
+    if len(p) == 5:
+        p[0] = Node("function_defn",children=[p[2],p[4]])
+    else:
+        p[0] = Node("function_defn",children=[p[2],p[3]])
+    
+def p_function_definition_2(p):
+    '''
+    function_definition : declarator declaration_list compound_statement
+			            | declarator compound_statement
+    
+    '''
+    if len(p) == 4:
+        p[0] = Node("function_defn",children=[p[1],p[3]])
+    else:
+        p[0] = Node("function_defn",children=[p[1],p[2]])
 
 # add all constants
 def p_primary_expression(p):
@@ -343,13 +358,16 @@ def p_constant_expression(p):
     '''
     p[0] = p[1]
 
-
+########################################
 def p_declaration(p):
     '''
     declaration : declaration_specifiers SEMI_COLON
 	            | declaration_specifiers init_declarator_list SEMI_COLON
     '''
-
+    if len(p) == 4 and p[2] != None:
+        p[0] = Node("declaration",children=p[2])
+    else:
+        p[0] = None
 
 def p_declaration_specifiers(p):
     '''
@@ -360,8 +378,10 @@ def p_declaration_specifiers(p):
                            | type_qualifier
                            | type_qualifier declaration_specifiers
     '''
-    p[0] = None
-
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1]+p[2]
 
 def p_init_declarator_list(p):
     '''
@@ -394,7 +414,7 @@ def p_storage_class_specifier(p):
                             | AUTO
                             | REGISTER
     '''
-    p[0] = p[1]
+    p[0] = Node("storage_class_specifier",p[1])
 
 def p_type_specifier(p):
     '''
@@ -411,7 +431,8 @@ def p_type_specifier(p):
                    | enum_specifier
                    | BOOL
     '''
-    p[0] = p[1]
+    p[0] = Node("type_specifier",p[1])
+
 
 def p_struct_or_union_specifier(p):
     '''
@@ -419,20 +440,27 @@ def p_struct_or_union_specifier(p):
 	                          | struct_or_union L_BRACES struct_declaration_list R_BRACES
 	                          | struct_or_union IDENTIFIER
     '''
+    p[0] = p[1]
+
 def p_struct_or_union(p):
     '''
     struct_or_union : STRUCT
 	                | UNION
     '''
+    p[0] = Node(p[1])
+
+
 def p_struct_declaration_list(p):
     '''
     struct_declaration_list : struct_declaration
 	                        | struct_declaration_list struct_declaration
     '''
+    p[0] = None
 def p_struct_declaration(p):
     '''
     struct_declaration : specifier_qualifier_list struct_declarator_list SEMI_COLON
     '''
+    p[0] = None
 def p_specifier_qualifier_list(p):
     '''
     specifier_qualifier_list : type_specifier specifier_qualifier_list
@@ -440,39 +468,49 @@ def p_specifier_qualifier_list(p):
                              | type_qualifier specifier_qualifier_list
                              | type_qualifier
     '''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]]+p[2]
+
 def p_struct_declarator_list(p):
     '''
     struct_declarator_list : struct_declarator
 	                       | struct_declarator_list COMMA struct_declarator
     '''
+    p[0] = None
 def p_struct_declarator(p):
     '''
     struct_declarator : declarator
                       | COLON constant_expression
                       | declarator COLON constant_expression
     '''
+    p[0] = None
 def p_enum_specifier(p):
     '''
     enum_specifier : ENUM L_BRACES enumerator_list R_BRACES
                    | ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
                    | ENUM IDENTIFIER
     '''
+    p[0] = Node("ENUM",p[1])
 def p_enumerator_list(p):
     '''
     enumerator_list : enumerator
 	                | enumerator_list COMMA enumerator
     '''
+    p[0] = None
 def p_enumerator(p):
     '''
     enumerator : IDENTIFIER
 	           | IDENTIFIER ASSIGNMENT constant_expression
     '''
+    p[0] = None
 def p_type_qualifier(p):
     '''
     type_qualifier : CONST
 	               | VOLATILE
     '''
-    p[0] = p[1]
+    p[0] = Node("type_qualifier",p[1])
 
 def p_declarator(p):
     '''
@@ -527,6 +565,14 @@ def p_parameter_type_list(p):
     parameter_type_list : parameter_declaration
 	                    | parameter_type_list COMMA parameter_declaration
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[1].type == "parameter_type_list":
+            p[1].addChild(p[3])
+            p[0] = p[1]
+        else:
+            p[0] = Node("parameter_type_list",children=[p[1],p[3]])
     
 def p_parameter_declaration(p):
     '''
@@ -534,22 +580,50 @@ def p_parameter_declaration(p):
 	                      | declaration_specifiers abstract_declarator
 	                      | declaration_specifiers
     '''
+    p[0] = Node("parameter_declaration",children=[p[1]])
+    if len(p) > 2:
+        if isinstance(p[2],list):
+            for i in p[2]:
+                p[0].addChild(i)
+        else:
+            p[0].addChild(p[2])
+
 def p_identifier_list(p):
     '''
     identifier_list : IDENTIFIER
 	                | identifier_list COMMA IDENTIFIER
     '''
+    if len(p) == 2:
+        p[0] = Node("id",p[1])
+    else:
+        c =  Node("id",p[3])
+        if p[1].type == "id":
+            p[0] = Node("identifier_list",children=[p[1],c])
+        else:
+            p[1].addChild(c)
+            p[0] = p[1]
+
+
 def p_type_name(p):
     '''
     type_name : specifier_qualifier_list
 	          | specifier_qualifier_list abstract_declarator
     '''
+    c = []
+    for i in range(1,len(p)):
+        c += p[i]
+    p[0] = Node("type_name",children=c)
+
 def p_abstract_declarator(p):
     '''
     abstract_declarator : pointer
 	                    | direct_abstract_declarator
 	                    | pointer direct_abstract_declarator
     '''
+    p[0] = []
+    for i in range(1,len(p)):
+        p[0] += p[i]
+
 def p_direct_abstract_declarator(p):
     '''
     direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
@@ -562,8 +636,15 @@ def p_direct_abstract_declarator(p):
                                | direct_abstract_declarator L_PAREN R_PAREN
                                | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
     '''
+    p[0] = []
+    for i in range(1,len(p)):
+        if not isinstance(p[i],list):
+            p[0] += [p[i]]
+        else:
+            p[0] += p[i]
 
-    
+
+#####################################################  
 def p_initializer(p):
     '''
     initializer : assignment_expression
