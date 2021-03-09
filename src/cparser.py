@@ -332,16 +332,13 @@ def p_type_qualifier_list(p):
     type_qualifier_list : type_qualifier
 	                    | type_qualifier_list type_qualifier
     '''
+
 def p_parameter_type_list(p):
     '''
-    parameter_type_list : parameter_list
-	                    | parameter_list ',' ELLIPSIS
+    parameter_type_list : parameter_declaration
+	                    | parameter_type_list ',' parameter_declaration
     '''
-def p_parameter_list(p):
-    '''
-    parameter_list : parameter_declaration
-	               | parameter_list ',' parameter_declaration
-    '''
+    
 def p_parameter_declaration(p):
     '''
     parameter_declaration : declaration_specifiers declarator
