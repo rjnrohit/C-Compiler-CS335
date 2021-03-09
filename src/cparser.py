@@ -71,14 +71,24 @@ def p_function_definition(p):
 			            | declarator compound_statement
     
     '''
+
 # add all constants
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
-                       | CONSTANT
-                       | STRING_LITERAL    
+                       | INT_CONSTANT,
+                       | HEX_CONSTANT,
+                       | OCTAL_CONSTANT,
+                       | EXPONENT_CONSTANT,
+                       | REAL_CONSTANT,
+                       | CHAR_CONSTANT,
+                       | STR_CONSTANT',
                        | L_PAREN expression R_PAREN
     '''
+    if len(p) == 2:
+        p[0] = Node("primary_exp", value = p[1], children=None)
+    else:
+        p[0] = Node("primary_exp", value="()", children=[p[2]])
 
 def p_postfix_expression(p):
     '''
@@ -146,7 +156,8 @@ def p_cast_expression(p):
     '''
     if len(p) == 2:
         p[0] = p[1]
-    else p[0] = Node("cast",p[2],children=[p[4]])
+    else:
+        p[0] = Node("cast",p[2],children=[p[4]])
 
 def p_multiplicative_expression(p):
     '''
@@ -322,7 +333,8 @@ def p_expression(p):
         if isinstance(p[1],Node) and p[1].type == "expression":
             p[1].addChild(p[2])
             p[0] = p[1]
-        else p[0] = Node("expression",children=[p[1],p[2]])
+        else:
+            p[0] = Node("expression",children=[p[1],p[2]])
     
 
 def p_constant_expression(p):
@@ -484,7 +496,7 @@ def p_direct_declarator(p):
     '''
     if len(p) == 2:
         p[0] = Node("id",p[1])
-    elif p[2] = '(':
+    elif p[2] == '(':
         p[0] = p[1]
     elif len(p) == 4:
         p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
@@ -560,7 +572,8 @@ def p_initializer(p):
     '''
     if len(p) == 2:
         p[0] = p[1]
-    else p[0] = Node("init_list","{}",p[2])
+    else:
+        p[0] = Node("init_list","{}",p[2])
 
 def p_initializer_list(p):
     '''
@@ -593,7 +606,8 @@ def p_labeled_statement_2(p):
     '''
     if len(p) == 5:
         p[0] = Node("case",children=[p[2],p[4]])
-    else p[0] = Node("default",children=[p[3]])
+    else:
+        p[0] = Node("default",children=[p[3]])
 
 def p_compound_statement(p):
     '''
