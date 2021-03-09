@@ -97,8 +97,6 @@ def p_primary_expression(p):
                        | REAL_CONSTANT
                        | CHAR_CONSTANT
                        | STR_CONSTANT
-                       | TRUE
-                       | FALSE
                        | L_PAREN expression R_PAREN
                        | TRUE
                        | FALSE
