@@ -37,12 +37,11 @@ def p_program(p):
 def p_translation_unit(p):
     '''
     translation_unit : external_declaration
-                     | translation_unit external_declaration
+                       | translation_unit external_declaration
     '''
 
 def p_external_declaration(p):
     '''
-  selection_statement(p):
   external_declaration : function_definition
                          | declaration
     '''
@@ -50,9 +49,9 @@ def p_external_declaration(p):
 def p_function_definition(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
-	                      | declaration_specifiers declarator compound_statement
-	                      | declarator declaration_list compound_statement
-	                      | declarator compound_statement
+			  | declaration_specifiers declarator compound_statement
+			  | declarator declaration_list compound_statement
+			  | declarator compound_statement
     
     '''
 def p_primary_expression(p):
