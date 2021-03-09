@@ -40,17 +40,22 @@ start = 'program' #start action
 
 def p_program(p):
     'program : translation_unit'
+    p[0] = p[1]
 
 def p_translation_unit(p):
     '''
     translation_unit : external_declaration
                      | translation_unit external_declaration
     '''
+    if len(p) == 1:
+        p[0] = Node(type="program",children = [p[1]])
+    elif:
+        p[0] = Node(type="program",children=p[1].children + [p[2]])
 
 def p_external_declaration(p):
     '''
-  external_declaration : function_definition
-                       | declaration
+    external_declaration : function_definition
+                         | declaration
     '''
 
 def p_function_definition(p):
