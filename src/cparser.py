@@ -50,7 +50,7 @@ def p_translation_unit(p):
     if len(p) == 1:
         p[0] = Node(type="program",children = [p[1]])
     elif:
-        p[0] = Node(type="program",children=p[1].children + p[2])
+        p[0] = Node(type="program",children=p[1].children + [p[2]])
 
 def p_external_declaration(p):
     '''
