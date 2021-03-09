@@ -22,6 +22,7 @@ class Node:
         else:
             self.children = [ ]
         self.leaf = leaf
+        self.id = 0
 #####################################################
 
 
