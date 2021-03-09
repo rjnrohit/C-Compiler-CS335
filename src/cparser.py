@@ -125,7 +125,8 @@ def p_postfix_expression(p):
     elif p[2] == '(':
         p[0] = Node("func_call",children= [p[1],p[3]] if len(p) == 5 else [p[1]])
     elif len(p) == 4:
-        p[0] = Node("struct_ref",p[2],children=[p[1],p[3]])
+        c = Node("id",p[3])
+        p[0] = Node("struct_ref",p[2],children=[p[1],c])
     else:
         p[0] = Node("unary_op",'p'+p[2],[p[1]])
 
@@ -137,7 +138,7 @@ def p_argument_expression_list(p):
     if len(p) == 2:
         p[0] = Node("argument_expression_list",children=[p[1]])
     else:
-        p[1].addChild(p[2])
+        p[1].addChild(p[3])
         p[0] = p[1]
 
 def p_unary_expression(p):
@@ -549,7 +550,7 @@ def p_pointer(p):
             | MULTIPLY pointer
             | MULTIPLY type_qualifier_list pointer
     '''
-    p[0] = [p[1]]
+    p[0] = [Node("pointer",p[1])]
     for i in range(2,len(p)):
         p[0] += p[i]
     
@@ -678,7 +679,8 @@ def p_labeled_statement_1(p):
     '''
     labeled_statement : IDENTIFIER COLON statement
     '''
-    p[0] = Node("label",children=[p[1],p[3]])
+    c = Node("id",p[1])
+    p[0] = Node("label",children=[c,p[3]])
 
 def p_labeled_statement_2(p):
     '''
@@ -771,7 +773,8 @@ def p_jump_statement(p):
 	                 
     '''
     if len(p) == 4:
-        p[0] = Node("jump_statment",p[1],[p[2]])
+        c = Node("id",p[2]) if p[1] == "goto" else p[2]
+        p[0] = Node("jump_statment",p[1],[c])
     else:
         p[0] = Node("Jump Statment",p[1])
 
