@@ -140,7 +140,7 @@ def p_unary_operator(p):
 def p_cast_expression(p):
     '''
     cast_expression : unary_expression
-	                | L_PAREN type_name R_PAREN cast_expression
+	                | L_PAREN type_specifier R_PAREN cast_expression
     '''
     if len(p) == 2:
         p[0] = p[1]
@@ -335,7 +335,8 @@ def p_declaration(p):
     declaration : declaration_specifiers SEMI_COLON
 	            | declaration_specifiers init_declarator_list SEMI_COLON
     '''
-    
+
+
 def p_declaration_specifiers(p):
     '''
     declaration_specifiers : storage_class_specifier
@@ -345,16 +346,32 @@ def p_declaration_specifiers(p):
                            | type_qualifier
                            | type_qualifier declaration_specifiers
     '''
+    p[0] = None
+
+
 def p_init_declarator_list(p):
     '''
     init_declarator_list : init_declarator
 	                     | init_declarator_list COMMA init_declarator
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[3] == None:
+            p[0] = p[1]
+        else:
+            p[0] = p[3] if p[1] == None else p[1] + p[3]
+
 def p_init_declarator(p):
     '''
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
+    if len(p) == 2:
+        p[0] = None
+    else:
+        p[0] = [Node("assignment",p[2],children = [p[1],p[3]])]
+
 def p_storage_class_specifier(p):
     '''
     storage_class_specifier : TYPEDEF
@@ -363,7 +380,7 @@ def p_storage_class_specifier(p):
                             | AUTO
                             | REGISTER
     '''
-
+    p[0] = p[1]
 
 def p_type_specifier(p):
     '''
@@ -380,6 +397,7 @@ def p_type_specifier(p):
                    | enum_specifier
                    | BOOL
     '''
+    p[0] = p[1]
 
 def p_struct_or_union_specifier(p):
     '''
@@ -440,11 +458,18 @@ def p_type_qualifier(p):
     type_qualifier : CONST
 	               | VOLATILE
     '''
+    p[0] = p[1]
+
 def p_declarator(p):
     '''
     declarator : pointer direct_declarator
 	           | direct_declarator
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("pointer",children=p[1]+[p[2]])
+
 def p_direct_declarator(p):
     '''
     direct_declarator : IDENTIFIER
@@ -455,6 +480,16 @@ def p_direct_declarator(p):
                       | direct_declarator L_PAREN identifier_list R_PAREN
                       | direct_declarator L_PAREN R_PAREN
     '''
+    if len(p) == 2:
+        p[0] = Node("id",p[1])
+    elif p[2] = '(':
+        p[0] = p[1]
+    elif len(p) == 4:
+        p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
+    else:
+        p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
+
+
 def p_pointer(p):
     '''
     pointer : MULTIPLY
@@ -462,11 +497,16 @@ def p_pointer(p):
             | MULTIPLY pointer
             | MULTIPLY type_qualifier_list pointer
     '''
+    p[0] = [p[1]]
+    for i in range(2,len(p)):
+        p[0] += p[i]
+    
 def p_type_qualifier_list(p):
     '''
     type_qualifier_list : type_qualifier
 	                    | type_qualifier_list type_qualifier
     '''
+    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
 
 def p_parameter_type_list(p):
     '''
