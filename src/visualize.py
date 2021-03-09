@@ -5,13 +5,18 @@ def not_all_None(ls):
         return True
     return not all(v is None for v in ls)
 
+def getlabel(type,value):
+    if value == None:
+        return type
+    else:
+        return type+": "+value
 
 
 def draw_ast(node):
     G = pgv.AGraph(strict=True, directed=True)
     node_list =[node]
 
-    G.add_node(node.id, label = node.value)
+    G.add_node(node.id, label = getlabel(node.type,node.value))
 
     while node_list:
 
