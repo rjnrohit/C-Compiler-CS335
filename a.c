@@ -1,21 +1,15 @@
-int x = 10;
-char a[10];
-static int y = 5;
+struct data {
+    int sum;
+    int b[5];
+};
 
-char f(){
-	for(int i = 0;i<10;++i){
-		a[i] = 'a' + i;
-	}
-	return a[5];
-}
-
-int main ()
+int main()
 {
-    int* p;
-    p = (int *) malloc(4);
-    *p = 5;
-    printf("%d\n", *p);
-    printf("%c\n", f());
-    
-    return y++;
+    struct data rec1;
+    struct data*pdata = &rec1;
+    printf("%d", sizeof(rec1));
+    rec1.sum=0;
+    rec1.b[0]=2;   
+    rec1.sum=rec1.sum+rec1.b[0];
+    return rec1.sum;
 }
