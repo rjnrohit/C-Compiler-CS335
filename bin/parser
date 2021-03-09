@@ -5,13 +5,13 @@ provided by user"""
 import sys
 import ply.lex as lex
 import ply.yacc as yacc
-import clexer as lexer
+import src.clexer as lexer
 import argparse
 import pygraphviz as pgv
 
 
 from visualize import draw_ast
-from clexer import tokens
+from src.clexer import tokens
 
 
 
@@ -91,13 +91,13 @@ def p_function_definition_2(p):
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
-                       | INT_CONSTANT
-                       | HEX_CONSTANT
-                       | OCTAL_CONSTANT
-                       | EXPONENT_CONSTANT
-                       | REAL_CONSTANT
-                       | CHAR_CONSTANT
-                       | STR_CONSTANT
+                       | INT_CONSTANT,
+                       | HEX_CONSTANT,
+                       | OCTAL_CONSTANT,
+                       | EXPONENT_CONSTANT,
+                       | REAL_CONSTANT,
+                       | CHAR_CONSTANT,
+                       | STR_CONSTANT',
                        | L_PAREN expression R_PAREN
     '''
     if len(p) == 2:
