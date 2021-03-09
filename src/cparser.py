@@ -27,6 +27,12 @@ class Node:
         else:
             self.children = []
         self.value = value
+
+    def addChild(self,node):
+        self.children.append(node)
+
+    def getChild(self):
+        return self.children
         
 #####################################################
 
@@ -39,24 +45,21 @@ start = 'program' #start action
 
 def p_program(p):
     'program : translation_unit'
-    p[0] = p[1]
+    p[0] = Node("program",children=p[1])
 
 def p_translation_unit(p):
     '''
     translation_unit : external_declaration
                      | translation_unit external_declaration
     '''
-    if len(p) == 1:
-        p[0] = Node(type="program",children = [p[1]])
-    else:
-        p[0] = Node(type="program",children=p[1].children + [p[2]])
+    p[0] = p[1] if len(p)==2 else p[1]+p[2]
 
 def p_external_declaration(p):
     '''
     external_declaration : function_definition
                          | declaration
     '''
-    p[0] = p[1]
+    p[0] = [p[1]]
 
 def p_function_definition(p):
     '''
@@ -66,7 +69,7 @@ def p_function_definition(p):
 			            | declarator compound_statement
     
     '''
-
+# add all constants
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
@@ -74,6 +77,7 @@ def p_primary_expression(p):
                        | STRING_LITERAL    
                        | L_PAREN expression R_PAREN
     '''
+
 def p_postfix_expression(p):
     '''
     postfix_expression : primary_expression
@@ -86,11 +90,28 @@ def p_postfix_expression(p):
                        | postfix_expression DECREMENT
 
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    elif p[2] == '[':
+        p[0] = Node("array_ref",children=[p[1],p[3]])
+    elif p[2] == '(':
+        p[0] = Node("func_call",children= [p[1],p[3]] if len(p) == 5 else [p[1]])
+    elif len(p) == 4:
+        p[0] = Node("struct_ref",p[2],children=[p[1],p[3]])
+    else:
+        p[0] = Node("unary_op",'p'+p[2],[p[1]])
+
 def p_argument_expression_list(p):
     '''
     argument_expression_list : assignment_expression
 	                         | argument_expression_list COMMA assignment_expression
     '''
+    if len(p) == 2:
+        p[0] = Node("argument_expression_list",children=[p[1]])
+    else:
+        p[1].addChild(p[2])
+        p[0] = p[1]
+
 def p_unary_expression(p):
     '''
     unary_expression : postfix_expression
@@ -100,6 +121,11 @@ def p_unary_expression(p):
                      | SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("unary_op",p[1],children = [p[2]] if len(p) == 3 else [p[3]])
+
 def p_unary_operator(p):
     '''
     unary_operator : BITWISE_AND
@@ -109,11 +135,17 @@ def p_unary_operator(p):
                    | BITWISE_ONE_COMPLEMENT
                    | LOGICAL_NOT
     '''
+    p[0] = p[1]
+
 def p_cast_expression(p):
     '''
     cast_expression : unary_expression
 	                | L_PAREN type_name R_PAREN cast_expression
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else p[0] = Node("cast",p[2],children=[p[4]])
+
 def p_multiplicative_expression(p):
     '''
     multiplicative_expression : cast_expression
@@ -121,18 +153,37 @@ def p_multiplicative_expression(p):
                               | multiplicative_expression DIVIDE cast_expression
                               | multiplicative_expression MODULUS cast_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_additive_expression(p):
     '''
     additive_expression : multiplicative_expression
                         | additive_expression ADD multiplicative_expression
                         | additive_expression SUBSTRACT multiplicative_expression
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
 def p_shift_expression(p):
     '''
     shift_expression : additive_expression
                      | shift_expression LEFT_SHIFT additive_expression
                      | shift_expression RIGHT_SHIFT additive_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_relational_expression(p):
     '''
     relational_expression : shift_expression
@@ -141,47 +192,107 @@ def p_relational_expression(p):
                           | relational_expression LESS_EQUALS shift_expression
                           | relational_expression GREATER_EQUALS shift_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        
+
 def p_equality_expression(p):
     '''
     equality_expression : relational_expression
                         | equality_expression EQUALS relational_expression
                         | equality_expression NOT_EQUALS relational_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_and_expression(p):
     '''
     and_expression : equality_expression
 	               | and_expression BITWISE_AND equality_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_exclusive_or_expression(p):
     '''
     exclusive_or_expression : and_expression
 	                        | exclusive_or_expression BITWISE_XOR and_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_inclusive_or_expression(p):
     '''
     inclusive_or_expression : exclusive_or_expression
 	                        | inclusive_or_expression BITWISE_OR exclusive_or_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
 def p_logical_and_expression(p):
     '''
     logical_and_expression : inclusive_or_expression
 	                       | logical_and_expression LOGICAL_AND inclusive_or_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_logical_or_expression(p):
     '''
     logical_or_expression : logical_and_expression
 	                      | logical_or_expression LOGICAL_OR logical_and_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+
+
 def p_conditional_expression(p):
     '''
     conditional_expression : logical_or_expression
 	                       | logical_or_expression QUES_MARK expression COLON conditional_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("ternary_op",children = [p[1],p[3],p[5]])
+
 def p_assignment_expression(p):
     '''
     assignment_expression : conditional_expression
 	                      | unary_expression assignment_operator assignment_expression
     '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node("assignment",p[2],children = [p[1],p[3]])
+
 def p_assignment_operator(p):
     '''
     assignment_operator : ASSIGNMENT
@@ -196,20 +307,35 @@ def p_assignment_operator(p):
                         | BITWISE_XOR_ASSIGNMENT
                         | BITWISE_OR_ASSIGNMENT
     '''
+    p[0] = p[1]
+
 def p_expression(p):
     '''
     expression : assignment_expression
 	           | expression COMMA assignment_expression
-    '''
+    ''' 
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if isinstance(p[1],Node) and p[1].type == "expression":
+            p[1].addChild(p[2])
+            p[0] = p[1]
+        else p[0] = Node("expression",children=[p[1],p[2]])
+    
+
 def p_constant_expression(p):
     '''
     constant_expression : conditional_expression
     '''
+    p[0] = p[1]
+
+
 def p_declaration(p):
     '''
     declaration : declaration_specifiers SEMI_COLON
 	            | declaration_specifiers init_declarator_list SEMI_COLON
     '''
+    
 def p_declaration_specifiers(p):
     '''
     declaration_specifiers : storage_class_specifier
@@ -237,6 +363,8 @@ def p_storage_class_specifier(p):
                             | AUTO
                             | REGISTER
     '''
+
+
 def p_type_specifier(p):
     '''
     type_specifier : VOID
@@ -250,8 +378,9 @@ def p_type_specifier(p):
                    | UNSIGNED
                    | struct_or_union_specifier
                    | enum_specifier
-                   | TYPE_NAME
+                   | BOOL
     '''
+
 def p_struct_or_union_specifier(p):
     '''
     struct_or_union_specifier : struct_or_union IDENTIFIER L_BRACES struct_declaration_list R_BRACES
@@ -379,17 +508,25 @@ def p_direct_abstract_declarator(p):
                                | direct_abstract_declarator L_PAREN R_PAREN
                                | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
     '''
+
+    
 def p_initializer(p):
     '''
     initializer : assignment_expression
 	            | L_BRACES initializer_list R_BRACES
 	            | L_BRACES initializer_list COMMA R_BRACES
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else p[0] = Node("init_list","{}",p[2])
+
 def p_initializer_list(p):
     '''
     initializer_list : initializer
 	                 | initializer_list COMMA initializer
     '''
+    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+
 def p_statement(p):
     '''
     statement : labeled_statement
@@ -399,13 +536,23 @@ def p_statement(p):
 	          | iteration_statement
 	          | jump_statement
     '''
-def p_labeled_statement(p):
+    p[0] = p[1]
+
+def p_labeled_statement_1(p):
     '''
     labeled_statement : IDENTIFIER COLON statement
-	                  | CASE constant_expression COLON statement
-	                  | DEFAULT COLON statement
-    
     '''
+    p[0] = Node("label",children=[p[1],p[3]])
+
+def p_labeled_statement_2(p):
+    '''
+    labeled_statement : CASE constant_expression COLON statement
+	                  | DEFAULT COLON statement
+    '''
+    if len(p) == 5:
+        p[0] = Node("case",children=[p[2],p[4]])
+    else p[0] = Node("default",children=[p[3]])
+
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
@@ -413,21 +560,38 @@ def p_compound_statement(p):
 	                   | L_BRACES declaration_list R_BRACES
 	                   | L_BRACES declaration_list statement_list R_BRACES
     '''
+    if len(p) == 3:
+        p[0] = Node("compound_statement","{}")
+    elif len(p) == 4:
+        p[0] = Node("compound_statement","{}",children=p[2])
+    else:
+        p[0] = Node("compound_statement","{}",children=p[2]+p[3])
+
+
 def p_declaration_list(p):
     '''
     declaration_list : declaration
 	                 | declaration_list declaration
     '''
+    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+
 def p_statement_list(p):
     '''
     statement_list : statement
 	               | statement_list statement
     '''
+    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+        
+
 def p_expression_statement(p):
     '''
     expression_statement : SEMI_COLON
 	                     | expression SEMI_COLON
     '''
+    if len(p) == 2:
+        p[0] = Node("expression_statement",p[1])
+    else:
+        p[0] = p[1]
 
 def p_selection_statement(p):
     '''
@@ -435,6 +599,12 @@ def p_selection_statement(p):
 	                    | IF L_PAREN expression R_PAREN statement ELSE statement
 	                    | SWITCH L_PAREN expression R_PAREN statement
     '''
+    if p[1] == "if":
+        if len(p) == 6:
+            p[0] = Node("if",children=[p[3],p[5]])
+        else:
+            p[0] = Node("if_else",children=[p[3],p[5],p[7]])
+
 def p_iteration_statement(p):
     '''
     iteration_statement : WHILE L_PAREN expression R_PAREN statement
@@ -443,9 +613,16 @@ def p_iteration_statement(p):
 	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
     '''
     if p[1] == "while":
-        p[0] = Node("iteration statement","while-expr-stmt",children=[p[3],p[5]])
+        p[0] = Node("iteration_statement","while",children=[p[3],p[5]])
     elif p[1] == "do":
-        p[0] =
+        p[0] = Node("iteration_statement","do",children=[p[2],p[5]])
+    else:
+        if len(p) == 7:
+            child = [p[3],p[4],p[6]]
+        else:
+            child = [p[3],p[4],p[5],p[7]]
+        p[0] = Node("iteration_statement","for",child)
+    
 
 def p_jump_statement(p):
     '''
@@ -457,7 +634,7 @@ def p_jump_statement(p):
 	                 
     '''
     if len(p) == 4:
-        p[0] = Node("Jump Statment",p[1],[p[2]])
+        p[0] = Node("jump_statment",p[1],[p[2]])
     else:
         p[0] = Node("Jump Statment",p[1])
 
