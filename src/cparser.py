@@ -67,8 +67,6 @@ def p_function_definition_1(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
 			            | declaration_specifiers declarator compound_statement
-			            | declarator declaration_list compound_statement
-			            | declarator compound_statement
     
     '''
     if len(p) == 5:
@@ -171,8 +169,7 @@ def p_cast_expression(p):
     '''
     if len(p) == 2:
         p[0] = p[1]
-    else:
-        p[0] = Node("cast",p[2],children=[p[4]])
+    else p[0] = Node("cast",p[2].type,children=[p[4]])
 
 def p_multiplicative_expression(p):
     '''
@@ -378,10 +375,9 @@ def p_declaration_specifiers(p):
                            | type_qualifier
                            | type_qualifier declaration_specifiers
     '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1]+p[2]
+    # required change in action
+    p[0] = p[1]
+        
 
 def p_init_declarator_list(p):
     '''
