@@ -353,7 +353,10 @@ def p_declaration(p):
     declaration : declaration_specifiers SEMI_COLON
 	            | declaration_specifiers init_declarator_list SEMI_COLON
     '''
-
+    if len(p) == 4 and p[2] != None:
+        p[0] = Node("declaration",children=p[2])
+    else:
+        p[0] = None
 
 def p_declaration_specifiers(p):
     '''
@@ -364,8 +367,10 @@ def p_declaration_specifiers(p):
                            | type_qualifier
                            | type_qualifier declaration_specifiers
     '''
-    p[0] = None
-
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1]+p[2]
 
 def p_init_declarator_list(p):
     '''
@@ -470,16 +475,19 @@ def p_enum_specifier(p):
                    | ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
                    | ENUM IDENTIFIER
     '''
+    p[0] = p[1]
 def p_enumerator_list(p):
     '''
     enumerator_list : enumerator
 	                | enumerator_list COMMA enumerator
     '''
+    p[0] = None
 def p_enumerator(p):
     '''
     enumerator : IDENTIFIER
 	           | IDENTIFIER ASSIGNMENT constant_expression
     '''
+    p[0] = None
 def p_type_qualifier(p):
     '''
     type_qualifier : CONST
@@ -552,6 +560,7 @@ def p_identifier_list(p):
     identifier_list : IDENTIFIER
 	                | identifier_list COMMA IDENTIFIER
     '''
+
 def p_type_name(p):
     '''
     type_name : specifier_qualifier_list
