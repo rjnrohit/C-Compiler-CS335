@@ -49,7 +49,7 @@ def p_translation_unit(p):
     '''
     if len(p) == 1:
         p[0] = Node(type="program",children = [p[1]])
-    elif:
+    else:
         p[0] = Node(type="program",children=p[1].children + [p[2]])
 
 def p_external_declaration(p):
@@ -71,110 +71,110 @@ def p_primary_expression(p):
     primary_expression : IDENTIFIER
                        | CONSTANT
                        | STRING_LITERAL    
-                       | '(' expression ')'
+                       | L_PAREN expression R_PAREN
     '''
 def p_postfix_expression(p):
     '''
     postfix_expression : primary_expression
-                       | postfix_expression '[' expression ']'
-                       | postfix_expression '(' ')'
-                       | postfix_expression '(' argument_expression_list ')'
-                       | postfix_expression '.' IDENTIFIER
-                       | postfix_expression PTR_OP IDENTIFIER
-                       | postfix_expression INC_OP
-                       | postfix_expression DEC_OP
+                       | postfix_expression L_SQBR expression R_SQBR
+                       | postfix_expression L_PAREN R_PAREN
+                       | postfix_expression L_PAREN argument_expression_list R_PAREN
+                       | postfix_expression DOT IDENTIFIER
+                       | postfix_expression ARROW IDENTIFIER
+                       | postfix_expression INCREMENT
+                       | postfix_expression DECREMENT
 
     '''
 def p_argument_expression_list(p):
     '''
     argument_expression_list : assignment_expression
-	                         | argument_expression_list ',' assignment_expression
+	                         | argument_expression_list COMMA assignment_expression
     '''
 def p_unary_expression(p):
     '''
     unary_expression : postfix_expression
-                     | INC_OP unary_expression
-                     | DEC_OP unary_expression
+                     | INCREMENT unary_expression
+                     | DECREMENT unary_expression
                      | unary_operator cast_expression
                      | SIZEOF unary_expression
-                     | SIZEOF '(' type_name ')'
+                     | SIZEOF L_PAREN type_name R_PAREN
     '''
 def p_unary_operator(p):
     '''
-    unary_operator : '&'
-                   | '*'
-                   | '+'
-                   | '-'
-                   | '~'
-                   | '!'
+    unary_operator : BITWISE_AND
+                   | MULTIPLY
+                   | ADD
+                   | SUBSTRACT
+                   | BITWISE_ONE_COMPLEMENT
+                   | LOGICAL_NOT
     '''
 def p_cast_expression(p):
     '''
     cast_expression : unary_expression
-	                | '(' type_name ')' cast_expression
+	                | L_PAREN type_name R_PAREN cast_expression
     '''
 def p_multiplicative_expression(p):
     '''
     multiplicative_expression : cast_expression
-                              | multiplicative_expression '*' cast_expression
-                              | multiplicative_expression '/' cast_expression
-                              | multiplicative_expression '%' cast_expression
+                              | multiplicative_expression MULTIPLY cast_expression
+                              | multiplicative_expression DIVIDE cast_expression
+                              | multiplicative_expression MODULUS cast_expression
     '''
 def p_additive_expression(p):
     '''
     additive_expression : multiplicative_expression
-                        | additive_expression '+' multiplicative_expression
-                        | additive_expression '-' multiplicative_expression
+                        | additive_expression ADD multiplicative_expression
+                        | additive_expression SUBSTRACT multiplicative_expression
     '''
 def p_shift_expression(p):
     '''
     shift_expression : additive_expression
-                     | shift_expression LEFT_OP additive_expression
-                     | shift_expression RIGHT_OP additive_expression
+                     | shift_expression LEFT_SHIFT additive_expression
+                     | shift_expression RIGHT_SHIFT additive_expression
     '''
 def p_relational_expression(p):
     '''
     relational_expression : shift_expression
-                          | relational_expression '<' shift_expression
-                          | relational_expression '>' shift_expression
-                          | relational_expression LE_OP shift_expression
-                          | relational_expression GE_OP shift_expression
+                          | relational_expression LESS shift_expression
+                          | relational_expression GREATER shift_expression
+                          | relational_expression LESS_EQUALS shift_expression
+                          | relational_expression GREATER_EQUALS shift_expression
     '''
 def p_equality_expression(p):
     '''
     equality_expression : relational_expression
-                        | equality_expression EQ_OP relational_expression
-                        | equality_expression NE_OP relational_expression
+                        | equality_expression EQUALS relational_expression
+                        | equality_expression NOT_EQUALS relational_expression
     '''
 def p_and_expression(p):
     '''
     and_expression : equality_expression
-	               | and_expression '&' equality_expression
+	               | and_expression BITWISE_AND equality_expression
     '''
 def p_exclusive_or_expression(p):
     '''
     exclusive_or_expression : and_expression
-	                        | exclusive_or_expression '^' and_expression
+	                        | exclusive_or_expression BITWISE_XOR and_expression
     '''
 def p_inclusive_or_expression(p):
     '''
     inclusive_or_expression : exclusive_or_expression
-	                        | inclusive_or_expression '|' exclusive_or_expression
+	                        | inclusive_or_expression BITWISE_OR exclusive_or_expression
     '''
 def p_logical_and_expression(p):
     '''
     logical_and_expression : inclusive_or_expression
-	                       | logical_and_expression AND_OP inclusive_or_expression
+	                       | logical_and_expression LOGICAL_AND inclusive_or_expression
     '''
 def p_logical_or_expression(p):
     '''
     logical_or_expression : logical_and_expression
-	                      | logical_or_expression OR_OP logical_and_expression
+	                      | logical_or_expression LOGICAL_OR logical_and_expression
     '''
 def p_conditional_expression(p):
     '''
     conditional_expression : logical_or_expression
-	                       | logical_or_expression '?' expression ':' conditional_expression
+	                       | logical_or_expression QUES_MARK expression COLON conditional_expression
     '''
 def p_assignment_expression(p):
     '''
@@ -183,22 +183,22 @@ def p_assignment_expression(p):
     '''
 def p_assignment_operator(p):
     '''
-    assignment_operator : '='
-                        | MUL_ASSIGN
-                        | DIV_ASSIGN
-                        | MOD_ASSIGN
-                        | ADD_ASSIGN
-                        | SUB_ASSIGN
-                        | LEFT_ASSIGN
-                        | RIGHT_ASSIGN
-                        | AND_ASSIGN
-                        | XOR_ASSIGN
-                        | OR_ASSIGN
+    assignment_operator : ASSIGNMENT
+                        | MULTIPLY_ASSIGNMENT
+                        | DIVIDE_ASSIGNMENT
+                        | MODULUS_ASSIGNMENT
+                        | ADD_ASSIGNMENT
+                        | SUBSTRACT_ASSIGNMENT
+                        | LEFT_SHIFT_ASSIGNMENT
+                        | RIGHT_SHIFT_ASSIGNMENT
+                        | BITWISE_AND_ASSIGNMENT
+                        | BITWISE_XOR_ASSIGNMENT
+                        | BITWISE_OR_ASSIGNMENT
     '''
 def p_expression(p):
     '''
     expression : assignment_expression
-	           | expression ',' assignment_expression
+	           | expression COMMA assignment_expression
     '''
 def p_constant_expression(p):
     '''
@@ -206,8 +206,8 @@ def p_constant_expression(p):
     '''
 def p_declaration(p):
     '''
-    declaration : declaration_specifiers ';'
-	            | declaration_specifiers init_declarator_list ';'
+    declaration : declaration_specifiers SEMI_COLON
+	            | declaration_specifiers init_declarator_list SEMI_COLON
     '''
 def p_declaration_specifiers(p):
     '''
@@ -221,12 +221,12 @@ def p_declaration_specifiers(p):
 def p_init_declarator_list(p):
     '''
     init_declarator_list : init_declarator
-	                     | init_declarator_list ',' init_declarator
+	                     | init_declarator_list COMMA init_declarator
     '''
 def p_init_declarator(p):
     '''
     init_declarator : declarator
-	                | declarator '=' initializer
+	                | declarator ASSIGNMENT initializer
     '''
 def p_storage_class_specifier(p):
     '''
@@ -253,8 +253,8 @@ def p_type_specifier(p):
     '''
 def p_struct_or_union_specifier(p):
     '''
-    struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list '}'
-	                          | struct_or_union '{' struct_declaration_list '}'
+    struct_or_union_specifier : struct_or_union IDENTIFIER L_BRACES struct_declaration_list R_BRACES
+	                          | struct_or_union L_BRACES struct_declaration_list R_BRACES
 	                          | struct_or_union IDENTIFIER
     '''
 def p_struct_or_union(p):
@@ -269,7 +269,7 @@ def p_struct_declaration_list(p):
     '''
 def p_struct_declaration(p):
     '''
-    struct_declaration : specifier_qualifier_list struct_declarator_list ';'
+    struct_declaration : specifier_qualifier_list struct_declarator_list SEMI_COLON
     '''
 def p_specifier_qualifier_list(p):
     '''
@@ -281,29 +281,29 @@ def p_specifier_qualifier_list(p):
 def p_struct_declarator_list(p):
     '''
     struct_declarator_list : struct_declarator
-	                       | struct_declarator_list ',' struct_declarator
+	                       | struct_declarator_list COMMA struct_declarator
     '''
 def p_struct_declarator(p):
     '''
     struct_declarator : declarator
-                      | ':' constant_expression
-                      | declarator ':' constant_expression
+                      | COLON constant_expression
+                      | declarator COLON constant_expression
     '''
 def p_enum_specifier(p):
     '''
-    enum_specifier : ENUM '{' enumerator_list '}'
-                   | ENUM IDENTIFIER '{' enumerator_list '}'
+    enum_specifier : ENUM L_BRACES enumerator_list R_BRACES
+                   | ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
                    | ENUM IDENTIFIER
     '''
 def p_enumerator_list(p):
     '''
     enumerator_list : enumerator
-	                | enumerator_list ',' enumerator
+	                | enumerator_list COMMA enumerator
     '''
 def p_enumerator(p):
     '''
     enumerator : IDENTIFIER
-	           | IDENTIFIER '=' constant_expression
+	           | IDENTIFIER ASSIGNMENT constant_expression
     '''
 def p_type_qualifier(p):
     '''
@@ -318,19 +318,19 @@ def p_declarator(p):
 def p_direct_declarator(p):
     '''
     direct_declarator : IDENTIFIER
-                      | '(' declarator ')'
-                      | direct_declarator '[' constant_expression ']'
-                      | direct_declarator '[' ']'
-                      | direct_declarator '(' parameter_type_list ')'
-                      | direct_declarator '(' identifier_list ')'
-                      | direct_declarator '(' ')'
+                      | L_PAREN declarator R_PAREN
+                      | direct_declarator L_SQBR constant_expression R_SQBR
+                      | direct_declarator L_SQBR R_SQBR
+                      | direct_declarator L_PAREN parameter_type_list R_PAREN
+                      | direct_declarator L_PAREN identifier_list R_PAREN
+                      | direct_declarator L_PAREN R_PAREN
     '''
 def p_pointer(p):
     '''
-    pointer : '*'
-	        | '*' type_qualifier_list
-            | '*' pointer
-            | '*' type_qualifier_list pointer
+    pointer : MULTIPLY
+	        | MULTIPLY type_qualifier_list
+            | MULTIPLY pointer
+            | MULTIPLY type_qualifier_list pointer
     '''
 def p_type_qualifier_list(p):
     '''
@@ -341,7 +341,7 @@ def p_type_qualifier_list(p):
 def p_parameter_type_list(p):
     '''
     parameter_type_list : parameter_declaration
-	                    | parameter_type_list ',' parameter_declaration
+	                    | parameter_type_list COMMA parameter_declaration
     '''
     
 def p_parameter_declaration(p):
@@ -353,7 +353,7 @@ def p_parameter_declaration(p):
 def p_identifier_list(p):
     '''
     identifier_list : IDENTIFIER
-	                | identifier_list ',' IDENTIFIER
+	                | identifier_list COMMA IDENTIFIER
     '''
 def p_type_name(p):
     '''
@@ -368,26 +368,26 @@ def p_abstract_declarator(p):
     '''
 def p_direct_abstract_declarator(p):
     '''
-    direct_abstract_declarator : '(' abstract_declarator ')'
-	                           | '[' ']'
-	                           | '[' constant_expression ']'
-	                           | direct_abstract_declarator '[' ']'
-                               | direct_abstract_declarator '[' constant_expression ']'
-                               | '(' ')'
-                               | '(' parameter_type_list ')'
-                               | direct_abstract_declarator '(' ')'
-                               | direct_abstract_declarator '(' parameter_type_list ')'
+    direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
+	                           | L_SQBR R_SQBR
+	                           | L_SQBR constant_expression R_SQBR
+	                           | direct_abstract_declarator L_SQBR R_SQBR
+                               | direct_abstract_declarator L_SQBR constant_expression R_SQBR
+                               | L_PAREN R_PAREN
+                               | L_PAREN parameter_type_list R_PAREN
+                               | direct_abstract_declarator L_PAREN R_PAREN
+                               | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
     '''
 def p_initializer(p):
     '''
     initializer : assignment_expression
-	            | '{' initializer_list '}'
-	            | '{' initializer_list ',' '}'
+	            | L_BRACES initializer_list R_BRACES
+	            | L_BRACES initializer_list COMMA R_BRACES
     '''
 def p_initializer_list(p):
     '''
     initializer_list : initializer
-	                 | initializer_list ',' initializer
+	                 | initializer_list COMMA initializer
     '''
 def p_statement(p):
     '''
@@ -400,17 +400,17 @@ def p_statement(p):
     '''
 def p_labeled_statement(p):
     '''
-    labeled_statement : IDENTIFIER ':' statement
-	                  | CASE constant_expression ':' statement
-	                  | DEFAULT ':' statement
+    labeled_statement : IDENTIFIER COLON statement
+	                  | CASE constant_expression COLON statement
+	                  | DEFAULT COLON statement
     
     '''
 def p_compound_statement(p):
     '''
-    compound_statement : '{' '}'
-	                   | '{' statement_list '}'
-	                   | '{' declaration_list '}'
-	                   | '{' declaration_list statement_list '}'
+    compound_statement : L_BRACES R_BRACES
+	                   | L_BRACES statement_list R_BRACES
+	                   | L_BRACES declaration_list R_BRACES
+	                   | L_BRACES declaration_list statement_list R_BRACES
     '''
 def p_declaration_list(p):
     '''
@@ -424,31 +424,31 @@ def p_statement_list(p):
     '''
 def p_expression_statement(p):
     '''
-    expression_statement : ';'
-	                     | expression ';'
+    expression_statement : SEMI_COLON
+	                     | expression SEMI_COLON
     '''
 
 def p_selection_statement(p):
     '''
-    selection_statement : IF '(' expression ')' statement
-	                    | IF '(' expression ')' statement ELSE statement
-	                    | SWITCH '(' expression ')' statement
+    selection_statement : IF L_PAREN expression R_PAREN statement
+	                    | IF L_PAREN expression R_PAREN statement ELSE statement
+	                    | SWITCH L_PAREN expression R_PAREN statement
     '''
 def p_iteration_statement(p):
     '''
-    iteration_statement : WHILE '(' expression ')' statement
-	                    | DO statement WHILE '(' expression ')' ';'
-	                    | FOR '(' expression_statement expression_statement ')' statement
-	                    | FOR '(' expression_statement expression_statement expression ')' statement
+    iteration_statement : WHILE L_PAREN expression R_PAREN statement
+	                    | DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON
+	                    | FOR L_PAREN expression_statement expression_statement R_PAREN statement
+	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
     
     '''
 def p_jump_statement(p):
     '''
-    jump_statement : GOTO IDENTIFIER ';'
-	               | CONTINUE ';'
-	               | BREAK ';'
-	               | RETURN ';'
-	               | RETURN expression ';'
+    jump_statement : GOTO IDENTIFIER SEMI_COLON
+	               | CONTINUE SEMI_COLON
+	               | BREAK SEMI_COLON
+	               | RETURN SEMI_COLON
+	               | RETURN expression SEMI_COLON
 	                 
     '''
  
