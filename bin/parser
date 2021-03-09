@@ -5,13 +5,13 @@ provided by user"""
 import sys
 import ply.lex as lex
 import ply.yacc as yacc
-import clexer as lexer
+import src.clexer as lexer
 import argparse
 import pygraphviz as pgv
 
 
 from visualize import draw_ast
-from clexer import tokens
+from src.clexer import tokens
 
 
 
@@ -67,6 +67,8 @@ def p_function_definition_1(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
 			            | declaration_specifiers declarator compound_statement
+			            | declarator declaration_list compound_statement
+			            | declarator compound_statement
     
     '''
     if len(p) == 5:
@@ -89,13 +91,13 @@ def p_function_definition_2(p):
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
-                       | INT_CONSTANT
-                       | HEX_CONSTANT
-                       | OCTAL_CONSTANT
-                       | EXPONENT_CONSTANT
-                       | REAL_CONSTANT
-                       | CHAR_CONSTANT
-                       | STR_CONSTANT
+                       | INT_CONSTANT,
+                       | HEX_CONSTANT,
+                       | OCTAL_CONSTANT,
+                       | EXPONENT_CONSTANT,
+                       | REAL_CONSTANT,
+                       | CHAR_CONSTANT,
+                       | STR_CONSTANT',
                        | L_PAREN expression R_PAREN
     '''
     if len(p) == 2:
@@ -170,7 +172,7 @@ def p_cast_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("cast",p[2].type,children=[p[4]])
+        p[0] = Node("cast",p[2],children=[p[4]])
 
 def p_multiplicative_expression(p):
     '''
@@ -376,9 +378,10 @@ def p_declaration_specifiers(p):
                            | type_qualifier
                            | type_qualifier declaration_specifiers
     '''
-    # required change in action
-    p[0] = p[1]
-        
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1]+p[2]
 
 def p_init_declarator_list(p):
     '''
@@ -798,7 +801,7 @@ def main():
     parser = yacc.yacc()
     parser.parse(source_code, lexer = lexer.lexer)
 
-    print(parser)
+    #print(parser)
 
     Graph = draw_ast(parser)
     Graph.draw("{args.filename}.png", format='png')
