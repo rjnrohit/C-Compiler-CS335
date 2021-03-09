@@ -27,7 +27,7 @@ def draw_ast(node):
             if nd is None:
                 continue
             if not_all_None(nd.children):
-                G.add_node(nd.id, label = nd.value)
+                G.add_node(nd.id, label = getlabel(node.type,node.value))
                 G.add_edge(top_node.id, nd.id)
                 node_list += [nd]
     
