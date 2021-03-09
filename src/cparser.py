@@ -15,24 +15,20 @@ from clexer import tokens
 
 #####################AST Section#####################
 class Node:
-    id = 0
-
-    def __init__(self,type,children=None,leaf=None):
+    count_nodes = 0
+    nodes = []
+    def __init__(self,type,children=None,leaf=None,value=None):
+        self.id = Node.count_nodes
+        Node.count_nodes += 1
+        Node.nodes.append(self)
         self.type = type
         if children:
             self.children = children
         else:
-            self.children = [ ]
+            self.children = []
         self.leaf = leaf
-        Node.id = Node.id + 1
-        self.id = Node.id
-    
-    def __str__(self):
-        return self.type
-    
-    def __repr__(self):
-        return self.type
-    
+        self.value = value
+        
 #####################################################
 
 
