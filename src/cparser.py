@@ -29,6 +29,27 @@ class Node:
 #####################Grammar section #################
 
 
+start = 'program' #start action
+
+def p_program(p):
+    'program : translation_unit'
+
+def p_translation_unit(p):
+    '''
+    translation_unit : external_declaration
+                     | translation_unit external_declaration
+    '''
+
+def p_external_declaration(p):
+    '''
+    external_declaration : function_definition
+                         | declaration
+    '''
+
+def p_function_definition(p):
+    pass
+
+
 ######################################################
 
 def main():
