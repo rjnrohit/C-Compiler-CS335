@@ -798,9 +798,7 @@ def main():
     parser = yacc.yacc()
     parser.parse(source_code, lexer = lexer.lexer)
 
-    print(parser)
-
-    Graph = draw_ast(parser)
+    Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
     Graph.draw("{args.filename}.png", format='png')
 
     file = open("{args.filename}", 'w')
