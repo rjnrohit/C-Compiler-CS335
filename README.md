@@ -22,14 +22,16 @@ make
 
 usage:
 ```
-./bin/lexer [-h] [-t] source_code
 
+./bin/lexer [-h] [-t] source_code               //to run lexer
+./bin/parser source_code [-o] file              //to generate AST
 positional arguments:
   source_code  source code file location
 
 optional arguments:
   -h, --help   show this help message and exit
   -t           not print tokens
+  -o           to specify the name of dot script, default name is 'ast.dot'
 ```
 
 Run tests from test/
