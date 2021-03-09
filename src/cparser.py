@@ -17,7 +17,7 @@ from clexer import tokens
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,type,children=None,leaf=None,value=None):
+    def __init__(self,type,value=None,children=None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
@@ -26,7 +26,6 @@ class Node:
             self.children = children
         else:
             self.children = []
-        self.leaf = leaf
         self.value = value
         
 #####################################################
@@ -57,6 +56,7 @@ def p_external_declaration(p):
     external_declaration : function_definition
                          | declaration
     '''
+    p[0] = p[1]
 
 def p_function_definition(p):
     '''
@@ -66,6 +66,7 @@ def p_function_definition(p):
 			            | declarator compound_statement
     
     '''
+
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
@@ -440,8 +441,12 @@ def p_iteration_statement(p):
 	                    | DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON
 	                    | FOR L_PAREN expression_statement expression_statement R_PAREN statement
 	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
-    
     '''
+    if p[1] == "while":
+        p[0] = Node("iteration statement","while-expr-stmt",children=[p[3],p[5]])
+    elif p[1] == "do":
+        p[0] =
+
 def p_jump_statement(p):
     '''
     jump_statement : GOTO IDENTIFIER SEMI_COLON
@@ -451,6 +456,11 @@ def p_jump_statement(p):
 	               | RETURN expression SEMI_COLON
 	                 
     '''
+    if len(p) == 4:
+        p[0] = Node("Jump Statment",p[1],[p[2]])
+    else:
+        p[0] = Node("Jump Statment",p[1])
+
  
 ######################################################
 
