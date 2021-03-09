@@ -89,6 +89,7 @@ def p_function_definition_2(p):
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
+                       | NULL
                        | INT_CONSTANT
                        | HEX_CONSTANT
                        | OCTAL_CONSTANT

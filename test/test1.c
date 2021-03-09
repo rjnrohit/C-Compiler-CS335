@@ -1,8 +1,3 @@
-/* Multiline comment
-It'll appear as block comment
-token name will be BLOCK_COMMENT*/
-
-//this is an inline comment
 
 void f1(){
     f1();
