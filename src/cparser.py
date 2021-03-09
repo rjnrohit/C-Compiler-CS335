@@ -750,6 +750,8 @@ def p_iteration_statement(p):
 	                    | DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON
 	                    | FOR L_PAREN expression_statement expression_statement R_PAREN statement
 	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
+                        | FOR L_PAREN declaration expression_statement R_PAREN statement
+                        | FOR L_PAREN declaration expression_statement expression R_PAREN statement
     '''
     if p[1] == "while":
         p[0] = Node("iteration_statement","while",children=[p[3],p[5]])

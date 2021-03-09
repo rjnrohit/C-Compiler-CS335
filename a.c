@@ -1,22 +1,21 @@
-enum day {sunday, monday, tuesday, wednesday, thursday, friday, saturday}; 
+int x = 10;
+char a[10];
+static int y = 5;
 
-int main()
-{
-	int n;
-	scanf("%d", &n);
-
-	long a, b;
-	long long temp;
-	
-	for(d = 1; d <= 2; d++){
-		a = 0, b = 1;
-		for( i = 2; i <= d; ++i)
-		{
-			temp = b;
-			b = a + b;
-			a = temp;
-		}
-		printf("%ld\n", b);
+char f(){
+	for(int i = 0;i<10;++i){
+		a[i] = 'a' + i;
 	}
-	return 0;
+	return a[5];
+}
+
+int main ()
+{
+    int* p;
+    p = (int *) malloc(4);
+    *p = 5;
+    printf("%d\n", *p);
+    printf("%c\n", f());
+    
+    return y++;
 }
