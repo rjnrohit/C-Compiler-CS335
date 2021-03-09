@@ -60,8 +60,8 @@ def p_external_declaration(p):
                          | declaration
     '''
     p[0] = [p[1]]
-
-def p_function_definition(p):
+##########################################
+def p_function_definition_1(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
 			            | declaration_specifiers declarator compound_statement
@@ -69,6 +69,22 @@ def p_function_definition(p):
 			            | declarator compound_statement
     
     '''
+    if len(p) == 5:
+        p[0] = Node("function_defn",children=[p[2],p[4]])
+    else:
+        p[0] = Node("function_defn",children=[p[2],p[3]])
+    
+def p_function_definition_2(p):
+    '''
+    function_definition : declarator declaration_list compound_statement
+			            | declarator compound_statement
+    
+    '''
+    if len(p) == 4:
+        p[0] = Node("function_defn",children=[p[1],p[3]])
+    else:
+        p[0] = Node("function_defn",children=[p[1],p[2]])
+
 # add all constants
 def p_primary_expression(p):
     '''
@@ -77,7 +93,7 @@ def p_primary_expression(p):
                        | STRING_LITERAL    
                        | L_PAREN expression R_PAREN
     '''
-
+##############################################
 def p_postfix_expression(p):
     '''
     postfix_expression : primary_expression
@@ -329,7 +345,7 @@ def p_constant_expression(p):
     '''
     p[0] = p[1]
 
-
+########################################
 def p_declaration(p):
     '''
     declaration : declaration_specifiers SEMI_COLON
@@ -405,20 +421,26 @@ def p_struct_or_union_specifier(p):
 	                          | struct_or_union L_BRACES struct_declaration_list R_BRACES
 	                          | struct_or_union IDENTIFIER
     '''
+    p[0] = p[1]
+
 def p_struct_or_union(p):
     '''
     struct_or_union : STRUCT
 	                | UNION
     '''
+    p[0] = p[1]
+
 def p_struct_declaration_list(p):
     '''
     struct_declaration_list : struct_declaration
 	                        | struct_declaration_list struct_declaration
     '''
+    p[0] = None
 def p_struct_declaration(p):
     '''
     struct_declaration : specifier_qualifier_list struct_declarator_list SEMI_COLON
     '''
+    p[0] = None
 def p_specifier_qualifier_list(p):
     '''
     specifier_qualifier_list : type_specifier specifier_qualifier_list
@@ -426,17 +448,20 @@ def p_specifier_qualifier_list(p):
                              | type_qualifier specifier_qualifier_list
                              | type_qualifier
     '''
+    p[0] = None
 def p_struct_declarator_list(p):
     '''
     struct_declarator_list : struct_declarator
 	                       | struct_declarator_list COMMA struct_declarator
     '''
+    p[0] = None
 def p_struct_declarator(p):
     '''
     struct_declarator : declarator
                       | COLON constant_expression
                       | declarator COLON constant_expression
     '''
+    p[0] = None
 def p_enum_specifier(p):
     '''
     enum_specifier : ENUM L_BRACES enumerator_list R_BRACES
@@ -549,7 +574,7 @@ def p_direct_abstract_declarator(p):
                                | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
     '''
 
-    
+#####################################################  
 def p_initializer(p):
     '''
     initializer : assignment_expression
