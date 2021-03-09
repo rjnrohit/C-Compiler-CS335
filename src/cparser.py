@@ -547,7 +547,7 @@ def p_pointer(p):
             | MULTIPLY pointer
             | MULTIPLY type_qualifier_list pointer
     '''
-    p[0] = [p[1]]
+    p[0] = [Node("pointer",p[1])]
     for i in range(2,len(p)):
         p[0] += p[i]
     
