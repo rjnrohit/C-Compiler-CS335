@@ -16,6 +16,9 @@ def draw_ast(node):
     G = pgv.AGraph(strict=True, directed=True)
     node_list =[node]
 
+    if not node:
+        return G
+
     G.add_node(node.id, label = getlabel(node.type,node.value))
 
     while node_list:
