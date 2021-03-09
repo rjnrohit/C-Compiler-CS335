@@ -9,7 +9,7 @@ def getlabel(type,value):
     if value == None:
         return type
     else:
-        return type+": "+value
+        return type+": "+str(value)
 
 
 def draw_ast(node):
