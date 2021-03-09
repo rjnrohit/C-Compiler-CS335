@@ -784,7 +784,7 @@ def main():
     arg_parser = argparse.ArgumentParser(description="Lexer for Source Language C")
     arg_parser.add_argument('source_code',help="source code file location")
     arg_parser.add_argument('-t',action='store_false',help=" not print tokens")
-    arg_parser.add_argument('-o',dest='filename',help="take the name of dot script", default="ast.dot")
+    arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
     args = arg_parser.parse_args()
 
     try:
@@ -800,9 +800,9 @@ def main():
     parser.parse(source_code, lexer = lexer.lexer)
 
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
-    Graph.draw("{args.filename}.png", format='png')
+    Graph.draw(args.o + ".png", format='png')
 
-    file = open("{args.filename}", 'w')
+    file = open(args.o, 'w')
     file.write(Graph.string())
     file.close()
 
