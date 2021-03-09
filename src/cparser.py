@@ -169,7 +169,8 @@ def p_cast_expression(p):
     '''
     if len(p) == 2:
         p[0] = p[1]
-    else p[0] = Node("cast",p[2].type,children=[p[4]])
+    else:
+        p[0] = Node("cast",p[2].type,children=[p[4]])
 
 def p_multiplicative_expression(p):
     '''
@@ -797,7 +798,7 @@ def main():
     parser = yacc.yacc()
     parser.parse(source_code, lexer = lexer.lexer)
 
-    #print(parser)
+    print(parser)
 
     Graph = draw_ast(parser)
     Graph.draw("{args.filename}.png", format='png')
