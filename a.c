@@ -2,6 +2,12 @@
 
 void f1(){
     f1();
+    if(a)
+    b;
+    if(c)
+    c;
+    else
+    d;
     return f1();
 }
 
