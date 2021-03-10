@@ -583,8 +583,8 @@ def p_direct_declarator(p):
     '''
     if len(p) == 2:
         p[0] = Node("id",p[1])
-    elif p[2] == '(':
-        p[0] = p[1]
+    elif p[1] == '(':
+        p[0] = p[2]
     elif len(p) == 4:
         p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
     else:
