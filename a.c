@@ -17,7 +17,9 @@ int global =0;
 
 long double another_global_variable_WITH_CODE_12387894965 = 34521.;
 
-int main(){
+int main;
+
+int main{
     int* pointer1 = NULL;
     int **pointer2 = &pointer1;
     int hex_num = 0x123ffddffcd;
