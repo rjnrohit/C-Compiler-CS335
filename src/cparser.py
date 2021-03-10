@@ -695,7 +695,7 @@ def p_labeled_statement_2(p):
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
-	                   | L_BRACES statement_list R_BRACES
+	                   | L_BRACES statement_list_with_comment R_BRACES
     '''
     if len(p) == 3:
         p[0] = Node("compound_statement","{}")
@@ -711,6 +711,29 @@ def p_declaration_list(p):
 	                 | declaration_list declaration
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+
+
+def p_statement_list_with_comment(p):
+    '''
+    statement_list_with_comment : BLOCK_COMMENT
+                                | INLINE_COMMENT
+                                | statement_list
+                                | statement_list_with_comment BLOCK_COMMENT
+                                | statement_list_with_comment INLINE_COMMENT
+                                | statement_list_with_comment statement_list
+    '''
+    if len(p) == 2:
+        if p.slice[0] == 'statement_list':
+            p[0] = p[1]
+        elif p.slice[-1].type == 'BLOCK_COMMENT':
+            p[0] = []
+        else:
+            p[0] =[]
+    elif p.slice[-1] == 'statement_list':
+        p[0] = p[1] + p[2]
+
+
+    # print(p[1], type(p[1]), p.slice[-1].type)
 
 def p_statement_list(p):
     '''
@@ -790,8 +813,8 @@ def main():
     #read source code provided by user
     arg_parser = argparse.ArgumentParser(description="Lexer for Source Language C")
     arg_parser.add_argument('source_code',help="source code file location")
-    arg_parser.add_argument('-t',action='store_false',help=" not print tokens")
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
+    arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
     args = arg_parser.parse_args()
 
     try:
@@ -807,6 +830,11 @@ def main():
     parser.parse(source_code, lexer = lexer.lexer)
 
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
+    # print(args)
+    if args.p:
+        Graph.draw(args.o + ".png", format='png')
+        print(Graph.string())
+        return
     Graph.draw(args.o + ".png", format='png')
 
     file = open(args.o, 'w')

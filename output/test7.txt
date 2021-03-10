@@ -1,5 +1,4 @@
 Token                 Lexeme                          Line#  Column#
-BLOCK_COMMENT         /* C program for Merge Sort */  1      1      
 VOID                  void                            3      1      
 IDENTIFIER            merge                           3      6      
 L_PAREN               (                               3      11     

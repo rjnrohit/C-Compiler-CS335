@@ -118,7 +118,6 @@ R_PAREN               )                               25     51
 SEMI_COLON            ;                               25     52     
 BREAK                 break                           26     13     
 SEMI_COLON            ;                               26     18     
-INLINE_COMMENT        // operator doesn't match any case constant +, -, *, /  28     9      
 DEFAULT               default                         29     9      
 COLON                 :                               29     16     
 IDENTIFIER            printf                          30     13     

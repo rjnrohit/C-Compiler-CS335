@@ -1,9 +1,10 @@
 all: bin/lexer bin/parser
 
-bin/parser : src/cparser.py
+bin/parser : src/cparser.py src/visualize.py
 	rm -rf bin/parser
 	cp src/cparser.py bin/parser
 	cp src/cparser.py bin/cparser.py
+	cp src/visualize.py bin/visualize.py
 	chmod +x bin/parser
 
 bin/lexer : src/clexer.py
