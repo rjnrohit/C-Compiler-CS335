@@ -527,7 +527,7 @@ def p_direct_declarator(p):
     '''
     direct_declarator : IDENTIFIER
                       | L_PAREN declarator R_PAREN
-                      | direct_declarator L_SQBR constant_expression R_SQBR
+                      | direct_declarator L_SQBR assignment_expression R_SQBR
                       | direct_declarator L_SQBR R_SQBR
                       | direct_declarator L_PAREN parameter_type_list R_PAREN
                       | direct_declarator L_PAREN identifier_list R_PAREN
@@ -629,9 +629,9 @@ def p_direct_abstract_declarator(p):
     '''
     direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
 	                           | L_SQBR R_SQBR
-	                           | L_SQBR constant_expression R_SQBR
+	                           | L_SQBR assignment_expression R_SQBR
 	                           | direct_abstract_declarator L_SQBR R_SQBR
-                               | direct_abstract_declarator L_SQBR constant_expression R_SQBR
+                               | direct_abstract_declarator L_SQBR assignment_expression R_SQBR
                                | L_PAREN R_PAREN
                                | L_PAREN parameter_type_list R_PAREN
                                | direct_abstract_declarator L_PAREN R_PAREN
@@ -695,7 +695,7 @@ def p_labeled_statement_2(p):
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
-	                   | L_BRACES statement_list R_BRACES
+	                   | L_BRACES block_item_list R_BRACES
     '''
     if len(p) == 3:
         p[0] = Node("compound_statement","{}")
@@ -712,15 +712,19 @@ def p_declaration_list(p):
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
 
-def p_statement_list(p):
+def p_block_item_list(p):
     '''
-    statement_list : statement
-                   | declaration
-	               | statement_list statement
-                   | statement_list declaration
+    block_item_list : block_item
+                   | block_item_list block_item
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
         
+def p_block_item(p):
+    '''
+    block_item : statement
+                | declaration
+    '''
+    p[0] = p[1]
 
 def p_expression_statement(p):
     '''

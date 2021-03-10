@@ -26,7 +26,7 @@ def draw_ast(node):
         top_node = node_list[0]
         node_list.pop(0)
         for nd in top_node.children:
-            print(top_node.type,nd)
+            # print(top_node.type,nd)
             if nd is None:
                 continue
             if not_all_None(nd.children):
