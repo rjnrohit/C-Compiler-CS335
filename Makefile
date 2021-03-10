@@ -1,6 +1,6 @@
 all: bin/lexer bin/parser
 
-bin/parser : src/cparser.py src/visualize.py
+bin/parser : src/cparser.py src/visualize.py bin/lexer
 	rm -rf bin/parser
 	cp src/cparser.py bin/parser
 	cp src/cparser.py bin/cparser.py

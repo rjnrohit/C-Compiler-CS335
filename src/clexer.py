@@ -137,8 +137,8 @@ class Tokens:
         'REAL_CONSTANT',
         'CHAR_CONSTANT',
         'STR_CONSTANT',
-        'INLINE_COMMENT',
-        'BLOCK_COMMENT',
+        # 'INLINE_COMMENT',
+        # 'BLOCK_COMMENT',
     ]
 
 reserved = Tokens().reserved    #dict of reserved keywords

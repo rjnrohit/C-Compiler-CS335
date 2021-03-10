@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 """This Script for Syntax Analysis of C code
 provided by user"""
 
@@ -876,7 +876,7 @@ def main():
     if args.l:
         print_lexeme(source_code)
 
-    parser = yacc.yacc()
+    parser = yacc.yacc(debug=0)
     lexer.lexer.filename = args.source_code
     
     parser.parse(source_code, lexer = lexer.lexer)
