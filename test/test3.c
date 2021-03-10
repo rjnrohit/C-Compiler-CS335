@@ -1,5 +1,6 @@
 int x = 10;
 char a[10];
+char name[] = {'a','b'};
 static int y = 5;
 
 char f(){
