@@ -2,7 +2,6 @@
 """This Script for Syntax Analysis of C code
 provided by user"""
 
-from platform import system_alias
 import sys
 import ply.lex as lex
 import ply.yacc as yacc

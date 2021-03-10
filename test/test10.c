@@ -51,14 +51,6 @@ void debug_mutex_unlock(struct mutex *lock)
 void debug_mutex_init(struct mutex *lock, const char *name,
 		      struct lock_class_key *key)
 {
-#ifdef CONFIG_DEBUG_LOCK_ALLOC
-	/*
-	 * Make sure we are not reinitializing a held lock:
-	 */
-	debug_check_no_locks_freed((void *)lock, sizeof(*lock));
-	lockdep_init_map_wait(&lock->dep_map, name, key, 0, LD_WAIT_SLEEP);
-#endif
-	lock->magic = lock;
 }
 
 /***
@@ -74,5 +66,3 @@ void mutex_destroy(struct mutex *lock)
 	DEBUG_LOCKS_WARN_ON(mutex_is_locked(lock));
 	lock->magic = NULL;
 }
-
-EXPORT_SYMBOL_GPL(mutex_destroy);

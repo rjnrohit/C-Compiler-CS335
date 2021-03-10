@@ -189,7 +189,7 @@ def t_INT_CONSTANT(t):
 
 
 t_CHAR_CONSTANT = r"\'([^\\\n]|(\\.))?\'"
-t_STR_CONSTANT = r"[a-zA-Z_]?\"([^\\\n]|(\\.))*?\""
+t_STR_CONSTANT = r"[a-zA-Z_]?\"([q\\\n]|(\\.))*?\""
 
 #seperators
 t_SEMI_COLON = r';'
@@ -235,7 +235,7 @@ t_MODULUS_ASSIGNMENT = r'%='
 t_LEFT_SHIFT_ASSIGNMENT = r'<<='
 t_RIGHT_SHIFT_ASSIGNMENT = r'>>='
 t_BITWISE_AND_ASSIGNMENT = r'&='
-t_BITWISE_XOR_ASSIGNMENT = r'^=' 
+t_BITWISE_XOR_ASSIGNMENT = r'\^=' 
 t_BITWISE_OR_ASSIGNMENT = r'\|='
 t_QUES_MARK = r'\?'
 t_DOT = r'\.'
