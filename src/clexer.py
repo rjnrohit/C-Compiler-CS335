@@ -248,7 +248,12 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_INLINE_COMMENT = r'//.*'
+# t_INLINE_COMMENT = r'//.*'
+
+def t_INLINE_COMMENT(t):
+    r'//.*'
+    t.lexer.lineno += t.value.count('\n')
+    return t
 
 def t_BLOCK_COMMENT(t):
     r'/\*(.|\n)*?\*/'
@@ -293,6 +298,8 @@ def main():
     lexer.input(source_code)                   #read input from file
     if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
     for tok in lexer:
+        if not tok:
+            continue
         if(args.t): 
             if tok.lexeme:
                 print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,source_code))))

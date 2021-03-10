@@ -699,8 +699,6 @@ def p_compound_statement(p):
     '''
     if len(p) == 3:
         p[0] = Node("compound_statement","{}")
-    # elif len(p) == 4:
-    #     p[0] = Node("compound_statement","{}",children=p[2])
     else:
         p[0] = Node("compound_statement","{}",children=p[2])
 
@@ -794,8 +792,8 @@ def main():
     #read source code provided by user
     arg_parser = argparse.ArgumentParser(description="Lexer for Source Language C")
     arg_parser.add_argument('source_code',help="source code file location")
-    arg_parser.add_argument('-t',action='store_false',help=" not print tokens")
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
+    arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
     args = arg_parser.parse_args()
 
     try:
@@ -811,6 +809,11 @@ def main():
     parser.parse(source_code, lexer = lexer.lexer)
 
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
+    # print(args)
+    if args.p:
+        Graph.draw(args.o + ".png", format='png')
+        print(Graph.string())
+        return
     Graph.draw(args.o + ".png", format='png')
 
     file = open(args.o, 'w')

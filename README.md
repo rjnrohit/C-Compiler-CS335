@@ -24,14 +24,17 @@ usage:
 ```
 
 ./bin/lexer [-h] [-t] source_code               //to run lexer
-./bin/parser source_code [-o] file              //to generate AST
+./bin/parser source_code [-o] script_name       //to generate AST
 positional arguments:
-  source_code  source code file location
+  source_code -> source code file location
+  script_name -> name of the .dot script
+  
 
 optional arguments:
   -h, --help   show this help message and exit
   -t           not print tokens
   -o           to specify the name of dot script, default name is 'ast.dot'
+  -p           print .dot script on the console instead of file
 ```
 
 Run tests from test/
