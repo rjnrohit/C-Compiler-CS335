@@ -190,7 +190,8 @@ def p_cast_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("cast",p[2].type,children=[p[4]])
+
+        p[0] = Node("cast",children=[p[2],p[4]])
 
 #Node
 def p_multiplicative_expression(p):
@@ -597,7 +598,7 @@ def p_pointer(p):
             | MULTIPLY pointer
             | MULTIPLY type_qualifier_list pointer
     '''
-    p[0] = [Node("pointer",p[1])]
+    p[0] = [Node("pointer_ref",p[1])]
     for i in range(2,len(p)):
         p[0] += p[i]
 
