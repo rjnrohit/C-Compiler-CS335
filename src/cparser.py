@@ -11,7 +11,7 @@ import pygraphviz as pgv
 
 
 from visualize import draw_ast
-from clexer import tokens
+from clexer import tokens,print_lexeme
 
 
 
@@ -794,6 +794,7 @@ def main():
     arg_parser.add_argument('source_code',help="source code file location")
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
     arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
+    arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
     args = arg_parser.parse_args()
 
     try:
@@ -803,7 +804,8 @@ def main():
         print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
         sys.exit(-1)
 
-
+    if args.l:
+        print_lexeme(source_code)
 
     parser = yacc.yacc()
     parser.parse(source_code, lexer = lexer.lexer)

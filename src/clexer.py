@@ -253,12 +253,12 @@ def t_newline(t):
 def t_INLINE_COMMENT(t):
     r'//.*'
     t.lexer.lineno += t.value.count('\n')
-    return t
+    pass
 
 def t_BLOCK_COMMENT(t):
     r'/\*(.|\n)*?\*/'
     t.lexer.lineno += t.value.count('\n')
-    return t
+    pass
 
 t_ignore = ' \t'
 
@@ -278,6 +278,19 @@ def find_column(token, input):
 lexer = lex.lex()
 ###################################
 
+def print_lexeme(code):
+    
+    lexer.input(code)                   #read input from file
+    print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
+    for tok in lexer:
+        if not tok:
+            continue
+        if tok.lexeme:
+            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,code))))
+        else:
+            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok,code))))
+
+
 
 def main():
     """The Driver function will print
@@ -295,18 +308,9 @@ def main():
     except FileNotFoundError:
         print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
         sys.exit(-1)
-    lexer.input(source_code)                   #read input from file
-    if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
-    for tok in lexer:
-        if not tok:
-            continue
-        if(args.t): 
-            if tok.lexeme:
-                print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,source_code))))
-            else:
-                print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok, source_code))))
+    if(args.t): print_lexeme(source_code)
 
-
+    
 if __name__ == "__main__":
     main()
 
