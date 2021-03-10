@@ -44,3 +44,10 @@ Run tests from test/
 chmod +x test.sh
 ./test.sh
 ```
+
+to draw the AST
+we can run command
+```
+dot -Tps graph1.dot -o graph1.ps
+```
+The .dot script files are in `output/` directory corresponding to tests in `test/`
