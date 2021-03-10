@@ -843,7 +843,11 @@ def p_jump_statement(p):
     else:
         p[0] = Node("Jump Statment",p[1])
 
- 
+def p_error(t):
+    if t is None:
+        print("End of File Reached. More Input required")    
+    print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
+
 
 
 def main():
@@ -869,6 +873,7 @@ def main():
         print_lexeme(source_code)
 
     parser = yacc.yacc()
+    lexer.lexer.filename = args.source_code
     parser.parse(source_code, lexer = lexer.lexer)
 
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))

@@ -144,6 +144,7 @@ class Tokens:
 reserved = Tokens().reserved    #dict of reserved keywords
 tokens = Tokens().tokens        #list of all tokens
 lex.LexToken.lexeme=""          #create a new attribute for token class
+lex.Lexer.filename=""           #create a new attribute for Lexer class
 ######## regular expressions ###################
 """
 Regular expression defined using the prefix 't_' followed by token name
@@ -305,6 +306,7 @@ def main():
     try:
         # source_code = open(sys.argv[1],"r").read()
         source_code = open(args.source_code,"r").read()
+        lexer.filename = args.source_code
     except FileNotFoundError:
         print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
         sys.exit(-1)

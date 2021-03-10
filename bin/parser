@@ -11,7 +11,7 @@ import pygraphviz as pgv
 
 
 from visualize import draw_ast
-from clexer import tokens
+from clexer import tokens,print_lexeme
 
 
 
@@ -45,10 +45,12 @@ class Node:
 
 start = 'program' #start action
 
+#Node
 def p_program(p):
     'program : translation_unit'
     p[0] = Node("program",children=p[1])
 
+#List
 def p_translation_unit(p):
     '''
     translation_unit : external_declaration
@@ -56,13 +58,15 @@ def p_translation_unit(p):
     '''
     p[0] = p[1] if len(p)==2 else p[1]+p[2]
 
+#List
 def p_external_declaration(p):
     '''
     external_declaration : function_definition
                          | declaration
     '''
     p[0] = [p[1]]
-##########################################
+
+#Node
 def p_function_definition_1(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
@@ -74,6 +78,7 @@ def p_function_definition_1(p):
     else:
         p[0] = Node("function_defn",children=[p[2],p[3]])
     
+#Node
 def p_function_definition_2(p):
     '''
     function_definition : declarator declaration_list compound_statement
@@ -86,6 +91,7 @@ def p_function_definition_2(p):
         p[0] = Node("function_defn",children=[p[1],p[2]])
 
 # add all constants
+#Node
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
@@ -102,10 +108,15 @@ def p_primary_expression(p):
                        | FALSE
     '''
     if len(p) == 2:
-        p[0] = Node("primary_exp", value = p[1], children=None)
+        if p.slice[-1].type == "IDENTIFIER":
+            p[0] = Node("id", value = p[1], children=None)
+        else:
+            p[0] = Node("constant", value = p[1], children=None)
     else:
-        p[0] = Node("primary_exp", value="()", children=[p[2]])
+        # p[0] = Node("primary_exp", value="()", children=[p[2]])
+        p[0] = p[2]
 
+#Node
 def p_postfix_expression(p):
     '''
     postfix_expression : primary_expression
@@ -130,6 +141,7 @@ def p_postfix_expression(p):
     else:
         p[0] = Node("unary_op",'p'+p[2],[p[1]])
 
+#Node
 def p_argument_expression_list(p):
     '''
     argument_expression_list : assignment_expression
@@ -141,6 +153,8 @@ def p_argument_expression_list(p):
         p[1].addChild(p[3])
         p[0] = p[1]
 
+
+#Node
 def p_unary_expression(p):
     '''
     unary_expression : postfix_expression
@@ -155,6 +169,7 @@ def p_unary_expression(p):
     else:
         p[0] = Node("unary_op",p[1],children = [p[2]] if len(p) == 3 else [p[3]])
 
+#String
 def p_unary_operator(p):
     '''
     unary_operator : BITWISE_AND
@@ -166,6 +181,7 @@ def p_unary_operator(p):
     '''
     p[0] = p[1]
 
+#Node
 def p_cast_expression(p):
     '''
     cast_expression : unary_expression
@@ -176,6 +192,7 @@ def p_cast_expression(p):
     else:
         p[0] = Node("cast",p[2].type,children=[p[4]])
 
+#Node
 def p_multiplicative_expression(p):
     '''
     multiplicative_expression : cast_expression
@@ -189,7 +206,7 @@ def p_multiplicative_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_additive_expression(p):
     '''
     additive_expression : multiplicative_expression
@@ -201,6 +218,7 @@ def p_additive_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
+#Node
 def p_shift_expression(p):
     '''
     shift_expression : additive_expression
@@ -213,7 +231,7 @@ def p_shift_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_relational_expression(p):
     '''
     relational_expression : shift_expression
@@ -228,7 +246,7 @@ def p_relational_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
         
-
+#Node
 def p_equality_expression(p):
     '''
     equality_expression : relational_expression
@@ -241,7 +259,7 @@ def p_equality_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_and_expression(p):
     '''
     and_expression : equality_expression
@@ -253,7 +271,7 @@ def p_and_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_exclusive_or_expression(p):
     '''
     exclusive_or_expression : and_expression
@@ -265,7 +283,7 @@ def p_exclusive_or_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_inclusive_or_expression(p):
     '''
     inclusive_or_expression : exclusive_or_expression
@@ -277,6 +295,7 @@ def p_inclusive_or_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
+#Node
 def p_logical_and_expression(p):
     '''
     logical_and_expression : inclusive_or_expression
@@ -288,7 +307,7 @@ def p_logical_and_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_logical_or_expression(p):
     '''
     logical_or_expression : logical_and_expression
@@ -300,7 +319,7 @@ def p_logical_or_expression(p):
     else:
         p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
-
+#Node
 def p_conditional_expression(p):
     '''
     conditional_expression : logical_or_expression
@@ -312,6 +331,7 @@ def p_conditional_expression(p):
     else:
         p[0] = Node("ternary_op",children = [p[1],p[3],p[5]])
 
+#Node
 def p_assignment_expression(p):
     '''
     assignment_expression : conditional_expression
@@ -323,6 +343,7 @@ def p_assignment_expression(p):
     else:
         p[0] = Node("assignment",p[2],children = [p[1],p[3]])
 
+#String
 def p_assignment_operator(p):
     '''
     assignment_operator : ASSIGNMENT
@@ -339,6 +360,7 @@ def p_assignment_operator(p):
     '''
     p[0] = p[1]
 
+# Node
 def p_expression(p):
     '''
     expression : assignment_expression
@@ -353,14 +375,15 @@ def p_expression(p):
         else:
             p[0] = Node("expression",children=[p[1],p[3]])
     
-
+#Node
 def p_constant_expression(p):
     '''
     constant_expression : conditional_expression
     '''
     p[0] = p[1]
 
-########################################
+
+#Node(can be None)
 def p_declaration(p):
     '''
     declaration : declaration_specifiers SEMI_COLON
@@ -371,6 +394,7 @@ def p_declaration(p):
     else:
         p[0] = None
 
+# Node
 def p_declaration_specifiers(p):
     '''
     declaration_specifiers : storage_class_specifier
@@ -384,6 +408,7 @@ def p_declaration_specifiers(p):
     p[0] = p[1]
         
 
+# list (can be None)
 def p_init_declarator_list(p):
     '''
     init_declarator_list : init_declarator
@@ -397,6 +422,7 @@ def p_init_declarator_list(p):
         else:
             p[0] = p[3] if p[1] == None else p[1] + p[3]
 
+# list (can be None)
 def p_init_declarator(p):
     '''
     init_declarator : declarator
@@ -407,6 +433,7 @@ def p_init_declarator(p):
     else:
         p[0] = [Node("assignment",p[2],children = [p[1],p[3]])]
 
+# Node
 def p_storage_class_specifier(p):
     '''
     storage_class_specifier : TYPEDEF
@@ -417,6 +444,7 @@ def p_storage_class_specifier(p):
     '''
     p[0] = Node("storage_class_specifier",p[1])
 
+# Node
 def p_type_specifier(p):
     '''
     type_specifier : VOID
@@ -434,7 +462,7 @@ def p_type_specifier(p):
     '''
     p[0] = Node("type_specifier",p[1])
 
-
+# String
 def p_struct_or_union_specifier(p):
     '''
     struct_or_union_specifier : struct_or_union IDENTIFIER L_BRACES struct_declaration_list R_BRACES
@@ -443,25 +471,31 @@ def p_struct_or_union_specifier(p):
     '''
     p[0] = p[1]
 
+# String
 def p_struct_or_union(p):
     '''
     struct_or_union : STRUCT
 	                | UNION
     '''
-    p[0] = Node(p[1])
+    p[0] = p[1]
 
 
+# None
 def p_struct_declaration_list(p):
     '''
     struct_declaration_list : struct_declaration
 	                        | struct_declaration_list struct_declaration
     '''
     p[0] = None
+
+# None
 def p_struct_declaration(p):
     '''
     struct_declaration : specifier_qualifier_list struct_declarator_list SEMI_COLON
     '''
     p[0] = None
+
+#list
 def p_specifier_qualifier_list(p):
     '''
     specifier_qualifier_list : type_specifier specifier_qualifier_list
@@ -474,12 +508,15 @@ def p_specifier_qualifier_list(p):
     else:
         p[0] = [p[1]]+p[2]
 
+# None
 def p_struct_declarator_list(p):
     '''
     struct_declarator_list : struct_declarator
 	                       | struct_declarator_list COMMA struct_declarator
     '''
     p[0] = None
+
+# None    
 def p_struct_declarator(p):
     '''
     struct_declarator : declarator
@@ -487,25 +524,33 @@ def p_struct_declarator(p):
                       | declarator COLON constant_expression
     '''
     p[0] = None
+
+#string
 def p_enum_specifier(p):
     '''
     enum_specifier : ENUM L_BRACES enumerator_list R_BRACES
                    | ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
                    | ENUM IDENTIFIER
     '''
-    p[0] = Node("ENUM",p[1])
+    p[0] = p[1]
+
+# None
 def p_enumerator_list(p):
     '''
     enumerator_list : enumerator
 	                | enumerator_list COMMA enumerator
     '''
     p[0] = None
+
+# None
 def p_enumerator(p):
     '''
     enumerator : IDENTIFIER
 	           | IDENTIFIER ASSIGNMENT constant_expression
     '''
     p[0] = None
+
+# Node
 def p_type_qualifier(p):
     '''
     type_qualifier : CONST
@@ -513,6 +558,7 @@ def p_type_qualifier(p):
     '''
     p[0] = Node("type_qualifier",p[1])
 
+# Node
 def p_declarator(p):
     '''
     declarator : pointer direct_declarator
@@ -523,11 +569,12 @@ def p_declarator(p):
     else:
         p[0] = Node("pointer",children=p[1]+[p[2]])
 
+# Node
 def p_direct_declarator(p):
     '''
     direct_declarator : IDENTIFIER
                       | L_PAREN declarator R_PAREN
-                      | direct_declarator L_SQBR constant_expression R_SQBR
+                      | direct_declarator L_SQBR assignment_expression R_SQBR
                       | direct_declarator L_SQBR R_SQBR
                       | direct_declarator L_PAREN parameter_type_list R_PAREN
                       | direct_declarator L_PAREN identifier_list R_PAREN
@@ -542,7 +589,7 @@ def p_direct_declarator(p):
     else:
         p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
 
-
+# List
 def p_pointer(p):
     '''
     pointer : MULTIPLY
@@ -553,7 +600,8 @@ def p_pointer(p):
     p[0] = [Node("pointer",p[1])]
     for i in range(2,len(p)):
         p[0] += p[i]
-    
+
+# List 
 def p_type_qualifier_list(p):
     '''
     type_qualifier_list : type_qualifier
@@ -561,6 +609,7 @@ def p_type_qualifier_list(p):
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
 
+# Node
 def p_parameter_type_list(p):
     '''
     parameter_type_list : parameter_declaration
@@ -574,7 +623,7 @@ def p_parameter_type_list(p):
             p[0] = p[1]
         else:
             p[0] = Node("parameter_type_list",children=[p[1],p[3]])
-    
+# Node 
 def p_parameter_declaration(p):
     '''
     parameter_declaration : declaration_specifiers declarator
@@ -589,6 +638,7 @@ def p_parameter_declaration(p):
         else:
             p[0].addChild(p[2])
 
+# Node
 def p_identifier_list(p):
     '''
     identifier_list : IDENTIFIER
@@ -604,7 +654,7 @@ def p_identifier_list(p):
             p[1].addChild(c)
             p[0] = p[1]
 
-
+# Node
 def p_type_name(p):
     '''
     type_name : specifier_qualifier_list
@@ -615,6 +665,7 @@ def p_type_name(p):
         c += p[i]
     p[0] = Node("type_name",children=c)
 
+# List
 def p_abstract_declarator(p):
     '''
     abstract_declarator : pointer
@@ -625,13 +676,14 @@ def p_abstract_declarator(p):
     for i in range(1,len(p)):
         p[0] += p[i]
 
+# List
 def p_direct_abstract_declarator(p):
     '''
     direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
 	                           | L_SQBR R_SQBR
-	                           | L_SQBR constant_expression R_SQBR
+	                           | L_SQBR assignment_expression R_SQBR
 	                           | direct_abstract_declarator L_SQBR R_SQBR
-                               | direct_abstract_declarator L_SQBR constant_expression R_SQBR
+                               | direct_abstract_declarator L_SQBR assignment_expression R_SQBR
                                | L_PAREN R_PAREN
                                | L_PAREN parameter_type_list R_PAREN
                                | direct_abstract_declarator L_PAREN R_PAREN
@@ -645,7 +697,7 @@ def p_direct_abstract_declarator(p):
             p[0] += p[i]
 
 
-#####################################################  
+# Node
 def p_initializer(p):
     '''
     initializer : assignment_expression
@@ -657,6 +709,7 @@ def p_initializer(p):
     else:
         p[0] = Node("init_list","{}",p[2])
 
+# List
 def p_initializer_list(p):
     '''
     initializer_list : initializer
@@ -664,6 +717,7 @@ def p_initializer_list(p):
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
 
+# Node
 def p_statement(p):
     '''
     statement : labeled_statement
@@ -675,6 +729,7 @@ def p_statement(p):
     '''
     p[0] = p[1]
 
+# Node
 def p_labeled_statement_1(p):
     '''
     labeled_statement : IDENTIFIER COLON statement
@@ -682,6 +737,7 @@ def p_labeled_statement_1(p):
     c = Node("id",p[1])
     p[0] = Node("label",children=[c,p[3]])
 
+# Node
 def p_labeled_statement_2(p):
     '''
     labeled_statement : CASE constant_expression COLON statement
@@ -692,59 +748,41 @@ def p_labeled_statement_2(p):
     else:
         p[0] = Node("default",children=[p[3]])
 
+# Node
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
-	                   | L_BRACES statement_list_with_comment R_BRACES
+	                   | L_BRACES block_item_list R_BRACES
     '''
     if len(p) == 3:
         p[0] = Node("compound_statement","{}")
-    # elif len(p) == 4:
-    #     p[0] = Node("compound_statement","{}",children=p[2])
     else:
         p[0] = Node("compound_statement","{}",children=p[2])
 
-
+# Node
 def p_declaration_list(p):
     '''
     declaration_list : declaration
 	                 | declaration_list declaration
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
-
-
-def p_statement_list_with_comment(p):
+# List
+def p_block_item_list(p):
     '''
-    statement_list_with_comment : BLOCK_COMMENT
-                                | INLINE_COMMENT
-                                | statement_list
-                                | statement_list_with_comment BLOCK_COMMENT
-                                | statement_list_with_comment INLINE_COMMENT
-                                | statement_list_with_comment statement_list
-    '''
-    if len(p) == 2:
-        if p.slice[0] == 'statement_list':
-            p[0] = p[1]
-        elif p.slice[-1].type == 'BLOCK_COMMENT':
-            p[0] = []
-        else:
-            p[0] =[]
-    elif p.slice[-1] == 'statement_list':
-        p[0] = p[1] + p[2]
-
-
-    # print(p[1], type(p[1]), p.slice[-1].type)
-
-def p_statement_list(p):
-    '''
-    statement_list : statement
-                   | declaration
-	               | statement_list statement
-                   | statement_list declaration
+    block_item_list : block_item
+                   | block_item_list block_item
     '''
     p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
-        
 
+# Node       
+def p_block_item(p):
+    '''
+    block_item : statement
+                | declaration
+    '''
+    p[0] = p[1]
+
+# Node
 def p_expression_statement(p):
     '''
     expression_statement : SEMI_COLON
@@ -755,6 +793,7 @@ def p_expression_statement(p):
     else:
         p[0] = p[1]
 
+# Node
 def p_selection_statement(p):
     '''
     selection_statement : IF L_PAREN expression R_PAREN statement
@@ -767,6 +806,7 @@ def p_selection_statement(p):
         else:
             p[0] = Node("if_else",children=[p[3],p[5],p[7]])
 
+# Node
 def p_iteration_statement(p):
     '''
     iteration_statement : WHILE L_PAREN expression R_PAREN statement
@@ -787,7 +827,7 @@ def p_iteration_statement(p):
             child = [p[3],p[4],p[5],p[7]]
         p[0] = Node("iteration_statement","for",child)
     
-
+# Node
 def p_jump_statement(p):
     '''
     jump_statement : GOTO IDENTIFIER SEMI_COLON
@@ -803,8 +843,12 @@ def p_jump_statement(p):
     else:
         p[0] = Node("Jump Statment",p[1])
 
- 
-######################################################
+def p_error(t):
+    if t is None:
+        print("End of File Reached. More Input required")    
+    print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
+
+
 
 def main():
     """Driver code for Abstract syntax tree 
@@ -815,6 +859,7 @@ def main():
     arg_parser.add_argument('source_code',help="source code file location")
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
     arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
+    arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
     args = arg_parser.parse_args()
 
     try:
@@ -824,9 +869,11 @@ def main():
         print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
         sys.exit(-1)
 
-
+    if args.l:
+        print_lexeme(source_code)
 
     parser = yacc.yacc()
+    lexer.lexer.filename = args.source_code
     parser.parse(source_code, lexer = lexer.lexer)
 
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
