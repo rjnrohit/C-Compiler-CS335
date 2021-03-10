@@ -859,6 +859,7 @@ def main():
     arg_parser = argparse.ArgumentParser(description="Lexer for Source Language C")
     arg_parser.add_argument('source_code',help="source code file location")
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
+    arg_parser.add_argument('-f',help="take the name of png file", default="ast.png")
     arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
     arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
     args = arg_parser.parse_args()
@@ -875,15 +876,17 @@ def main():
 
     parser = yacc.yacc()
     lexer.lexer.filename = args.source_code
+    
     parser.parse(source_code, lexer = lexer.lexer)
 
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
     # print(args)
     if args.p:
-        Graph.draw(args.o + ".png", format='png')
+        Graph.draw(args.f, format='png')
         print(Graph.string())
         return
-    Graph.draw(args.o + ".png", format='png')
+
+    Graph.draw(args.f, format='png')
 
     file = open(args.o, 'w')
     file.write(Graph.string())

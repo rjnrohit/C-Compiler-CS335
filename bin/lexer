@@ -251,12 +251,12 @@ def t_newline(t):
 
 # t_INLINE_COMMENT = r'//.*'
 
-def t_ignore_INLINE_COMMENT(t):
+def t_INLINE_COMMENT(t):
     r'//.*'
     t.lexer.lineno += t.value.count('\n')
     pass
 
-def t_ignore_BLOCK_COMMENT(t):
+def t_BLOCK_COMMENT(t):
     r'/\*(.|\n)*?\*/'
     t.lexer.lineno += t.value.count('\n')
     pass
