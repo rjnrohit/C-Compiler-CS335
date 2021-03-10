@@ -189,7 +189,7 @@ def t_INT_CONSTANT(t):
 
 
 t_CHAR_CONSTANT = r"\'([^\\\n]|(\\.))?\'"
-t_STR_CONSTANT = r"[a-zA-Z_]?\"([q\\\n]|(\\.))*?\""
+t_STR_CONSTANT = r"[a-zA-Z_]?\"([^\\\n]|(\\.))*?\""
 
 #seperators
 t_SEMI_COLON = r';'
