@@ -21,7 +21,7 @@ int main(){
     int* pointer1 = NULL;
     int **pointer2 = &pointer1;
     int hex_num = 0x123ffddffcd;
-    *pointer1 = 1e144;
+    *pointer1 = (float *)1e144;
     bool logic1 = true;
     hex_num << 1;
     logic1 = true && false || (logic1 ^0xffffff );
