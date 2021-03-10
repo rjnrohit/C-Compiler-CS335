@@ -144,6 +144,7 @@ class Tokens:
 reserved = Tokens().reserved    #dict of reserved keywords
 tokens = Tokens().tokens        #list of all tokens
 lex.LexToken.lexeme=""          #create a new attribute for token class
+lex.Lexer.filename=""           #create a new attribute for Lexer class
 ######## regular expressions ###################
 """
 Regular expression defined using the prefix 't_' followed by token name
@@ -250,15 +251,15 @@ def t_newline(t):
 
 # t_INLINE_COMMENT = r'//.*'
 
-def t_INLINE_COMMENT(t):
+def t_ignore_INLINE_COMMENT(t):
     r'//.*'
     t.lexer.lineno += t.value.count('\n')
-    return t
+    pass
 
-def t_BLOCK_COMMENT(t):
+def t_ignore_BLOCK_COMMENT(t):
     r'/\*(.|\n)*?\*/'
     t.lexer.lineno += t.value.count('\n')
-    return t
+    pass
 
 t_ignore = ' \t'
 
@@ -278,6 +279,19 @@ def find_column(token, input):
 lexer = lex.lex()
 ###################################
 
+def print_lexeme(code):
+    
+    lexer.input(code)                   #read input from file
+    print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
+    for tok in lexer:
+        if not tok:
+            continue
+        if tok.lexeme:
+            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,code))))
+        else:
+            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok,code))))
+
+
 
 def main():
     """The Driver function will print
@@ -292,21 +306,13 @@ def main():
     try:
         # source_code = open(sys.argv[1],"r").read()
         source_code = open(args.source_code,"r").read()
+        lexer.filename = args.source_code
     except FileNotFoundError:
         print("source file cannot be open/read.\nCheck the file name or numbers of arguments!!")
         sys.exit(-1)
-    lexer.input(source_code)                   #read input from file
-    if(args.t): print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
-    for tok in lexer:
-        if not tok:
-            continue
-        if(args.t): 
-            if tok.lexeme:
-                print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,source_code))))
-            else:
-                print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok, source_code))))
+    if(args.t): print_lexeme(source_code)
 
-
+    
 if __name__ == "__main__":
     main()
 

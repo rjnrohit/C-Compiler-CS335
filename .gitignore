@@ -1,5 +1,7 @@
 .vscode
 src/__pycache__/*
 src/__pycache__
+bin/__pycache__/*
+bin/__pycache__
 *.dot
 *.png
