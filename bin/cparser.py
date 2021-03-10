@@ -2,6 +2,7 @@
 """This Script for Syntax Analysis of C code
 provided by user"""
 
+from platform import system_alias
 import sys
 import ply.lex as lex
 import ply.yacc as yacc
@@ -583,8 +584,8 @@ def p_direct_declarator(p):
     '''
     if len(p) == 2:
         p[0] = Node("id",p[1])
-    elif p[2] == '(':
-        p[0] = p[1]
+    elif p[1] == '(':
+        p[0] = p[2]
     elif len(p) == 4:
         p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
     else:
@@ -848,6 +849,7 @@ def p_error(t):
     if t is None:
         print("End of File Reached. More Input required")    
     print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
+    exit(-1)
 
 
 
