@@ -585,10 +585,12 @@ def p_direct_declarator(p):
         p[0] = Node("id",p[1])
     elif p[1] == '(':
         p[0] = p[2]
-    elif len(p) == 4:
-        p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
+    # elif len(p) == 4:
+    #     p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
+    # else:
+    #     p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
     else:
-        p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
+        p[0] = p[1]
 
 # List
 def p_pointer(p):
