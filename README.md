@@ -3,6 +3,9 @@ Course Project , C-compiler implemented in Python , CS335, IIT Kanpur
 <br>
 <!-- [Milestone1 Report (Latex)](https://github.com/RohitRanjangit/C-Compiler-CS335/blob/main/Documentation/CS335_Project_Milestone1.pdf) -->
 [Milestone1 Report](reports/CS335_Project_Milestone1.pdf)
+[Milestone2 Report](reports/CS335_Project_Milestone2.pdf)
+[Milestone3 Report](reports/CS335_Project_Milestone3.pdf)
+[Milestone4 Report](reports/CS335_Project_Milestone4.pdf)
 
 environment-setup:
 
