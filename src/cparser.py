@@ -12,33 +12,7 @@ import pygraphviz as pgv
 
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
-
-
-
-#####################AST Section#####################
-class Node:
-    count_nodes = 0
-    nodes = []
-    def __init__(self,type,value=None,children=None):
-        self.id = Node.count_nodes
-        Node.count_nodes += 1
-        Node.nodes.append(self)
-        self.type = type
-        if children:
-            self.children = children
-        else:
-            self.children = []
-        self.value = value
-
-    def addChild(self,node):
-        self.children.append(node)
-
-    def getChild(self):
-        return self.children
-        
-#####################################################
-
-
+from structure import Node
 
 #####################Grammar section #################
 
@@ -67,28 +41,24 @@ def p_external_declaration(p):
     p[0] = [p[1]]
 
 #Node
-def p_function_definition_1(p):
+def p_function_definition(p):
     '''
     function_definition : declaration_specifiers declarator declaration_list compound_statement
 			            | declaration_specifiers declarator compound_statement
-    
-    '''
-    if len(p) == 5:
-        p[0] = Node("function_defn",children=[p[2],p[4]])
-    else:
-        p[0] = Node("function_defn",children=[p[2],p[3]])
-    
-#Node
-def p_function_definition_2(p):
-    '''
-    function_definition : declarator declaration_list compound_statement
+                        | declarator declaration_list compound_statement
 			            | declarator compound_statement
     
     '''
-    if len(p) == 4:
-        p[0] = Node("function_defn",children=[p[1],p[3]])
+    if p.slice[1].type == 'declaration_specifiers':
+        if len(p) == 5:
+            p[0] = Node("function_defn",children=[p[2],p[4]])
+        else:
+            p[0] = Node("function_defn",children=[p[2],p[3]])
     else:
-        p[0] = Node("function_defn",children=[p[1],p[2]])
+        if len(p) == 4:
+            p[0] = Node("function_defn",children=[p[1],p[3]])
+        else:
+            p[0] = Node("function_defn",children=[p[1],p[2]])
 
 # add all constants
 #Node
@@ -733,20 +703,15 @@ def p_statement(p):
     p[0] = p[1]
 
 # Node
-def p_labeled_statement_1(p):
+def p_labeled_statement(p):
     '''
     labeled_statement : IDENTIFIER COLON statement
-    '''
-    c = Node("id",p[1])
-    p[0] = Node("label",children=[c,p[3]])
-
-# Node
-def p_labeled_statement_2(p):
-    '''
-    labeled_statement : CASE constant_expression COLON statement
+                      | CASE constant_expression COLON statement
 	                  | DEFAULT COLON statement
     '''
-    if len(p) == 5:
+    if p.slice[1].type == 'IDENTIFIER':
+        p[0] = Node("label",children=[Node("id",p[1]),p[3]])
+    elif p.slice[1].type == 'CASE':
         p[0] = Node("case",children=[p[2],p[4]])
     else:
         p[0] = Node("default",children=[p[3]])
