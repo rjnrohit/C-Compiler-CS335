@@ -94,7 +94,7 @@ class PointerType(Type):
     def update_width(self):
         self.width = 8
         matrix_size = 1
-        if hasattr(self.array_size):
+        if hasattr(self.array_size, '__iter__'):
             for s in self.array_size:
                 matrix_size *= s
         else:
@@ -215,7 +215,7 @@ class SymbolTable:
             self.add_scope(name = name, parent=self, symbol_table = type.symbol_table)
 
         #TODO check error if name already in table
-        self.table[name] = Entry(name=name, type = type , offset = offset, width = width, symbol_table = self, token_object = token_object)
+        self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object)
 
         if type.class_type != "FunctionType":
             #update offset
