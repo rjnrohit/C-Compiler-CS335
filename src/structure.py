@@ -73,6 +73,9 @@ class BasicType(Type):
         res  = str(self.type)
         return res
     
+    def __repr__(self) -> str:
+        return self.__str__()
+    
     def update_width(self):
         self.width = self.size_dict[type]
         return self.width
@@ -91,6 +94,9 @@ class PointerType(Type):
         res = "pointer of (" + str(self.type) + ")"
         return res
     
+    def __repr__(self) -> str:
+        return self.__str__()
+    
     def update_width(self):
         self.width = 8
         matrix_size = 1
@@ -99,7 +105,7 @@ class PointerType(Type):
                 matrix_size *= s
         else:
             matrix_size *= self.array_size
-        self.width += matrix_size*self.size_dict[type]
+        self.width += matrix_size*self.size_dict[self.type]
         return self.width
 
 class StructType(Type):
@@ -110,11 +116,14 @@ class StructType(Type):
         self.is_struct = True
         self.name = name
         self.symbol_table = symbol_table
-        self.type = "struct:" + str(self.name)
+        self.type = "struct " + str(self.name)
         self.width = self.update_width()
 
     def __str__(self) -> str:
         return self.type
+    
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def update_width(self):
         self.width = self.symbol_table.width
@@ -122,21 +131,29 @@ class StructType(Type):
 
 class FunctionType(Type):
 
-    def __init__(self, return_type = None, param__dict = None, symbol_table = None):
+    def __init__(self, return_type = None, param_dict = None, symbol_table = None):
         super().__init__()
         self.class_type = "FunctionType"
         self.is_function = True
         self.return_type = return_type
         self.symbol_table = symbol_table
-        self.type = str(self.return_type) + " function("  +str(param__dict)+")"
+        self.param_dict = param_dict
+        self.type = str(self.return_type) + " function("  +str(param_dict)+")"
         self.width = self.update_width()
 
     def __str__(self) -> str:
         return self.type
+    
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def update_width(self):
         self.width = self.symbol_table.width
         return self.width
+    
+    def add_param_dict(self, param_dict=None):
+        self.param_dict = param_dict
+        return self.param_dict
 
 #=================================== SYMBOL TABLE ==================================#
 
@@ -152,6 +169,17 @@ class Entry:
         self.offset = self.symbol_table.offset
         self.width = self.type.width
 
+    def __str__(self):
+        res = "Entry("
+        res += "name:" + str(self.name)
+        res += ",type:" + str(self.type)
+        res +=",symbol_table_id:" + str(self.symbol_table.id)
+        res += ")\n"
+        return res
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
 #! The Symbol Table implemented is Hierarchical symbol table
 # every scope has it's own symbol table
 # It has id(unique), name(unique), dict of entries with key id_name
@@ -163,7 +191,7 @@ class Entry:
 class SymbolTable:
     id_count =0
     symbol_table_dict= {}
-    def __init__(self, parent = None, id =None, name = None, base =0):
+    def __init__(self, parent = None, id =None, name = None,scope_type = None, base =0):
         if parent:
             assert isinstance(parent, SymbolTable) 
 
@@ -185,6 +213,7 @@ class SymbolTable:
         self.width = 0
         self.base = base
         self.offset = 0
+        self.scope_type = scope_type
 
         if name:
             self.name = name
@@ -199,11 +228,18 @@ class SymbolTable:
         res = "SymbolTable("
         res += "id:" + str(self.id)
         res += ",name:" + str(self.name)
-        res += ",parent:" + str(self.parent)
+        res += ",scope_type:" + str(self.scope_type)
+        if self.parent:
+            res += ",parent_id:" + str(self.parent.id)
+        else:
+            res += ",parent:" + str(self.parent)
         res += ",table:" + str(self.table)
-        res += ", chilren:" + str(self.chilren)
-        res +=")"
+        res += ",scopes:" + str(self.scopes)
+        res += ")\n"
         return res
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def add_entry(self,name = None, type = None, token_object = None):
 
@@ -258,13 +294,23 @@ class SymbolTable:
         symbol_table =self
         while symbol_table != None and name not in symbol_table.table:
             symbol_table = symbol_table.parent
-        return symbol_table
+        
+        if symbol_table is None:
+            #TODO throw error
+            return None
+
+        return symbol_table.table[name]
 
     def look_up_struct(self, name = None):
         symbol_table =self
         while symbol_table != None and name not in symbol_table.struct_table:
             symbol_table = symbol_table.parent
-        return symbol_table
+        
+        if symbol_table is None:
+            #TODO throw error
+            return None
+
+        return symbol_table.struct_table[name]
     
     def set_parent(self, parent = None):
         #! CAUTION
@@ -286,7 +332,7 @@ class SymbolTable:
         return self.offset 
 
     def update_width(self, entry = None):
-        self.widht += entry.type.width
+        self.width += entry.type.width
         return self.width
 
 #=================================== ERRORS ==================================#
