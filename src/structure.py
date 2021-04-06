@@ -1,5 +1,3 @@
-#Node to represent entry in a symbol table
-#TODO Modify node 
 class Node:
     count_nodes = 0
     nodes = []
@@ -152,7 +150,7 @@ class Entry:
         self.token_object = token_object
 
         self.offset = self.symbol_table.offset
-        self.width = self.symbol_table.width
+        self.width = self.type.width
 
 #! The Symbol Table implemented is Hierarchical symbol table
 # every scope has it's own symbol table
@@ -165,7 +163,7 @@ class Entry:
 class SymbolTable:
     id_count =0
     symbol_table_dict= {}
-    def __init__(self, parent = None, id =None, name = None, offset =0):
+    def __init__(self, parent = None, id =None, name = None, base =0):
         if parent:
             assert(isinstance(parent, SymbolTable))
 
@@ -185,7 +183,8 @@ class SymbolTable:
         self.scopes = {}
 
         self.width = 0
-        self.offset = offset
+        self.base = base
+        self.offset = 0
 
         if name:
             self.name = name
