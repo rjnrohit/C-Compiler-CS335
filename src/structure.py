@@ -239,3 +239,28 @@ class SymbolTable:
 
     def update_offset(self):
         pass
+
+
+class Errors:
+    error_id = 0
+    error_list = []
+
+    def __init__(self, errorType = None, errorText = None):
+        self.id = Errors.error_id
+        self.errorType = errorType
+        self.errorText = errorText
+
+        Errors.error_list.append(self)
+        Errors.error_id += 1
+
+    def get_error(self, id=None):
+        return Errors.error_list[id]
+    
+    def get_all_error(self):
+        return Errors.error_list
+
+
+    def __str__(self):
+        res  = "Error("
+        res += self.errorType + ","
+        res += self.errorText + ")"
