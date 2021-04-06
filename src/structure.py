@@ -35,66 +35,83 @@ class Node:
 
 #=================================== TYPES CLASS ===================================#
 
-#! There are four class of types: 
+class Type:
+    def __init__(self):
+        self.class_type = None
+        self.is_basic = False
+        self.is_pointer = False
+        self.is_struct = False
+        self.is_function = False
+        
+
+#! There are four class of entries: 
 #! i)BasicType (include :int, float, double, char..etc)
 #! ii)PointerType
 #! iii)StructType
 #! iv)FunctionType
-#TODO EnumType, TypeDefs
+#TODO EnumType, TypeDef
 
-class BasicType:
-    class_type = "BasicType"
-    def __init__(self, name = None, type = None,width =0, offset = 0, base = None):
-        self.name = name
+class BasicType(Type):
+
+    def __init__(self, type = None):
+        super().__init__()
+        self.class_type = "BasicType"
+        self.is_basic = True
         self.type = type
-        self.offset = offset
-        self.base = base
-        self.width = width
 
     def __str__(self) -> str:
-        #TODO
-        pass
+        res  = str(self.type)
+        return res
 
-class PointerType:
-    class_type = "PointerType"
-    def __init__(self, name = None, type = None,width =0, offset = 0, base = None):
-        self.name = name
+class PointerType(Type):
+
+    def __init__(self, type = None):
+        super().__init__()
+        self.class_type = "PointerType"
+        self.is_pointer = True
         self.type = type
-        self.offset = offset
-        self.base = base
-        self.width = width
+
+    def __str__(self) -> str:
+        res = "pointer of (" + str(self.type) + ")"
+        return res
+
+class StructType(Type):
     
-    def __str__(self) -> str:
-        #TODO
-        pass
-
-class StructType:
-    class_type = "Struct Type"
-    def __init__(self, name = None, type = None,width =0, offset = 0, base = None):
+    def __init__(self, name = None, symbol_table = None):
+        super().__init__()
+        self.class_type = "StructType"
+        self.is_struct = True
         self.name = name
-        self.type = type
-        self.offset = offset
-        self.base = base
-        self.width = width
-    
-    def __str__(self) -> str:
-        #TODO
-        pass
+        self.symbol_table = symbol_table
+        self.type = "struct:" + str(self.name)
 
-class FunctionType:
-    class_type = "FunctionType"
-    def __init__(self, name = None, type = None,width =0, offset = 0, base = None):
-        self.name = name
-        self.type = type
-        self.offset = offset
-        self.base = base
-        self.width = width
-    
     def __str__(self) -> str:
-        #TODO
-        pass
+        return self.type
+
+class FunctionType(Type):
+
+    def __init__(self, return_type = None, param__dict = None, symbol_table = None):
+        super().__init__()
+        self.class_type = "FunctionType"
+        self.is_function = True
+        self.return_type = return_type
+        self.symbol_table = symbol_table
+        self.type = str(self.return_type) + " function("  +str(param__dict)+")"
+
+    def __str__(self) -> str:
+        return self.type
 
 #=================================== SYMBOL TABLE ==================================#
+
+#! class corresponding to symbol table entry
+class Entry:
+    def __init__(self, name = None, type = None, offset = None, width = None,symbol_table = None, token_object=None):
+        self.name = name
+        self.type = type
+        self.offset = offset
+        self.width = width
+        self.symbol_table = symbol_table
+        self.token_object = token_object
 
 #! The Symbol Table implemented is Hierarchical symbol table
 # every scope has it's own symbol table
@@ -102,6 +119,7 @@ class FunctionType:
 # It has attribute children which stores the chilren symbol tables
 # It has table attribute which is of type: dict will store the entries
 # It has scopes attribute which is an dict of symbol_tables with key scope_id
+# It has struct_table attribute which will store all struct defined things #TODO modify to support typedef also
 
 class SymbolTable:
     id_count =0
@@ -119,6 +137,9 @@ class SymbolTable:
             SymbolTable.id_count += 1
 
         self.table = {}
+        self.struct_table = {}
+
+        #TODO enum table for enum
         self.scopes_list= []
         self.scopes = {}
 
@@ -131,6 +152,7 @@ class SymbolTable:
             self.name = '_temp_name_' + str(self.id)
 
         SymbolTable.symbol_table_dict[id] = self
+
         #TODO add dict for every type class
 
     def __str__(self):
@@ -144,19 +166,58 @@ class SymbolTable:
         res +=")"
         return res
 
-    def add_entry(self,table_id = None,table = None):
-        pass
+    def add_entry(self,name = None, type = None, offset = 0, width = 0, token_object = None):
 
-    def add_scope(self, name = None, parent = None):
+        assert(name, "name not provided for entry")
+        assert(type is not None, "type not specified for entry")
+        
+        if type.class_type == "FunctionType":
+            self.add_scope(name = name, parent=self, symbol_table = type.symbol_table)
+
+        #TODO check error if name already in table
+        self.table[name] = Entry(name=name, type = type , offset = offset, width = width, symbol_table = self, token_object = token_object)
+        return self.table[name]
+    
+    def add_struct_entry(self, name = None, symbol_table = None):
+        assert(name, "name not provided for entry")
+        assert(symbol_table is not None, "symbol table not given for struct entry")
+
+        
+        self.add_scope(name = name, parent=self, symbol_table=symbol_table)
+
+        #TODO check error if name already in table
+        self.struct_table[name] = StructType(name = name, symbol_table=symbol_table)
+        return self.struct_table[name]
+        
+
+    def add_scope(self, name = None, parent = None, symbol_table = None):
         #! CAUTION
         #Python always return the object itself (not a copy)
         #Any changes to the returned object will reflect to original object
-        self.scopes_list.append(SymbolTable(name, parent))
-        self.scopes[self.scopes_list[-1].name] = self.scopes_list[-1]
+
+        if symbol_table is None:
+            self.scopes_list.append(SymbolTable(name, parent))
+        else:
+            self.scopes_list.append(symbol_table)
+        
+        if name is None:
+            self.scopes[self.scopes_list[-1].name] = self.scopes_list[-1]
+        else:
+            self.scopes[name] = self.scopes_list[-1]
+        
         return self.scopes_list[-1]
 
-    def look_up(self, name = None, type = None, class_type = None):
-        pass
+    def look_up(self, name = None):
+        symbol_table =self
+        while symbol_table != None and name not in symbol_table.table:
+            symbol_table = symbol_table.parent
+        return symbol_table
+
+    def look_up_struct(self, name = None):
+        symbol_table =self
+        while symbol_table != None and name not in symbol_table.struct_table:
+            symbol_table = symbol_table.parent
+        return symbol_table
     
     def set_parent(self, parent = None):
         #! CAUTION
