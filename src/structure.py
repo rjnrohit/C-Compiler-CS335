@@ -165,7 +165,7 @@ class SymbolTable:
     symbol_table_dict= {}
     def __init__(self, parent = None, id =None, name = None, base =0):
         if parent:
-            assert(isinstance(parent, SymbolTable))
+            assert isinstance(parent, SymbolTable) 
 
         self.parent = parent
 
@@ -196,8 +196,7 @@ class SymbolTable:
         #TODO add dict for every type class
 
     def __str__(self):
-        res = ""
-        res += "SymbolTable("
+        res = "SymbolTable("
         res += "id:" + str(self.id)
         res += ",name:" + str(self.name)
         res += ",parent:" + str(self.parent)
@@ -206,10 +205,10 @@ class SymbolTable:
         res +=")"
         return res
 
-    def add_entry(self,name = None, type = None, offset = 0, width = 0, token_object = None):
+    def add_entry(self,name = None, type = None, token_object = None):
 
-        assert(name, "name not provided for entry")
-        assert(type is not None, "type not specified for entry")
+        assert name, "name not provided for entry"
+        assert type is not None, "type not specified for entry"
         
         if type.class_type == "FunctionType":
             self.add_scope(name = name, parent=self, symbol_table = type.symbol_table)
@@ -227,8 +226,8 @@ class SymbolTable:
         return self.table[name]
     
     def add_struct_entry(self, name = None, symbol_table = None):
-        assert(name, "name not provided for entry")
-        assert(symbol_table is not None, "symbol table not given for struct entry")
+        assert name, "name not provided for entry"
+        assert symbol_table is not None, "symbol table not given for struct entry"
 
         
         self.add_scope(name = name, parent=self, symbol_table=symbol_table)
@@ -278,8 +277,8 @@ class SymbolTable:
          #! CAUTION
         #Python always return the object itself (not a copy)
         #Any changes to the returned object will reflect to original object
-        assert(id, "No Id value given or it is None type")
-        assert(id < SymbolTable.id_count, "No Symbol table exist with given id")
+        assert id, "No Id value given or it is None type"
+        assert id < SymbolTable.id_count, "No Symbol table exist with given id"
         return SymbolTable.symbol_table_dict[id]
 
     def update_offset(self, entry = None):
