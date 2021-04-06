@@ -46,7 +46,7 @@ class Type:
 
 #! There are four class of entries: 
 #! i)BasicType (include :int, float, double, char..etc)
-#! ii)PointerType
+#! ii)PointerType (which includes arrays also)
 #! iii)StructType
 #! iv)FunctionType
 #TODO EnumType, TypeDef
@@ -65,11 +65,12 @@ class BasicType(Type):
 
 class PointerType(Type):
 
-    def __init__(self, type = None):
+    def __init__(self, type = None, array_size = 0):
         super().__init__()
         self.class_type = "PointerType"
         self.is_pointer = True
         self.type = type
+        self.array_size = array_size
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
