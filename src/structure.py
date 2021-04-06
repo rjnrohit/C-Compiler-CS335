@@ -36,12 +36,23 @@ class Node:
 #=================================== TYPES CLASS ===================================#
 
 class Type:
+    size_dict = {
+        'int':4,
+        'long':8,
+        'char':1,
+        'float':4,
+        'double':8,
+        'void':0,
+        'bool': 1,
+        'short':2,
+    }
     def __init__(self):
         self.class_type = None
         self.is_basic = False
         self.is_pointer = False
         self.is_struct = False
         self.is_function = False
+        self.width = 0
         
 
 #! There are four class of entries: 
@@ -52,16 +63,21 @@ class Type:
 #TODO EnumType, TypeDef
 
 class BasicType(Type):
-
+    
     def __init__(self, type = None):
         super().__init__()
         self.class_type = "BasicType"
         self.is_basic = True
         self.type = type
+        self.width = self.size_dict[type]
 
     def __str__(self) -> str:
         res  = str(self.type)
         return res
+    
+    def update_width(self):
+        self.width = self.size_dict[type]
+        return self.width
 
 class PointerType(Type):
 
@@ -71,10 +87,22 @@ class PointerType(Type):
         self.is_pointer = True
         self.type = type
         self.array_size = array_size
+        self.width = self.update_width()
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
         return res
+    
+    def update_width(self):
+        self.width = 8
+        matrix_size = 1
+        if hasattr(self.array_size):
+            for s in self.array_size:
+                matrix_size *= s
+        else:
+            matrix_size *= self.array_size
+        self.width += matrix_size*self.size_dict[type]
+        return self.width
 
 class StructType(Type):
     
@@ -85,9 +113,14 @@ class StructType(Type):
         self.name = name
         self.symbol_table = symbol_table
         self.type = "struct:" + str(self.name)
+        self.width = self.update_width()
 
     def __str__(self) -> str:
         return self.type
+
+    def update_width(self):
+        self.width = self.symbol_table.width
+        return self.width
 
 class FunctionType(Type):
 
@@ -98,21 +131,28 @@ class FunctionType(Type):
         self.return_type = return_type
         self.symbol_table = symbol_table
         self.type = str(self.return_type) + " function("  +str(param__dict)+")"
+        self.width = self.update_width()
 
     def __str__(self) -> str:
         return self.type
+
+    def update_width(self):
+        self.width = self.symbol_table.width
+        return self.width
 
 #=================================== SYMBOL TABLE ==================================#
 
 #! class corresponding to symbol table entry
 class Entry:
-    def __init__(self, name = None, type = None, offset = None, width = None,symbol_table = None, token_object=None):
+    def __init__(self, name = None, type = None, symbol_table = None, token_object=None):
         self.name = name
         self.type = type
-        self.offset = offset
-        self.width = width
+        
         self.symbol_table = symbol_table
         self.token_object = token_object
+
+        self.offset = self.symbol_table.offset
+        self.width = self.symbol_table.width
 
 #! The Symbol Table implemented is Hierarchical symbol table
 # every scope has it's own symbol table
@@ -125,7 +165,7 @@ class Entry:
 class SymbolTable:
     id_count =0
     symbol_table_dict= {}
-    def __init__(self, parent = None, id =None, name = None, width =0 , offset =0):
+    def __init__(self, parent = None, id =None, name = None, offset =0):
         if parent:
             assert(isinstance(parent, SymbolTable))
 
@@ -144,7 +184,7 @@ class SymbolTable:
         self.scopes_list= []
         self.scopes = {}
 
-        self.width = width
+        self.width = 0
         self.offset = offset
 
         if name:
@@ -177,6 +217,14 @@ class SymbolTable:
 
         #TODO check error if name already in table
         self.table[name] = Entry(name=name, type = type , offset = offset, width = width, symbol_table = self, token_object = token_object)
+
+        if type.class_type != "FunctionType":
+            #update offset
+            self.update_offset(self.table[name])
+            
+            #update width
+            self.update_width(self.table[name])
+
         return self.table[name]
     
     def add_struct_entry(self, name = None, symbol_table = None):
@@ -235,12 +283,15 @@ class SymbolTable:
         assert(id < SymbolTable.id_count, "No Symbol table exist with given id")
         return SymbolTable.symbol_table_dict[id]
 
-    def calc_offset(self, type = None, class_type = None, base = 0):
-        pass
+    def update_offset(self, entry = None):
+        self.offset += entry.type.width
+        return self.offset 
 
-    def update_offset(self):
-        pass
+    def update_width(self, entry = None):
+        self.widht += entry.type.width
+        return self.width
 
+#=================================== ERRORS ==================================#
 
 class Errors:
     error_id = 0
