@@ -522,12 +522,12 @@ def p_enumerator(p):
     # p[0] = None
 
 # Node
-def p_type_qualifier(p):
-    '''
-    type_qualifier : CONST
-	               | VOLATILE
-    '''
-    # p[0] = Node("type_qualifier",p[1])
+# def p_type_qualifier(p):
+#     '''
+#     type_qualifier : CONST
+# 	               | VOLATILE
+#     '''
+#     # p[0] = Node("type_qualifier",p[1])
 
 # Node
 def p_declarator(p):
@@ -575,12 +575,12 @@ def p_pointer(p):
     #     p[0] += p[i]
 
 # List 
-def p_type_qualifier_list(p):
-    '''
-    type_qualifier_list : type_qualifier
-	                    | type_qualifier_list type_qualifier
-    '''
-    # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+# def p_type_qualifier_list(p):
+#     '''
+#     type_qualifier_list : type_qualifier
+# 	                    | type_qualifier_list type_qualifier
+#     '''
+#     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
 
 # Node
 def p_parameter_type_list(p):
@@ -612,26 +612,26 @@ def p_parameter_declaration(p):
     #         p[0].addChild(p[2])
 
 # Node
-def p_identifier_list(p):
-    '''
-    identifier_list : IDENTIFIER
-	                | identifier_list COMMA IDENTIFIER
-    '''
-    # if len(p) == 2:
-    #     p[0] = Node("id",p[1])
-    # else:
-    #     c =  Node("id",p[3])
-    #     if p[1].type == "id":
-    #         p[0] = Node("identifier_list",children=[p[1],c])
-    #     else:
-    #         p[1].addChild(c)
-    #         p[0] = p[1]
+# def p_identifier_list(p):
+#     '''
+#     identifier_list : IDENTIFIER
+# 	                | identifier_list COMMA IDENTIFIER
+#     '''
+#     # if len(p) == 2:
+#     #     p[0] = Node("id",p[1])
+#     # else:
+#     #     c =  Node("id",p[3])
+#     #     if p[1].type == "id":
+#     #         p[0] = Node("identifier_list",children=[p[1],c])
+#     #     else:
+#     #         p[1].addChild(c)
+#     #         p[0] = p[1]
 
 # Node
 def p_type_name(p):
     '''
     type_name : specifier_qualifier_list
-	          : pointer specifier_qualifier_list
+	          | pointer specifier_qualifier_list
     '''
     # | specifier_qualifier_list abstract_declarator
     # c = []
@@ -651,18 +651,18 @@ def p_type_name(p):
 #         p[0] += p[i]
 
 # List
-def p_direct_abstract_declarator(p):
-    '''
-    direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
-	                           | L_SQBR R_SQBR
-	                           | L_SQBR assignment_expression R_SQBR
-	                           | direct_abstract_declarator L_SQBR R_SQBR
-                               | direct_abstract_declarator L_SQBR assignment_expression R_SQBR
-                               | L_PAREN R_PAREN
-                               | L_PAREN parameter_type_list R_PAREN
-                               | direct_abstract_declarator L_PAREN R_PAREN
-                               | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
-    '''
+# def p_direct_abstract_declarator(p):
+#     '''
+#     direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
+# 	                           | L_SQBR R_SQBR
+# 	                           | L_SQBR assignment_expression R_SQBR
+# 	                           | direct_abstract_declarator L_SQBR R_SQBR
+#                                | direct_abstract_declarator L_SQBR assignment_expression R_SQBR
+#                                | L_PAREN R_PAREN
+#                                | L_PAREN parameter_type_list R_PAREN
+#                                | direct_abstract_declarator L_PAREN R_PAREN
+#                                | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
+#     '''
     # p[0] = []
     # for i in range(1,len(p)):
     #     if not isinstance(p[i],list):
@@ -729,11 +729,11 @@ def p_compound_statement(p):
     #     p[0] = Node("compound_statement","{}",children=p[2])
 
 # Node
-def p_declaration_list(p):
-    '''
-    declaration_list : declaration
-	                 | declaration_list declaration
-    '''
+# def p_declaration_list(p):
+#     '''
+#     declaration_list : declaration
+# 	                 | declaration_list declaration
+#     '''
     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
 # List
 def p_block_item_list(p):
@@ -848,18 +848,18 @@ def main():
     
     parser.parse(source_code, lexer = lexer.lexer)
 
-    Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
-    # print(args)
-    if args.p:
-        Graph.draw(args.f, format='png')
-        print(Graph.string())
-        return
+    # Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
+    # # print(args)
+    # if args.p:
+    #     Graph.draw(args.f, format='png')
+    #     print(Graph.string())
+    #     return
 
-    Graph.draw(args.f, format='png')
+    # Graph.draw(args.f, format='png')
 
-    file = open(args.o, 'w')
-    file.write(Graph.string())
-    file.close()
+    # file = open(args.o, 'w')
+    # file.write(Graph.string())
+    # file.close()
 
 if __name__ == "__main__":
     main()

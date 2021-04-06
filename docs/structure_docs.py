@@ -86,7 +86,7 @@ curr_symbol_table = curr_symbol_table.parent
 curr_symbol_table.add_entry('f', curr_symbol_table.look_up_struct('D'))
 
 #   } // end for loop
-curr_symbol_table.parent.add_scope(curr_symbol_table)
+curr_symbol_table.parent.add_scope(symbol_table  = curr_symbol_table)
 curr_symbol_table = curr_symbol_table.parent
 
 #} // end main

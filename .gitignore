@@ -8,5 +8,4 @@ bin/__pycache__
 *.png
 src/parser.out
 src/parsetab.py
-temp.py
-temp.txt
+temp.*
