@@ -514,22 +514,21 @@ def p_direct_declarator(p):
     '''
     direct_declarator : IDENTIFIER
                       | L_PAREN declarator R_PAREN
-                      | direct_declarator L_SQBR assignment_expression R_SQBR
+                      | direct_declarator L_SQBR INT_CONSTANT R_SQBR
                       | direct_declarator L_SQBR R_SQBR
     '''
-    # | direct_declarator L_PAREN identifier_list R_PAREN
-    # if len(p) == 2:
-    #     p[0] = Node("id",p[1])
-    # elif p[1] == '(':
-    #     p[0] = p[2]
-    # # elif len(p) == 4:
-    # #     p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
-    # # else:
-    # #     p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
-    # else:
-    #     p[0] = p[1]
-    #print(p, p[1], p.__dict__)
-    #sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
+
+    if len(p) == 2:
+        sym_table.add_entry(name= p[1],type = p.stack[-1].value.type, token_object=p.slice[-1])
+    elif p[1] == '(':
+        p[0] = p[2]
+    elif len(p) == 4:
+        p[0] = p[1]
+        p[0].type = PointerType(type = p[0].type,array_size=p[3])
+    else:
+        p[0] = p[1]
+        p[0].type = PointerType(type = p[0].type)
+    
 
 
 # List
