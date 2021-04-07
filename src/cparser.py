@@ -421,7 +421,7 @@ def p_type_specifier(p):
     if p[1] == 'enum':
         pass
     elif p[1] == 'struct':
-        p[0] = Node(type = sym_table.look_up_struct(name = p[1].value))
+        p[0] = Node(type = sym_table.look_up_struct(name = p[2]))
     else:
         p[0] = Node(type = BasicType(type = p[1]))
 
@@ -496,18 +496,17 @@ def p_enumerator(p):
 def p_declarator(p):
     '''
     declarator : pointer direct_declarator
-	           | direct_declarator
+	           | no_pointer direct_declarator
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("pointer",children=p[1]+[p[2]])
+    p[0] = p[2]
+    #   
 
     # if len(p) == 2:
     #     p[0] = p[1]
     # else:
     #     print(p, p[0], p[1], p[2])
     #     sym_table.add_entry(name = p[2],type = getMutliPointerType(type =p.stack[-1].value.type, level = p[1].data['pointer']), token_object=p.slice[-1])
+
 
 # Node
 def p_direct_declarator(p):
@@ -519,7 +518,8 @@ def p_direct_declarator(p):
     '''
 
     if len(p) == 2:
-        sym_table.add_entry(name= p[1],type = p.stack[-1].value.type, token_object=p.slice[-1])
+        # sym_table.add_entry(name= p[1],type = p.stack[-1].value.type, token_object=p.slice[-1])
+        # store in direct declarator
     elif p[1] == '(':
         p[0] = p[2]
     elif len(p) == 4:
@@ -543,12 +543,22 @@ def p_pointer(p):
     # for i in range(2,len(p)):
     #     p[0] += p[i]
     if len(p) == 2:
+        # loop for type scpecifier
         p[0] = Node(PointerType(type = p.stack[-1].value.type))
     else:
         p[0] = p[2]
         p[2].type = PointerType(type = p[2].type)
 
 # Node
+
+def p_no_pointer(p):
+    '''
+    no_pointer : 
+    '''
+    # loop for type scpecifier
+    
+
+
 
 def p_parameter_type_list(p):
     '''
