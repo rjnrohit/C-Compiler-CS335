@@ -44,8 +44,11 @@ def p_external_declaration(p):
 #Node
 def p_function_definition(p):
     '''
-    function_definition : declaration_specifiers declarator compound_statement
+    function_definition : declaration_specifiers declarator L_PAREN parameter_type_list R_PAREN compound_statement
+                        | declaration_specifiers declarator L_PAREN R_PAREN compound_statement
     '''
+    | direct_declarator L_PAREN parameter_type_list R_PAREN
+                      | direct_declarator L_PAREN R_PAREN
     # if p.slice[1].type == 'declaration_specifiers':
     #     if len(p) == 5:
     #         p[0] = Node("function_defn",children=[p[2],p[4]])
@@ -524,8 +527,6 @@ def p_direct_declarator(p):
                       | L_PAREN declarator R_PAREN
                       | direct_declarator L_SQBR assignment_expression R_SQBR
                       | direct_declarator L_SQBR R_SQBR
-                      | direct_declarator L_PAREN parameter_type_list R_PAREN
-                      | direct_declarator L_PAREN R_PAREN
     '''
     # | direct_declarator L_PAREN identifier_list R_PAREN
     # if len(p) == 2:
@@ -541,6 +542,7 @@ def p_direct_declarator(p):
     #print(p, p[1], p.__dict__)
     sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
 
+
 # List
 def p_pointer(p):
     '''
@@ -555,6 +557,7 @@ def p_pointer(p):
 
 
 # Node
+
 def p_parameter_type_list(p):
     '''
     parameter_type_list : parameter_declaration
