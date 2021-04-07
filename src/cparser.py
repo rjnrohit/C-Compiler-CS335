@@ -44,8 +44,8 @@ def p_external_declaration(p):
 #Node
 def p_function_definition(p):
     '''
-    function_definition : type_specifier declarator L_PAREN parameter_type_list R_PAREN compound_statement
-                        | type_specifier declarator L_PAREN R_PAREN compound_statement
+    function_definition : type_specifier declarator func_scope parameter_type_list R_PAREN function_body pop_sym
+                        | type_specifier declarator func_scope R_PAREN function_body pop_sym
     '''
     # if p.slice[1].type == 'declaration_specifiers':
     #     if len(p) == 5:
@@ -62,6 +62,12 @@ def p_function_definition(p):
 
 # add all constants
 #Node
+def p_func_scope(p):
+    '''
+    func_scope: L_PAREN
+    '''
+    sym_table.add_scope()
+    
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
@@ -416,7 +422,7 @@ def p_type_specifier(p):
 # String
 def p_struct_specifier(p):
     '''
-    struct_specifier : STRUCT IDENTIFIER L_BRACES struct_declaration_list R_BRACES
+    struct_specifier : STRUCT IDENTIFIER L_BRACES add_sym struct_declaration_list pop_sym R_BRACES
     '''
     # p[0] = p[1]
 
@@ -621,13 +627,23 @@ def p_labeled_statement(p):
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
-	                   | L_BRACES marker_1 block_item_list marker_2 R_BRACES
+	                   | L_BRACES add_sym block_item_list pop_sym R_BRACES
     '''
-    # if len(p) == 3:
-    #     p[0] = Node("compound_statement","{}")
-    # else:
-    #     p[0] = Node("compound_statement","{}",children=p[2])
-    print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
+    if len(p) == 3:
+        p[0] = Node("compound_statement","{}")
+    else:
+        p[0] = Node("compound_statement","{}",children=p[2])
+    # print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
+
+def p_function_body(p):
+    '''
+    function_body : L_BRACES R_BRACES
+	              | L_BRACES block_item_list R_BRACES
+    '''
+    if len(p) == 3:
+        p[0] = Node("compound_statement","{}")
+    else:
+        p[0] = Node("compound_statement","{}",children=p[2])
 
 # List
 def p_block_item_list(p):
@@ -676,8 +692,6 @@ def p_iteration_statement(p):
 	                    | DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON
 	                    | FOR L_PAREN expression_statement expression_statement R_PAREN statement
 	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
-                        | FOR L_PAREN declaration expression_statement R_PAREN statement
-                        | FOR L_PAREN declaration expression_statement expression R_PAREN statement
     '''
     # if p[1] == "while":
     #     p[0] = Node("iteration_statement","while",children=[p[3],p[5]])
@@ -706,15 +720,17 @@ def p_jump_statement(p):
     # else:
     #     p[0] = Node("Jump Statment",p[1])
 
-def p_marker_1(p):
+def p_add_sym(p):
     '''
-        marker_1 :
+        add_sym :
     '''
+    sym_table.add_scope()
 
-def p_marker_2(p):
+def p_pop_sym(p):
     '''
-        marker_2 :
+        pop_sym :
     '''
+    sym_table.close_scope()
     
 def p_error(t):
     if t is None:
