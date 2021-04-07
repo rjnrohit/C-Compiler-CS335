@@ -57,6 +57,7 @@ def p_function_definition(p):
     #         p[0] = Node("function_defn",children=[p[1],p[2]])
 
 
+
 # add all constants
 #Node
 def p_primary_expression(p):
@@ -641,7 +642,7 @@ def p_labeled_statement(p):
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
-	                   | L_BRACES block_item_list R_BRACES
+	                   | L_BRACES marker_1 block_item_list marker_2 R_BRACES
     '''
     # if len(p) == 3:
     #     p[0] = Node("compound_statement","{}")
@@ -726,6 +727,16 @@ def p_jump_statement(p):
     # else:
     #     p[0] = Node("Jump Statment",p[1])
 
+def p_marker_1(p):
+    '''
+        marker1 :
+    '''
+
+def p_marker_2(p):
+    '''
+        marker2:
+    '''
+    
 def p_error(t):
     if t is None:
         print("End of File Reached. More Input required")    
