@@ -425,5 +425,14 @@ class Errors:
         res += self.errorType + ","
         res += self.errorText + ")"
 
+def getMutliPointerType(type = None, level = 0):
+    levObj = PointerType(type = type)
+    while level:
+        levObj = PointerType(type = levObj)
+        level -= 1
+    return levObj
+
+
+
 sym_table = SymbolTable(name = 'global', scope_type='global')
 sym_table.set_curr_scope(symbol_table = sym_table)

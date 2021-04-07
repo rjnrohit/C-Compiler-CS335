@@ -13,7 +13,8 @@ import pygraphviz as pgv
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
 from structure import Node
-from structure import sym_table, BasicType, FunctionType, PointerType, StructType
+from structure import sym_table, BasicType, FunctionType, PointerType, StructTyp
+from structure import getMutliPointerType
 
 #####################Grammar section #################
 
@@ -417,7 +418,13 @@ def p_type_specifier(p):
                    | ENUM IDENTIFIER
                    | BOOL
     '''
-    p[0] = Node(type = p[1])
+    if p[1] == 'enum':
+        pass
+    elif p[1] == 'struct':
+        p[0] = Node(type=sym_table.look_up_struct(name = p[1].value))
+    else:
+        p[0] = Node(type = p[1])
+
 
 # String
 def p_struct_specifier(p):
@@ -496,6 +503,10 @@ def p_declarator(p):
     # else:
     #     p[0] = Node("pointer",children=p[1]+[p[2]])
 
+    if len(p) == 2:
+        sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
+    else:
+        sym_table.add_entry(name = p[2],type = getMutliPointerType(type =p.stack[-1].value.type, level = p[1].data['pointer']), token_object=p.slice[-1])
 
 # Node
 def p_direct_declarator(p):
@@ -517,7 +528,7 @@ def p_direct_declarator(p):
     # else:
     #     p[0] = p[1]
     #print(p, p[1], p.__dict__)
-    sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
+    #sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
 
 
 # List
@@ -531,8 +542,12 @@ def p_pointer(p):
     # p[0] = [Node("pointer_ref",p[1])]
     # for i in range(2,len(p)):
     #     p[0] += p[i]
-
-
+    if len(p) == 2:
+        p[0] = Node()
+        p[0].data['pointer'] = 1
+    else:
+        p[0] = p[2]
+        p[0].data['pointer'] += 1
 # Node
 
 def p_parameter_type_list(p):
