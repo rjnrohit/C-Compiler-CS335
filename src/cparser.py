@@ -40,9 +40,9 @@ def p_external_declaration(p):
     external_declaration : function_definition
                          | declaration
     '''
-    p[0] = [p[1]]
+    p[0] = p[1]
 
-#Node
+#List
 def p_function_definition(p):
     '''
     function_definition : type_specifier declarator func_scope parameter_type_list R_PAREN function_body pop_sym
@@ -59,7 +59,8 @@ def p_function_definition(p):
     #     else:
     #         p[0] = Node("function_defn",children=[p[1],p[2]])
 
-    p[2] = "iitk"
+
+    p[0] = [p[0]]
 
 # add all constants
 #Node
@@ -67,7 +68,7 @@ def p_func_scope(p):
     '''
     func_scope : L_PAREN
     '''
-    sym_table.add_scope()
+    sym_table.add_entry('return',p.stack[-1].value.type)
     
 def p_primary_expression(p):
     '''
@@ -361,18 +362,17 @@ def p_constant_expression(p):
     # p[0] = p[1]
 
 
-#Node(can be None)
+#List
 def p_declaration(p):
     '''
     declaration : struct_specifier SEMI_COLON
                 | enum_specifier SEMI_COLON
 	            | type_specifier init_declarator_list SEMI_COLON
     '''
-    # if len(p) == 4 and p[2] != None:
-    #     p[0] = Node("declaration",children=p[2])
-    # else:
-    #     p[0] = None
-    # print(p[1])
+    if len(p) == 4:
+        p[0] = p[2]
+    else:
+        p[0] = [None]
 
 
 
@@ -398,10 +398,12 @@ def p_init_declarator(p):
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
-    # if len(p) == 2:
-    #     p[0] = None
-    # else:
-    #     p[0] = [Node("assignment",p[2],children = [p[1],p[3]])]
+    if len(p) == 2:
+        p[0] = [None]
+        sym_table.add_entry(p[1].value,p[1].type)
+    else:
+        # check for initliazer and add symbol
+        p[0] = [Node(value = p[2],children = [p[1],p[3]])]
 
 
 # Node
@@ -432,41 +434,50 @@ def p_struct_specifier(p):
     struct_specifier : STRUCT IDENTIFIER L_BRACES add_sym struct_declaration_list pop_sym R_BRACES
     '''
     # p[0] = p[1]
+    # add struct decl
 
 
 
-# None
+# dict
 def p_struct_declaration_list(p):
     '''
     struct_declaration_list : struct_declaration
 	                        | struct_declaration_list struct_declaration
     '''
-    # p[0] = None
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1].update(p[2])
 
-# None
+# dict
 def p_struct_declaration(p):
     '''
     struct_declaration : type_specifier struct_declarator_list SEMI_COLON
     '''
-    # p[0] = None
+    p[0] = p[2]
 
 
-# None
+# dict
 def p_struct_declarator_list(p):
     '''
-    struct_declarator_list : struct_declarator
-	                       | struct_declarator_list COMMA struct_declarator
+    struct_declarator_list : declarator
+	                       | struct_declarator_list COMMA declarator
     '''
-    # p[0] = None
+    if len(p) == 2:
+        sym_table.add_entry(p[1].value,p[1].type)
+        # if success:
+        #     p[0] = {p[1].value:p[1].type}
+        # else:
+        #     p[0] = {}
 
-# None    
-def p_struct_declarator(p):
-    '''
-    struct_declarator : declarator
-    '''
-    #  | COLON constant_expression
-    #                   | declarator COLON constant_expression
-    # p[0] = None
+    else:
+        sym_table.add_entry(p[2].value,p[2].type)
+        # if success:
+        #     p[0] = p[1].update({p[2].value:p[2].type})
+        # else:
+        #     p[0] = p[1]
+
+
 
 #string
 def p_enum_specifier(p):
@@ -578,27 +589,22 @@ def p_parameter_type_list(p):
     parameter_type_list : parameter_declaration
 	                    | parameter_type_list COMMA parameter_declaration
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     if p[1].type == "parameter_type_list":
-    #         p[1].addChild(p[3])
-    #         p[0] = p[1]
-    #     else:
-    #         p[0] = Node("parameter_type_list",children=[p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1]+p[2]
+    
 # Node 
 def p_parameter_declaration(p):
     '''
     parameter_declaration : type_specifier declarator
     '''
 
-    # p[0] = Node("parameter_declaration",children=[p[1]])
-    # if len(p) > 2:
-    #     if isinstance(p[2],list):
-    #         for i in p[2]:
-    #             p[0].addChild(i)
-    #     else:
-    #         p[0].addChild(p[2])
+    sym_table.add_entry(p[2].value,p[2].type)
+    # if success:
+    #     p[0] = [p[2].type]
+    # else:
+    #     p[0] = []
 
 
 
@@ -608,10 +614,10 @@ def p_type_name(p):
     type_name : type_specifier
 	          | type_specifier pointer
     '''
-    # c = []
-    # for i in range(1,len(p)):
-    #     c += p[i]
-    # p[0] = Node("type_name",children=c)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[2]
 
 
 
@@ -645,7 +651,7 @@ def p_statement(p):
 	          | iteration_statement
 	          | jump_statement
     '''
-    # p[0] = p[1]
+    p[0] = p[1]
 
 # Node
 def p_labeled_statement(p):
@@ -670,7 +676,7 @@ def p_compound_statement(p):
     if len(p) == 3:
         p[0] = Node("compound_statement","{}")
     else:
-        p[0] = Node("compound_statement","{}",children=p[2])
+        p[0] = Node("compound_statement","{}",children=p[3])
     # print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
 
 def p_function_body(p):
@@ -689,15 +695,15 @@ def p_block_item_list(p):
     block_item_list : block_item
                    | block_item_list block_item
     '''
-    # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+    p[0] = p[1] if len(p) == 2 else p[1]+p[2]
 
-# Node       
+# List     
 def p_block_item(p):
     '''
     block_item : statement
                 | declaration
     '''
-    # p[0] = p[1]
+    p[0] = [p[1]]
 
 # Node
 def p_expression_statement(p):
@@ -705,10 +711,10 @@ def p_expression_statement(p):
     expression_statement : SEMI_COLON
 	                     | expression SEMI_COLON
     '''
-    # if len(p) == 2:
-    #     p[0] = Node("expression_statement",p[1])
-    # else:
-    #     p[0] = p[1]
+    if len(p) == 2:
+        p[0] = Node(value = p[1])
+    else:
+        p[0] = p[1]
 
 # Node
 def p_selection_statement(p):
