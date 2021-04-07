@@ -55,7 +55,7 @@ def p_function_definition(p):
     #         p[0] = Node("function_defn",children=[p[1],p[3]])
     #     else:
     #         p[0] = Node("function_defn",children=[p[1],p[2]])
-    
+
 
 # add all constants
 #Node
@@ -354,7 +354,8 @@ def p_constant_expression(p):
 #Node(can be None)
 def p_declaration(p):
     '''
-    declaration : declaration_specifiers SEMI_COLON
+    declaration : struct_specifier SEMI_COLON
+                | enum_specifier SEMI_COLON
 	            | declaration_specifiers init_declarator_list SEMI_COLON
     '''
     # if len(p) == 4 and p[2] != None:
@@ -413,8 +414,8 @@ def p_type_specifier(p):
                    | LONG
                    | FLOAT
                    | DOUBLE
-                   | struct_specifier
-                   | enum_specifier
+                   | STRUCT IDENTIFIER
+                   | ENUM IDENTIFIER
                    | BOOL
     '''
     # p[0] = Node("type_specifier",p[1])
@@ -423,8 +424,6 @@ def p_type_specifier(p):
 def p_struct_specifier(p):
     '''
     struct_specifier : STRUCT IDENTIFIER L_BRACES struct_declaration_list R_BRACES
-	                | STRUCT L_BRACES struct_declaration_list R_BRACES
-	                | STRUCT IDENTIFIER
     '''
     # p[0] = p[1]
 
@@ -480,9 +479,7 @@ def p_struct_declarator(p):
 #string
 def p_enum_specifier(p):
     '''
-    enum_specifier : ENUM L_BRACES enumerator_list R_BRACES
-                   | ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
-                   | ENUM IDENTIFIER
+    enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
     '''
     # p[0] = p[1]
 
