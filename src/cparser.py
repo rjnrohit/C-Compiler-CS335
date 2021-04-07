@@ -499,7 +499,7 @@ def p_declarator(p):
 	           | no_pointer direct_declarator
     '''
     p[0] = p[2]
-    print(p[0].type, type(p[0].type))
+    print(p[0].type, type(p[0].type), p[0].value)
     #   
 
     # if len(p) == 2:
