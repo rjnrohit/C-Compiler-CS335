@@ -499,6 +499,7 @@ def p_declarator(p):
 	           | no_pointer direct_declarator
     '''
     p[0] = p[2]
+    print(p[0].type, type(p[0].type))
     #   
 
     # if len(p) == 2:
@@ -520,7 +521,7 @@ def p_direct_declarator(p):
     if len(p) == 2:
         # sym_table.add_entry(name= p[1],type = p.stack[-1].value.type, token_object=p.slice[-1])
         # store in direct declarator
-        p[0] = Node(value=p[1])
+        p[0] = Node(value=p[1], type = p.stack[-1].value.type)
         p[0].data['token'] = p.slice[-1]
     elif p[1] == '(':
         p[0] = p[2]
@@ -553,8 +554,8 @@ def p_pointer(p):
         p[0] = Node(type = PointerType(type = type_specifier_symbol.value.type))
         #p[0] = Node(PointerType(type = p.stack[-1].value.type))
     else:
-        p[0] = p[2]
-        p[2].type = PointerType(type = p[2].type)
+        p[0] = p[1]
+        p[0].type = PointerType(type = p[1].type)
 
 # Node
 
@@ -567,7 +568,7 @@ def p_no_pointer(p):
         if symbol.type == 'type_specifier':
             type_specifier_symbol = symbol
             break
-    p[0] = Node(type = PointerType(type = type_specifier_symbol.value.type))
+    p[0] = Node(type = type_specifier_symbol.value.type)
     
 
 
