@@ -1,7 +1,7 @@
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,type,value=None,children=None):
+    def __init__(self,type=None,value=None,children=None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)

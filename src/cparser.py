@@ -57,7 +57,7 @@ def p_function_definition(p):
     #     else:
     #         p[0] = Node("function_defn",children=[p[1],p[2]])
 
-
+    p[2] = "iitk"
 
 # add all constants
 #Node
@@ -364,6 +364,7 @@ def p_declaration(p):
     #     p[0] = Node("declaration",children=p[2])
     # else:
     #     p[0] = None
+    # print(p[1])
 
 # Node
 #changed
@@ -378,7 +379,7 @@ def p_declaration_specifiers(p):
     # | type_qualifier declaration_specifiers
     # required change in action
     # p[0] = p[1]
-        
+    p[0] = p[1]
 
 # list (can be None)
 def p_init_declarator_list(p):
@@ -393,6 +394,8 @@ def p_init_declarator_list(p):
     #         p[0] = p[1]
     #     else:
     #         p[0] = p[3] if p[1] == None else p[1] + p[3]
+    #print(p, p.__dict__, p.stack[-1].value.type)
+
 
 # list (can be None)
 def p_init_declarator(p):
@@ -420,7 +423,7 @@ def p_type_specifier(p):
                    | ENUM IDENTIFIER
                    | BOOL
     '''
-    # p[0] = Node("type_specifier",p[1])
+    p[0] = Node(type = p[1])
 
 # String
 def p_struct_specifier(p):
@@ -513,6 +516,7 @@ def p_declarator(p):
     # else:
     #     p[0] = Node("pointer",children=p[1]+[p[2]])
 
+
 # Node
 def p_direct_declarator(p):
     '''
@@ -534,6 +538,8 @@ def p_direct_declarator(p):
     # #     p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
     # else:
     #     p[0] = p[1]
+    #print(p, p[1], p.__dict__)
+    sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
 
 # List
 def p_pointer(p):
@@ -649,7 +655,7 @@ def p_compound_statement(p):
     #     p[0] = Node("compound_statement","{}")
     # else:
     #     p[0] = Node("compound_statement","{}",children=p[2])
-    #print(p, p.__dict__, p[-1], p.stack[-1])
+    print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
 
 # List
 def p_block_item_list(p):
@@ -786,6 +792,7 @@ def main():
     # file = open(args.o, 'w')
     # file.write(Graph.string())
     # file.close()
+    print(sym_table)
 
 if __name__ == "__main__":
     main()
