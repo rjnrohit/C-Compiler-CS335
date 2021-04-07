@@ -191,6 +191,8 @@ class Entry:
 class SymbolTable:
     id_count =0
     symbol_table_dict= {}
+    curr_symbol_table = None
+    next_symbol_table = None
     def __init__(self, parent = None, id =None, name = None,scope_type = None, base =0):
         if parent:
             assert isinstance(parent, SymbolTable) 
@@ -241,43 +243,46 @@ class SymbolTable:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def add_entry(self,name = None, type = None, token_object = None):
+    def _add_entry(self,name = None, type = None, token_object = None):
 
         assert name, "name not provided for entry"
         assert type is not None, "type not specified for entry"
         
         if type.class_type == "FunctionType":
-            self.add_scope(name = name, parent=self, symbol_table = type.symbol_table)
+            self._add_scope(name = name, parent=self, symbol_table = type.symbol_table)
 
         #TODO check error if name already in table
         self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object)
 
         if type.class_type != "FunctionType":
             #update offset
-            self.update_offset(self.table[name])
+            self._update_offset(self.table[name])
             
             #update width
-            self.update_width(self.table[name])
+            self._update_width(self.table[name])
 
         return self.table[name]
     
-    def add_struct_entry(self, name = None, symbol_table = None):
+    def _add_struct_entry(self, name = None, symbol_table = None):
         assert name, "name not provided for entry"
         assert symbol_table is not None, "symbol table not given for struct entry"
 
         
-        self.add_scope(name = name, parent=self, symbol_table=symbol_table)
+        self._add_scope(name = name, parent=self, symbol_table=symbol_table)
 
         #TODO check error if name already in table
         self.struct_table[name] = StructType(name = name, symbol_table=symbol_table)
         return self.struct_table[name]
         
 
-    def add_scope(self, name = None, parent = None, symbol_table = None):
+    def _add_scope(self, name = None, parent = None, symbol_table = None):
         #! CAUTION
         #Python always return the object itself (not a copy)
         #Any changes to the returned object will reflect to original object
 
+        if parent:
+            assert isinstance(parent, SymbolTable) 
+            
         if symbol_table is None:
             self.scopes_list.append(SymbolTable(name, parent))
         else:
@@ -290,7 +295,7 @@ class SymbolTable:
         
         return self.scopes_list[-1]
 
-    def look_up(self, name = None):
+    def _look_up(self, name = None):
         symbol_table =self
         while symbol_table != None and name not in symbol_table.table:
             symbol_table = symbol_table.parent
@@ -301,7 +306,7 @@ class SymbolTable:
 
         return symbol_table.table[name]
 
-    def look_up_struct(self, name = None):
+    def _look_up_struct(self, name = None):
         symbol_table =self
         while symbol_table != None and name not in symbol_table.struct_table:
             symbol_table = symbol_table.parent
@@ -312,7 +317,7 @@ class SymbolTable:
 
         return symbol_table.struct_table[name]
     
-    def set_parent(self, parent = None):
+    def _set_parent(self, parent = None):
         #! CAUTION
         #Python always return the object itself (not a copy)
         #Any changes to the returned object will reflect to original object
@@ -327,13 +332,72 @@ class SymbolTable:
         assert id < SymbolTable.id_count, "No Symbol table exist with given id"
         return SymbolTable.symbol_table_dict[id]
 
-    def update_offset(self, entry = None):
+    def _update_offset(self, entry = None):
         self.offset += entry.type.width
         return self.offset 
 
-    def update_width(self, entry = None):
+    def _update_width(self, entry = None):
         self.width += entry.type.width
         return self.width
+    
+    def start_scope(self, name =None, scope_type = None):
+
+        if SymbolTable.curr_symbol_table is None:
+            if SymbolTable.symbol_table_dict:
+                SymbolTable.curr_symbol_table = SymbolTable.symbol_table_dict[0]
+
+        SymbolTable.curr_symbol_table = SymbolTable(
+            name = name,
+            scope_type = scope_type,
+            parent = SymbolTable.curr_symbol_table, 
+            base = SymbolTable.curr_symbol_table.offset
+            )
+        
+        return SymbolTable.curr_symbol_table
+    
+    def close_scope(self):
+        SymbolTable.next_symbol_table = SymbolTable.curr_symbol_table
+        SymbolTable.curr_symbol_table = SymbolTable.curr_symbol_table.parent
+
+        return SymbolTable.curr_symbol_table
+    
+    def get_next_symbol_table(self):
+        return SymbolTable.next_symbol_table
+    
+    def add_entry(self,name = None, type = None, token_object = None):
+        return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object)
+    
+    def add_struct_entry(self, name = None, symbol_table = None):
+        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table)
+    
+    def look_up(self, name = None):
+        return SymbolTable.curr_symbol_table._look_up(name = name)
+
+    def look_up_struct(self, name = None):
+        return SymbolTable.curr_symbol_table._look_up_struct(name = name)
+
+    def update_width(self, entry = None):
+        return SymbolTable.curr_symbol_table._update_width(entry=entry)
+
+    def update_offset(self, entry = None):
+        return SymbolTable.curr_symbol_table._update_offset(entry=entry)
+
+    def set_parent(self, parent = None):
+        return SymbolTable.curr_symbol_table._set_parent(parent=parent)
+
+    def add_scope(self, name = None, parent = None, symbol_table = None):
+        return SymbolTable.curr_symbol_table._add_scope(name = name, parent = parent,symbol_table=symbol_table)
+    
+    def set_curr_scope(self, symbol_table=None):
+        if symbol_table:
+            SymbolTable.curr_symbol_table = symbol_table
+        else:
+            if SymbolTable.symbol_table_dict:
+                SymbolTable.curr_symbol_table = SymbolTable.symbol_table_dict[0]
+            else:
+                return None
+        return SymbolTable.curr_symbol_table
+        
 
 #=================================== ERRORS ==================================#
 
@@ -360,3 +424,6 @@ class Errors:
         res  = "Error("
         res += self.errorType + ","
         res += self.errorText + ")"
+
+sym_table = SymbolTable(name = 'global', scope_type='global')
+sym_table.set_curr_scope(symbol_table = sym_table)
