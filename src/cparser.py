@@ -44,8 +44,8 @@ def p_external_declaration(p):
 #Node
 def p_function_definition(p):
     '''
-    function_definition : declaration_specifiers declarator L_PAREN parameter_type_list R_PAREN compound_statement
-                        | declaration_specifiers declarator L_PAREN R_PAREN compound_statement
+    function_definition : type_specifier declarator L_PAREN parameter_type_list R_PAREN compound_statement
+                        | type_specifier declarator L_PAREN R_PAREN compound_statement
     '''
     # if p.slice[1].type == 'declaration_specifiers':
     #     if len(p) == 5:
@@ -359,7 +359,7 @@ def p_declaration(p):
     '''
     declaration : struct_specifier SEMI_COLON
                 | enum_specifier SEMI_COLON
-	            | declaration_specifiers init_declarator_list SEMI_COLON
+	            | type_specifier init_declarator_list SEMI_COLON
     '''
     # if len(p) == 4 and p[2] != None:
     #     p[0] = Node("declaration",children=p[2])
@@ -367,20 +367,7 @@ def p_declaration(p):
     #     p[0] = None
     # print(p[1])
 
-# Node
-#changed
-def p_declaration_specifiers(p):
-    '''
-    declaration_specifiers : type_specifier
-    '''
 
-    # removed storage_class_specifier | storage_class_specifier declaration_specifiers
-    # | type_specifier declaration_specifiers
-    # | type_qualifier
-    # | type_qualifier declaration_specifiers
-    # required change in action
-    # p[0] = p[1]
-    p[0] = p[1]
 
 # list (can be None)
 def p_init_declarator_list(p):
@@ -446,24 +433,10 @@ def p_struct_declaration_list(p):
 # None
 def p_struct_declaration(p):
     '''
-    struct_declaration : specifier_qualifier_list struct_declarator_list SEMI_COLON
+    struct_declaration : type_specifier struct_declarator_list SEMI_COLON
     '''
     # p[0] = None
 
-#list
-def p_specifier_qualifier_list(p):
-    '''
-    specifier_qualifier_list : type_specifier
-                             
-    '''
-    # type_specifier specifier_qualifier_list
-    #  type_qualifier specifier_qualifier_list
-    #                          | type_qualifier
-
-    # if len(p) == 2:
-    #     p[0] = [p[1]]
-    # else:
-    #     p[0] = [p[1]]+p[2]
 
 # None
 def p_struct_declarator_list(p):
@@ -572,10 +545,9 @@ def p_parameter_type_list(p):
 # Node 
 def p_parameter_declaration(p):
     '''
-    parameter_declaration : declaration_specifiers declarator
+    parameter_declaration : type_specifier declarator
     '''
-    # | declaration_specifiers abstract_declarator
-	#                       | declaration_specifiers
+
     # p[0] = Node("parameter_declaration",children=[p[1]])
     # if len(p) > 2:
     #     if isinstance(p[2],list):
@@ -589,10 +561,9 @@ def p_parameter_declaration(p):
 # Node
 def p_type_name(p):
     '''
-    type_name : specifier_qualifier_list
-	          | pointer specifier_qualifier_list
+    type_name : type_specifier
+	          | pointer type_specifier
     '''
-    # | specifier_qualifier_list abstract_declarator
     # c = []
     # for i in range(1,len(p)):
     #     c += p[i]
