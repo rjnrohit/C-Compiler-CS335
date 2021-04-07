@@ -13,7 +13,7 @@ import pygraphviz as pgv
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
 from structure import Node
-from structure import sym_table, BasicType, FunctionType, PointerType, StructTyp
+from structure import sym_table, BasicType, FunctionType, PointerType, StructType
 from structure import getMutliPointerType
 
 #####################Grammar section #################
@@ -65,7 +65,7 @@ def p_function_definition(p):
 #Node
 def p_func_scope(p):
     '''
-    func_scope: L_PAREN
+    func_scope : L_PAREN
     '''
     sym_table.add_scope()
     
@@ -421,9 +421,9 @@ def p_type_specifier(p):
     if p[1] == 'enum':
         pass
     elif p[1] == 'struct':
-        p[0] = Node(type=sym_table.look_up_struct(name = p[1].value))
+        p[0] = Node(type = sym_table.look_up_struct(name = p[1].value))
     else:
-        p[0] = Node(type = p[1])
+        p[0] = Node(type = BasicType(type = p[1]))
 
 
 # String
@@ -503,10 +503,11 @@ def p_declarator(p):
     # else:
     #     p[0] = Node("pointer",children=p[1]+[p[2]])
 
-    if len(p) == 2:
-        sym_table.add_entry(name= p[1],type = BasicType(p.stack[-1].value.type),token_object=p.slice[-1])
-    else:
-        sym_table.add_entry(name = p[2],type = getMutliPointerType(type =p.stack[-1].value.type, level = p[1].data['pointer']), token_object=p.slice[-1])
+    # if len(p) == 2:
+    #     p[0] = p[1]
+    # else:
+    #     print(p, p[0], p[1], p[2])
+    #     sym_table.add_entry(name = p[2],type = getMutliPointerType(type =p.stack[-1].value.type, level = p[1].data['pointer']), token_object=p.slice[-1])
 
 # Node
 def p_direct_declarator(p):
@@ -535,7 +536,7 @@ def p_direct_declarator(p):
 def p_pointer(p):
     '''
     pointer : MULTIPLY
-            | MULTIPLY pointer
+            | pointer MULTIPLY
     '''
     # | MULTIPLY type_qualifier_list
     # | MULTIPLY type_qualifier_list pointer
@@ -543,11 +544,11 @@ def p_pointer(p):
     # for i in range(2,len(p)):
     #     p[0] += p[i]
     if len(p) == 2:
-        p[0] = Node()
-        p[0].data['pointer'] = 1
+        p[0] = Node(PointerType(type = p.stack[-1].value.type))
     else:
         p[0] = p[2]
-        p[0].data['pointer'] += 1
+        p[2].type = PointerType(type = p[2].type)
+
 # Node
 
 def p_parameter_type_list(p):
@@ -583,7 +584,7 @@ def p_parameter_declaration(p):
 def p_type_name(p):
     '''
     type_name : type_specifier
-	          | pointer type_specifier
+	          | type_specifier pointer
     '''
     # c = []
     # for i in range(1,len(p)):

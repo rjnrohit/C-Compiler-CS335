@@ -77,7 +77,7 @@ class BasicType(Type):
         return self.__str__()
     
     def update_width(self):
-        self.width = self.size_dict[type]
+        self.width = self.size_dict[self.type]
         return self.width
 
 class PointerType(Type):
@@ -105,7 +105,10 @@ class PointerType(Type):
                 matrix_size *= s
         else:
             matrix_size *= self.array_size
-        self.width += matrix_size*self.size_dict[self.type]
+        if isinstance(self.type, Type):
+            self.width += matrix_size*self.type.width
+        else:
+            self.width += matrix_size*self.size_dict[self.type]
         return self.width
 
 class StructType(Type):
