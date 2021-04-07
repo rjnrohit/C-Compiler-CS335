@@ -131,14 +131,14 @@ class StructType(Type):
 
 class FunctionType(Type):
 
-    def __init__(self, return_type = None, param_dict = None, symbol_table = None):
+    def __init__(self, return_type = None, param_list = None, symbol_table = None):
         super().__init__()
         self.class_type = "FunctionType"
         self.is_function = True
         self.return_type = return_type
         self.symbol_table = symbol_table
-        self.param_dict = param_dict
-        self.type = str(self.return_type) + " function("  +str(param_dict)+")"
+        self.param_list = param_list
+        self.type = str(self.return_type) + " function("  +str(param_list)+")"
         self.width = self.update_width()
 
     def __str__(self) -> str:
@@ -151,9 +151,9 @@ class FunctionType(Type):
         self.width = self.symbol_table.width
         return self.width
     
-    def add_param_dict(self, param_dict=None):
-        self.param_dict = param_dict
-        return self.param_dict
+    def add_param_list(self, param_list=None):
+        self.param_list = param_list
+        return self.param_list
 
 #=================================== SYMBOL TABLE ==================================#
 

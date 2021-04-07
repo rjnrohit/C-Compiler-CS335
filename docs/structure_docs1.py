@@ -84,7 +84,7 @@ sym_table.add_scope(symbol_table=sym_table.get_next_symbol_table())
 
 #} // end main
 sym_table.close_scope()
-sym_table.add_entry(name = 'main', type = FunctionType(return_type='int', param_dict={'argv':PointerType('int'), 'argc':BasicType('int')}, symbol_table=sym_table.get_next_symbol_table()))
+sym_table.add_entry(name = 'main', type = FunctionType(return_type='int', param_dict=[PointerType('int'), BasicType('int')], symbol_table=sym_table.get_next_symbol_table()))
 
 assert(sym_table.name == "global")
 

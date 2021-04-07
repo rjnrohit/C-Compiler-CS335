@@ -13,6 +13,7 @@ import pygraphviz as pgv
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
 from structure import Node
+from structure import sym_table, BasicType, FunctionType, PointerType, StructType
 
 #####################Grammar section #################
 
