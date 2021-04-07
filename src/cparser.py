@@ -648,7 +648,7 @@ def p_compound_statement(p):
     #     p[0] = Node("compound_statement","{}")
     # else:
     #     p[0] = Node("compound_statement","{}",children=p[2])
-
+    #print(p, p.__dict__, p[-1], p.stack[-1])
 
 # List
 def p_block_item_list(p):
@@ -729,12 +729,12 @@ def p_jump_statement(p):
 
 def p_marker_1(p):
     '''
-        marker1 :
+        marker_1 :
     '''
 
 def p_marker_2(p):
     '''
-        marker2:
+        marker_2 :
     '''
     
 def p_error(t):

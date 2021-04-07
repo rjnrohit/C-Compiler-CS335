@@ -4,11 +4,11 @@ struct a{
     long a;
 };
 
-int func(int *a,int **b){
-    return a*b;
-}
+enum day{mon, tues};
 
 int main(){
+    enum day a;
+    struct a A;
     printf("hello world\n");
     return 0;
 }
