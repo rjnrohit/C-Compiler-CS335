@@ -22,7 +22,7 @@ start = 'program' #start action
 #Node
 def p_program(p):
     'program : translation_unit'
-    # p[0] = Node("program",children=p[1])
+    p[0] = Node("program",children=p[1])
 
 #List
 def p_translation_unit(p):
@@ -30,7 +30,7 @@ def p_translation_unit(p):
     translation_unit : external_declaration
                      | translation_unit external_declaration
     '''
-    # p[0] = p[1] if len(p)==2 else p[1]+p[2]
+    p[0] = p[1] if len(p)==2 else p[1]+p[2]
 
 #List
 def p_external_declaration(p):
@@ -38,16 +38,13 @@ def p_external_declaration(p):
     external_declaration : function_definition
                          | declaration
     '''
-    # p[0] = [p[1]]
+    p[0] = [p[1]]
 
 #Node
 def p_function_definition(p):
     '''
     function_definition : declaration_specifiers declarator compound_statement
     '''
-    # declaration_specifiers declarator declaration_list compound_statement
-    # | declarator declaration_list compound_statement
-	# | declarator compound_statement
     # if p.slice[1].type == 'declaration_specifiers':
     #     if len(p) == 5:
     #         p[0] = Node("function_defn",children=[p[2],p[4]])
@@ -58,6 +55,7 @@ def p_function_definition(p):
     #         p[0] = Node("function_defn",children=[p[1],p[3]])
     #     else:
     #         p[0] = Node("function_defn",children=[p[1],p[2]])
+    
 
 # add all constants
 #Node
@@ -404,16 +402,6 @@ def p_init_declarator(p):
     # else:
     #     p[0] = [Node("assignment",p[2],children = [p[1],p[3]])]
 
-# Node
-# def p_storage_class_specifier(p):
-#     '''
-#     storage_class_specifier : TYPEDEF
-#                             | EXTERN
-#                             | STATIC
-#                             | AUTO
-#                             | REGISTER
-#     '''
-#     p[0] = Node("storage_class_specifier",p[1])
 
 # Node
 def p_type_specifier(p):
@@ -440,13 +428,6 @@ def p_struct_specifier(p):
     '''
     # p[0] = p[1]
 
-# String
-# def p_struct_or_union(p):
-#     '''
-#     struct_or_union : STRUCT
-# 	                | UNION
-#     '''
-#     p[0] = p[1]
 
 
 # None
@@ -521,13 +502,6 @@ def p_enumerator(p):
     '''
     # p[0] = None
 
-# Node
-# def p_type_qualifier(p):
-#     '''
-#     type_qualifier : CONST
-# 	               | VOLATILE
-#     '''
-#     # p[0] = Node("type_qualifier",p[1])
 
 # Node
 def p_declarator(p):
@@ -574,13 +548,6 @@ def p_pointer(p):
     # for i in range(2,len(p)):
     #     p[0] += p[i]
 
-# List 
-# def p_type_qualifier_list(p):
-#     '''
-#     type_qualifier_list : type_qualifier
-# 	                    | type_qualifier_list type_qualifier
-#     '''
-#     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
 
 # Node
 def p_parameter_type_list(p):
@@ -611,21 +578,7 @@ def p_parameter_declaration(p):
     #     else:
     #         p[0].addChild(p[2])
 
-# Node
-# def p_identifier_list(p):
-#     '''
-#     identifier_list : IDENTIFIER
-# 	                | identifier_list COMMA IDENTIFIER
-#     '''
-#     # if len(p) == 2:
-#     #     p[0] = Node("id",p[1])
-#     # else:
-#     #     c =  Node("id",p[3])
-#     #     if p[1].type == "id":
-#     #         p[0] = Node("identifier_list",children=[p[1],c])
-#     #     else:
-#     #         p[1].addChild(c)
-#     #         p[0] = p[1]
+
 
 # Node
 def p_type_name(p):
@@ -639,36 +592,6 @@ def p_type_name(p):
     #     c += p[i]
     # p[0] = Node("type_name",children=c)
 
-# List
-# def p_abstract_declarator(p):
-#     '''
-#     abstract_declarator : pointer
-# 	                    | direct_abstract_declarator
-# 	                    | pointer direct_abstract_declarator
-#     '''
-#     p[0] = []
-#     for i in range(1,len(p)):
-#         p[0] += p[i]
-
-# List
-# def p_direct_abstract_declarator(p):
-#     '''
-#     direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
-# 	                           | L_SQBR R_SQBR
-# 	                           | L_SQBR assignment_expression R_SQBR
-# 	                           | direct_abstract_declarator L_SQBR R_SQBR
-#                                | direct_abstract_declarator L_SQBR assignment_expression R_SQBR
-#                                | L_PAREN R_PAREN
-#                                | L_PAREN parameter_type_list R_PAREN
-#                                | direct_abstract_declarator L_PAREN R_PAREN
-#                                | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
-#     '''
-    # p[0] = []
-    # for i in range(1,len(p)):
-    #     if not isinstance(p[i],list):
-    #         p[0] += [p[i]]
-    #     else:
-    #         p[0] += p[i]
 
 
 # Node
@@ -728,13 +651,7 @@ def p_compound_statement(p):
     # else:
     #     p[0] = Node("compound_statement","{}",children=p[2])
 
-# Node
-# def p_declaration_list(p):
-#     '''
-#     declaration_list : declaration
-# 	                 | declaration_list declaration
-#     '''
-    # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+
 # List
 def p_block_item_list(p):
     '''
