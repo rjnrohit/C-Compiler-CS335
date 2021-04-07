@@ -47,8 +47,6 @@ def p_function_definition(p):
     function_definition : declaration_specifiers declarator L_PAREN parameter_type_list R_PAREN compound_statement
                         | declaration_specifiers declarator L_PAREN R_PAREN compound_statement
     '''
-    | direct_declarator L_PAREN parameter_type_list R_PAREN
-                      | direct_declarator L_PAREN R_PAREN
     # if p.slice[1].type == 'declaration_specifiers':
     #     if len(p) == 5:
     #         p[0] = Node("function_defn",children=[p[2],p[4]])
