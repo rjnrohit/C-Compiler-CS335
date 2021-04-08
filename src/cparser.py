@@ -12,7 +12,7 @@ import pygraphviz as pgv
 
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
-from structure import Node
+from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, StructType
 from structure import getMutliPointerType
 
@@ -130,7 +130,11 @@ def p_postfix_expression(p):
         else:
             p[0] = p[1]
             p[0].type = 'error'
-            # add error
+            Errors(
+                errorType='TypeError',
+                errorText='increment/decrement not possible',
+                token_object= p.slice[-1]
+            )
         
 
 def p_postfix_expression_1(p):
