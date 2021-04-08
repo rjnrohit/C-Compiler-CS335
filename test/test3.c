@@ -1,3 +1,5 @@
+// Performing simple looping operations
+
 int main()
 {
 	int n;

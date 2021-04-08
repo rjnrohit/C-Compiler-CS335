@@ -1,4 +1,5 @@
-/* Utility function to get max of 2 integers */
+// Longest Common Subsequence --- Recursive method
+
 int max(int a, int b) 
 { 
     return (a > b)? a : b; 

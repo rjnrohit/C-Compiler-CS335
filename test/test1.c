@@ -1,21 +1,35 @@
-int x = 10;
-char a[10];
-char name[] = {'a','b'};
-int y = 5;
+// Newton-Raphson Method
 
-char f(){
-	int i = 0;
-	for(i = 0;i<10;++i){
-		a[i] = 'a' + i;
-	}
-	return a[5];
+float f(float x)
+{
+    return x*x + 3*x - 1.2;
+}
+float df (float x)
+{
+    return 2*x + 3;
+}
+float fabs(float x){
+	return x<0?-x:x;
 }
 
-int main ()
+void main()
 {
-    int p = 5;
-    printf("%d\n", p);
-    printf("%c\n", f());
-    
-    return y++;
+    int itr, maxmitr;
+    float h, x0, x1, allerr;
+    printf("\nEnter x0, allowed error and maximum iterations\n");
+    scanf("%f %f %d", &x0, &allerr, &maxmitr);
+    for (itr=1; itr<=maxmitr; itr++)
+    {
+        h=f(x0)/df(x0);
+        x1=x0-h;
+        printf(" At Iteration no. %3d, x = %f\n", itr, x1);
+        if (fabs(h) < allerr)
+        {
+            printf("After %d iterations, root = %f\n", itr, x1);
+            return 0;
+        }
+        x0=x1;
+    }
+    printf(" The required solution does not converge or iterations are insufficient\n");
+    return;
 }

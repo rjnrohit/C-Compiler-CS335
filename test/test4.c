@@ -1,3 +1,5 @@
+// Performing multiple bitwise operations
+
 int main(){
     char operator;
     printf("Enter a bitwise operator (&, |, ^, ~, <, >): ");

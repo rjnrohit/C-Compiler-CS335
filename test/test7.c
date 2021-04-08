@@ -1,3 +1,4 @@
+// Linked list iteration
 struct Node {
 	int data;
 	struct Node* next;
