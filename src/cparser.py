@@ -211,16 +211,89 @@ def p_argument_expression_list(p):
 def p_unary_expression(p):
     '''
     unary_expression : postfix_expression
-                     | INCREMENT unary_expression
+    '''
+    p[0] = p[1]
+
+#Node
+def p_unary_expression_1(p):
+    '''
+    unary_expression : INCREMENT unary_expression
                      | DECREMENT unary_expression
-                     | unary_operator cast_expression
-                     | SIZEOF unary_expression
+    '''
+    allowed_base = {'int','float','double','char','long'}
+    allowed_class = {'PointerType'}
+    if p[2].type == 'error':
+        p[0] = p[2]
+    elif p[2].type.class_type == 'BasicType' and p[2].type.type in allowed_base:
+        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type)
+    elif p[2].type.class_type in allowed_class:
+        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type)
+    else:
+        p[0] = p[2]
+        p[0].type = 'error'
+        Errors(
+            errorType='TypeError',
+            errorText='increment/decrement not possible for' + p[2].type.stype,
+            token_object= p.slice[-2]
+        )
+
+#Node
+def p_unary_expression_2(p):
+    '''
+    unary_expression : unary_operator cast_expression
+    '''
+    #print(p[1]) #!!
+
+    if p[2].type == 'error':
+        p[0] = Node(type = 'error')
+
+    elif p[1] == '+' or p[1] == '-':
+
+        allowed_base = {'int','float','double','char','long'}
+
+        if p[2].type.type in allowed_base:
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
+        else:
+            p[0] = Node(type = 'error')
+        
+    elif p[1] == '&':
+
+        p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = PointerType(p[2].type))
+
+    elif p[1] == '*':
+
+        if p[2].type.is_pointer:
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type.type)
+        else:
+            p[0]  =Node(type = 'error')
+
+    else:
+
+        allowed_base = {'int','float','double','char','long', 'bool'}
+        if p[2].type.type in allowed_base:
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
+        else:
+            p[0] = Node(type = 'error')
+
+
+
+#Node
+def p_unary_expression_3(p):
+    '''
+    unary_expression : SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("unary_op",p[1],children = [p[2]] if len(p) == 3 else [p[3]])
+
+    if len(p) == 3:
+        if p[2].type == 'error':
+            p[0] = Node(type = 'error')
+        else:
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType(type = 'long'))
+    else:
+        if p[3].type == 'error':
+            p[0] = Node(type = 'error')
+        else:
+            p[0] = Node(name = "unary_op", value=str(p[3].type.stype) + ':p ' + p[1], type = BasicType(type = 'long'))
 
 #String
 def p_unary_operator(p):
@@ -232,7 +305,7 @@ def p_unary_operator(p):
                    | BITWISE_ONE_COMPLEMENT
                    | LOGICAL_NOT
     '''
-    # p[0] = p[1]
+    p[0] = p[1]
 
 #Node
 def p_cast_expression(p):
