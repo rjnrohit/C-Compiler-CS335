@@ -25,6 +25,9 @@ int main(){
     int *ptr1 = &b;
     ptr = ptr1+'c';
     ptr = 5+ptr1;
+    if(5){
+        a = 5.0?b:a;
+    }
 
 }
 char c = 'a';

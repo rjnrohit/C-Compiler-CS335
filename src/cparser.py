@@ -635,10 +635,34 @@ def p_equality_expression(p):
                         | equality_expression NOT_EQUALS relational_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','double','float'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=BasicType('bool'))
 
 #Node
 def p_and_expression(p):
@@ -646,11 +670,36 @@ def p_and_expression(p):
     and_expression : equality_expression
 	               | and_expression BITWISE_AND equality_expression
     '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+
+    
 
 #Node
 def p_exclusive_or_expression(p):
@@ -659,10 +708,36 @@ def p_exclusive_or_expression(p):
 	                        | exclusive_or_expression BITWISE_XOR and_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+
+
 
 #Node
 def p_inclusive_or_expression(p):
@@ -671,10 +746,35 @@ def p_inclusive_or_expression(p):
 	                        | inclusive_or_expression BITWISE_OR exclusive_or_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+
 
 #Node
 def p_logical_and_expression(p):
@@ -683,40 +783,36 @@ def p_logical_and_expression(p):
 	                       | logical_and_expression LOGICAL_AND inclusive_or_expression
     '''
     ### Implement typecasting logic
-    allowed_class = {'BasicType'}
-    allowed_base = {'bool'}
-
-    check1 = True
-    check3 = True
-
     if len(p) == 2:
         p[0] = p[1]
-        return
-    elif p[1].type=="error":
-        p[0] = Node(type="error")
-        check1 = False
-    elif p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
-        Errors(
-            errorType = 'TypeError',
-            errorText = 'wrong index type '+p[1].type.stype,
-            token_object=p.slice[-1]
-        )
-        check1 = False
-    
-    if p[3].type=="error":
-        p[0] = Node(type="error")
-        check3 = False
-    elif p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
-        Errors(
-            errorType = 'TypeError',
-            errorText = 'wrong index type '+p[3].type.stype,
-            token_object=p.slice[-1]
-        )
-        check3 = False
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool','double','float'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
 
-    if check1 and check3:
-        p[0] = Node(name="binary_op", value=p[2], type='BasicType', children=[p[1],p[3]])
-    
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+        p[3] = Node(name="type_cast",value='bool',children=[p[3]],type=BasicType('bool'))
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]],type=BasicType('bool'))
+
 #Node
 def p_logical_or_expression(p):
     '''
@@ -724,40 +820,35 @@ def p_logical_or_expression(p):
 	                      | logical_or_expression LOGICAL_OR logical_and_expression
     '''
 
-    ### Implement typecasting logic
-    allowed_class = {'BasicType'}
-    allowed_base = {'bool'}
-
-    check1 = True
-    check3 = True
-
     if len(p) == 2:
         p[0] = p[1]
-        return
-    elif p[1].type=="error":
-        p[0] = Node(type="error")
-        check1 = False
-    elif p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
-        Errors(
-            errorType = 'TypeError',
-            errorText = 'wrong index type '+p[1].type.stype,
-            token_object=p.slice[-1]
-        )
-        check1 = False
-    
-    if p[3].type=="error":
-        p[0] = Node(type="error")
-        check3 = False
-    elif p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
-        Errors(
-            errorType = 'TypeError',
-            errorText = 'wrong index type '+p[3].type.stype,
-            token_object=p.slice[-1]
-        )
-        check3 = False
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool','double','float'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
 
-    if check1 and check3:
-        p[0] = Node(name="binary_op", value=p[2], type='BasicType', children=[p[1],p[3]])
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+        p[3] = Node(name="type_cast",value='bool',children=[p[3]],type=BasicType('bool'))
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]],type=BasicType('bool'))
     
 
 #Node
@@ -767,10 +858,31 @@ def p_conditional_expression(p):
 	                       | logical_or_expression QUES_MARK expression COLON conditional_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("ternary_op",children = [p[1],p[3],p[5]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[1].type == "error" or p[3].type == "error" or p[5].type == "error":
+            p[0] = Node(type="error")
+            return
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool','double','float'}
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        if p[3].type != p[5].type:
+            Errors(
+                errorType='TypeError',
+                errorText='not same type',
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+        p[0] = Node("ternary_op",children = [p[1],p[3],p[5]],type=p[3].type)
 
 #Node
 def p_assignment_expression(p):
