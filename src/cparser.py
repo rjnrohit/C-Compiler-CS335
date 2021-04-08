@@ -967,21 +967,23 @@ def p_expression(p):
     expression : assignment_expression
 	           | expression COMMA assignment_expression
     ''' 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     if isinstance(p[1],Node) and p[1].type == "expression":
-    #         p[1].addChild(p[3])
-    #         p[0] = p[1]
-    #     else:
-    #         p[0] = Node("expression",children=[p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+        if isinstance(p[1],Node) and p[1].name == "expression":
+            p[1].addChild(p[3])
+            p[0] = p[1]
+        else:
+            p[0] = Node(name="expression",children=[p[1],p[3]],type="ok")
     
 #Node
 def p_constant_expression(p):
     '''
     constant_expression : conditional_expression
     '''
-    # p[0] = p[1]
+    p[0] = p[1]
 
 
 #List
