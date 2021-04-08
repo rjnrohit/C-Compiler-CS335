@@ -235,7 +235,7 @@ def p_postfix_expression_3(p):
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
-    if p[1].type != "StructType"
+    if p[1].type != "StructType":
         p[0] = Node(type="error")
         Errors(
             errorType='TypeError',
@@ -267,7 +267,7 @@ def p_postfix_expression_4(p):
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
-    if p[1].type != "PointerType" or p[1].type.type != "StructType"
+    if p[1].type != "PointerType" or p[1].type.type != "StructType":
         p[0] = Node(type="error")
         Errors(
             errorType='TypeError',
