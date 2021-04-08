@@ -325,9 +325,9 @@ def p_unary_expression_1(p):
     if p[2].type == 'error':
         p[0] = p[2]
     elif p[2].type.class_type == 'BasicType' and p[2].type.type in allowed_base:
-        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type)
+        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type,children=[p[2]])
     elif p[2].type.class_type in allowed_class:
-        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type)
+        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type,children=[p[2]])
     else:
         p[0] = p[2]
         p[0].type = 'error'
@@ -352,32 +352,32 @@ def p_unary_expression_2(p):
         allowed_base = {'int','float','double','char','long'}
 
         if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
-            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type,children=[p[2]])
         else:
             p[0] = Node(type = 'error')
         
     elif p[1] == '&':
 
-        p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = PointerType(p[2].type))
+        p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = PointerType(p[2].type),children=[p[2]])
 
     elif p[1] == '*':
 
         if p[2].type.is_pointer:
-            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type.type)
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type.type,children=[p[2]])
         else:
             p[0]  =Node(type = 'error')
 
     elif p[1] == '~':
         allowed_base = {'int','float','double','char','long', 'bool'}
         if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
-            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type,children=[p[2]])
         else:
             p[0] = Node(type = 'error')
     
     else: 
         allowed_base = {'int','float','double','char','long', 'bool'}
         if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
-            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType('bool'))
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType('bool'),children=[p[2]])
         else:
             p[0] = Node(type = 'error')
 
@@ -394,12 +394,12 @@ def p_unary_expression_3(p):
         if p[2].type == 'error':
             p[0] = Node(type = 'error')
         else:
-            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType(type = 'long'))
+            p[0] = Node(name = "unary_op",value=p[1], type = BasicType(type = 'long'),children=[p[2]])
     else:
         if p[3].type == 'error':
             p[0] = Node(type = 'error')
         else:
-            p[0] = Node(name = "unary_op", value=str(p[3].type.stype) + ':p ' + p[1], type = BasicType(type = 'long'))
+            p[0] = Node(name = "unary_op", value=p[1] + ':' + str(p[3].type.stype), type = BasicType(type = 'long'))
 
 #String
 def p_unary_operator(p):
@@ -530,6 +530,8 @@ def p_additive_expression(p):
                 )
                 p[0] = Node(type="error")
                 return
+            if p[3].type.type == "char":
+                p[3] = Node("type_caste",value="int",type=BasicType('int'),children=[p[3]])
             p[0] = Node(name="binary_op",value=p[1].type.stype+p[2],type=p[1].type,children = [p[1],p[3]])
             return
         if i == 1:
@@ -541,6 +543,8 @@ def p_additive_expression(p):
                 )
                 p[0] = Node(type="error")
                 return
+            if p[1].type.type == "char":
+                p[1] = Node("type_caste",value="int",type=BasicType('int'),children=[p[1]])
             p[0] = Node(name="binary_op",value=p[3].type.stype+p[2],type=p[3].type,children = [p[1],p[3]])
             return
         
@@ -1478,7 +1482,8 @@ def p_jump_statement(p):
                 p[0] = Node(type="error")
                 return
             if p[2].type.is_convertible_to(success.type):
-                if p[2].type != success.type:
+                if str(p[2].type) != str(success.type):
+                    print(p[2].type.stype,success.type.stype)
                     p[2] = Node(name="type_cast",value=success.type.stype,children=[p[2]],type=success.type)
                 p[0] = Node(name="return",children=[p[2]],type="ok")
                 return
