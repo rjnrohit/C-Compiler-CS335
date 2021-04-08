@@ -1088,7 +1088,7 @@ def p_declarator(p):
 	           | no_pointer direct_declarator
     '''
     p[0] = p[2]
-    print(p[0].type, type(p[0].type), p[0].value)
+    # print(p[0].type, type(p[0].type), p[0].value)
     #   
 
     # if len(p) == 2:
@@ -1243,12 +1243,17 @@ def p_labeled_statement(p):
     labeled_statement : CASE constant_expression COLON statement
 	                  | DEFAULT COLON statement
     '''
-    # if p.slice[1].type == 'IDENTIFIER':
-    #     p[0] = Node("label",children=[Node("id",p[1]),p[3]])
-    # elif p.slice[1].type == 'CASE':
-    #     p[0] = Node("case",children=[p[2],p[4]])
-    # else:
-    #     p[0] = Node("default",children=[p[3]])
+    
+    if p.slice[1].type == 'CASE':
+        if p[2].type == "error" or p[4].type == "error":
+            p[0] = Node(type="error")
+            return 
+        p[0] = Node("case",children=[p[2],p[4]],type="ok")
+    else:
+        if p[3].type == "error":
+            p[0] = Node(type="error")
+            return 
+        p[0] = Node("default",children=[p[3]],type="ok")
 
 # Node
 def p_compound_statement(p):
@@ -1257,9 +1262,9 @@ def p_compound_statement(p):
 	                   | L_BRACES add_sym block_item_list pop_sym R_BRACES
     '''
     if len(p) == 3:
-        p[0] = Node("compound_statement","{}")
+        p[0] = Node("compound_statement","{}",type="ok")
     else:
-        p[0] = Node("compound_statement","{}",children=p[3])
+        p[0] = Node("compound_statement","{}",children=p[3],type="ok")
     # print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
 
 def p_function_body(p):
@@ -1268,9 +1273,9 @@ def p_function_body(p):
 	              | L_BRACES block_item_list R_BRACES
     '''
     if len(p) == 3:
-        p[0] = Node("compound_statement","{}")
+        p[0] = Node("compound_statement","{}",type="ok")
     else:
-        p[0] = Node("compound_statement","{}",children=p[2])
+        p[0] = Node("compound_statement","{}",children=p[2],type="ok")
 
 # List
 def p_block_item_list(p):
@@ -1295,7 +1300,7 @@ def p_expression_statement(p):
 	                     | expression SEMI_COLON
     '''
     if len(p) == 2:
-        p[0] = Node(value = p[1])
+        p[0] = Node(value = p[1],type="ok")
     else:
         p[0] = p[1]
 
@@ -1306,11 +1311,24 @@ def p_selection_statement(p):
 	                    | IF L_PAREN expression R_PAREN statement ELSE statement
 	                    | SWITCH L_PAREN expression R_PAREN statement
     '''
-    # if p[1] == "if":
-    #     if len(p) == 6:
-    #         p[0] = Node("if",children=[p[3],p[5]])
-    #     else:
-    #         p[0] = Node("if_else",children=[p[3],p[5],p[7]])
+    if p[1] == "if":
+        if len(p) == 6:
+            if p[3].type=="error" or p[5].type=="error":
+                p[0] = Node(type="error")
+                return
+            p[0] = Node(name="if",children=[p[3],p[5]],type="ok")
+
+        else:
+            if p[3].type=="error" or p[5].type=="error" or p[7].type=="error":
+                p[0] = Node(type="error")
+                return
+            p[0] = Node(name="if_else",children=[p[3],p[5],p[7]],type="ok")
+    
+    else:
+        if p[3].type=="error" or p[5].type=="error":
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(name="switch",children=[p[3],p[5]],type="ok")
 
 # Node
 def p_iteration_statement(p):
@@ -1320,37 +1338,83 @@ def p_iteration_statement(p):
 	                    | FOR L_PAREN expression_statement expression_statement R_PAREN statement
 	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
     '''
-    # if p[1] == "while":
-    #     p[0] = Node("iteration_statement","while",children=[p[3],p[5]])
-    # elif p[1] == "do":
-    #     p[0] = Node("iteration_statement","do",children=[p[2],p[5]])
-    # else:
-    #     if len(p) == 7:
-    #         child = [p[3],p[4],p[6]]
-    #     else:
-    #         child = [p[3],p[4],p[5],p[7]]
-    #     p[0] = Node("iteration_statement","for",child)
+    if p[1] == "while":
+        if p[3].type=="error" or p[5].type=="error":
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(name="iteration_statement",value="while",children=[p[3],p[5]],type="ok")
+    elif p[1] == "do":
+        if p[2].type=="error" or p[5].type=="error":
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(name="iteration_statement",value="do",children=[p[2],p[5]],type="ok")
+    else:
+        if len(p) == 7:
+            if p[3].type=="error" or p[4].type=="error" or p[6].type=="error":
+                p[0] = Node(type="error")
+                return
+            child = [p[3],p[4],p[6]]
+        else:
+            if p[3].type=="error" or p[4].type=="error" or p[5].type=="error" or p[7].type=="error":
+                p[0] = Node(type="error")
+                return
+            child = [p[3],p[4],p[5],p[7]]
+        p[0] = Node(name="iteration_statement",value="for",children=child,type="ok")
     
 # Node
 def p_jump_statement(p):
     '''
     jump_statement : CONTINUE SEMI_COLON
 	               | BREAK SEMI_COLON
-	               | RETURN SEMI_COLON
-	               | RETURN expression SEMI_COLON
 	                 
     '''
-    # if len(p) == 4:
-    #     c = Node("id",p[2]) if p[1] == "goto" else p[2]
-    #     p[0] = Node("jump_statment",p[1],[c])
-    # else:
-    #     p[0] = Node("Jump Statment",p[1])
+    p[0] = Node(name=p[1],type="ok")
+def p_jump_statement(p):
+    '''
+    jump_statement : RETURN SEMI_COLON
+	               | RETURN expression SEMI_COLON      
+    '''
+    success = sym_table.look_up(name='return',token_object=p.slice[1])
+    if success:
+        if len(p) == 3:
+            if success.type != BasicType('void'):
+                p[0] = Node(type="error")
+                Errors(
+                    errorType='TypeError',
+                    errorText='return type not matching',
+                    token_object= p.slice[2]
+                )
+                return
+            p[0] = Node(name="return",type="ok")
+        else:
+            if p[2].type == "error":
+                p[0] = Node(type="error")
+                return
+            if p[2].type.is_convertible_to(success.type):
+                if p[2].type != success.type:
+                    p[2] = Node(name="type_cast",value=success.type.stype,children=[p[2]],type=success.type)
+                p[0] = Node(name="return",children=[p[2]],type="ok")
+                return
+            p[0] = Node(type="error")
+            Errors(
+                errorType='TypeError',
+                errorText='return type not matching',
+                token_object= p.slice[2]
+            )
+    else:
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='Not Function',
+            token_object= p.slice[2]
+        )
 
 def p_add_sym(p):
     '''
         add_sym :
     '''
     sym_table.start_scope()
+    p[0] = None
 
 def p_pop_sym(p):
     '''

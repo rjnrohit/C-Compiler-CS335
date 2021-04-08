@@ -26,8 +26,10 @@ int main(){
     ptr = ptr1+'c';
     ptr = 5+ptr1;
     if(5){
-        a = 5.0?b:a;
+        5;
     }
+
+    return;
 
 }
 char c = 'a';
