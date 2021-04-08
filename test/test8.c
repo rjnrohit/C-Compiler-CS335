@@ -1,30 +1,31 @@
-int main(){
-    char operator;
-    int a=2;
-    int b=3;
-    printf("Enter a bitwise operator (&, |, ^, ~, <, >): ");
-    scanf("%c", &operator);
-    
-    
-
-    if(operator == '|'){
-        printf("%d", a|b);
-    }
-    else if(operator == '&'){
-        printf("%d", a&b);
-    }
-    else if(operator == '^'){
-        printf("%d", a^b);
-    }
-    else if(operator == '~'){
-        printf("%d %d", ~a, ~b);
-    }
-    else if(operator == '<'){
-        printf("%d %d", a<<1, b<<2);
-    }
-    else if(operator == '>'){
-        printf("%d %d", a>>1, b>>2);
-    }
-    
-    printf("\n%d\n%d\n%d\n%d\n%d", a+b, a-b, a*b, a/b, a%b);
-}
+/* Utility function to get max of 2 integers */
+int max(int a, int b) 
+{ 
+    return (a > b)? a : b; 
+} 
+  
+/* Returns length of LCS for X[0..m-1], Y[0..n-1] */
+int lcs( char *X, char *Y, int m, int n ) 
+{ 
+   if (m == 0 || n == 0) 
+     return 0; 
+   if (X[m-1] == Y[n-1]) 
+     return 1 + lcs(X, Y, m-1, n-1); 
+   else
+     return max(lcs(X, Y, m, n-1), lcs(X, Y, m-1, n)); 
+} 
+  
+/* Driver program to test above function */
+int main() 
+{ 
+  char X[] = "AGGTAB"; 
+  char Y[] = "GXTXAYB"; 
+  
+  //int m = strlen(X); 
+  //int n = strlen(Y); 
+  int m = 6, n=7;
+  
+  printf("Length of LCS is %d", lcs( X, Y, m, n ) ); 
+  
+  return 0; 
+} 
