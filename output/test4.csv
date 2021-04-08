@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------------------
+          symbol table id:,0,symbol table name:,global
+name,type,offset,width
+main,int function([]),0,30
+-------------------------------------------------------------------------------------------
+          symbol table id:,1,symbol table name:,main
+name,type,offset,width
+operator,char,4,1
+a,long,5,8
+b,long,13,8
+equal,bool,21,1
+x,long,22,8
+-------------------------------------------------------------------------------------------
+          symbol table id:,8,symbol table name:,main
+name,type,offset,width
+operator,char,4,1
+a,long,5,8
+b,long,13,8
+equal,bool,21,1
+x,long,22,8

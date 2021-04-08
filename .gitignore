@@ -6,7 +6,7 @@ bin/__pycache__/*
 bin/__pycache__
 *.dot
 *.png
-*.csv
+dump.csv
 src/parser.out
 src/parsetab.py
 temp.*
