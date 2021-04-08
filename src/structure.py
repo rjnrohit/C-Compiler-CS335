@@ -485,8 +485,8 @@ sym_table.set_curr_scope(symbol_table = sym_table)
 
 # checking type
 def implicit_casting(node1,node2):
-    list_type = {'double':1,'float':2,'long':3,'int':4,'char':5,'void':6]
-    if node1.type.class_type != 'BaiscType' or  node2.type.class_type != 'BaiscType':
+    list_type = {'double':1,'float':2,'long':3,'int':4,'char':5,'void':6}
+    if node1.type.class_type != 'BasicType' or  node2.type.class_type != 'BasicType':
         return None
     if node1.type.type not in list_type or  node1.type.type not in list_type:
         return None
