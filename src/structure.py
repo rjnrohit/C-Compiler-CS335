@@ -20,7 +20,10 @@ class Node:
     def __str__(self):
         res = "Node("
         res += "id:" + str(self.id)
-        res += "info:" + str(self.data)
+        res += ",name" + str(self.name)
+        res += ",value" + str(self.value)
+        res += ",type" + str(self.type)
+        res += ",info:" + str(self.data)
         res += ")"
         return res
 
@@ -110,7 +113,7 @@ class PointerType(Type):
         self.class_type = "PointerType"
         self.is_pointer = True
         self.type = type
-        self.stype = self.stype + "*"
+        self.stype = type.stype + "*"
         self.array_size = array_size
         self.width = self.update_width()
 
@@ -504,7 +507,8 @@ class Errors:
 
         if token_object:
             self.lineno = token_object.lineno
-            self.filename = token_object.lexer.filename
+            # print(token_object, token_object.__dict__)
+            # self.filename = token_object.lexer.filename
             if token_object.lexeme:
                 self.lexeme = token_object.lexeme
             else:
@@ -516,18 +520,19 @@ class Errors:
     def get_error(self, id=None):
         return Errors.error_list[id]
     
-    def get_all_error(self):
+    def get_all_error():
         return Errors.error_list
 
 
     def __str__(self):
         res  = "Error("
         res += self.errorType + ","
-        res += "in file: " + self.filename + ","
-        res += "at line no. " + self.lineno + ","
+        # res += "in file: " + self.filename + ","
+        res += "at line no. " + str(self.lineno) + ","
         res += "errorenous lexeme: " + self.lexeme + ","
         res += self.errorText
         res += ")"
+        return res
 
 def getMutliPointerType(type = None, level = 0):
     levObj = PointerType(type = type)

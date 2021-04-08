@@ -29,7 +29,7 @@ int main(){
         5;
     }
 
-    return;
+    return a;
 
 }
 char c = 'a';

@@ -531,7 +531,7 @@ def p_additive_expression(p):
                 )
                 p[0] = Node(type="error")
                 return
-            p[0] = Node(name="binary_op",value=p[1].type.stype+p[2],type=p[1],children = [p[1],p[3]])
+            p[0] = Node(name="binary_op",value=p[1].type.stype+p[2],type=p[1].type,children = [p[1],p[3]])
             return
         if i == 1:
             if p[1].type.type not in allowed_base[i]:
@@ -542,7 +542,7 @@ def p_additive_expression(p):
                 )
                 p[0] = Node(type="error")
                 return
-            p[0] = Node(name="binary_op",value=p[3].type.stype+p[2],type=p[3],children = [p[1],p[3]])
+            p[0] = Node(name="binary_op",value=p[3].type.stype+p[2],type=p[3].type,children = [p[1],p[3]])
             return
         
         if i == 2:
@@ -903,8 +903,10 @@ def p_assignment_expression(p):
     '''
 
     if len(p) == 2:
+        print("906",p[1])
         p[0] = p[1]
     else:
+        print("909",p[3])
         if p[1].type == 'error' or p[3].type == 'error':
 
             p[0] = Node(type = 'error')
@@ -1540,19 +1542,21 @@ def main():
     
     parser.parse(source_code, lexer = lexer.lexer)
 
-    # Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
-    # # print(args)
-    # if args.p:
-    #     Graph.draw(args.f, format='png')
-    #     print(Graph.string())
-    #     return
+    Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
+    # print(args)
+    if args.p:
+        Graph.draw(args.f, format='png')
+        print(Graph.string())
+        return
 
-    # Graph.draw(args.f, format='png')
+    Graph.draw(args.f, format='png')
 
-    # file = open(args.o, 'w')
-    # file.write(Graph.string())
-    # file.close()
+    file = open(args.o, 'w')
+    file.write(Graph.string())
+    file.close()
+    
     print(sym_table)
+    
 
 if __name__ == "__main__":
     main()
