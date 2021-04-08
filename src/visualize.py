@@ -6,7 +6,7 @@ def not_all_None(ls):
     return not all(v is None for v in ls)
 
 def getlabel(name,value):
-    if value == None and name = None:
+    if value == None and name == None:
         return ""
     elif value == None and name != None:
         return str(name)
@@ -36,7 +36,7 @@ def draw_ast(node):
             if nd is None:
                 continue
             if not_all_None(nd.children):
-                G.add_node(nd.id, label = getlabel(nd.type,nd.value))
+                G.add_node(nd.id, label = getlabel(nd.name,nd.value))
                 G.add_edge(top_node.id, nd.id)
                 node_list += [nd]
     
