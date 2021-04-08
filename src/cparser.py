@@ -508,7 +508,7 @@ def p_additive_expression(p):
     else:
         allowed_class = [('PointerType','BasicType'),('BasicType','PointerType'),('BasicType','BasicType')]
         allowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','double','float'}]
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         class1 = p[1].type.class_type
@@ -575,7 +575,7 @@ def p_shift_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -614,7 +614,7 @@ def p_relational_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','double','float'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -651,7 +651,7 @@ def p_equality_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','double','float'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -686,7 +686,7 @@ def p_and_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','bool'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -724,7 +724,7 @@ def p_exclusive_or_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','bool'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -762,7 +762,7 @@ def p_inclusive_or_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','bool'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -799,7 +799,7 @@ def p_logical_and_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','bool','double','float'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -836,7 +836,7 @@ def p_logical_or_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','char','bool','double','float'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -983,7 +983,18 @@ def p_init_declarator(p):
         if success:
             # type checking
             # check for initliazer
-            p[0] = [Node(value = p[2],children = [p[1],p[3]])]
+            if p[3].type = "error":
+                p[0] = Node(type="error")
+                return
+            if p[3].type != p[1].type
+                Errors(
+                    errorType='TypeError',
+                    errorText='not same type',
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            p[0] = [Node(value = p[2],children = [p[1],p[3]],type="ok")]
         else:
             p[0] = [None]
 
@@ -1223,10 +1234,12 @@ def p_initializer(p):
 	            | L_BRACES initializer_list R_BRACES
 	            | L_BRACES initializer_list COMMA R_BRACES
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("init_list","{}",p[2])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[2].type == "error":
+            p[0] = Node(type="error")
+        p[0] = Node(name="{}",children=p[2].value,type=PointerType(type=p[2].type))
 
 # List
 def p_initializer_list(p):
@@ -1235,6 +1248,24 @@ def p_initializer_list(p):
 	                 | initializer_list COMMA initializer
     '''
     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
+    if len(p) == 2:
+        p[0] = Node(value=[p[1]],type=p[1].type)
+    else:
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type != p[3].type:
+            Errors(
+                errorType='TypeError',
+                errorText='not same type',
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(value=p[1]+[p[3]],type=p[1].type)
+
+        
+
 
 # Node
 def p_statement(p):
