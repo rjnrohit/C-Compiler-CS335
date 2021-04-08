@@ -447,13 +447,13 @@ def p_multiplicative_expression(p):
         if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[3].type.stype
+                errorText=p[2]+' not support type '+p[3].type.stype,
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
             return
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+        p[0] = Node("binary_op",value=typ+p[2],children = [node1,node2],type=typ)
 
 def p_multiplicative_expression_1(p):
     '''
@@ -483,7 +483,7 @@ def p_multiplicative_expression_1(p):
         return
         
     node1,node2,typ = implicit_casting(p[1],p[3])
-    p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+    p[0] = Node("binary_op",value=typ+p[2],children = [node1,node2],type=typ)
 
 #Node
 def p_additive_expression(p):
@@ -544,7 +544,7 @@ def p_additive_expression(p):
                 p[0] = Node(type="error")
                 return
             node1,node2,typ = implicit_casting(p[1],p[3])
-            p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+            p[0] = Node("binary_op",value=typ+p[2],children = [node1,node2],type=typ)
             return
 
 
@@ -586,7 +586,7 @@ def p_shift_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
 
 #Node
 def p_relational_expression(p):
@@ -625,7 +625,7 @@ def p_relational_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=BasicType('bool'))
         
 #Node
 def p_equality_expression(p):
