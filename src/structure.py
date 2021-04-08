@@ -68,6 +68,7 @@ class BasicType(Type):
         self.class_type = "BasicType"
         self.is_basic = True
         self.type = type
+        self.stype = self.type
         self.width = self.size_dict[type]
 
     def __str__(self) -> str:
@@ -88,6 +89,7 @@ class PointerType(Type):
         self.class_type = "PointerType"
         self.is_pointer = True
         self.type = type
+        self.stype = self.stype + "*"
         self.array_size = array_size
         self.width = self.update_width()
 
@@ -121,6 +123,7 @@ class StructType(Type):
         self.name = name
         self.symbol_table = symbol_table
         self.type = "struct " + str(self.name)
+        self.stype = "struct"
         self.width = self.update_width()
 
     def __str__(self) -> str:
@@ -143,6 +146,7 @@ class FunctionType(Type):
         self.symbol_table = symbol_table
         self.param_list = param_list
         self.type = str(self.return_type) + " function("  +str(param_list)+")"
+        self.stype = "function"
         self.width = self.update_width()
 
     def __str__(self) -> str:
