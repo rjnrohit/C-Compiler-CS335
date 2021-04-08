@@ -183,14 +183,112 @@ def p_postfix_expression_2(p):
                        | postfix_expression L_PAREN argument_expression_list R_PAREN
     
     '''
+    if p[1].type == "error":
+        p[0] = Node(type="error")
+        return
 
-def p_p_postfix_expression_3(p):
+    if p[1].type != "FunctionType":
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='not function type',
+            token_object= p.slice[-1]
+        )
+        return
+    
+    param_list = p[1].type.param_list
+    return_type = p[1].type.return_type
+
+    if len(p) == 3:
+        if len(param_list) != 0:
+            p[0] = Node(type="error")
+            Errors(
+                errorType='TypeError',
+                errorText='Function require more arguments',
+                token_object= p.slice[-1]
+            )
+        else:
+            p[0] = Node(name="func_call",type=return_type,children=[p[1]])
+    else:
+        arg_list = p[3].data['args_type']
+        if len(arg_list) != len(param_list):
+            p[0] = Node(type="error")
+            Errors(
+                errorType='TypeError',
+                errorText='No of arguments is not matching',
+                token_object= p.slice[-1]
+            )
+        # check for type cast if possible
+        else:
+            p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
+        
+        
+
+
+
+def p_postfix_expression_3(p):
     # struct ref
     ''' 
     postfix_expression : postfix_expression DOT IDENTIFIER
-                       | postfix_expression ARROW IDENTIFIER
+
+    '''
+    if p[1].type == "error":
+        p[0] = Node(type="error")
+        return
+    if p[1].type != "StructType":
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='not struct type',
+            token_object= p.slice[-1]
+        )
+        return
+    
+    arg_dict = p[1].type.arg_dict
+    success = arg_dict.get(p[3])
+    if success == None:
+        Errors(
+            errorType='DeclarationError',
+            errorText='variable'+p[3]+' not declared in struct',
+            token_object= p.slice[-1]
+        )
+        p[0] = Node(type="error")
+        return
+    p[0] = Node(name="struct ref",value=p[2],type=success,children=[p[1],p[3]])
+    
+
+
+def p_postfix_expression_4(p):
+    # struct ref
+    ''' 
+    postfix_expression : postfix_expression ARROW IDENTIFIER
     
     '''
+    if p[1].type == "error":
+        p[0] = Node(type="error")
+        return
+    if p[1].type != "PointerType" or p[1].type.type != "StructType":
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='not pointer of struct type',
+            token_object= p.slice[-1]
+        )
+        return
+    
+    arg_dict = p[1].type.type.arg_dict
+    success = arg_dict.get(p[3])
+    if success == None:
+        Errors(
+            errorType='DeclarationError',
+            errorText='variable'+p[3]+' not declared in struct',
+            token_object= p.slice[-1]
+        )
+        p[0] = Node(type="error")
+        return
+    p[0] = Node(name="struct ref",value=p[2],type=success,children=[p[1],p[3]])
+
+
 
 
 
@@ -200,11 +298,13 @@ def p_argument_expression_list(p):
     argument_expression_list : assignment_expression
 	                         | argument_expression_list COMMA assignment_expression
     '''
-    # if len(p) == 2:
-    #     p[0] = Node("argument_expression_list",children=[p[1]])
-    # else:
-    #     p[1].addChild(p[3])
-    #     p[0] = p[1]
+    if len(p) == 2:
+        p[0] = Node("argument_expression_list",children=[p[1]])
+        p[0].data['args_type'] = [p[1].type]
+    else:
+        p[1].addChild(p[3])
+        p[1].data['args_type'] += [p[3].type]
+        p[0] = p[1]
 
 
 #Node
@@ -569,7 +669,7 @@ def p_struct_specifier(p):
     '''
     
     # todo dict
-    sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2])
+    sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2],arg_dict=p[5])
 
 
 
