@@ -444,7 +444,7 @@ def p_multiplicative_expression(p):
     else:
         allowed_class = {'BasicType'}
         allowed_base = {'int','long','double','float','char'}
-        if p[1].type == "error" or p[2].type == "error":
+        if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
             return
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -464,7 +464,7 @@ def p_multiplicative_expression(p):
             p[0] = Node(type="error")
             return
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",value=typ+p[2],children = [node1,node2],type=typ)
+        p[0] = Node("binary_op",value=typ.stype+p[2],children = [node1,node2],type=typ)
 
 def p_multiplicative_expression_1(p):
     '''
@@ -472,7 +472,7 @@ def p_multiplicative_expression_1(p):
     '''
     allowed_class = {'BasicType'}
     allowed_base = {'int','long','char'}
-    if p[1].type == "error" or p[2].type == "error":
+    if p[1].type == "error" or p[3].type == "error":
         p[0] = Node(type="error")
         return
     if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
@@ -494,7 +494,7 @@ def p_multiplicative_expression_1(p):
         return
         
     node1,node2,typ = implicit_casting(p[1],p[3])
-    p[0] = Node("binary_op",value=typ+p[2],children = [node1,node2],type=typ)
+    p[0] = Node("binary_op",value=typ.stype+p[2],children = [node1,node2],type=typ)
 
 #Node
 def p_additive_expression(p):
@@ -555,7 +555,7 @@ def p_additive_expression(p):
                 p[0] = Node(type="error")
                 return
             node1,node2,typ = implicit_casting(p[1],p[3])
-            p[0] = Node("binary_op",value=typ+p[2],children = [node1,node2],type=typ)
+            p[0] = Node("binary_op",value=typ.stype+p[2],children = [node1,node2],type=typ)
             return
 
 
@@ -597,7 +597,7 @@ def p_shift_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=typ)
 
 #Node
 def p_relational_expression(p):
@@ -636,7 +636,7 @@ def p_relational_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=BasicType('bool'))
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=BasicType('bool'))
         
 #Node
 def p_equality_expression(p):
@@ -673,7 +673,7 @@ def p_equality_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=BasicType('bool'))
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=BasicType('bool'))
 
 #Node
 def p_and_expression(p):
@@ -708,7 +708,7 @@ def p_and_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+        p[0] = Node(name = "binary_op",value = typ.stype+p[2],children = [node1,node2],type=typ)
 
     
 
@@ -746,7 +746,7 @@ def p_exclusive_or_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=typ)
 
 
 
@@ -784,7 +784,7 @@ def p_inclusive_or_expression(p):
             return
             
         node1,node2,typ = implicit_casting(p[1],p[3])
-        p[0] = Node("binary_op",typ+p[2],children = [node1,node2],type=typ)
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=typ)
 
 
 #Node
@@ -1020,7 +1020,7 @@ def p_init_declarator(p):
         if success:
             # type checking
             # check for initliazer
-            if p[3].type = "error":
+            if p[3].type == "error":
                 p[0] = Node(type="error")
                 return
             # if p[3].type != p[1].type
