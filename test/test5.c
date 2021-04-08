@@ -1,3 +1,5 @@
+// Iterative fibonnaci number calculation
+
 int main() {
     int i, n=10, t1 = 0, t2 = 1, nextTerm;
     
