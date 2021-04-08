@@ -986,14 +986,14 @@ def p_init_declarator(p):
             if p[3].type = "error":
                 p[0] = Node(type="error")
                 return
-            if p[3].type != p[1].type
-                Errors(
-                    errorType='TypeError',
-                    errorText='not same type',
-                    token_object= p.slice[2]
-                )
-                p[0] = Node(type="error")
-                return
+            # if p[3].type != p[1].type
+            #     Errors(
+            #         errorType='TypeError',
+            #         errorText='not same type',
+            #         token_object= p.slice[2]
+            #     )
+            #     p[0] = Node(type="error")
+            #     return
             p[0] = [Node(value = p[2],children = [p[1],p[3]],type="ok")]
         else:
             p[0] = [None]
