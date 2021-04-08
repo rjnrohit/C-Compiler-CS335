@@ -116,7 +116,7 @@ class PointerType(Type):
 
 class StructType(Type):
     
-    def __init__(self, name = None, symbol_table = None):
+    def __init__(self, name = None, symbol_table = None,arg_dict=None):
         super().__init__()
         self.class_type = "StructType"
         self.is_struct = True
@@ -125,6 +125,7 @@ class StructType(Type):
         self.type = "struct " + str(self.name)
         self.stype = "struct"
         self.width = self.update_width()
+        self.arg_dict = arg_dict
 
     def __str__(self) -> str:
         return self.type
@@ -280,7 +281,7 @@ class SymbolTable:
 
         return self.table[name]
     
-    def _add_struct_entry(self, name = None, symbol_table = None, token_object = None):
+    def _add_struct_entry(self, name = None, symbol_table = None, token_object = None,arg_dict=None):
         assert name, "name not provided for entry"
         assert symbol_table is not None, "symbol table not given for struct entry"
 
@@ -295,7 +296,7 @@ class SymbolTable:
             )
             return None
 
-        self.struct_table[name] = StructType(name = name, symbol_table=symbol_table)
+        self.struct_table[name] = StructType(name = name, symbol_table=symbol_table,arg_dict=arg_dict)
         return self.struct_table[name]
         
 
@@ -399,8 +400,8 @@ class SymbolTable:
     def add_entry(self,name = None, type = None, token_object = None):
         return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object)
     
-    def add_struct_entry(self, name = None, symbol_table = None, token_object = None):
-        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object)
+    def add_struct_entry(self, name = None, symbol_table = None, token_object = None,arg_dict=None):
+        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object,arg_dict=None)
     
     def look_up(self, name = None, token_object = None):
         return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object)
@@ -481,3 +482,23 @@ def getMutliPointerType(type = None, level = 0):
 
 sym_table = SymbolTable(name = 'global', scope_type='global')
 sym_table.set_curr_scope(symbol_table = sym_table)
+
+# checking type
+def implicit_casting(node1,node2):
+    list_type = {'double':1,'float':2,'long':3,'int':4,'char':5,'void':6]
+    if node1.type.class_type != 'BaiscType' or  node2.type.class_type != 'BaiscType':
+        return None
+    if node1.type.type not in list_type or  node1.type.type not in list_type:
+        return None
+    else:
+        rank1 = list_type(node1.type.type)
+        rank2 = list_type(node2.type.type)
+        if rank1 == rank2:
+            return node1,node2,node1.type
+        elif rank1 < rank2:
+            new_node = Node(name="type_cast",value=node1.type.stype,children=[node2])
+            return node1,new_node,node1.type
+        else:
+            new_node = Node(name="type_cast",value=node2.type.stype,children=[node1])
+            return new_node,node2,node2.type
+
