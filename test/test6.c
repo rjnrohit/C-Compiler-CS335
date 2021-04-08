@@ -72,17 +72,16 @@ void main()
     void preorder(struct node *);
  
     struct node *ptr;
-    int no,i,num;
+    int no=6,i;
+
+    int arr[] = { 12, 11, 13, 5, 6, 7 };
  
     ptr = 0;
     ptr->data=0;
-    
-    scanf("%d",&no);
  
     for(i=0;i<no;i++)
     {
-        scanf("%d",&num);
-        insert(&ptr,num);
+        insert(&ptr,arr[i]);
     }
  
     inorder(ptr);

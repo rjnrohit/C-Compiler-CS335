@@ -2,8 +2,7 @@
 
 int main()
 {
-	int n;
-	scanf("%d", &n);
+	int n=20;
 
 	long a, b;
 	long temp;

@@ -1,9 +1,9 @@
 // Check if a number is palindrome
 
 int main() {
-    int n, reversedN = 0, remainder, originalN;
+    long reversedN = 0, remainder, originalN;
     
-    scanf("%d", &n);
+    long n = 123454321;
     originalN = n;
 
     // reversed integer is stored in reversedN
