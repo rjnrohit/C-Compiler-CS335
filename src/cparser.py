@@ -119,13 +119,19 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        allowed_base = {'int','float','double','char','long'}
+        allowed_class = {'PointerType'}
         if p[1].type == 'error':
             p[0] = p[1]
-        elif p[1].type.class_type == 'FunctionType' or p[1].type.class_type == 'StructType':
-            p[0] = p[1]
-            p[0].type = 'error'
+        elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+        elif p[1].type.class_type in allowed_class:
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
         else:
             p[0] = p[1]
+            p[0].type = 'error'
+            # add error
+        
 
 def p_postfix_expression_1(p):
     # Array ref
@@ -440,7 +446,6 @@ def p_type_specifier(p):
     '''
     type_specifier : VOID
                    | CHAR
-                   | SHORT
                    | INT
                    | LONG
                    | FLOAT
