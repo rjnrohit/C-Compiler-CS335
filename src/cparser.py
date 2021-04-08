@@ -16,7 +16,7 @@ from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, StructType
 from structure import getMutliPointerType
 from structure import implicit_casting
-
+from dump_csv import print_csv
 #####################Grammar section #################
 
 
@@ -1546,6 +1546,11 @@ def main():
     
     parser.parse(source_code, lexer = lexer.lexer)
 
+    if len(Errors.get_all_error()):
+        for error in Errors:
+            print(error)
+        return
+
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
     # print(args)
     if args.p:
@@ -1560,7 +1565,7 @@ def main():
     file.close()
     
     # print(sym_table)
-    
+    print_csv(sym_table)
 
 if __name__ == "__main__":
     main()
