@@ -22,11 +22,9 @@ int main()
   char X[] = "AGGTAB"; 
   char Y[] = "GXTXAYB"; 
   
-  //int m = strlen(X); 
-  //int n = strlen(Y); 
   int m = 6, n=7;
   
-  printf("Length of LCS is %d", lcs( X, Y, m, n ) ); 
+  int ans = lcs(X, Y, m, n);
   
   return 0; 
 } 

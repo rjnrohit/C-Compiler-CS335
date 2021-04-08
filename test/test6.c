@@ -59,9 +59,8 @@ void postorder(struct node *p)
     {
         postorder(p->left);
         postorder(p->right);
-        printf("\nData :%d",p->data);
     }
-    else
+    
     return;
 }
 

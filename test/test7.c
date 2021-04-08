@@ -19,7 +19,6 @@ int main()
 	
 	struct Node* itr = &head;
 	while(itr != 0){
-	    printf("%d", itr->data);
 	    itr = itr->next;
 	}
 	return 0;

@@ -18,7 +18,6 @@ int main()
 			b = a + b;
 			a = temp;
 		}
-		printf("%ld\n", b);
 	}
 	return 0;
 }
