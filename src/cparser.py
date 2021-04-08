@@ -906,10 +906,8 @@ def p_assignment_expression(p):
     '''
 
     if len(p) == 2:
-        print("906",p[1])
         p[0] = p[1]
     else:
-        print("909",p[3])
         if p[1].type == 'error' or p[3].type == 'error':
 
             p[0] = Node(type = 'error')
@@ -1089,7 +1087,6 @@ def p_struct_declaration_list(p):
     else:
         p[0] = p[1]
         p[0].update(p[2])
-        print(p[1])
 
 # dict
 def p_struct_declaration(p):
@@ -1097,7 +1094,6 @@ def p_struct_declaration(p):
     struct_declaration : type_specifier struct_declarator_list SEMI_COLON
     '''
     p[0] = p[2]
-    print("ksjjd", p[0])
 
 
 # dict
@@ -1483,7 +1479,6 @@ def p_jump_statement(p):
                 return
             if p[2].type.is_convertible_to(success.type):
                 if str(p[2].type) != str(success.type):
-                    print(p[2].type.stype,success.type.stype)
                     p[2] = Node(name="type_cast",value=success.type.stype,children=[p[2]],type=success.type)
                 p[0] = Node(name="return",children=[p[2]],type="ok")
                 return
@@ -1564,7 +1559,7 @@ def main():
     file.write(Graph.string())
     file.close()
     
-    print(sym_table)
+    # print(sym_table)
     
 
 if __name__ == "__main__":
