@@ -112,11 +112,6 @@ def p_primary_expression(p):
 def p_postfix_expression(p):
     '''
     postfix_expression : primary_expression
-                       | postfix_expression L_SQBR expression R_SQBR
-                       | postfix_expression L_PAREN R_PAREN
-                       | postfix_expression L_PAREN argument_expression_list R_PAREN
-                       | postfix_expression DOT IDENTIFIER
-                       | postfix_expression ARROW IDENTIFIER
                        | postfix_expression INCREMENT
                        | postfix_expression DECREMENT
 
@@ -132,6 +127,31 @@ def p_postfix_expression(p):
     #     p[0] = Node("struct_ref",p[2],children=[p[1],c])
     # else:
     #     p[0] = Node("unary_op",'p'+p[2],[p[1]])
+
+def p_postfix_expression_1(p):
+    # Array ref
+    ''' 
+    postfix_expression : postfix_expression L_SQBR expression R_SQBR
+    
+    '''
+
+def p_p_postfix_expression_2(p):
+    # function ref
+    ''' 
+    postfix_expression : postfix_expression L_PAREN R_PAREN
+                       | postfix_expression L_PAREN argument_expression_list R_PAREN
+    
+    '''
+
+def p_p_postfix_expression_3(p):
+    # struct ref
+    ''' 
+    postfix_expression : postfix_expression DOT IDENTIFIER
+                       | postfix_expression ARROW IDENTIFIER
+    
+    '''
+
+
 
 #Node
 def p_argument_expression_list(p):
