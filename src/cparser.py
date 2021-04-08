@@ -355,12 +355,41 @@ def p_logical_and_expression(p):
     logical_and_expression : inclusive_or_expression
 	                       | logical_and_expression LOGICAL_AND inclusive_or_expression
     '''
+    ### Implement typecasting logic
+    allowed_class = {'BasicType'}
+    allowed_base = {'bool'}
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    check1 = True
+    check3 = True
 
+    if len(p) == 2:
+        p[0] = p[1]
+        return
+    elif p[1].type=="error":
+        p[0] = Node(type="error")
+        check1 = False
+    elif p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+        Errors(
+            errorType = 'TypeError',
+            errorText = 'wrong index type '+p[1].type.stype,
+            token_object=p.slice[-1]
+        )
+        check1 = False
+    
+    if p[3].type=="error":
+        p[0] = Node(type="error")
+        check3 = False
+    elif p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+        Errors(
+            errorType = 'TypeError',
+            errorText = 'wrong index type '+p[3].type.stype,
+            token_object=p.slice[-1]
+        )
+        check3 = False
+
+    if check1 and check3:
+        p[0] = Node(name="binary_op", value=p[2], type='BasicType', children=[p[1],p[3]])
+    
 #Node
 def p_logical_or_expression(p):
     '''
@@ -401,9 +430,8 @@ def p_logical_or_expression(p):
         check3 = False
 
     if check1 and check3:
-        p[0] = Node(name="or_express", value=p[2], type='BasicType', children=[p[1],p[3]])
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        p[0] = Node(name="binary_op", value=p[2], type='BasicType', children=[p[1],p[3]])
+    
 
 #Node
 def p_conditional_expression(p):
