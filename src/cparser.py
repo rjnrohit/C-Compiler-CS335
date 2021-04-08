@@ -48,16 +48,7 @@ def p_function_definition(p):
     function_definition : type_specifier declarator func_scope parameter_type_list R_PAREN function_body pop_sym
                         | type_specifier declarator func_scope R_PAREN function_body pop_sym
     '''
-    # if p.slice[1].type == 'declaration_specifiers':
-    #     if len(p) == 5:
-    #         p[0] = Node("function_defn",children=[p[2],p[4]])
-    #     else:
-    #         p[0] = Node("function_defn",children=[p[2],p[3]])
-    # else:
-    #     if len(p) == 4:
-    #         p[0] = Node("function_defn",children=[p[1],p[3]])
-    #     else:
-    #         p[0] = Node("function_defn",children=[p[1],p[2]])
+    
     if len(p) == 8:
         node_type = FunctionType(return_type=p[2].type,param_list=p[4],symbol_table=p[7])
         p[0] = Node("function",p[2].value,children=[p[6]])
@@ -442,7 +433,11 @@ def p_type_specifier(p):
     if p[1] == 'enum':
         pass
     elif p[1] == 'struct':
-        p[0] = Node(type = sym_table.look_up_struct(name = p[2],token_object=p.slice[-1]))
+        success = sym_table.look_up_struct(name = p[2],token_object=p.slice[-1])
+        if success:
+            p[0] = Node(type = success)
+        else:
+            p[0] = Node(type="error")
     else:
         p[0] = Node(type = BasicType(type = p[1]))
 
@@ -586,11 +581,15 @@ def p_pointer(p):
             if symbol.type == 'type_specifier':
                 type_specifier_symbol = symbol
                 break
-        p[0] = Node(type = PointerType(type = type_specifier_symbol.value.type))
+        if type_specifier_symbol.value.type == "error":
+            p[0] = Node(type="error")
+        else:
+            p[0] = Node(type = PointerType(type = type_specifier_symbol.value.type))
         #p[0] = Node(PointerType(type = p.stack[-1].value.type))
     else:
         p[0] = p[1]
-        p[0].type = PointerType(type = p[1].type)
+        if p[0].type != "error":
+            p[0].type = PointerType(type = p[1].type)
 
 # Node
 
