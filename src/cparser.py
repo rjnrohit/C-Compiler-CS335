@@ -557,10 +557,12 @@ def p_direct_declarator(p):
         p[0] = p[2]
     elif len(p) == 4:
         p[0] = p[1]
-        p[0].type = PointerType(type = p[0].type,array_size=p[3])
+        if p[0].type != "error":
+            p[0].type = PointerType(type = p[0].type,array_size=p[3])
     else:
         p[0] = p[1]
-        p[0].type = PointerType(type = p[0].type)
+        if p[0].type != "error":
+            p[0].type = PointerType(type = p[0].type)
     
 
 
