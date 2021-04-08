@@ -81,6 +81,27 @@ class BasicType(Type):
     def update_width(self):
         self.width = self.size_dict[self.type]
         return self.width
+    
+    def is_convertible_to(self, t):
+        assert isinstance(t, Type), "please pass Type object"
+        if t.class_type == 'FunctionType' or t.class_type == 'StructType':
+            return False
+        
+        if t.class_type == 'PointerType':
+            if self.type in ['char', 'long', 'int']:
+                return True
+            return False
+        
+        if t.type == 'void':
+            return True
+        
+        if self.type == 'void':
+            return False
+        
+        return True
+        
+                
+        
 
 class PointerType(Type):
 
@@ -113,6 +134,21 @@ class PointerType(Type):
         else:
             self.width += matrix_size*self.size_dict[self.type]
         return self.width
+    
+    def is_convertible_to(self, t):
+        assert isinstance(t, Type), "please pass Type object"
+        if t.class_type == 'FunctionType' or t.class_type == 'StructType':
+            return False
+        
+        if t.class_type == 'PointerType':
+            return True
+
+        if t.type in ['long', 'int', 'char']:
+            return True
+
+        return False
+        
+        
 
 class StructType(Type):
     
@@ -135,6 +171,17 @@ class StructType(Type):
     def update_width(self):
         self.width = self.symbol_table.width
         return self.width
+
+    def is_same(self, t):
+        assert isinstance(t, Type), "please pass Type object"
+        if t.class_type == 'StructType':
+            if t.name == self.name and self.symbol_table == t.symbol_table:
+                return True
+        return False
+    
+    def is_convertible_to(self, t):
+        assert isinstance(t, Type), "please pass Type object"
+        return self.is_same(t)
 
 class FunctionType(Type):
 
@@ -162,6 +209,17 @@ class FunctionType(Type):
     def add_param_list(self, param_list=None):
         self.param_list = param_list
         return self.param_list
+    
+    def is_same(self, t):
+        assert isinstance(t, Type), "please pass Type object"
+        if t.class_type == 'FunctionType':
+            if self.return_type == t.return_type and self.param_list == t.param_list:
+                return True
+        return False
+    
+    def is_convertible_to(self, t):
+        assert isinstance(t, Type), "please pass Type object"
+        return self.is_same(t)
 
 #=================================== SYMBOL TABLE ==================================#
 
