@@ -15,6 +15,7 @@ from clexer import tokens,print_lexeme
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, StructType
 from structure import getMutliPointerType
+from structure import implicit_casting
 
 #####################Grammar section #################
 
@@ -352,13 +353,64 @@ def p_multiplicative_expression(p):
     multiplicative_expression : cast_expression
                               | multiplicative_expression MULTIPLY cast_expression
                               | multiplicative_expression DIVIDE cast_expression
-                              | multiplicative_expression MODULUS cast_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','double','float','char'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+
+def p_multiplicative_expression_1(p):
+    '''
+    multiplicative_expression : multiplicative_expression MODULUS cast_expression
+    '''
+    allowed_class = {'BasicType'}
+    allowed_base = {'int','long','char'}
+    if p[1].type == "error" or p[2].type == "error":
+        p[0] = Node(type="error")
+        return
+    if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+        Errors(
+            errorType='TypeError',
+            errorText=p[2]+' not support type '+p[1].type.stype
+            token_object= p.slice[2]
+        )
+        p[0] = Node(type="error")
+        return
+
+    if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+        Errors(
+            errorType='TypeError',
+            errorText=p[2]+' not support type '+p[3].type.stype
+            token_object= p.slice[2]
+        )
+        p[0] = Node(type="error")
+        return
+        
+    node1,node2,typ = implicit_casting(p[1],p[3])
+    p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
 
 #Node
 def p_additive_expression(p):
@@ -367,10 +419,64 @@ def p_additive_expression(p):
                         | additive_expression ADD multiplicative_expression
                         | additive_expression SUBSTRACT multiplicative_expression
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = [('PointerType','BasicType'),('BasicType','PointerType'),('BasicType','BasicType')]
+        alowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','double','float'}]
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        class1 = p[1].type.class_type
+        class2 = p[3].type.class_type
+        if (class1,class2) not in allowed_class:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        i = allowed_class.index((class1,class2))
+        if i == 0:
+            if p[3].type.type not in allowed_base[i]:
+                Errors(
+                    errorType='TypeError',
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            p[0] = Node(name="binary_op",value=p[1].type.stype+p[2],type=p[1],children = [p[1],p[3]])
+            return
+        if i == 1:
+            if p[1].type.type not in allowed_base[i]:
+                Errors(
+                    errorType='TypeError',
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            p[0] = Node(name="binary_op",value=p[3].type.stype+p[2],type=p[3],children = [p[1],p[3]])
+            return
+        
+        if i == 2:
+            if p[3].type.type not in allowed_base[i] or p[1].type.type not in allowed_base[i]:
+                Errors(
+                    errorType='TypeError',
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            node1,node2,typ = implicit_casting(p[1],p[3])
+            p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
+            return
+
+
+
+        # p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
 #Node
 def p_shift_expression(p):
@@ -380,10 +486,34 @@ def p_shift_expression(p):
                      | shift_expression RIGHT_SHIFT additive_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
 
 #Node
 def p_relational_expression(p):
@@ -395,10 +525,34 @@ def p_relational_expression(p):
                           | relational_expression GREATER_EQUALS shift_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','double','float'}
+        if p[1].type == "error" or p[2].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ+p[2],children = [node1,node2])
         
 #Node
 def p_equality_expression(p):

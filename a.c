@@ -1,15 +1,15 @@
-int ***a, c;
-int  a,**c, d, *****d;
+// int ***a, c;
+// int  a,**c, d, *****d;
 
-int **(**b);
+// int **(**b);
 
-struct A{
-    int x;
-    int y;
-    int z;
-};
+// struct A{
+//     int x;
+//     int y;
+//     int z;
+// };
 
-// struct A b;
+// // struct A b;
 
 int main(){
     struct B{
@@ -17,6 +17,14 @@ int main(){
     };
     struct B c;
     int a;
-
+    int b = 5;
+    a = 5*'c';
+    a = 5%'c';
     return 0;
+    int *ptr = &a;
+    int *ptr1 = &b;
+    ptr = ptr1+'c';
+    ptr = 5+ptr1;
+
 }
+char c = 'a';
