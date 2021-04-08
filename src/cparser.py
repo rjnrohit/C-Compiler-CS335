@@ -116,17 +116,16 @@ def p_postfix_expression(p):
                        | postfix_expression DECREMENT
 
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # elif p[2] == '[':
-    #     p[0] = Node("array_ref",children=[p[1],p[3]])
-    # elif p[2] == '(':
-    #     p[0] = Node("func_call",children= [p[1],p[3]] if len(p) == 5 else [p[1]])
-    # elif len(p) == 4:
-    #     c = Node("id",p[3])
-    #     p[0] = Node("struct_ref",p[2],children=[p[1],c])
-    # else:
-    #     p[0] = Node("unary_op",'p'+p[2],[p[1]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[1].type == 'error':
+            p[0] = p[1]
+        elif p[1].type.class_type == 'FunctionType' or p[1].type.class_type == 'StructType':
+            p[0] = p[1]
+            p[0].type = 'error'
+        else:
+            p[0] = p[1]
 
 def p_postfix_expression_1(p):
     # Array ref
