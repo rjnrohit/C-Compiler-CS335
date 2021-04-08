@@ -405,7 +405,7 @@ def p_init_declarator_list(p):
     init_declarator_list : init_declarator
 	                     | init_declarator_list COMMA init_declarator
     '''
-    p[0] = p[1] if len(p) == 2  else p[1]+p[2]
+    p[0] = p[1] if len(p) == 2  else p[1]+p[3]
 
 
 # list (can be None)
@@ -467,7 +467,9 @@ def p_struct_declaration_list(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = p[1].update(p[2])
+        p[0] = p[1]
+        p[0].update(p[2])
+        print(p[1])
 
 # dict
 def p_struct_declaration(p):
@@ -475,6 +477,7 @@ def p_struct_declaration(p):
     struct_declaration : type_specifier struct_declarator_list SEMI_COLON
     '''
     p[0] = p[2]
+    print("ksjjd", p[0])
 
 
 # dict
@@ -488,12 +491,13 @@ def p_struct_declarator_list(p):
         if success:
             p[0] = {p[1].value:p[1].type}
         else:
-            p[0] = {}
+            p[0] = dict({})
 
     else:
-        success = sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
+        success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
         if success:
-            p[0] = p[1].update({p[2].value:p[2].type})
+            p[0] = p[1]
+            p[0].update({p[3].value:p[3].type})
         else:
             p[0] = p[1]
 
@@ -612,7 +616,7 @@ def p_parameter_type_list(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = p[1]+p[2]
+        p[0] = p[1]+p[3]
     
 # Node 
 def p_parameter_declaration(p):
@@ -792,7 +796,7 @@ def p_pop_sym(p):
     '''
         pop_sym :
     '''
-    p[0] = sym_table.curr_symbol_table()
+    p[0] = sym_table.curr_symbol_table
     sym_table.close_scope()
     
 def p_error(t):

@@ -1,11 +1,12 @@
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,type=None,value=None,children=None):
+    def __init__(self,name = None, value=None,type=None,children=None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
         self.type = type
+        self.name = name
         if children:
             self.children = children
         else:
@@ -255,7 +256,7 @@ class SymbolTable:
             self._add_scope(name = name, parent=self, symbol_table = type.symbol_table)
 
 
-        if self.table[name]:
+        if self.table.get(name):
             Errors(
                 errorType='RedeclarationError', 
                 errorText='variable already declared',
@@ -282,7 +283,7 @@ class SymbolTable:
         
         self._add_scope(name = name, parent=self, symbol_table=symbol_table)
 
-        if self.struct_table[name]:
+        if self.struct_table.get(name):
             Errors(
                 errorType='RedefinitionError', 
                 errorText='struct already defined',
