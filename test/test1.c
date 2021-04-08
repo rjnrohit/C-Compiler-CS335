@@ -1,14 +1,21 @@
-struct a{
-    int b;
-    float c,d;
-    long a;
-};
+int x = 10;
+char a[10];
+char name[] = {'a','b'};
+int y = 5;
 
-int func(int *a,int **b){
-    return a*b;
+char f(){
+	int i = 0;
+	for(i = 0;i<10;++i){
+		a[i] = 'a' + i;
+	}
+	return a[5];
 }
 
-int main(){
-    printf("hello world\n");
-    return 0;
+int main ()
+{
+    int p = 5;
+    printf("%d\n", p);
+    printf("%c\n", f());
+    
+    return y++;
 }

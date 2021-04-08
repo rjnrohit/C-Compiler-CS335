@@ -1,17 +1,30 @@
-struct data {
-    int sum;
-    int b[5];
-};
+int main(){
+    char operator;
+    printf("Enter a bitwise operator (&, |, ^, ~, <, >): ");
+    scanf("%c", &operator);
 
-int main()
-{
-    struct data rec1;
-    struct data*pdata = &rec1;
-    printf("%d", sizeof(rec1));
-    rec1.sum=0;
-    rec1.b[0]=2;   
-    rec1.sum=rec1.sum+rec1.b[0];
-    pdata->sum = 34l;
-    int a =12;
-    return rec1.sum;
+    long a = 0x56a, b = 0x44f;
+    bool equal = (a==b);
+    printf("%d\n", ((a!=b) == equal));
+
+    if(operator == '|'){
+        printf("%d", a|b);
+    }
+    else if(operator == '&'){
+        printf("%d", a&b);
+    }
+    else if(operator == '^'){
+        printf("%d", a^b);
+    }
+    else if(operator == '~'){
+        printf("%d %d", ~a, ~b);
+    }
+    else if(operator == '<'){
+        printf("%d %d", a<<1, b<<2);
+    }
+    else if(operator == '>'){
+        printf("%d %d", a>>1, b>>2);
+    }
+    
+    printf("\n%d\n%d\n%d\n%d\n%d", a+b, a-b, a*b, a/b, a%b);
 }

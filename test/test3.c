@@ -1,23 +1,22 @@
-int x = 10;
-char a[10];
-char name[] = {'a','b'};
-int y = 5;
-
-char f(){
-	int i = 0;
-	for(i = 0;i<10;++i){
-		a[i] = 'a' + i;
-	}
-	return a[5];
-}
-
-int main ()
+int main()
 {
-    int* p;
-    p = (int *) malloc(4);
-    *p = 5;
-    printf("%d\n", *p);
-    printf("%c\n", f());
-    
-    return y++;
+	int n;
+	scanf("%d", &n);
+
+	long a, b;
+	long long temp;
+	
+	int d = -5;
+	for(;d <= 10; d++){
+		a = 0, b = 1;
+		int i;
+		for(i = 2; i <= d; ++i)
+		{
+			temp = b;
+			b = a + b;
+			a = temp;
+		}
+		printf("%ld\n", b);
+	}
+	return 0;
 }

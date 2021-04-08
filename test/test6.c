@@ -1,30 +1,14 @@
 int main(){
-    char operator;
-    printf("Enter a bitwise operator (&, |, ^, ~, <, >): ");
-    scanf("%c", &operator);
+    int b,c,d,e,f,g,h,i,j,k,l;
+    int a = b= c= d= e=f =g =h=i=j=k=l=234;
+}
 
-    long a = 0x56a, b = 0x44f;
-    bool equal = (a==b);
-    printf("%d\n", ((a!=b) == equal));
+void main(){
+    ;;;;;;;;;;;;1;
 
-    if(operator == '|'){
-        printf("%d", a|b);
+    {
+        {
+            printf("34");
+        }
     }
-    else if(operator == '&'){
-        printf("%d", a&b);
-    }
-    else if(operator == '^'){
-        printf("%d", a^b);
-    }
-    else if(operator == '~'){
-        printf("%d %d", ~a, ~b);
-    }
-    else if(operator == '<'){
-        printf("%d %d", a<<1, b<<2);
-    }
-    else if(operator == '>'){
-        printf("%d %d", a>>1, b>>2);
-    }
-    
-    printf("\n%d\n%d\n%d\n%d\n%d", a+b, a-b, a*b, a/b, a%b);
 }
