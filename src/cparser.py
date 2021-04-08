@@ -352,7 +352,7 @@ def p_unary_expression_2(p):
 
         allowed_base = {'int','float','double','char','long'}
 
-        if p[2].type.type in allowed_base:
+        if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
             p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
         else:
             p[0] = Node(type = 'error')
@@ -370,14 +370,14 @@ def p_unary_expression_2(p):
 
     elif p[1] == '~':
         allowed_base = {'int','float','double','char','long', 'bool'}
-        if p[2].type.type in allowed_base:
+        if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
             p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
         else:
             p[0] = Node(type = 'error')
     
     else: 
         allowed_base = {'int','float','double','char','long', 'bool'}
-        if p[2].type.type in allowed_base:
+        if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
             p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType('bool'))
         else:
             p[0] = Node(type = 'error')
@@ -902,10 +902,47 @@ def p_assignment_expression(p):
 	                      | unary_expression assignment_operator assignment_expression
     '''
 
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = Node("assignment",p[2],children = [p[1],p[3]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[1].type == 'error' or p[3].type == 'error':
+
+            p[0] = Node(type = 'error')
+
+        elif p[2] == '=':
+            if p[3].type.is_convertible_to(p[1].type):
+
+                p[0] = Node(name = "assignment",value = p[2] ,children = [p[1],p[3]], type = p[1].type)
+            
+            else:
+                p[0] = Node(type = 'error')
+        
+        elif p[2] == '<<=' or p[2] == '=>>':
+
+            allowed_class = ['long', 'int', 'char']
+            if p[3].type.type in allowed_class  and p[1].type.type in allowed_class and p[1].type.is_basic and p[3].type.is_basic:
+                p[0] = Node(name = "lshift_assign",value = p[2] ,children = [p[1],p[3]], type = p[1].type )
+            else:
+                p[0] = Node(type = 'error')
+        
+        elif p[2] == '+=' or p[2] == '-=':
+            pass
+
+        elif p[2] == '/=':
+            pass
+
+        elif p[2] == '%=':
+            pass
+
+        elif p[2] == '*=':
+            pass
+
+        elif p[2] == '&=' or p[2] == '^=' or p[2] == '|=':
+            pass
+
+        
+
+            
 
 #String
 def p_assignment_operator(p):
@@ -922,7 +959,7 @@ def p_assignment_operator(p):
                         | BITWISE_XOR_ASSIGNMENT
                         | BITWISE_OR_ASSIGNMENT
     '''
-    # p[0] = p[1]
+    p[0] = p[1]
 
 # Node
 def p_expression(p):
