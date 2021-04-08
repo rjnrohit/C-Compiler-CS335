@@ -59,12 +59,12 @@ def p_function_definition(p):
     #     else:
     #         p[0] = Node("function_defn",children=[p[1],p[2]])
     if len(p) == 8:
-        node_type = FunctionType(p[2].type,p[4],symbol_table=p[7])
+        node_type = FunctionType(return_type=p[2].type,param_list=p[4],symbol_table=p[7])
         p[0] = Node("function",p[2].value,children=[p[6]])
     else:
-        node_type = FunctionType(p[2].type,[],symbol_table=p[6])
+        node_type = FunctionType(return_type=p[2].type,param_list=[],symbol_table=p[6])
         p[0] = Node("function",p[2].value,children=[p[5]])
-    sym_table.add_entry(p[2].value,node_type,p[2].data['token'])
+    sym_table.add_entry(name=p[2].value,type=node_type,token_object=p[2].data['token'])
     p[0] = [p[0]]
 
 
@@ -73,8 +73,8 @@ def p_func_scope(p):
     '''
     func_scope : L_PAREN
     '''
-    sym_table.start_scope(nanme=p.stack[-1].value.value)
-    sym_table.add_entry('return',p.stack[-1].value.type)
+    sym_table.start_scope(name=p.stack[-1].value.value)
+    sym_table.add_entry(name='return',type=p.stack[-1].value.type)
     
 
 def p_primary_expression(p):
@@ -389,14 +389,7 @@ def p_init_declarator_list(p):
     init_declarator_list : init_declarator
 	                     | init_declarator_list COMMA init_declarator
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     if p[3] == None:
-    #         p[0] = p[1]
-    #     else:
-    #         p[0] = p[3] if p[1] == None else p[1] + p[3]
-    #print(p, p.__dict__, p.stack[-1].value.type)
+    p[0] = p[1] if len(p) == 2  else p[1]+p[2]
 
 
 # list (can be None)
@@ -405,13 +398,16 @@ def p_init_declarator(p):
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
+    success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
     if len(p) == 2:
         p[0] = [None]
-        sym_table.add_entry(p[1].value,p[1].type,p[1].data['token'])
     else:
-        # check for initliazer and add symbol
-        p[0] = [Node(value = p[2],children = [p[1],p[3]])]
-
+        if success:
+            # type checking
+            # check for initliazer
+            p[0] = [Node(value = p[2],children = [p[1],p[3]])]
+        else:
+            p[0] = [None]
 
 # Node
 def p_type_specifier(p):
@@ -471,18 +467,18 @@ def p_struct_declarator_list(p):
 	                       | struct_declarator_list COMMA declarator
     '''
     if len(p) == 2:
-        sym_table.add_entry(p[1].value,p[1].type,p[1].data['token'])
-        # if success:
-        #     p[0] = {p[1].value:p[1].type}
-        # else:
-        #     p[0] = {}
+        success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
+        if success:
+            p[0] = {p[1].value:p[1].type}
+        else:
+            p[0] = {}
 
     else:
-        sym_table.add_entry(p[2].value,p[2].type,p[2].data['token'])
-        # if success:
-        #     p[0] = p[1].update({p[2].value:p[2].type})
-        # else:
-        #     p[0] = p[1]
+        success = sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
+        if success:
+            p[0] = p[1].update({p[2].value:p[2].type})
+        else:
+            p[0] = p[1]
 
 
 
@@ -607,7 +603,7 @@ def p_parameter_declaration(p):
     parameter_declaration : type_specifier declarator
     '''
 
-    sym_table.add_entry(p[2].value,p[2].type,p[2].data['token'])
+    sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
     # if success:
     #     p[0] = [p[2].type]
     # else:
