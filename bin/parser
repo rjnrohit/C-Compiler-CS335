@@ -1459,7 +1459,7 @@ def p_jump_statement(p):
 	                 
     '''
     p[0] = Node(name=p[1],type="ok")
-def p_jump_statement(p):
+def p_jump_statement_1(p):
     '''
     jump_statement : RETURN SEMI_COLON
 	               | RETURN expression SEMI_COLON      
@@ -1530,6 +1530,7 @@ def main():
     arg_parser.add_argument('source_code',help="source code file location")
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
     arg_parser.add_argument('-f',help="take the name of png file", default="ast.png")
+    arg_parser.add_argument('-d',help="take the name of csv file", default="dump.csv")
     arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
     arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
     args = arg_parser.parse_args()
@@ -1568,7 +1569,8 @@ def main():
     file.close()
     
     # print(sym_table)
-    print_csv(sym_table)
+    print(args.d)
+    print_csv(sym_table = sym_table, filename = args.d)
 
 if __name__ == "__main__":
     main()

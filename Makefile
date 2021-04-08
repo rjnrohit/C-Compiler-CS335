@@ -6,6 +6,7 @@ bin/parser : src/cparser.py src/visualize.py bin/lexer
 	cp src/cparser.py bin/cparser.py
 	cp src/visualize.py bin/visualize.py
 	cp src/dump_csv.py bin/dump_csv.py
+	cp src/structure.py bin/structure.py
 	chmod +x bin/parser
 
 bin/lexer : src/clexer.py

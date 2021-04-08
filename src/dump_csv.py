@@ -1,22 +1,22 @@
 import csv
 from os import write
 
-csv_file = open('dump.csv','w', newline='')
-writer = csv.writer(csv_file)
 
-def print_csv(sym_table):
+
+def print_csv(sym_table =None , filename = None):
     queue = [sym_table]
-
+    csv_file = open(filename,'w', newline='')
+    writer = csv.writer(csv_file)
     while queue:
         top = queue[0]
         queue.pop(0)
-        print_csv_sym_table(top)
+        print_csv_sym_table(top, writer)
         for table in top.scopes_list:
             queue += [table]
     
 
 
-def print_csv_sym_table(sym_table):
+def print_csv_sym_table(sym_table, writer):
     # print(sym_table.name, sym_table.id)
     writer.writerow(['-------------------------------------------------------------------------------------------'])
     writer.writerow(["          symbol table id:" , sym_table.id, "symbol table name:", sym_table.name])
