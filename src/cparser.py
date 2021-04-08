@@ -368,11 +368,17 @@ def p_unary_expression_2(p):
         else:
             p[0]  =Node(type = 'error')
 
-    else:
-
+    elif p[1] == '~':
         allowed_base = {'int','float','double','char','long', 'bool'}
         if p[2].type.type in allowed_base:
             p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type)
+        else:
+            p[0] = Node(type = 'error')
+    
+    else: 
+        allowed_base = {'int','float','double','char','long', 'bool'}
+        if p[2].type.type in allowed_base:
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType('bool'))
         else:
             p[0] = Node(type = 'error')
 
@@ -414,11 +420,16 @@ def p_cast_expression(p):
     cast_expression : unary_expression
 	                | L_PAREN type_name R_PAREN cast_expression
     '''
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-
-    #     p[0] = Node("cast",children=[p[2],p[4]])
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if p[2].type == 'error' or p[4].type == 'error':
+            p[0] = Node(type='error')
+        else:
+            if p[4].type.is_convertible_to(p[2].type):
+                p[0] = Node(name = "type_cast", value=str(p[2].type.stype), type = p[2].type)
+            else:
+                p[0] = Node(type='error')
 
 #Node
 def p_multiplicative_expression(p):

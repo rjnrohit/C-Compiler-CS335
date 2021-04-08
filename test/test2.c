@@ -5,7 +5,7 @@ multiline comment
 */
 
 
-void f(){
+void f(int a, float b, char c){
     // comment inside a function
     void f13();
     int f3();
@@ -31,7 +31,8 @@ int  bar(){
     return bar();
     return bar();
     f(3,4.5,'c');
-    for(int a=3;bar() > *func(NULL, 0);foo(1,2)){};
+    int a;
+    for(a=3;bar() > *func(NULL, 0);foo(1,2)){};
 }
 
 

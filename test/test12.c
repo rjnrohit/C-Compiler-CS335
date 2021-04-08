@@ -1,4 +1,8 @@
-int max(int a, int b); 
+int max(int a, int b){
+  if(a>=b)
+    return a;
+  return b;
+}
   
 /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
 int lcs( char *X, char *Y, int m, int n ) 
@@ -23,8 +27,9 @@ int main()
   char X[] = "AGGTAB"; 
   char Y[] = "GXTXAYB"; 
   
-  int m = strlen(X); 
-  int n = strlen(Y); 
+  //int m = strlen(X); 
+  //int n = strlen(Y); 
+  int m = 6, n=7;
   
   printf("Length of LCS is %d", lcs( X, Y, m, n ) ); 
   

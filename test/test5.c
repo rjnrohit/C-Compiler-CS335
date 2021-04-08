@@ -1,5 +1,3 @@
-enum day {sunday, monday, tuesday, wednesday, thursday, friday, saturday}; 
-
 int main()
 {
 	int n;
@@ -8,9 +6,11 @@ int main()
 	long a, b;
 	long long temp;
 	
-	for(int d = sunday; d <= saturday; d++){
+	int d = -5;
+	for(;d <= 10; d++){
 		a = 0, b = 1;
-		for(int i = 2; i <= d; ++i)
+		int i;
+		for(i = 2; i <= d; ++i)
 		{
 			temp = b;
 			b = a + b;

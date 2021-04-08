@@ -1,10 +1,11 @@
 int x = 10;
 char a[10];
 char name[] = {'a','b'};
-static int y = 5;
+int y = 5;
 
 char f(){
-	for(int i = 0;i<10;++i){
+	int i = 0;
+	for(i = 0;i<10;++i){
 		a[i] = 'a' + i;
 	}
 	return a[5];
