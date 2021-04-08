@@ -254,7 +254,16 @@ class SymbolTable:
         if type.class_type == "FunctionType":
             self._add_scope(name = name, parent=self, symbol_table = type.symbol_table)
 
-        #TODO check error if name already in table
+
+        if self.table[name]:
+            Errors(
+                errorType='RedeclarationError', 
+                errorText='variable already declared',
+                token_object = token_object
+            )
+            return None
+
+
         self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object)
 
         if type.class_type != "FunctionType":
@@ -266,14 +275,21 @@ class SymbolTable:
 
         return self.table[name]
     
-    def _add_struct_entry(self, name = None, symbol_table = None):
+    def _add_struct_entry(self, name = None, symbol_table = None, token_object = None):
         assert name, "name not provided for entry"
         assert symbol_table is not None, "symbol table not given for struct entry"
 
         
         self._add_scope(name = name, parent=self, symbol_table=symbol_table)
 
-        #TODO check error if name already in table
+        if self.struct_table[name]:
+            Errors(
+                errorType='RedefinitionError', 
+                errorText='struct already defined',
+                token_object = token_object
+            )
+            return None
+
         self.struct_table[name] = StructType(name = name, symbol_table=symbol_table)
         return self.struct_table[name]
         
@@ -298,24 +314,32 @@ class SymbolTable:
         
         return self.scopes_list[-1]
 
-    def _look_up(self, name = None):
+    def _look_up(self, name = None, token_object = None):
         symbol_table =self
         while symbol_table != None and name not in symbol_table.table:
             symbol_table = symbol_table.parent
         
         if symbol_table is None:
-            #TODO throw error
+            Errors(
+                errorType='DeclarationError', 
+                errorText='variable/function not declared before',
+                token_object = token_object
+            )
             return None
 
         return symbol_table.table[name]
 
-    def _look_up_struct(self, name = None):
+    def _look_up_struct(self, name = None, token_object = None):
         symbol_table =self
         while symbol_table != None and name not in symbol_table.struct_table:
             symbol_table = symbol_table.parent
         
         if symbol_table is None:
-            #TODO throw error
+            Errors(
+                errorType='DefinitionError', 
+                errorText='struct not defined',
+                token_object = token_object
+            )
             return None
 
         return symbol_table.struct_table[name]
@@ -370,14 +394,14 @@ class SymbolTable:
     def add_entry(self,name = None, type = None, token_object = None):
         return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object)
     
-    def add_struct_entry(self, name = None, symbol_table = None):
-        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table)
+    def add_struct_entry(self, name = None, symbol_table = None, token_object = None):
+        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object)
     
-    def look_up(self, name = None):
-        return SymbolTable.curr_symbol_table._look_up(name = name)
+    def look_up(self, name = None, token_object = None):
+        return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object)
 
-    def look_up_struct(self, name = None):
-        return SymbolTable.curr_symbol_table._look_up_struct(name = name)
+    def look_up_struct(self, name = None, token_object = None):
+        return SymbolTable.curr_symbol_table._look_up_struct(name = name, token_object = token_object)
 
     def update_width(self, entry = None):
         return SymbolTable.curr_symbol_table._update_width(entry=entry)
@@ -408,10 +432,19 @@ class Errors:
     error_id = 0
     error_list = []
 
-    def __init__(self, errorType = None, errorText = None):
+    def __init__(self, errorType = None, errorText = None, token_object = None):
         self.id = Errors.error_id
         self.errorType = errorType
         self.errorText = errorText
+        self.token_object = token_object
+
+        if token_object:
+            self.lineno = token_object.lineno
+            self.filename = token_object.lexer.filename
+            if token_object.lexeme:
+                self.lexeme = token_object.lexeme
+            else:
+                self.lexeme = token_object.value
 
         Errors.error_list.append(self)
         Errors.error_id += 1
@@ -426,7 +459,11 @@ class Errors:
     def __str__(self):
         res  = "Error("
         res += self.errorType + ","
-        res += self.errorText + ")"
+        res += "in file: " + self.filename + ","
+        res += "at line no. " + self.lineno + ","
+        res += "errorenous lexeme: " + self.lexeme + ","
+        res += self.errorText
+        res += ")"
 
 def getMutliPointerType(type = None, level = 0):
     levObj = PointerType(type = type)
