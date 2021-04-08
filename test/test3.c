@@ -1,10 +1,11 @@
+// Performing simple looping operations
+
 int main()
 {
-	int n;
-	scanf("%d", &n);
+	int n=20;
 
 	long a, b;
-	long long temp;
+	long temp;
 	
 	int d = -5;
 	for(;d <= 10; d++){
@@ -16,7 +17,6 @@ int main()
 			b = a + b;
 			a = temp;
 		}
-		printf("%ld\n", b);
 	}
 	return 0;
 }

@@ -1,21 +1,35 @@
-int x = 10;
-char a[10];
-char name[] = {'a','b'};
-int y = 5;
+// Newton-Raphson Method
 
-char f(){
-	int i = 0;
-	for(i = 0;i<10;++i){
-		a[i] = 'a' + i;
-	}
-	return a[5];
+float f(float x)
+{
+    return x*x + 3*x - 1.2;
+}
+float df (float x)
+{
+    return 2*x + 3;
+}
+float fabs(float x){
+	return x<0?-x:x;
 }
 
-int main ()
+int main()
 {
-    int p = 5;
-    printf("%d\n", p);
-    printf("%c\n", f());
+    int itr, maxmitr;
+    float h, x0, x1, allerr;
     
-    return y++;
+    float x0 = 1, allerr = 0.05;
+    int maxmitr = 10000;
+    for (itr=1; itr<=maxmitr; itr++)
+    {
+        h=f(x0)/df(x0);
+        x1=x0-h;
+        
+        if (fabs(h) < allerr)
+        {
+            return 0;
+        }
+        x0=x1;
+    }
+    
+    return;
 }
