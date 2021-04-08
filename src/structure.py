@@ -459,7 +459,7 @@ class SymbolTable:
         return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object)
     
     def add_struct_entry(self, name = None, symbol_table = None, token_object = None,arg_dict=None):
-        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object,arg_dict=None)
+        return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object,arg_dict=arg_dict)
     
     def look_up(self, name = None, token_object = None):
         return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object)
