@@ -394,7 +394,7 @@ def p_unary_expression_3(p):
         if p[2].type == 'error':
             p[0] = Node(type = 'error')
         else:
-            p[0] = Node(name = "unary_op",p[1], type = BasicType(type = 'long'),children=[p[2]])
+            p[0] = Node(name = "unary_op",value=p[1], type = BasicType(type = 'long'),children=[p[2]])
     else:
         if p[3].type == 'error':
             p[0] = Node(type = 'error')
