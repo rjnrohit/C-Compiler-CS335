@@ -187,7 +187,7 @@ def p_postfix_expression_2(p):
         p[0] = Node(type="error")
         return
 
-    if p[1].type != "FunctionType":
+    if p[1].type.class_type != "FunctionType":
         p[0] = Node(type="error")
         Errors(
             errorType='TypeError',
@@ -235,7 +235,7 @@ def p_postfix_expression_3(p):
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
-    if p[1].type != "StructType":
+    if p[1].type.class_type != "StructType":
         p[0] = Node(type="error")
         Errors(
             errorType='TypeError',
@@ -267,7 +267,7 @@ def p_postfix_expression_4(p):
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
-    if p[1].type != "PointerType" or p[1].type.type != "StructType":
+    if p[1].type.class_type != "PointerType" or p[1].type.type.class_type != "StructType":
         p[0] = Node(type="error")
         Errors(
             errorType='TypeError',
@@ -1102,15 +1102,18 @@ def p_struct_declarator_list(p):
     struct_declarator_list : declarator
 	                       | struct_declarator_list COMMA declarator
     '''
+    success = None
     if len(p) == 2:
-        success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
+        if p[1].type != "error":
+            success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
             p[0] = {p[1].value:p[1].type}
         else:
             p[0] = dict({})
 
     else:
-        success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
+        if p[1].type != "error":
+            success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
         if success:
             p[0] = p[1]
             p[0].update({p[3].value:p[3].type})
@@ -1547,7 +1550,7 @@ def main():
     parser.parse(source_code, lexer = lexer.lexer)
 
     if len(Errors.get_all_error()):
-        for error in Errors:
+        for error in Errors.get_all_error():
             print(error)
         return
 

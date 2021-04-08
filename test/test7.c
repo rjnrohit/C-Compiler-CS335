@@ -1,7 +1,7 @@
 // Linked list iteration
 struct Node {
 	int data;
-	struct Node* next;
+	int next;
 };
 
 int main()
@@ -18,7 +18,7 @@ int main()
 	third.next = 0;
 	
 	struct Node* itr = &head;
-	while(itr != 0){
+	while((int)itr != 0){
 	    itr = itr->next;
 	}
 	return 0;
