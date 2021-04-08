@@ -6,7 +6,7 @@ int main()
 	scanf("%d", &n);
 
 	long a, b;
-	long long temp;
+	long temp;
 	
 	int d = -5;
 	for(;d <= 10; d++){
