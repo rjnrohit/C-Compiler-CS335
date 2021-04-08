@@ -243,6 +243,8 @@ class Entry:
         res = "Entry("
         res += "name:" + str(self.name)
         res += ",type:" + str(self.type)
+        res += ",offset:" + str(self.offset)
+        res += ",width:" + str(self.width)
         res +=",symbol_table_id:" + str(self.symbol_table.id)
         res += ")\n"
         return res
