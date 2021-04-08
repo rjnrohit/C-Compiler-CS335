@@ -80,7 +80,6 @@ def p_func_scope(p):
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
-                       | NULL
                        | INT_CONSTANT
                        | HEX_CONSTANT
                        | OCTAL_CONSTANT
@@ -92,14 +91,31 @@ def p_primary_expression(p):
                        | TRUE
                        | FALSE
     '''
-    # if len(p) == 2:
-    #     if p.slice[-1].type == "IDENTIFIER":
-    #         p[0] = Node("id", value = p[1], children=None)
-    #     else:
-    #         p[0] = Node("constant", value = p[1], children=None)
-    # else:
-    #     # p[0] = Node("primary_exp", value="()", children=[p[2]])
-    #     p[0] = p[2]
+    if len(p) == 2:
+        if p.slice[-1].type == "IDENTIFIER":
+            success = sym_table.look_up(name=p[1],token_object=p.slice[-1])
+            if success:
+                p[0] = Node(name="id",value=p[1],type=success.type)
+            else:
+                p[0] = Node(name="id",type='error')
+
+        elif p.slice[-1].type in {"INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"}:
+            p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
+        
+        elif p.slice[-1].type in {"EXPONENT_CONSTANT","REAL_CONSTANT"}:
+            p[0] = Node(name="constant",value=p[1],type=BasicType('float'))
+        
+        elif p.slice[-1].type == "CHAR_CONSTANT":
+            p[0] = Node(name="constant",value=p[1],type=BasicType('char'))
+
+        elif p.slice[-1].type == "STR_CONSTANT":
+            str_type = PointerType(type=BasicType('char'),array_size=len(p[1]))
+            p[0] = Node(name="constant",value=p[1],type=str_type)
+        else:
+            p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
+    
+    else:
+        p[0] = p[2]
 
 #Node
 def p_postfix_expression(p):
@@ -426,7 +442,7 @@ def p_type_specifier(p):
     if p[1] == 'enum':
         pass
     elif p[1] == 'struct':
-        p[0] = Node(type = sym_table.look_up_struct(name = p[2]))
+        p[0] = Node(type = sym_table.look_up_struct(name = p[2],token_object=p.slice[-1]))
     else:
         p[0] = Node(type = BasicType(type = p[1]))
 
@@ -436,8 +452,9 @@ def p_struct_specifier(p):
     '''
     struct_specifier : STRUCT IDENTIFIER L_BRACES add_sym struct_declaration_list pop_sym R_BRACES
     '''
-    # p[0] = p[1]
-    # add struct decl
+    
+    # todo dict
+    sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2])
 
 
 
@@ -603,11 +620,11 @@ def p_parameter_declaration(p):
     parameter_declaration : type_specifier declarator
     '''
 
-    sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
-    # if success:
-    #     p[0] = [p[2].type]
-    # else:
-    #     p[0] = []
+    success = sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
+    if success:
+        p[0] = [p[2].type]
+    else:
+        p[0] = []
 
 
 
@@ -659,8 +676,7 @@ def p_statement(p):
 # Node
 def p_labeled_statement(p):
     '''
-    labeled_statement : IDENTIFIER COLON statement
-                      | CASE constant_expression COLON statement
+    labeled_statement : CASE constant_expression COLON statement
 	                  | DEFAULT COLON statement
     '''
     # if p.slice[1].type == 'IDENTIFIER':
@@ -754,8 +770,7 @@ def p_iteration_statement(p):
 # Node
 def p_jump_statement(p):
     '''
-    jump_statement : GOTO IDENTIFIER SEMI_COLON
-	               | CONTINUE SEMI_COLON
+    jump_statement : CONTINUE SEMI_COLON
 	               | BREAK SEMI_COLON
 	               | RETURN SEMI_COLON
 	               | RETURN expression SEMI_COLON
