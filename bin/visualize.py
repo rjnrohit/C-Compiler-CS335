@@ -5,11 +5,15 @@ def not_all_None(ls):
         return True
     return not all(v is None for v in ls)
 
-def getlabel(type,value):
-    if value == None:
-        return type
+def getlabel(name,value):
+    if value == None and name == None:
+        return ""
+    elif value == None and name != None:
+        return str(name)
+    elif value != None and name == None:
+        return str(value)
     else:
-        return type+": "+str(value)
+        return str(name)+": "+str(value)
 
 
 def draw_ast(node):
@@ -21,7 +25,7 @@ def draw_ast(node):
         G.layout(prog="dot")
         return G
 
-    G.add_node(node.id, label = getlabel(node.type,node.value))
+    G.add_node(node.id, label = getlabel(node.name,node.value))
 
     while node_list:
 
@@ -32,7 +36,7 @@ def draw_ast(node):
             if nd is None:
                 continue
             if not_all_None(nd.children):
-                G.add_node(nd.id, label = getlabel(nd.type,nd.value))
+                G.add_node(nd.id, label = getlabel(nd.name,nd.value))
                 G.add_edge(top_node.id, nd.id)
                 node_list += [nd]
     

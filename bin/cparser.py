@@ -12,34 +12,11 @@ import pygraphviz as pgv
 
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
-
-
-
-#####################AST Section#####################
-class Node:
-    count_nodes = 0
-    nodes = []
-    def __init__(self,type,value=None,children=None):
-        self.id = Node.count_nodes
-        Node.count_nodes += 1
-        Node.nodes.append(self)
-        self.type = type
-        if children:
-            self.children = children
-        else:
-            self.children = []
-        self.value = value
-
-    def addChild(self,node):
-        self.children.append(node)
-
-    def getChild(self):
-        return self.children
-        
-#####################################################
-
-
-
+from structure import Errors, Node
+from structure import sym_table, BasicType, FunctionType, PointerType, StructType
+from structure import getMutliPointerType
+from structure import implicit_casting
+from dump_csv import print_csv
 #####################Grammar section #################
 
 
@@ -64,38 +41,36 @@ def p_external_declaration(p):
     external_declaration : function_definition
                          | declaration
     '''
-    p[0] = [p[1]]
+    p[0] = p[1]
 
-#Node
-def p_function_definition_1(p):
+#List
+def p_function_definition(p):
     '''
-    function_definition : declaration_specifiers declarator declaration_list compound_statement
-			            | declaration_specifiers declarator compound_statement
+    function_definition : type_specifier declarator func_scope parameter_type_list R_PAREN function_body pop_sym
+                        | type_specifier declarator func_scope R_PAREN function_body pop_sym
+    '''
     
-    '''
-    if len(p) == 5:
-        p[0] = Node("function_defn",children=[p[2],p[4]])
+    if len(p) == 8:
+        node_type = FunctionType(return_type=p[2].type,param_list=p[4],symbol_table=p[7])
+        p[0] = Node("function",p[2].value,children=[p[6]])
     else:
-        p[0] = Node("function_defn",children=[p[2],p[3]])
-    
-#Node
-def p_function_definition_2(p):
-    '''
-    function_definition : declarator declaration_list compound_statement
-			            | declarator compound_statement
-    
-    '''
-    if len(p) == 4:
-        p[0] = Node("function_defn",children=[p[1],p[3]])
-    else:
-        p[0] = Node("function_defn",children=[p[1],p[2]])
+        node_type = FunctionType(return_type=p[2].type,param_list=[],symbol_table=p[6])
+        p[0] = Node("function",p[2].value,children=[p[5]])
+    sym_table.add_entry(name=p[2].value,type=node_type,token_object=p[2].data['token'])
+    p[0] = [p[0]]
 
-# add all constants
-#Node
+
+def p_func_scope(p):
+    '''
+    func_scope : L_PAREN
+    '''
+    sym_table.start_scope(name=p.stack[-1].value.value)
+    sym_table.add_entry(name='return',type=p.stack[-1].value.type)
+    
+
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
-                       | NULL
                        | INT_CONSTANT
                        | HEX_CONSTANT
                        | OCTAL_CONSTANT
@@ -109,37 +84,213 @@ def p_primary_expression(p):
     '''
     if len(p) == 2:
         if p.slice[-1].type == "IDENTIFIER":
-            p[0] = Node("id", value = p[1], children=None)
+            success = sym_table.look_up(name=p[1],token_object=p.slice[-1])
+            if success:
+                p[0] = Node(name="id",value=p[1],type=success.type)
+            else:
+                p[0] = Node(name="id",type='error')
+
+        elif p.slice[-1].type in {"INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"}:
+            p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
+        
+        elif p.slice[-1].type in {"EXPONENT_CONSTANT","REAL_CONSTANT"}:
+            p[0] = Node(name="constant",value=p[1],type=BasicType('float'))
+        
+        elif p.slice[-1].type == "CHAR_CONSTANT":
+            p[0] = Node(name="constant",value=p[1],type=BasicType('char'))
+
+        elif p.slice[-1].type == "STR_CONSTANT":
+            str_type = PointerType(type=BasicType('char'),array_size=len(p[1]))
+            p[0] = Node(name="constant",value=p[1],type=str_type)
         else:
-            p[0] = Node("constant", value = p[1], children=None)
+            p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
+    
     else:
-        # p[0] = Node("primary_exp", value="()", children=[p[2]])
         p[0] = p[2]
 
 #Node
 def p_postfix_expression(p):
     '''
     postfix_expression : primary_expression
-                       | postfix_expression L_SQBR expression R_SQBR
-                       | postfix_expression L_PAREN R_PAREN
-                       | postfix_expression L_PAREN argument_expression_list R_PAREN
-                       | postfix_expression DOT IDENTIFIER
-                       | postfix_expression ARROW IDENTIFIER
                        | postfix_expression INCREMENT
                        | postfix_expression DECREMENT
 
     '''
     if len(p) == 2:
         p[0] = p[1]
-    elif p[2] == '[':
-        p[0] = Node("array_ref",children=[p[1],p[3]])
-    elif p[2] == '(':
-        p[0] = Node("func_call",children= [p[1],p[3]] if len(p) == 5 else [p[1]])
-    elif len(p) == 4:
-        c = Node("id",p[3])
-        p[0] = Node("struct_ref",p[2],children=[p[1],c])
     else:
-        p[0] = Node("unary_op",'p'+p[2],[p[1]])
+        allowed_base = {'int','float','double','char','long'}
+        allowed_class = {'PointerType'}
+        if p[1].type == 'error':
+            p[0] = p[1]
+        elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+        elif p[1].type.class_type in allowed_class:
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+        else:
+            p[0] = p[1]
+            p[0].type = 'error'
+            Errors(
+                errorType='TypeError',
+                errorText='increment/decrement not possible',
+                token_object= p.slice[-1]
+            )
+        
+
+def p_postfix_expression_1(p):
+    # Array ref
+    ''' 
+    postfix_expression : postfix_expression L_SQBR expression R_SQBR
+    
+    '''
+    allowed_class = {'BasicType'}
+    allowd_base = {'int','long'}
+    check1 = True
+    check2 = True
+    if p[3].type == "error":
+        check1 = False
+        p[0] = Node(type="error")
+    elif p[3].type.class_type not in allowed_class or p[3].type.type not in allowd_base:
+        Errors(
+            errorType='TypeError',
+            errorText='wrong index type'+p[3].type.stype,
+            token_object= p.slice[-1]
+        )
+        check1  = False
+        p[0] = Node(type="error")
+
+    allowed_class = {'PointerType'}
+    if p[1].type == "error":
+        check2 = False
+        p[0] = Node(type="error")
+    elif p[1].type.class_type not in allowed_class:
+        Errors(
+            errorType='TypeError',
+            errorText='cannot reference type'+p[1].type.stype,
+            token_object= p.slice[-1]
+        )
+        check2  = False
+        p[0] = Node(type="error")
+
+    if check1 and check2:
+        p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
+
+
+def p_postfix_expression_2(p):
+    # function ref
+    ''' 
+    postfix_expression : postfix_expression L_PAREN R_PAREN
+                       | postfix_expression L_PAREN argument_expression_list R_PAREN
+    
+    '''
+    if p[1].type == "error":
+        p[0] = Node(type="error")
+        return
+
+    if p[1].type.class_type != "FunctionType":
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='not function type',
+            token_object= p.slice[-1]
+        )
+        return
+    
+    param_list = p[1].type.param_list
+    return_type = p[1].type.return_type
+
+    if len(p) == 3:
+        if len(param_list) != 0:
+            p[0] = Node(type="error")
+            Errors(
+                errorType='TypeError',
+                errorText='Function require more arguments',
+                token_object= p.slice[-1]
+            )
+        else:
+            p[0] = Node(name="func_call",type=return_type,children=[p[1]])
+    else:
+        arg_list = p[3].data['args_type']
+        if len(arg_list) != len(param_list):
+            p[0] = Node(type="error")
+            Errors(
+                errorType='TypeError',
+                errorText='No of arguments is not matching',
+                token_object= p.slice[-1]
+            )
+        # check for type cast if possible
+        else:
+            p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
+        
+        
+
+
+
+def p_postfix_expression_3(p):
+    # struct ref
+    ''' 
+    postfix_expression : postfix_expression DOT IDENTIFIER
+
+    '''
+    if p[1].type == "error":
+        p[0] = Node(type="error")
+        return
+    if p[1].type.class_type != "StructType":
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='not struct type',
+            token_object= p.slice[-1]
+        )
+        return
+    
+    arg_dict = p[1].type.arg_dict
+    success = arg_dict.get(p[3])
+    if success == None:
+        Errors(
+            errorType='DeclarationError',
+            errorText='variable'+p[3]+' not declared in struct',
+            token_object= p.slice[-1]
+        )
+        p[0] = Node(type="error")
+        return
+    p[0] = Node(name="struct ref",value=p[2],type=success,children=[p[1],p[3]])
+    
+
+
+def p_postfix_expression_4(p):
+    # struct ref
+    ''' 
+    postfix_expression : postfix_expression ARROW IDENTIFIER
+    
+    '''
+    if p[1].type == "error":
+        p[0] = Node(type="error")
+        return
+    if p[1].type.class_type != "PointerType" or p[1].type.type.class_type != "StructType":
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='not pointer of struct type',
+            token_object= p.slice[-1]
+        )
+        return
+    
+    arg_dict = p[1].type.type.arg_dict
+    success = arg_dict.get(p[3])
+    if success == None:
+        Errors(
+            errorType='DeclarationError',
+            errorText='variable'+p[3]+' not declared in struct',
+            token_object= p.slice[-1]
+        )
+        p[0] = Node(type="error")
+        return
+    p[0] = Node(name="struct ref",value=p[2],type=success,children=[p[1],p[3]])
+
+
+
+
 
 #Node
 def p_argument_expression_list(p):
@@ -149,8 +300,10 @@ def p_argument_expression_list(p):
     '''
     if len(p) == 2:
         p[0] = Node("argument_expression_list",children=[p[1]])
+        p[0].data['args_type'] = [p[1].type]
     else:
         p[1].addChild(p[3])
+        p[1].data['args_type'] += [p[3].type]
         p[0] = p[1]
 
 
@@ -158,16 +311,95 @@ def p_argument_expression_list(p):
 def p_unary_expression(p):
     '''
     unary_expression : postfix_expression
-                     | INCREMENT unary_expression
+    '''
+    p[0] = p[1]
+
+#Node
+def p_unary_expression_1(p):
+    '''
+    unary_expression : INCREMENT unary_expression
                      | DECREMENT unary_expression
-                     | unary_operator cast_expression
-                     | SIZEOF unary_expression
+    '''
+    allowed_base = {'int','float','double','char','long'}
+    allowed_class = {'PointerType'}
+    if p[2].type == 'error':
+        p[0] = p[2]
+    elif p[2].type.class_type == 'BasicType' and p[2].type.type in allowed_base:
+        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type,children=[p[2]])
+    elif p[2].type.class_type in allowed_class:
+        p[0] = Node(name="unary_op",value=str(p[2].type.stype)+': p'+p[1],type=p[2].type,children=[p[2]])
+    else:
+        p[0] = p[2]
+        p[0].type = 'error'
+        Errors(
+            errorType='TypeError',
+            errorText='increment/decrement not possible for' + p[2].type.stype,
+            token_object= p.slice[-2]
+        )
+
+#Node
+def p_unary_expression_2(p):
+    '''
+    unary_expression : unary_operator cast_expression
+    '''
+    #print(p[1]) #!!
+
+    if p[2].type == 'error':
+        p[0] = Node(type = 'error')
+
+    elif p[1] == '+' or p[1] == '-':
+
+        allowed_base = {'int','float','double','char','long'}
+
+        if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type,children=[p[2]])
+        else:
+            p[0] = Node(type = 'error')
+        
+    elif p[1] == '&':
+
+        p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = PointerType(p[2].type),children=[p[2]])
+
+    elif p[1] == '*':
+
+        if p[2].type.is_pointer:
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type.type,children=[p[2]])
+        else:
+            p[0]  =Node(type = 'error')
+
+    elif p[1] == '~':
+        allowed_base = {'int','float','double','char','long', 'bool'}
+        if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = p[2].type,children=[p[2]])
+        else:
+            p[0] = Node(type = 'error')
+    
+    else: 
+        allowed_base = {'int','float','double','char','long', 'bool'}
+        if p[2].type.type in allowed_base and p[2].type.class_type == 'BasicType':
+            p[0] = Node(name = "unary_op", value=str(p[2].type.stype) + ':p ' + p[1], type = BasicType('bool'),children=[p[2]])
+        else:
+            p[0] = Node(type = 'error')
+
+
+
+#Node
+def p_unary_expression_3(p):
+    '''
+    unary_expression : SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
-    if len(p) == 2:
-        p[0] = p[1]
+
+    if len(p) == 3:
+        if p[2].type == 'error':
+            p[0] = Node(type = 'error')
+        else:
+            p[0] = Node(name = "unary_op",value=p[1], type = BasicType(type = 'long'),children=[p[2]])
     else:
-        p[0] = Node("unary_op",p[1],children = [p[2]] if len(p) == 3 else [p[3]])
+        if p[3].type == 'error':
+            p[0] = Node(type = 'error')
+        else:
+            p[0] = Node(name = "unary_op", value=p[1] + ':' + str(p[3].type.stype), type = BasicType(type = 'long'))
 
 #String
 def p_unary_operator(p):
@@ -190,8 +422,13 @@ def p_cast_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-
-        p[0] = Node("cast",children=[p[2],p[4]])
+        if p[2].type == 'error' or p[4].type == 'error':
+            p[0] = Node(type='error')
+        else:
+            if p[4].type.is_convertible_to(p[2].type):
+                p[0] = Node(name = "type_cast", value=str(p[2].type.stype), type = p[2].type)
+            else:
+                p[0] = Node(type='error')
 
 #Node
 def p_multiplicative_expression(p):
@@ -199,13 +436,64 @@ def p_multiplicative_expression(p):
     multiplicative_expression : cast_expression
                               | multiplicative_expression MULTIPLY cast_expression
                               | multiplicative_expression DIVIDE cast_expression
-                              | multiplicative_expression MODULUS cast_expression
     '''
 
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','double','float','char'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2],
+            )
+            p[0] = Node(type="error")
+            return
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",value=typ.stype+p[2],children = [node1,node2],type=typ)
+
+def p_multiplicative_expression_1(p):
+    '''
+    multiplicative_expression : multiplicative_expression MODULUS cast_expression
+    '''
+    allowed_class = {'BasicType'}
+    allowed_base = {'int','long','char'}
+    if p[1].type == "error" or p[3].type == "error":
+        p[0] = Node(type="error")
+        return
+    if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+        Errors(
+            errorType='TypeError',
+            errorText=p[2]+' not support type '+p[1].type.stype,
+            token_object= p.slice[2]
+        )
+        p[0] = Node(type="error")
+        return
+
+    if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+        Errors(
+            errorType='TypeError',
+            errorText=p[2]+' not support type '+p[3].type.stype,
+            token_object= p.slice[2]
+        )
+        p[0] = Node(type="error")
+        return
+        
+    node1,node2,typ = implicit_casting(p[1],p[3])
+    p[0] = Node("binary_op",value=typ.stype+p[2],children = [node1,node2],type=typ)
 
 #Node
 def p_additive_expression(p):
@@ -217,7 +505,65 @@ def p_additive_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = [('PointerType','BasicType'),('BasicType','PointerType'),('BasicType','BasicType')]
+        allowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','double','float'}]
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        class1 = p[1].type.class_type
+        class2 = p[3].type.class_type
+        if (class1,class2) not in allowed_class:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        i = allowed_class.index((class1,class2))
+        if i == 0:
+            if p[3].type.type not in allowed_base[i]:
+                Errors(
+                    errorType='TypeError',
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            if p[3].type.type == "char":
+                p[3] = Node("type_caste",value="int",type=BasicType('int'),children=[p[3]])
+            p[0] = Node(name="binary_op",value=p[1].type.stype+p[2],type=p[1].type,children = [p[1],p[3]])
+            return
+        if i == 1:
+            if p[1].type.type not in allowed_base[i]:
+                Errors(
+                    errorType='TypeError',
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            if p[1].type.type == "char":
+                p[1] = Node("type_caste",value="int",type=BasicType('int'),children=[p[1]])
+            p[0] = Node(name="binary_op",value=p[3].type.stype+p[2],type=p[3].type,children = [p[1],p[3]])
+            return
+        
+        if i == 2:
+            if p[3].type.type not in allowed_base[i] or p[1].type.type not in allowed_base[i]:
+                Errors(
+                    errorType='TypeError',
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
+                    token_object= p.slice[2]
+                )
+                p[0] = Node(type="error")
+                return
+            node1,node2,typ = implicit_casting(p[1],p[3])
+            p[0] = Node("binary_op",value=typ.stype+p[2],children = [node1,node2],type=typ)
+            return
+
+
+
+        # p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
 
 #Node
 def p_shift_expression(p):
@@ -230,7 +576,31 @@ def p_shift_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=typ)
 
 #Node
 def p_relational_expression(p):
@@ -245,7 +615,31 @@ def p_relational_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','double','float'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=BasicType('bool'))
         
 #Node
 def p_equality_expression(p):
@@ -258,7 +652,31 @@ def p_equality_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','double','float'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=BasicType('bool'))
 
 #Node
 def p_and_expression(p):
@@ -266,11 +684,36 @@ def p_and_expression(p):
     and_expression : equality_expression
 	               | and_expression BITWISE_AND equality_expression
     '''
-
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node(name = "binary_op",value = typ.stype+p[2],children = [node1,node2],type=typ)
+
+    
 
 #Node
 def p_exclusive_or_expression(p):
@@ -282,7 +725,33 @@ def p_exclusive_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=typ)
+
+
 
 #Node
 def p_inclusive_or_expression(p):
@@ -294,7 +763,32 @@ def p_inclusive_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        node1,node2,typ = implicit_casting(p[1],p[3])
+        p[0] = Node("binary_op",typ.stype+p[2],children = [node1,node2],type=typ)
+
 
 #Node
 def p_logical_and_expression(p):
@@ -302,11 +796,36 @@ def p_logical_and_expression(p):
     logical_and_expression : inclusive_or_expression
 	                       | logical_and_expression LOGICAL_AND inclusive_or_expression
     '''
-
+    ### Implement typecasting logic
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool','double','float'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+        p[3] = Node(name="type_cast",value='bool',children=[p[3]],type=BasicType('bool'))
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]],type=BasicType('bool'))
 
 #Node
 def p_logical_or_expression(p):
@@ -318,7 +837,33 @@ def p_logical_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("binary_op",p[2],children = [p[1],p[3]])
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool','double','float'}
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+
+        if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[3].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+            
+        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+        p[3] = Node(name="type_cast",value='bool',children=[p[3]],type=BasicType('bool'))
+        p[0] = Node("binary_op",p[2],children = [p[1],p[3]],type=BasicType('bool'))
+    
 
 #Node
 def p_conditional_expression(p):
@@ -330,7 +875,28 @@ def p_conditional_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("ternary_op",children = [p[1],p[3],p[5]])
+        if p[1].type == "error" or p[3].type == "error" or p[5].type == "error":
+            p[0] = Node(type="error")
+            return
+        allowed_class = {'BasicType'}
+        allowed_base = {'int','long','char','bool','double','float'}
+        if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
+            Errors(
+                errorType='TypeError',
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        if p[3].type != p[5].type:
+            Errors(
+                errorType='TypeError',
+                errorText='not same type',
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+        p[0] = Node("ternary_op",children = [p[1],p[3],p[5]],type=p[3].type)
 
 #Node
 def p_assignment_expression(p):
@@ -342,7 +908,44 @@ def p_assignment_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("assignment",p[2],children = [p[1],p[3]])
+        if p[1].type == 'error' or p[3].type == 'error':
+
+            p[0] = Node(type = 'error')
+
+        elif p[2] == '=':
+            if p[3].type.is_convertible_to(p[1].type):
+
+                p[0] = Node(name = "assignment",value = p[2] ,children = [p[1],p[3]], type = p[1].type)
+            
+            else:
+                p[0] = Node(type = 'error')
+        
+        elif p[2] == '<<=' or p[2] == '=>>':
+
+            allowed_class = ['long', 'int', 'char']
+            if p[3].type.type in allowed_class  and p[1].type.type in allowed_class and p[1].type.is_basic and p[3].type.is_basic:
+                p[0] = Node(name = "lshift_assign",value = p[2] ,children = [p[1],p[3]], type = p[1].type )
+            else:
+                p[0] = Node(type = 'error')
+        
+        elif p[2] == '+=' or p[2] == '-=':
+            pass
+
+        elif p[2] == '/=':
+            pass
+
+        elif p[2] == '%=':
+            pass
+
+        elif p[2] == '*=':
+            pass
+
+        elif p[2] == '&=' or p[2] == '^=' or p[2] == '|=':
+            pass
+
+        
+
+            
 
 #String
 def p_assignment_operator(p):
@@ -370,11 +973,13 @@ def p_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        if isinstance(p[1],Node) and p[1].type == "expression":
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+        if isinstance(p[1],Node) and p[1].name == "expression":
             p[1].addChild(p[3])
             p[0] = p[1]
         else:
-            p[0] = Node("expression",children=[p[1],p[3]])
+            p[0] = Node(name="expression",children=[p[1],p[3]],type="ok")
     
 #Node
 def p_constant_expression(p):
@@ -384,30 +989,19 @@ def p_constant_expression(p):
     p[0] = p[1]
 
 
-#Node(can be None)
+#List
 def p_declaration(p):
     '''
-    declaration : declaration_specifiers SEMI_COLON
-	            | declaration_specifiers init_declarator_list SEMI_COLON
+    declaration : struct_specifier SEMI_COLON
+                | enum_specifier SEMI_COLON
+	            | type_specifier init_declarator_list SEMI_COLON
     '''
-    if len(p) == 4 and p[2] != None:
-        p[0] = Node("declaration",children=p[2])
+    if len(p) == 4:
+        p[0] = p[2]
     else:
-        p[0] = None
+        p[0] = [None]
 
-# Node
-def p_declaration_specifiers(p):
-    '''
-    declaration_specifiers : storage_class_specifier
-                           | storage_class_specifier declaration_specifiers
-                           | type_specifier
-                           | type_specifier declaration_specifiers
-                           | type_qualifier
-                           | type_qualifier declaration_specifiers
-    '''
-    # required change in action
-    p[0] = p[1]
-        
+
 
 # list (can be None)
 def p_init_declarator_list(p):
@@ -415,13 +1009,8 @@ def p_init_declarator_list(p):
     init_declarator_list : init_declarator
 	                     | init_declarator_list COMMA init_declarator
     '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        if p[3] == None:
-            p[0] = p[1]
-        else:
-            p[0] = p[3] if p[1] == None else p[1] + p[3]
+    p[0] = p[1] if len(p) == 2  else p[1]+p[3]
+
 
 # list (can be None)
 def p_init_declarator(p):
@@ -429,111 +1018,116 @@ def p_init_declarator(p):
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
+    success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
     if len(p) == 2:
-        p[0] = None
+        p[0] = [None]
     else:
-        p[0] = [Node("assignment",p[2],children = [p[1],p[3]])]
-
-# Node
-def p_storage_class_specifier(p):
-    '''
-    storage_class_specifier : TYPEDEF
-                            | EXTERN
-                            | STATIC
-                            | AUTO
-                            | REGISTER
-    '''
-    p[0] = Node("storage_class_specifier",p[1])
+        if success:
+            # type checking
+            # check for initliazer
+            if p[3].type == "error":
+                p[0] = Node(type="error")
+                return
+            # if p[3].type != p[1].type
+            #     Errors(
+            #         errorType='TypeError',
+            #         errorText='not same type',
+            #         token_object= p.slice[2]
+            #     )
+            #     p[0] = Node(type="error")
+            #     return
+            p[0] = [Node(value = p[2],children = [p[1],p[3]],type="ok")]
+        else:
+            p[0] = [None]
 
 # Node
 def p_type_specifier(p):
     '''
     type_specifier : VOID
                    | CHAR
-                   | SHORT
                    | INT
                    | LONG
                    | FLOAT
                    | DOUBLE
-                   | SIGNED
-                   | UNSIGNED
-                   | struct_or_union_specifier
-                   | enum_specifier
+                   | STRUCT IDENTIFIER
+                   | ENUM IDENTIFIER
                    | BOOL
     '''
-    p[0] = Node("type_specifier",p[1])
+    if p[1] == 'enum':
+        pass
+    elif p[1] == 'struct':
+        success = sym_table.look_up_struct(name = p[2],token_object=p.slice[-1])
+        if success:
+            p[0] = Node(type = success)
+        else:
+            p[0] = Node(type="error")
+    else:
+        p[0] = Node(type = BasicType(type = p[1]))
+
 
 # String
-def p_struct_or_union_specifier(p):
+def p_struct_specifier(p):
     '''
-    struct_or_union_specifier : struct_or_union IDENTIFIER L_BRACES struct_declaration_list R_BRACES
-	                          | struct_or_union L_BRACES struct_declaration_list R_BRACES
-	                          | struct_or_union IDENTIFIER
+    struct_specifier : STRUCT IDENTIFIER L_BRACES add_sym struct_declaration_list pop_sym R_BRACES
     '''
-    p[0] = p[1]
-
-# String
-def p_struct_or_union(p):
-    '''
-    struct_or_union : STRUCT
-	                | UNION
-    '''
-    p[0] = p[1]
+    
+    # todo dict
+    sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2],arg_dict=p[5])
 
 
-# None
+
+# dict
 def p_struct_declaration_list(p):
     '''
     struct_declaration_list : struct_declaration
 	                        | struct_declaration_list struct_declaration
     '''
-    p[0] = None
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1]
+        p[0].update(p[2])
 
-# None
+# dict
 def p_struct_declaration(p):
     '''
-    struct_declaration : specifier_qualifier_list struct_declarator_list SEMI_COLON
+    struct_declaration : type_specifier struct_declarator_list SEMI_COLON
     '''
-    p[0] = None
+    p[0] = p[2]
 
-#list
-def p_specifier_qualifier_list(p):
-    '''
-    specifier_qualifier_list : type_specifier specifier_qualifier_list
-                             | type_specifier
-                             | type_qualifier specifier_qualifier_list
-                             | type_qualifier
-    '''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = [p[1]]+p[2]
 
-# None
+# dict
 def p_struct_declarator_list(p):
     '''
-    struct_declarator_list : struct_declarator
-	                       | struct_declarator_list COMMA struct_declarator
+    struct_declarator_list : declarator
+	                       | struct_declarator_list COMMA declarator
     '''
-    p[0] = None
+    success = None
+    if len(p) == 2:
+        if p[1].type != "error":
+            success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
+        if success:
+            p[0] = {p[1].value:p[1].type}
+        else:
+            p[0] = dict({})
 
-# None    
-def p_struct_declarator(p):
-    '''
-    struct_declarator : declarator
-                      | COLON constant_expression
-                      | declarator COLON constant_expression
-    '''
-    p[0] = None
+    else:
+        if p[1].type != "error":
+            success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
+        if success:
+            p[0] = p[1]
+            p[0].update({p[3].value:p[3].type})
+        else:
+            p[0] = p[1]
+
+
 
 #string
 def p_enum_specifier(p):
     '''
-    enum_specifier : ENUM L_BRACES enumerator_list R_BRACES
-                   | ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
-                   | ENUM IDENTIFIER
+    enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
     '''
-    p[0] = p[1]
+    # p[0] = p[1]
 
 # None
 def p_enumerator_list(p):
@@ -541,7 +1135,7 @@ def p_enumerator_list(p):
     enumerator_list : enumerator
 	                | enumerator_list COMMA enumerator
     '''
-    p[0] = None
+    # p[0] = None
 
 # None
 def p_enumerator(p):
@@ -549,70 +1143,96 @@ def p_enumerator(p):
     enumerator : IDENTIFIER
 	           | IDENTIFIER ASSIGNMENT constant_expression
     '''
-    p[0] = None
+    # p[0] = None
 
-# Node
-def p_type_qualifier(p):
-    '''
-    type_qualifier : CONST
-	               | VOLATILE
-    '''
-    p[0] = Node("type_qualifier",p[1])
 
 # Node
 def p_declarator(p):
     '''
     declarator : pointer direct_declarator
-	           | direct_declarator
+	           | no_pointer direct_declarator
     '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = Node("pointer",children=p[1]+[p[2]])
+    p[0] = p[2]
+    # print(p[0].type, type(p[0].type), p[0].value)
+    #   
+
+    # if len(p) == 2:
+    #     p[0] = p[1]
+    # else:
+    #     print(p, p[0], p[1], p[2])
+    #     sym_table.add_entry(name = p[2],type = getMutliPointerType(type =p.stack[-1].value.type, level = p[1].data['pointer']), token_object=p.slice[-1])
+
 
 # Node
 def p_direct_declarator(p):
     '''
     direct_declarator : IDENTIFIER
                       | L_PAREN declarator R_PAREN
-                      | direct_declarator L_SQBR assignment_expression R_SQBR
+                      | direct_declarator L_SQBR INT_CONSTANT R_SQBR
                       | direct_declarator L_SQBR R_SQBR
-                      | direct_declarator L_PAREN parameter_type_list R_PAREN
-                      | direct_declarator L_PAREN identifier_list R_PAREN
-                      | direct_declarator L_PAREN R_PAREN
     '''
+
     if len(p) == 2:
-        p[0] = Node("id",p[1])
+        # sym_table.add_entry(name= p[1],type = p.stack[-1].value.type, token_object=p.slice[-1])
+        # store in direct declarator
+        p[0] = Node(value=p[1], type = p.stack[-1].value.type)
+        p[0].data['token'] = p.slice[-1]
     elif p[1] == '(':
         p[0] = p[2]
-    # elif len(p) == 4:
-    #     p[0] = Node("declarator",p[2]+p[3],children=[p[1]])
-    # else:
-    #     p[0] = Node("declarator",p[2]+p[4],children=[p[1],p[3]])
+    elif len(p) == 4:
+        p[0] = p[1]
+        if p[0].type != "error":
+            p[0].type = PointerType(type = p[0].type,array_size=p[3])
     else:
         p[0] = p[1]
+        if p[0].type != "error":
+            p[0].type = PointerType(type = p[0].type)
+    
+
 
 # List
 def p_pointer(p):
     '''
     pointer : MULTIPLY
-	        | MULTIPLY type_qualifier_list
-            | MULTIPLY pointer
-            | MULTIPLY type_qualifier_list pointer
+            | pointer MULTIPLY
     '''
-    p[0] = [Node("pointer_ref",p[1])]
-    for i in range(2,len(p)):
-        p[0] += p[i]
-
-# List 
-def p_type_qualifier_list(p):
-    '''
-    type_qualifier_list : type_qualifier
-	                    | type_qualifier_list type_qualifier
-    '''
-    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+    # | MULTIPLY type_qualifier_list
+    # | MULTIPLY type_qualifier_list pointer
+    # p[0] = [Node("pointer_ref",p[1])]
+    # for i in range(2,len(p)):
+    #     p[0] += p[i]
+    if len(p) == 2:
+        type_specifier_symbol = None
+        for symbol in reversed(p.stack):
+            if symbol.type == 'type_specifier':
+                type_specifier_symbol = symbol
+                break
+        if type_specifier_symbol.value.type == "error":
+            p[0] = Node(type="error")
+        else:
+            p[0] = Node(type = PointerType(type = type_specifier_symbol.value.type))
+        #p[0] = Node(PointerType(type = p.stack[-1].value.type))
+    else:
+        p[0] = p[1]
+        if p[0].type != "error":
+            p[0].type = PointerType(type = p[1].type)
 
 # Node
+
+def p_no_pointer(p):
+    '''
+    no_pointer : 
+    '''
+    type_specifier_symbol = None
+    for symbol in reversed(p.stack):
+        if symbol.type == 'type_specifier':
+            type_specifier_symbol = symbol
+            break
+    p[0] = Node(type = type_specifier_symbol.value.type)
+    
+
+
+
 def p_parameter_type_list(p):
     '''
     parameter_type_list : parameter_declaration
@@ -621,83 +1241,33 @@ def p_parameter_type_list(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        if p[1].type == "parameter_type_list":
-            p[1].addChild(p[3])
-            p[0] = p[1]
-        else:
-            p[0] = Node("parameter_type_list",children=[p[1],p[3]])
+        p[0] = p[1]+p[3]
+    
 # Node 
 def p_parameter_declaration(p):
     '''
-    parameter_declaration : declaration_specifiers declarator
-	                      | declaration_specifiers abstract_declarator
-	                      | declaration_specifiers
+    parameter_declaration : type_specifier declarator
     '''
-    p[0] = Node("parameter_declaration",children=[p[1]])
-    if len(p) > 2:
-        if isinstance(p[2],list):
-            for i in p[2]:
-                p[0].addChild(i)
-        else:
-            p[0].addChild(p[2])
 
-# Node
-def p_identifier_list(p):
-    '''
-    identifier_list : IDENTIFIER
-	                | identifier_list COMMA IDENTIFIER
-    '''
-    if len(p) == 2:
-        p[0] = Node("id",p[1])
+    success = sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
+    if success:
+        p[0] = [p[2].type]
     else:
-        c =  Node("id",p[3])
-        if p[1].type == "id":
-            p[0] = Node("identifier_list",children=[p[1],c])
-        else:
-            p[1].addChild(c)
-            p[0] = p[1]
+        p[0] = []
+
+
 
 # Node
 def p_type_name(p):
     '''
-    type_name : specifier_qualifier_list
-	          | specifier_qualifier_list abstract_declarator
+    type_name : type_specifier
+	          | type_specifier pointer
     '''
-    c = []
-    for i in range(1,len(p)):
-        c += p[i]
-    p[0] = Node("type_name",children=c)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[2]
 
-# List
-def p_abstract_declarator(p):
-    '''
-    abstract_declarator : pointer
-	                    | direct_abstract_declarator
-	                    | pointer direct_abstract_declarator
-    '''
-    p[0] = []
-    for i in range(1,len(p)):
-        p[0] += p[i]
-
-# List
-def p_direct_abstract_declarator(p):
-    '''
-    direct_abstract_declarator : L_PAREN abstract_declarator R_PAREN
-	                           | L_SQBR R_SQBR
-	                           | L_SQBR assignment_expression R_SQBR
-	                           | direct_abstract_declarator L_SQBR R_SQBR
-                               | direct_abstract_declarator L_SQBR assignment_expression R_SQBR
-                               | L_PAREN R_PAREN
-                               | L_PAREN parameter_type_list R_PAREN
-                               | direct_abstract_declarator L_PAREN R_PAREN
-                               | direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
-    '''
-    p[0] = []
-    for i in range(1,len(p)):
-        if not isinstance(p[i],list):
-            p[0] += [p[i]]
-        else:
-            p[0] += p[i]
 
 
 # Node
@@ -710,7 +1280,9 @@ def p_initializer(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = Node("init_list","{}",p[2])
+        if p[2].type == "error":
+            p[0] = Node(type="error")
+        p[0] = Node(name="{}",children=p[2].value,type=PointerType(type=p[2].type))
 
 # List
 def p_initializer_list(p):
@@ -718,7 +1290,25 @@ def p_initializer_list(p):
     initializer_list : initializer
 	                 | initializer_list COMMA initializer
     '''
-    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
+    # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
+    if len(p) == 2:
+        p[0] = Node(value=[p[1]],type=p[1].type)
+    else:
+        if p[1].type == "error" or p[3].type == "error":
+            p[0] = Node(type="error")
+            return
+        if p[1].type != p[3].type:
+            Errors(
+                errorType='TypeError',
+                errorText='not same type',
+                token_object= p.slice[2]
+            )
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(value=p[1]+[p[3]],type=p[1].type)
+
+        
+
 
 # Node
 def p_statement(p):
@@ -733,57 +1323,65 @@ def p_statement(p):
     p[0] = p[1]
 
 # Node
-def p_labeled_statement_1(p):
-    '''
-    labeled_statement : IDENTIFIER COLON statement
-    '''
-    c = Node("id",p[1])
-    p[0] = Node("label",children=[c,p[3]])
-
-# Node
-def p_labeled_statement_2(p):
+def p_labeled_statement(p):
     '''
     labeled_statement : CASE constant_expression COLON statement
 	                  | DEFAULT COLON statement
     '''
-    if len(p) == 5:
-        p[0] = Node("case",children=[p[2],p[4]])
+    
+    if p.slice[1].type == 'CASE':
+        if p[2].type == "error" or p[4].type == "error":
+            p[0] = Node(type="error")
+            return 
+        p[0] = Node("case",children=[p[2],p[4]],type="ok")
     else:
-        p[0] = Node("default",children=[p[3]])
+        if p[3].type == "error":
+            p[0] = Node(type="error")
+            return 
+        p[0] = Node("default",children=[p[3]],type="ok")
 
 # Node
 def p_compound_statement(p):
     '''
     compound_statement : L_BRACES R_BRACES
-	                   | L_BRACES block_item_list R_BRACES
+	                   | L_BRACES add_sym block_item_list pop_sym R_BRACES
     '''
     if len(p) == 3:
-        p[0] = Node("compound_statement","{}")
+        p[0] = Node("compound_statement","{}",type="ok")
     else:
-        p[0] = Node("compound_statement","{}",children=p[2])
+        p[0] = Node("compound_statement","{}",children=p[3],type="ok")
+    # print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
 
-# Node
-def p_declaration_list(p):
+def p_function_body(p):
     '''
-    declaration_list : declaration
-	                 | declaration_list declaration
+    function_body : L_BRACES R_BRACES
+	              | L_BRACES block_item_list R_BRACES
     '''
-    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+    if len(p) == 3:
+        p[0] = Node("compound_statement","{}",type="ok")
+    else:
+        p[0] = Node("compound_statement","{}",children=p[2],type="ok")
+
 # List
 def p_block_item_list(p):
     '''
     block_item_list : block_item
                    | block_item_list block_item
     '''
-    p[0] = [p[1]] if len(p) == 2 else p[1]+[p[2]]
+    p[0] = p[1] if len(p) == 2 else p[1]+p[2]
 
-# Node       
+# List     
 def p_block_item(p):
     '''
     block_item : statement
                 | declaration
     '''
-    p[0] = p[1]
+    if p.slice[1].type == "statement":
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1]
+ 
+
 
 # Node
 def p_expression_statement(p):
@@ -792,7 +1390,7 @@ def p_expression_statement(p):
 	                     | expression SEMI_COLON
     '''
     if len(p) == 2:
-        p[0] = Node("expression_statement",p[1])
+        p[0] = Node(value = p[1],type="ok")
     else:
         p[0] = p[1]
 
@@ -805,9 +1403,22 @@ def p_selection_statement(p):
     '''
     if p[1] == "if":
         if len(p) == 6:
-            p[0] = Node("if",children=[p[3],p[5]])
+            if p[3].type=="error" or p[5].type=="error":
+                p[0] = Node(type="error")
+                return
+            p[0] = Node(name="if",children=[p[3],p[5]],type="ok")
+
         else:
-            p[0] = Node("if_else",children=[p[3],p[5],p[7]])
+            if p[3].type=="error" or p[5].type=="error" or p[7].type=="error":
+                p[0] = Node(type="error")
+                return
+            p[0] = Node(name="if_else",children=[p[3],p[5],p[7]],type="ok")
+    
+    else:
+        if p[3].type=="error" or p[5].type=="error":
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(name="switch",children=[p[3],p[5]],type="ok")
 
 # Node
 def p_iteration_statement(p):
@@ -816,36 +1427,92 @@ def p_iteration_statement(p):
 	                    | DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON
 	                    | FOR L_PAREN expression_statement expression_statement R_PAREN statement
 	                    | FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
-                        | FOR L_PAREN declaration expression_statement R_PAREN statement
-                        | FOR L_PAREN declaration expression_statement expression R_PAREN statement
     '''
     if p[1] == "while":
-        p[0] = Node("iteration_statement","while",children=[p[3],p[5]])
+        if p[3].type=="error" or p[5].type=="error":
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(name="iteration_statement",value="while",children=[p[3],p[5]],type="ok")
     elif p[1] == "do":
-        p[0] = Node("iteration_statement","do",children=[p[2],p[5]])
+        if p[2].type=="error" or p[5].type=="error":
+            p[0] = Node(type="error")
+            return
+        p[0] = Node(name="iteration_statement",value="do",children=[p[2],p[5]],type="ok")
     else:
         if len(p) == 7:
+            if p[3].type=="error" or p[4].type=="error" or p[6].type=="error":
+                p[0] = Node(type="error")
+                return
             child = [p[3],p[4],p[6]]
         else:
+            if p[3].type=="error" or p[4].type=="error" or p[5].type=="error" or p[7].type=="error":
+                p[0] = Node(type="error")
+                return
             child = [p[3],p[4],p[5],p[7]]
-        p[0] = Node("iteration_statement","for",child)
+        p[0] = Node(name="iteration_statement",value="for",children=child,type="ok")
     
 # Node
 def p_jump_statement(p):
     '''
-    jump_statement : GOTO IDENTIFIER SEMI_COLON
-	               | CONTINUE SEMI_COLON
+    jump_statement : CONTINUE SEMI_COLON
 	               | BREAK SEMI_COLON
-	               | RETURN SEMI_COLON
-	               | RETURN expression SEMI_COLON
 	                 
     '''
-    if len(p) == 4:
-        c = Node("id",p[2]) if p[1] == "goto" else p[2]
-        p[0] = Node("jump_statment",p[1],[c])
+    p[0] = Node(name=p[1],type="ok")
+def p_jump_statement(p):
+    '''
+    jump_statement : RETURN SEMI_COLON
+	               | RETURN expression SEMI_COLON      
+    '''
+    success = sym_table.look_up(name='return',token_object=p.slice[1])
+    if success:
+        if len(p) == 3:
+            if success.type != BasicType('void'):
+                p[0] = Node(type="error")
+                Errors(
+                    errorType='TypeError',
+                    errorText='return type not matching',
+                    token_object= p.slice[2]
+                )
+                return
+            p[0] = Node(name="return",type="ok")
+        else:
+            if p[2].type == "error":
+                p[0] = Node(type="error")
+                return
+            if p[2].type.is_convertible_to(success.type):
+                if str(p[2].type) != str(success.type):
+                    p[2] = Node(name="type_cast",value=success.type.stype,children=[p[2]],type=success.type)
+                p[0] = Node(name="return",children=[p[2]],type="ok")
+                return
+            p[0] = Node(type="error")
+            Errors(
+                errorType='TypeError',
+                errorText='return type not matching',
+                token_object= p.slice[2]
+            )
     else:
-        p[0] = Node("Jump Statment",p[1])
+        p[0] = Node(type="error")
+        Errors(
+            errorType='TypeError',
+            errorText='Not Function',
+            token_object= p.slice[2]
+        )
 
+def p_add_sym(p):
+    '''
+        add_sym :
+    '''
+    sym_table.start_scope()
+    p[0] = None
+
+def p_pop_sym(p):
+    '''
+        pop_sym :
+    '''
+    p[0] = sym_table.curr_symbol_table
+    sym_table.close_scope()
+    
 def p_error(t):
     if t is None:
         print("End of File Reached. More Input required")    
@@ -882,6 +1549,11 @@ def main():
     
     parser.parse(source_code, lexer = lexer.lexer)
 
+    if len(Errors.get_all_error()):
+        for error in Errors.get_all_error():
+            print(error)
+        return
+
     Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
     # print(args)
     if args.p:
@@ -894,6 +1566,9 @@ def main():
     file = open(args.o, 'w')
     file.write(Graph.string())
     file.close()
+    
+    # print(sym_table)
+    print_csv(sym_table)
 
 if __name__ == "__main__":
     main()
