@@ -143,8 +143,40 @@ def p_postfix_expression_1(p):
     postfix_expression : postfix_expression L_SQBR expression R_SQBR
     
     '''
+    allowed_class = {'BasicType'}
+    allowd_base = {'int','long'}
+    check1 = True
+    check2 = True
+    if p[3].type == "error":
+        check1 = False
+        p[0] = Node(type="error")
+    elif p[3].type.class_type not in allowed_class or p[3].type.type not in allowd_base:
+        Errors(
+            errorType='TypeError',
+            errorText='wrong index type'+p[3].type.stype,
+            token_object= p.slice[-1]
+        )
+        check1  = False
+        p[0] = Node(type="error")
 
-def p_p_postfix_expression_2(p):
+    allowd_class = {'PointerType'}
+    if p[1].type == "error":
+        check2 = False
+        p[0] = Node(type="error")
+    elif p[1].type.class_type not in allowed_class:
+        Errors(
+            errorType='TypeError',
+            errorText='cannot reference type'+p[1].type.stype,
+            token_object= p.slice[-1]
+        )
+        check2  = False
+        p[0] = Node(type="error")
+
+    if check1 and check2:
+        p[0] = Node(name="array_ref",value = "[]",type=p[0].type.type,children=[p[1],p[3]])
+
+
+def p_postfix_expression_2(p):
     # function ref
     ''' 
     postfix_expression : postfix_expression L_PAREN R_PAREN
