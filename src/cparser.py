@@ -439,8 +439,8 @@ def p_multiplicative_expression(p):
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[1].type.stype
-                token_object= p.slice[2]
+                errorText=p[2]+' not support type '+p[1].type.stype,
+                token_object= p.slice[2],
             )
             p[0] = Node(type="error")
             return
@@ -467,7 +467,7 @@ def p_multiplicative_expression_1(p):
     if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
         Errors(
             errorType='TypeError',
-            errorText=p[2]+' not support type '+p[1].type.stype
+            errorText=p[2]+' not support type '+p[1].type.stype,
             token_object= p.slice[2]
         )
         p[0] = Node(type="error")
@@ -476,7 +476,7 @@ def p_multiplicative_expression_1(p):
     if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
         Errors(
             errorType='TypeError',
-            errorText=p[2]+' not support type '+p[3].type.stype
+            errorText=p[2]+' not support type '+p[3].type.stype,
             token_object= p.slice[2]
         )
         p[0] = Node(type="error")
@@ -496,7 +496,7 @@ def p_additive_expression(p):
         p[0] = p[1]
     else:
         allowed_class = [('PointerType','BasicType'),('BasicType','PointerType'),('BasicType','BasicType')]
-        alowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','double','float'}]
+        allowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','double','float'}]
         if p[1].type == "error" or p[2].type == "error":
             p[0] = Node(type="error")
             return
@@ -505,7 +505,7 @@ def p_additive_expression(p):
         if (class1,class2) not in allowed_class:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
@@ -515,7 +515,7 @@ def p_additive_expression(p):
             if p[3].type.type not in allowed_base[i]:
                 Errors(
                     errorType='TypeError',
-                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
                     token_object= p.slice[2]
                 )
                 p[0] = Node(type="error")
@@ -526,7 +526,7 @@ def p_additive_expression(p):
             if p[1].type.type not in allowed_base[i]:
                 Errors(
                     errorType='TypeError',
-                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
                     token_object= p.slice[2]
                 )
                 p[0] = Node(type="error")
@@ -538,7 +538,7 @@ def p_additive_expression(p):
             if p[3].type.type not in allowed_base[i] or p[1].type.type not in allowed_base[i]:
                 Errors(
                     errorType='TypeError',
-                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype
+                    errorText=p[2]+' not support type '+p[1].type.stype+','+p[3].type.stype,
                     token_object= p.slice[2]
                 )
                 p[0] = Node(type="error")
@@ -570,7 +570,7 @@ def p_shift_expression(p):
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[1].type.stype
+                errorText=p[2]+' not support type '+p[1].type.stype,
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
@@ -579,7 +579,7 @@ def p_shift_expression(p):
         if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[3].type.stype
+                errorText=p[2]+' not support type '+p[3].type.stype,
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
@@ -609,7 +609,7 @@ def p_relational_expression(p):
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[1].type.stype
+                errorText=p[2]+' not support type '+p[1].type.stype,
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
@@ -618,7 +618,7 @@ def p_relational_expression(p):
         if p[3].type.class_type not in allowed_class or p[3].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
-                errorText=p[2]+' not support type '+p[3].type.stype
+                errorText=p[2]+' not support type '+p[3].type.stype,
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
