@@ -159,7 +159,7 @@ def p_postfix_expression_1(p):
         check1  = False
         p[0] = Node(type="error")
 
-    allowd_class = {'PointerType'}
+    allowed_class = {'PointerType'}
     if p[1].type == "error":
         check2 = False
         p[0] = Node(type="error")
@@ -173,7 +173,7 @@ def p_postfix_expression_1(p):
         p[0] = Node(type="error")
 
     if check1 and check2:
-        p[0] = Node(name="array_ref",value = "[]",type=p[0].type.type,children=[p[1],p[3]])
+        p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
 
 
 def p_postfix_expression_2(p):
