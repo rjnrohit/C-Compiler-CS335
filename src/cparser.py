@@ -60,7 +60,6 @@ def p_function_definition(p):
     p[0] = [p[0]]
 
 
-#Node
 def p_func_scope(p):
     '''
     func_scope : L_PAREN
@@ -1374,7 +1373,12 @@ def p_block_item(p):
     block_item : statement
                 | declaration
     '''
-    p[0] = [p[1]]
+    if p.slice[1].type == "statement":
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1]
+ 
+
 
 # Node
 def p_expression_statement(p):
