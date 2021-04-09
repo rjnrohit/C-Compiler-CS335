@@ -320,9 +320,6 @@ class SymbolTable:
         assert name, "name not provided for entry"
         assert type is not None, "type not specified for entry"
         
-        if type.class_type == "FunctionType":
-            self._add_scope(name = name, parent=self, symbol_table = type.symbol_table)
-
 
         if self.table.get(name):
             Errors(
@@ -331,7 +328,6 @@ class SymbolTable:
                 token_object = token_object
             )
             return None
-
 
         self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object)
 
@@ -348,8 +344,6 @@ class SymbolTable:
         assert name, "name not provided for entry"
         assert symbol_table is not None, "symbol table not given for struct entry"
 
-        
-        self._add_scope(name = name, parent=self, symbol_table=symbol_table)
 
         if self.struct_table.get(name):
             Errors(
@@ -363,25 +357,26 @@ class SymbolTable:
         return self.struct_table[name]
         
 
-    def _add_scope(self, name = None, parent = None, symbol_table = None):
+    def _add_scope(self,  symbol_table = None, name = None, parent = None):
         #! CAUTION
         #Python always return the object itself (not a copy)
         #Any changes to the returned object will reflect to original object
 
         if parent:
             assert isinstance(parent, SymbolTable) 
-            
-        if symbol_table is None:
-            self.scopes_list.append(SymbolTable(name, parent))
         else:
-            self.scopes_list.append(symbol_table)
+            parent = self
+
+        assert symbol_table, "symbol table can't be None"
+        #print(symbol_table.id, parent)
+        parent.scopes_list.append(symbol_table)
         
         if name is None:
-            self.scopes[self.scopes_list[-1].name] = self.scopes_list[-1]
+            parent.scopes[parent.scopes_list[-1].name] = parent.scopes_list[-1]
         else:
-            self.scopes[name] = self.scopes_list[-1]
+            parent.scopes[name] = parent.scopes_list[-1]
         
-        return self.scopes_list[-1]
+        return parent.scopes_list[-1]
 
     def _look_up(self, name = None, token_object = None):
         symbol_table =self
@@ -442,13 +437,17 @@ class SymbolTable:
             if SymbolTable.symbol_table_dict:
                 SymbolTable.curr_symbol_table = SymbolTable.symbol_table_dict[0]
 
-        SymbolTable.curr_symbol_table = SymbolTable(
+        new_symbol_table = SymbolTable(
             name = name,
             scope_type = scope_type,
             parent = SymbolTable.curr_symbol_table, 
             base = SymbolTable.curr_symbol_table.offset
             )
         
+        self.add_scope(symbol_table = new_symbol_table)
+
+        SymbolTable.curr_symbol_table = new_symbol_table
+
         return SymbolTable.curr_symbol_table
     
     def close_scope(self):
@@ -481,8 +480,9 @@ class SymbolTable:
     def set_parent(self, parent = None):
         return SymbolTable.curr_symbol_table._set_parent(parent=parent)
 
-    def add_scope(self, name = None, parent = None, symbol_table = None):
-        return SymbolTable.curr_symbol_table._add_scope(name = name, parent = parent,symbol_table=symbol_table)
+    def add_scope(self, symbol_table = None, name = None, parent = None):
+        #print('here', symbol_table.id, parent)
+        return SymbolTable.curr_symbol_table._add_scope(symbol_table=symbol_table, name = name, parent = parent)
     
     def set_curr_scope(self, symbol_table=None):
         if symbol_table:
@@ -552,10 +552,10 @@ sym_table.set_curr_scope(symbol_table = sym_table)
 def implicit_casting(node1,node2):
     list_type = {'double':1,'float':2,'long':3,'int':4,'char':5,'bool':6}
     if node1.type.class_type != 'BasicType' or  node2.type.class_type != 'BasicType':
-        print('1')
+        #print('1')
         return None
     if node1.type.type not in list_type or  node1.type.type not in list_type:
-        print('2')
+        #print('2')
         return None
     else:
         rank1 = list_type[node1.type.type]

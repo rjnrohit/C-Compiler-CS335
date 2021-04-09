@@ -18,3 +18,9 @@ n,int,8,4
 t1,int,12,4
 t2,int,16,4
 nextTerm,int,20,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,2,symbol table name:,_temp_name_2
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,4,symbol table name:,_temp_name_4
+name,type,offset,width

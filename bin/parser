@@ -1569,7 +1569,7 @@ def main():
     file.close()
     
     # print(sym_table)
-    print(args.d)
+    # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
 
 if __name__ == "__main__":

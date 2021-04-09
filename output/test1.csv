@@ -47,3 +47,15 @@ h,float,12,4
 x0,float,16,4
 x1,float,20,4
 allerr,float,24,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,5,symbol table name:,_temp_name_5
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,11,symbol table name:,_temp_name_11
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,6,symbol table name:,_temp_name_6
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,12,symbol table name:,_temp_name_12
+name,type,offset,width
