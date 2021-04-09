@@ -11,24 +11,9 @@ b,long,16,8
 temp,long,24,8
 d,int,32,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,main
-name,type,offset,width
-n,int,4,4
-a,long,8,8
-b,long,16,8
-temp,long,24,8
-d,int,32,4
--------------------------------------------------------------------------------------------
           symbol table id:,2,symbol table name:,_temp_name_2
 name,type,offset,width
 i,int,0,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,5,symbol table name:,_temp_name_5
-name,type,offset,width
-i,int,0,4
--------------------------------------------------------------------------------------------
           symbol table id:,3,symbol table name:,_temp_name_3
-name,type,offset,width
--------------------------------------------------------------------------------------------
-          symbol table id:,6,symbol table name:,_temp_name_6
 name,type,offset,width

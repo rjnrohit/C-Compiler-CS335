@@ -443,7 +443,7 @@ class SymbolTable:
             parent = SymbolTable.curr_symbol_table, 
             base = SymbolTable.curr_symbol_table.offset
             )
-        print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
+        #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
         self.add_scope(symbol_table = new_symbol_table)
 
         SymbolTable.curr_symbol_table = new_symbol_table

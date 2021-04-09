@@ -64,6 +64,7 @@ def p_func_scope(p):
     '''
     func_scope : L_PAREN
     '''
+    #print("start_scope", p, p.stack, p.slice)
     sym_table.start_scope(name=p.stack[-1].value.value)
     sym_table.add_entry(name='return',type=p.stack[-1].value.type)
     
@@ -1503,6 +1504,7 @@ def p_add_sym(p):
     '''
         add_sym :
     '''
+    #print("start_scope", p, p.stack, p.slice)
     sym_table.start_scope()
     p[0] = None
 
@@ -1548,7 +1550,7 @@ def main():
     parser = yacc.yacc(debug=0)
     lexer.lexer.filename = args.source_code
     
-    parser.parse(source_code, lexer = lexer.lexer)
+    #parser.parse(source_code, lexer = lexer.lexer)
 
     if len(Errors.get_all_error()):
         for error in Errors.get_all_error():
