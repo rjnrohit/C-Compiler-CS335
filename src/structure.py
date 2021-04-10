@@ -1,3 +1,5 @@
+import builtins
+
 class Node:
     count_nodes = 0
     nodes = []
@@ -20,9 +22,9 @@ class Node:
     def __str__(self):
         res = "Node("
         res += "id:" + str(self.id)
-        res += ",name" + str(self.name)
-        res += ",value" + str(self.value)
-        res += ",type" + str(self.type)
+        res += ",name:" + str(self.name)
+        res += ",value:" + str(self.value)
+        res += ",type:" + str(self.type)
         res += ",info:" + str(self.data)
         res += ")"
         return res
@@ -70,6 +72,7 @@ class BasicType(Type):
         super().__init__()
         self.class_type = "BasicType"
         self.is_basic = True
+        assert isinstance(type,str), str(type) + "expected Type object, provided:" + str(builtins.type(type))
         self.type = type
         self.stype = self.type
         self.width = self.size_dict[type]
@@ -112,8 +115,10 @@ class PointerType(Type):
         super().__init__()
         self.class_type = "PointerType"
         self.is_pointer = True
+        assert isinstance(type,Type), str(type) + " expected Type object, provided:" + str(builtins.type(type))
         self.type = type
         self.stype = type.stype + "*"
+        assert not isinstance(array_size,str), "array_size can't be string, provided: " + str(array_size)
         self.array_size = array_size
         self.width = self.update_width()
 
@@ -133,6 +138,7 @@ class PointerType(Type):
         else:
             matrix_size *= self.array_size
         if isinstance(self.type, Type):
+            print(self.type, self.type.width, matrix_size)
             self.width += matrix_size*self.type.width
         else:
             self.width += matrix_size*self.size_dict[self.type]
@@ -231,6 +237,9 @@ class FunctionType(Type):
 class Entry:
     def __init__(self, name = None, type = None, symbol_table = None, token_object=None):
         self.name = name
+
+        assert isinstance(type,Type), str(type) + "expected Type object, provided:" + str(builtins.type(type))
+
         self.type = type
         
         self.symbol_table = symbol_table
@@ -319,7 +328,7 @@ class SymbolTable:
 
         assert name, "name not provided for entry"
         assert type is not None, "type not specified for entry"
-        
+        assert isinstance(type, Type), "type: '"+ str(type) + "' is not of Type class, provided: " + str((builtins.type(type)))
 
         if self.table.get(name):
             Errors(
@@ -497,6 +506,8 @@ class SymbolTable:
 
 #=================================== ERRORS ==================================#
 
+from clexer import lexer
+
 class Errors:
     error_id = 0
     error_list = []
@@ -510,7 +521,7 @@ class Errors:
         if token_object:
             self.lineno = token_object.lineno
             # print(token_object, token_object.__dict__)
-            # self.filename = token_object.lexer.filename
+            self.filename = lexer.filename
             if token_object.lexeme:
                 self.lexeme = token_object.lexeme
             else:
@@ -529,7 +540,7 @@ class Errors:
     def __str__(self):
         res  = "Error("
         res += self.errorType + ","
-        # res += "in file: " + self.filename + ","
+        res += "in file: " + self.filename + ","
         res += "at line no. " + str(self.lineno) + ","
         res += "errorenous lexeme: " + self.lexeme + ","
         res += self.errorText
