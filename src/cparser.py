@@ -46,8 +46,8 @@ def p_external_declaration(p):
 #List
 def p_function_definition(p):
     '''
-    function_definition : type_specifier declarator func_scope parameter_type_list R_PAREN function_body pop_sym
-                        | type_specifier declarator func_scope R_PAREN function_body pop_sym
+    function_definition : type_specifier declarator func_scope parameter_type_list func_rparen_1 function_body pop_sym
+                        | type_specifier declarator func_scope func_rparen_2 function_body pop_sym
     '''
     
     if len(p) == 8:
@@ -65,9 +65,34 @@ def p_func_scope(p):
     func_scope : L_PAREN
     '''
     #print("start_scope", p, p.stack, p.slice)
-    sym_table.start_scope(name=p.stack[-1].value.value)
-    sym_table.add_entry(name='return',type=p.stack[-1].value.type)
+    decl = p.stack[-1].value
+    sym_table.start_scope(name=decl.value)
+    sym_table.add_entry(name='return',type=decl.type)
+    p[0] = (decl,FunctionType(return_type=decl.type,symbol_table=sym_table.curr_symbol_table))
+
     
+    
+def p_func_rparen_1(p):
+    '''
+    func_rparen_1 : R_PAREN
+    '''
+    func_name = p.stack[-2].value[0].value
+    token = p.stack[-2].value[0].data['token']
+    func_type = p.stack[-2].value[1]
+    func_type.param_list = p.stack[-1].value
+    sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
+
+    
+def p_func_rparen_2(p):
+    '''
+    func_rparen_2 : R_PAREN
+    '''
+    func_name = p.stack[-1].value[0].value
+    token = p.stack[-1].value[0].data['token']
+    func_type = p.stack[-1].value[1]
+    func_type.param_list = []
+    sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
+
 
 def p_primary_expression(p):
     '''

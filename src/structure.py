@@ -7,13 +7,13 @@ class Node:
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
-        self.type = type
-        self.name = name
+        self.type = type #type of node
+        self.name = name #name of node (or class of node)
         if children:
             self.children = children
         else:
             self.children = []
-        self.value = value
+        self.value = value #value in node (some attributes to use in ast)
 
         #A dictionary to contain info like(eg. width, offset..)
         #!Info may be Synthesised Attributes and Inherited Attributes
