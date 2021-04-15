@@ -47,8 +47,7 @@ class Type:
         'float':4,
         'double':8,
         'void':0,
-        'bool': 1,
-        'short':2,
+        'bool': 1
     }
     def __init__(self):
         self.class_type = None
@@ -56,7 +55,19 @@ class Type:
         self.is_pointer = False
         self.is_struct = False
         self.is_function = False
+        self.stype = 'void'
+        self.type = 'void'
         self.width = 0
+    
+    def __eq__(self, other):
+        if builtins.type(self) != builtins.type(other):
+            return False
+        if other.class_type != self.class_type:
+            return False
+        return self.type == other.type
+    
+    def __ne__(self, other):
+        return not self == other
         
 
 #! There are four class of entries: 
@@ -67,12 +78,16 @@ class Type:
 #TODO EnumType, TypeDef
 
 class BasicType(Type):
-    
+    allowed_all_type = ['int', 'long', 'float', 'double','bool', 'char']
+    allowed_bool_type = ['bool']
+    allowed_int_type = ['long', 'int', 'char']
+    allowed_read_type = ['float', 'double']
     def __init__(self, type = None):
         super().__init__()
         self.class_type = "BasicType"
         self.is_basic = True
         assert isinstance(type,str), str(type) + "expected Type object, provided:" + str(builtins.type(type))
+        assert type in self.allowed_all_type, "unknown type:" +type + " given"
         self.type = type
         self.stype = self.type
         self.width = self.size_dict[type]

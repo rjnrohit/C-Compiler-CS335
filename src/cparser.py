@@ -13,7 +13,7 @@ import pygraphviz as pgv
 from visualize import draw_ast
 from clexer import tokens,print_lexeme
 from structure import Errors, Node
-from structure import sym_table, BasicType, FunctionType, PointerType, StructType
+from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import getMutliPointerType
 from structure import implicit_casting
 from dump_csv import print_csv
@@ -91,10 +91,10 @@ def p_primary_expression(p):
             else:
                 p[0] = Node(name="id",type='error')
 
-        elif p.slice[-1].type in {"INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"}:
+        elif p.slice[-1].type in ["INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"]:
             p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
         
-        elif p.slice[-1].type in {"EXPONENT_CONSTANT","REAL_CONSTANT"}:
+        elif p.slice[-1].type in ["EXPONENT_CONSTANT","REAL_CONSTANT"]:
             p[0] = Node(name="constant",value=p[1],type=BasicType('float'))
         
         elif p.slice[-1].type == "CHAR_CONSTANT":
@@ -1001,6 +1001,7 @@ def p_declaration(p):
         p[0] = p[2]
     else:
         p[0] = [None]
+    assert isinstance(p[0], list), "return object is not list"
 
 
 
@@ -1010,8 +1011,8 @@ def p_init_declarator_list(p):
     init_declarator_list : init_declarator
 	                     | init_declarator_list COMMA init_declarator
     '''
-    p[0] = p[1] if len(p) == 2  else p[1]+p[3]
-
+    p[0] = [p[1]] if len(p) == 2  else p[1]+p[3]
+    assert isinstance(p[0], list), "return object is not list, p[0] is:" + str(p[0])
 
 # list (can be None)
 def p_init_declarator(p):
@@ -1019,6 +1020,9 @@ def p_init_declarator(p):
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
+    if p[1].type == 'error':
+        p[0] = [Node(type="error")]
+        return
     success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
     if len(p) == 2:
         p[0] = [None]
@@ -1063,7 +1067,13 @@ def p_type_specifier(p):
         else:
             p[0] = Node(type="error")
     else:
-        p[0] = Node(type = BasicType(type = p[1]))
+        if p[1] == 'void':
+            p[0] = Node(type = Type())
+        else:
+            p[0] = Node(type = BasicType(type = p[1]))
+
+    assert isinstance(p[0], Node), "return object is not Node"
+    assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
 
 # String
@@ -1107,17 +1117,17 @@ def p_struct_declarator_list(p):
     if len(p) == 2:
         if p[1].type != "error":
             success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
-        if success:
-            p[0] = {p[1].value:p[1].type}
+            if success:
+                p[0] = {p[1].value:p[1].type}
         else:
             p[0] = dict({})
 
     else:
-        if p[1].type != "error":
+        if p[3].type != "error":
             success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
-        if success:
-            p[0] = p[1]
-            p[0].update({p[3].value:p[3].type})
+            if success:
+                p[0] = p[1]
+                p[0].update({p[3].value:p[3].type})
         else:
             p[0] = p[1]
 
@@ -1154,14 +1164,8 @@ def p_declarator(p):
 	           | no_pointer direct_declarator
     '''
     p[0] = p[2]
-    # print(p[0].type, type(p[0].type), p[0].value)
-    #   
-
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     print(p, p[0], p[1], p[2])
-    #     sym_table.add_entry(name = p[2],type = getMutliPointerType(type =p.stack[-1].value.type, level = p[1].data['pointer']), token_object=p.slice[-1])
+    assert isinstance(p[0], Node), "return object is not Node"
+    assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
 
 # Node
@@ -1174,13 +1178,11 @@ def p_direct_declarator(p):
     '''
 
     if len(p) == 2:
-        # sym_table.add_entry(name= p[1],type = p.stack[-1].value.type, token_object=p.slice[-1])
-        # store in direct declarator
         p[0] = Node(value=p[1], type = p.stack[-1].value.type)
         p[0].data['token'] = p.slice[-1]
     elif p[1] == '(':
         p[0] = p[2]
-    elif len(p) == 4:
+    elif len(p) == 5:
         p[0] = p[1]
         if p[0].type != "error":
             p[0].type = PointerType(type = p[0].type,array_size=p[3])
@@ -1189,9 +1191,10 @@ def p_direct_declarator(p):
         if p[0].type != "error":
             p[0].type = PointerType(type = p[0].type)
     
+    assert isinstance(p[0], Node), "return object is not Node"
+    assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
-
-# List
+# Node
 def p_pointer(p):
     '''
     pointer : MULTIPLY
@@ -1205,7 +1208,7 @@ def p_pointer(p):
     if len(p) == 2:
         type_specifier_symbol = None
         for symbol in reversed(p.stack):
-            if symbol.type == 'type_specifier':
+            if symbol.type in  ['type_specifier', 'pointer', 'no_pointer']:
                 type_specifier_symbol = symbol
                 break
         if type_specifier_symbol.value.type == "error":
@@ -1217,6 +1220,10 @@ def p_pointer(p):
         p[0] = p[1]
         if p[0].type != "error":
             p[0].type = PointerType(type = p[1].type)
+    
+    assert isinstance(p[0], Node), "return object is not Node"
+    assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
+
 
 # Node
 
@@ -1226,11 +1233,13 @@ def p_no_pointer(p):
     '''
     type_specifier_symbol = None
     for symbol in reversed(p.stack):
-        if symbol.type == 'type_specifier':
+        if symbol.type in  ['type_specifier', 'pointer', 'no_pointer']:
             type_specifier_symbol = symbol
             break
     p[0] = Node(type = type_specifier_symbol.value.type)
     
+    assert isinstance(p[0], Node), "return object is not Node"
+    assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
 
 
@@ -1283,7 +1292,8 @@ def p_initializer(p):
     else:
         if p[2].type == "error":
             p[0] = Node(type="error")
-        p[0] = Node(name="{}",children=p[2].value,type=PointerType(type=p[2].type))
+        else: 
+            p[0] = Node(name="{}",children=p[2].value,type=PointerType(type=p[2].type))
 
 # List
 def p_initializer_list(p):
@@ -1468,7 +1478,7 @@ def p_jump_statement_1(p):
     success = sym_table.look_up(name='return',token_object=p.slice[1])
     if success:
         if len(p) == 3:
-            if success.type != BasicType('void'):
+            if success.type != Type():
                 p[0] = Node(type="error")
                 Errors(
                     errorType='TypeError',
@@ -1504,8 +1514,11 @@ def p_add_sym(p):
     '''
         add_sym :
     '''
-    #print("start_scope", p, p.stack, p.slice)
-    sym_table.start_scope()
+    # print("start_scope", p, p.stack, p.slice)
+    name = None
+    if p.stack[-2].type == 'IDENTIFIER':
+        name = p.stack[-2].value
+    sym_table.start_scope(name)
     p[0] = None
 
 def p_pop_sym(p):
@@ -1550,14 +1563,14 @@ def main():
     parser = yacc.yacc(debug=0)
     lexer.lexer.filename = args.source_code
     
-    #parser.parse(source_code, lexer = lexer.lexer)
-
+    result = parser.parse(source_code, lexer = lexer.lexer)
+    
     if len(Errors.get_all_error()):
         for error in Errors.get_all_error():
             print(error)
         return
 
-    Graph = draw_ast(parser.parse(source_code, lexer = lexer.lexer))
+    Graph = draw_ast(result)
     # print(args)
     if args.p:
         Graph.draw(args.f, format='png')
