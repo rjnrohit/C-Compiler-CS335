@@ -415,12 +415,13 @@ class SymbolTable:
                 symbol_table = None
             
         
-        if symbol_table is None and no_error:
-            Errors(
-                errorType='DeclarationError', 
-                errorText='variable/function not declared before',
-                token_object = token_object
-            )
+        if symbol_table is None:
+            if no_error == False:
+                Errors(
+                    errorType='DeclarationError', 
+                    errorText='variable/function not declared before',
+                    token_object = token_object
+                )
             return None
 
         return symbol_table.table[name]
@@ -561,13 +562,9 @@ class Errors:
 
 
     def __str__(self):
-        res  = "Error("
-        res += self.errorType + ","
-        res += "in file: " + self.filename + ","
-        res += "at line no. " + str(self.lineno) + ","
-        res += "errorenous lexeme: " + self.lexeme + ","
-        res += self.errorText
-        res += ")"
+        res = self.filename + " "
+        res += "at line no: "+ str(self.lineno)
+        res += ", "+self.errorType +": " + self.errorText
         return res
 
 def getMutliPointerType(type = None, level = 0):

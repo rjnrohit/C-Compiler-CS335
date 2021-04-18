@@ -10,13 +10,13 @@ import argparse
 import pygraphviz as pgv
 
 
-from visualize import draw_ast
+from utils import draw_ast
 from clexer import tokens,print_lexeme
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import getMutliPointerType
 from structure import implicit_casting
-from dump_csv import print_csv
+from utils import print_csv
 #####################Grammar section #################
 
 
@@ -272,7 +272,7 @@ def p_postfix_expression_3(p):
     
     # arg_dict = p[1].type.arg_dict
     struct_sym = p[1].type.symbol_table
-    success = struct_sym._look_up(p[3],token_object=p.slice[3],in_struct=True)
+    success = struct_sym._look_up(p[3],token_object=p.slice[3],in_struct=True,no_error=True)
     # success = arg_dict.get(p[3])
     if success == None:
         Errors(
@@ -308,7 +308,7 @@ def p_postfix_expression_4(p):
     # arg_dict = p[1].type.type.arg_dict
     # success = arg_dict.get(p[3])
     struct_sym = p[1].type.type.symbol_table
-    success = struct_sym._look_up(p[3],token_object=p.slice[3],in_struct=True)
+    success = struct_sym._look_up(p[3],token_object=p.slice[3],in_struct=True,no_error=True)
     if success == None:
         Errors(
             errorType='DeclarationError',
@@ -1511,7 +1511,7 @@ def p_jump_statement_1(p):
     jump_statement : RETURN SEMI_COLON
 	               | RETURN expression SEMI_COLON      
     '''
-    success = sym_table.look_up(name='return',token_object=p.slice[1])
+    success = sym_table.look_up(name='return',token_object=p.slice[1],no_error=True)
     if success:
         if len(p) == 3:
             if success.type != Type():
