@@ -411,7 +411,7 @@ class SymbolTable:
             while symbol_table != None and name not in symbol_table.table:
                 symbol_table = symbol_table.parent
         else:
-            if name not in symbol_table:
+            if name not in symbol_table.table:
                 symbol_table = None
             
         
