@@ -271,8 +271,8 @@ def p_postfix_expression_3(p):
         return
     
     # arg_dict = p[1].type.arg_dict
-    struct_sym = p[1].sym_table
-    success = struct_sym._look_up(p[3])
+    struct_sym = p[1].type.symbol_table
+    success = struct_sym._look_up(p[3],token_object=p.slice[3])
     # success = arg_dict.get(p[3])
     if success == None:
         Errors(
@@ -282,6 +282,7 @@ def p_postfix_expression_3(p):
         )
         p[0] = Node(type="error")
         return
+    p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     
 
@@ -304,8 +305,10 @@ def p_postfix_expression_4(p):
         )
         return
     
-    arg_dict = p[1].type.type.arg_dict
-    success = arg_dict.get(p[3])
+    # arg_dict = p[1].type.type.arg_dict
+    # success = arg_dict.get(p[3])
+    struct_sym = p[1].type.type.symbol_table
+    success = struct_sym._look_up(p[3],token_object=p.slice[3])
     if success == None:
         Errors(
             errorType='DeclarationError',
@@ -314,7 +317,8 @@ def p_postfix_expression_4(p):
         )
         p[0] = Node(type="error")
         return
-    p[0] = Node(name="struct ref",value=p[2],type=success,children=[p[1],p[3]])
+    p[3] = Node(name="id",value=p[3])
+    p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
 
 
 
@@ -1047,9 +1051,7 @@ def p_init_declarator(p):
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
-    if p[1].type == 'error':
-        p[0] = [Node(type="error")]
-        return
+
     success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
     if len(p) == 2:
         p[0] = [None]
@@ -1058,7 +1060,7 @@ def p_init_declarator(p):
             # type checking
             # check for initliazer
             if p[3].type == "error":
-                p[0] = Node(type="error")
+                p[0] = [Node(type="error")]
                 return
             # if p[3].type != p[1].type
             #     Errors(
@@ -1117,7 +1119,7 @@ def p_add_sym_struct(p):
     '''
     add_sym_struct : L_BRACES
     '''   
-    name = p.stack[-2].value
+    name = p.stack[-1].value
     sym_table.start_scope(name)
     sym_table.curr_symbol_table.parent._add_struct_entry(name=name,symbol_table=sym_table.curr_symbol_table,token_object=p.slice[1])
 
