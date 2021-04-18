@@ -35,8 +35,8 @@ def draw_ast(node):
             print(top_node.type,nd)
             if nd is None:
                 continue
-            if isinstance(nd,list):
-                # print(nd[0].children)
+            # if isinstance(nd,list):
+            #     # print(nd[0].children)
             if not_all_None(nd.children):
                 G.add_node(nd.id, label = getlabel(nd.name,nd.value))
                 G.add_edge(top_node.id, nd.id)

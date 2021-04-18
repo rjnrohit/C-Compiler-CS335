@@ -270,8 +270,10 @@ def p_postfix_expression_3(p):
         )
         return
     
-    arg_dict = p[1].type.arg_dict
-    success = arg_dict.get(p[3])
+    # arg_dict = p[1].type.arg_dict
+    struct_sym = p[1].sym_table
+    success = struct_sym._look_up(p[3])
+    # success = arg_dict.get(p[3])
     if success == None:
         Errors(
             errorType='DeclarationError',
@@ -280,7 +282,7 @@ def p_postfix_expression_3(p):
         )
         p[0] = Node(type="error")
         return
-    p[0] = Node(name="struct ref",value=p[2],type=success,children=[p[1],p[3]])
+    p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     
 
 
@@ -1104,13 +1106,20 @@ def p_type_specifier(p):
 # String
 def p_struct_specifier(p):
     '''
-    struct_specifier : STRUCT IDENTIFIER L_BRACES add_sym struct_declaration_list pop_sym R_BRACES
+    struct_specifier : STRUCT IDENTIFIER add_sym_struct struct_declaration_list pop_sym R_BRACES
     '''
     
     # todo dict
-    sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2],arg_dict=p[5])
+    # sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2],arg_dict=p[5])
 
 
+def p_add_sym_struct(p):
+    '''
+    add_sym_struct : L_BRACES
+    '''   
+    name = p.stack[-2].value
+    sym_table.start_scope(name)
+    sym_table.curr_symbol_table.parent._add_struct_entry(name=name,symbol_table=sym_table.curr_symbol_table,token_object=p.slice[1])
 
 # dict
 def p_struct_declaration_list(p):
@@ -1590,6 +1599,7 @@ def main():
     
     result = parser.parse(source_code, lexer = lexer.lexer)
     
+    print(sym_table)
     if len(Errors.get_all_error()):
         for error in Errors.get_all_error():
             print(error)
