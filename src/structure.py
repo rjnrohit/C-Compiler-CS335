@@ -405,7 +405,7 @@ class SymbolTable:
         
         return parent.scopes_list[-1]
 
-    def _look_up(self, name = None, token_object = None, in_struct = False):
+    def _look_up(self, name = None, token_object = None, in_struct = False, no_error = False):
         symbol_table =self
         if not in_struct:
             while symbol_table != None and name not in symbol_table.table:
@@ -415,7 +415,7 @@ class SymbolTable:
                 symbol_table = None
             
         
-        if symbol_table is None:
+        if symbol_table is None and no_error:
             Errors(
                 errorType='DeclarationError', 
                 errorText='variable/function not declared before',
@@ -497,8 +497,8 @@ class SymbolTable:
     def add_struct_entry(self, name = None, symbol_table = None, token_object = None,arg_dict=None):
         return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object,arg_dict=arg_dict)
     
-    def look_up(self, name = None, token_object = None, in_struct = False):
-        return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object, in_struct = in_struct)
+    def look_up(self, name = None, token_object = None, in_struct = False, no_error = False):
+        return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object, in_struct = in_struct, no_error = no_error)
 
     def look_up_struct(self, name = None, token_object = None):
         return SymbolTable.curr_symbol_table._look_up_struct(name = name, token_object = token_object)
