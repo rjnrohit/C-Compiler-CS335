@@ -272,12 +272,12 @@ def p_postfix_expression_3(p):
     
     # arg_dict = p[1].type.arg_dict
     struct_sym = p[1].type.symbol_table
-    success = struct_sym._look_up(p[3],token_object=p.slice[3])
+    success = struct_sym._look_up(p[3],token_object=p.slice[3],in_struct=True)
     # success = arg_dict.get(p[3])
     if success == None:
         Errors(
             errorType='DeclarationError',
-            errorText='variable'+p[3]+' not declared in struct',
+            errorText='variable '+p[3]+' not declared in struct',
             token_object= p.slice[-1]
         )
         p[0] = Node(type="error")
@@ -308,11 +308,11 @@ def p_postfix_expression_4(p):
     # arg_dict = p[1].type.type.arg_dict
     # success = arg_dict.get(p[3])
     struct_sym = p[1].type.type.symbol_table
-    success = struct_sym._look_up(p[3],token_object=p.slice[3])
+    success = struct_sym._look_up(p[3],token_object=p.slice[3],in_struct=True)
     if success == None:
         Errors(
             errorType='DeclarationError',
-            errorText='variable'+p[3]+' not declared in struct',
+            errorText='variable '+p[3]+' not declared in struct',
             token_object= p.slice[-1]
         )
         p[0] = Node(type="error")
@@ -365,7 +365,7 @@ def p_unary_expression_1(p):
         p[0].type = 'error'
         Errors(
             errorType='TypeError',
-            errorText='increment/decrement not possible for' + p[2].type.stype,
+            errorText='increment/decrement not possible for ' + p[2].type.stype,
             token_object= p.slice[-2]
         )
 
