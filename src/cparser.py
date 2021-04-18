@@ -56,7 +56,7 @@ def p_function_definition(p):
     else:
         node_type = FunctionType(return_type=p[2].type,param_list=[],symbol_table=p[6])
         p[0] = Node("function",p[2].value,children=[p[5]])
-    sym_table.add_entry(name=p[2].value,type=node_type,token_object=p[2].data['token'])
+    # sym_table.add_entry(name=p[2].value,type=node_type,token_object=p[2].data['token'])
     p[0] = [p[0]]
 
 
@@ -1036,7 +1036,7 @@ def p_init_declarator_list(p):
     init_declarator_list : init_declarator
 	                     | init_declarator_list COMMA init_declarator
     '''
-    p[0] = [p[1]] if len(p) == 2  else p[1]+p[3]
+    p[0] = p[1] if len(p) == 2  else p[1]+p[3]
     assert isinstance(p[0], list), "return object is not list, p[0] is:" + str(p[0])
 
 # list (can be None)
