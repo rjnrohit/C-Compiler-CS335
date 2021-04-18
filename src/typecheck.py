@@ -3,6 +3,46 @@ from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import implicit_casting
 
 
+def type_check_init(init,type,token):
+    if isinstance(init,Node):
+        if init.type.is_convertible_to(type):
+            return init
+        else:
+            Errors(
+            errorType='TypeError',
+            errorText="cannot assign "+init.types.stype+" to "+type.stype,
+            token_object= token
+        )
+        return Node(type="error")
+    if type.class_type != "PointerType":
+        Errors(
+            errorType='TypeError',
+            errorText="cannot assign array to "+type.stype,
+            token_object= token
+        )
+        return Node(type="error")
+    if isinstance(init[0],Node): leng = 0
+    else: leng = len(init[0])
+    size_error = False
+    for i in init[1:]:
+        if (isinstance(i,Node) and leng != 0) or (isinstance(i,list) and leng != len(i)):
+            size_error = True
+            break
+    if size_error:
+        Errors(
+            errorType='TypeError',
+            errorText="size of arrays not matching",
+            token_object= token
+        )
+        return Node(type="error")
+    children = []
+    for i in init:
+        node = type_check_init(i,type.type,token)
+        if node.type == "error":
+            return Node(type="error")
+        children.append(node)
+    return Node(name="init_array",value="{}",children=children,type=type)
+
 #multiplication, division, modulus
 def type_check_unary(node1,op,token,is_typename=False):
     allowed_base = {'int','float','double','char','long'}
@@ -27,7 +67,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             return Node(name="unary_op",value=op,children=[node1],type=node1.type.type)
         Errors(
             errorType='TypeError',
-            errorText="cannot dereference non-pointer type "+node1.type,
+            errorText="cannot dereference non-pointer type "+node1.type.stype,
             token_object= token
         )
         return Node(type="error")
@@ -42,7 +82,7 @@ def type_check_unary(node1,op,token,is_typename=False):
     elif op == "sizeof":
         if is_typename:
             return Node(name = "unary_op", value=op+':'+node1.type.stype,type = BasicType(type = 'long'))
-        if isinstance(node1.type,Type):
+        if isinstance(node1.type,Type) == False:
             Errors(
                 errorType='TypeError',
                 errorText="cannot do sizeof on non type",

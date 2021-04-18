@@ -63,11 +63,12 @@ def p_func_scope(p):
     func_scope : L_PAREN
     '''
     decl = p.stack[-1].value
-    sym_table.start_scope(name=decl.value)
-    sym_table.add_entry(name='return',type=decl.type)
-    p[0] = (decl,FunctionType(return_type=decl.type,symbol_table=sym_table.curr_symbol_table))
+    sym_table.start_scope(name=decl.value) #starting scope of function
+    sym_table.add_entry(name='return',type=decl.type) #creating entry to check return type
+    p[0] = (decl,FunctionType(return_type=decl.type,symbol_table=sym_table.curr_symbol_table)) #type of function
 
 
+#with parameters
 def p_func_rparen_1(p):
     '''
     func_rparen_1 : R_PAREN
@@ -76,9 +77,10 @@ def p_func_rparen_1(p):
     token = p.stack[-2].value[0].data['token']
     func_type = p.stack[-2].value[1]
     func_type.param_list = p.stack[-1].value
+    #adding function to global table after creating paramlist
     sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
-    
+#without parameters    
 def p_func_rparen_2(p):
     '''
     func_rparen_2 : R_PAREN
@@ -106,6 +108,7 @@ def p_primary_expression(p):
     '''
     if len(p) == 2:
         if p.slice[-1].type == "IDENTIFIER":
+            #looking for id
             success = sym_table.look_up(name=p[1],token_object=p.slice[-1])
             if success:
                 p[0] = Node(name="id",value=p[1],type=success.type)
@@ -353,11 +356,8 @@ def p_unary_expression_1(p):
 def p_unary_expression_2(p):
     '''
     unary_expression : unary_operator cast_expression
-    '''
-    #print(p[1]) #!!
-
+    '''    
     p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
-
 
 #Node
 def p_unary_expression_3(p):
@@ -395,8 +395,13 @@ def p_cast_expression(p):
             p[0] = Node(type='error')
         else:
             if p[4].type.is_convertible_to(p[2].type):
-                p[0] = Node(name = "type_cast", value=str(p[2].type.stype), type = p[2].type)
+                p[0] = Node(name ="type_cast",value=p[2].type.stype,type = p[2].type,children=[p[4]])
             else:
+                Errors(
+                    errorType='TypeError',
+                    errorText="cannot typecast "+p[4].types.stype+" to "+p[2].type.stype,
+                    token_object= token
+                )
                 p[0] = Node(type='error')
 
 #Node
@@ -562,7 +567,7 @@ def p_conditional_expression(p):
         if p[3].type != p[5].type:
             Errors(
                 errorType='TypeError',
-                errorText='not same type',
+                errorText='type should be same',
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
@@ -662,18 +667,9 @@ def p_init_declarator(p):
         if success:
             # type checking
             # check for initliazer
-            if p[3].type == "error":
-                p[0] = [Node(type="error")]
-                return
-            # if p[3].type != p[1].type
-            #     Errors(
-            #         errorType='TypeError',
-            #         errorText='not same type',
-            #         token_object= p.slice[2]
-            #     )
-            #     p[0] = Node(type="error")
-            #     return
-            p[0] = [Node(value = p[2],children = [p[1],p[3]],type="ok")]
+            # print(p[1].type.stype)
+            init = type_check_init(p[3],p[1].type,p.slice[2])
+            p[0] = [Node(name="initialization",children = [p[1],init],type="ok")]
         else:
             p[0] = [None]
 
@@ -919,7 +915,7 @@ def p_type_name(p):
 
 
 
-# Node
+# List or Node
 def p_initializer(p):
     '''
     initializer : assignment_expression
@@ -929,12 +925,9 @@ def p_initializer(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        if p[2].type == "error":
-            p[0] = Node(type="error")
-        else: 
-            p[0] = Node(name="{}",children=p[2].value,type=PointerType(type=p[2].type))
+        p[0] = p[2]
 
-# List
+#List
 def p_initializer_list(p):
     '''
     initializer_list : initializer
@@ -942,20 +935,9 @@ def p_initializer_list(p):
     '''
     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
     if len(p) == 2:
-        p[0] = Node(value=[p[1]],type=p[1].type)
+        p[0] = [p[1]]
     else:
-        if p[1].type == "error" or p[3].type == "error":
-            p[0] = Node(type="error")
-            return
-        if p[1].type != p[3].type:
-            Errors(
-                errorType='TypeError',
-                errorText='not same type',
-                token_object= p.slice[2]
-            )
-            p[0] = Node(type="error")
-            return
-        p[0] = Node(value=p[1]+[p[3]],type=p[1].type)
+        p[0] = p[1]+[p[3]]
 
         
 
