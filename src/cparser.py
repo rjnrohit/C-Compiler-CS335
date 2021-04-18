@@ -51,12 +51,12 @@ def p_function_definition(p):
     '''
     
     if len(p) == 8:
-        node_type = FunctionType(return_type=p[2].type,param_list=p[4],symbol_table=p[7])
+        #node_type = FunctionType(return_type=p[2].type,param_list=p[4],symbol_table=p[7])
         p[0] = Node("function",p[2].value,children=[p[6]])
     else:
-        node_type = FunctionType(return_type=p[2].type,param_list=[],symbol_table=p[6])
+        #node_type = FunctionType(return_type=p[2].type,param_list=[],symbol_table=p[6])
         p[0] = Node("function",p[2].value,children=[p[5]])
-    sym_table.add_entry(name=p[2].value,type=node_type,token_object=p[2].data['token'])
+    #sym_table.add_entry(name=p[2].value,type=node_type,token_object=p[2].data['token'])
     p[0] = [p[0]]
 
 
