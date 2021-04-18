@@ -34,6 +34,9 @@ class Node:
 
     def getChild(self):
         return self.children
+    
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 
@@ -153,7 +156,7 @@ class PointerType(Type):
         else:
             matrix_size *= self.array_size
         if isinstance(self.type, Type):
-            print(self.type, self.type.width, matrix_size)
+            #print(self.type, self.type.width, matrix_size)
             self.width += matrix_size*self.type.width
         else:
             self.width += matrix_size*self.size_dict[self.type]
