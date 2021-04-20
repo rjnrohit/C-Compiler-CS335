@@ -71,6 +71,13 @@ class Type:
     
     def __ne__(self, other):
         return not self == other
+    
+    def __str__(self) -> str:
+        res  = str(self.type)
+        return res
+    
+    def __repr__(self) -> str:
+        return self.__str__()
         
 
 #! There are four class of entries: 

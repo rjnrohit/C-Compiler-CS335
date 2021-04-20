@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-main,int function([]),0,30
+main,int function(None),0,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,main
 name,type,offset,width

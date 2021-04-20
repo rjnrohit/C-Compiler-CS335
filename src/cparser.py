@@ -223,7 +223,7 @@ def p_postfix_expression_2(p):
     param_list = p[1].type.param_list
     return_type = p[1].type.return_type
 
-    if len(p) == 3:
+    if len(p) == 4:
         if len(param_list) != 0:
             p[0] = Node(type="error")
             Errors(
@@ -400,7 +400,7 @@ def p_cast_expression(p):
                 Errors(
                     errorType='TypeError',
                     errorText="cannot typecast "+p[4].types.stype+" to "+p[2].type.stype,
-                    token_object= token
+                    token_object= p.slice[1]
                 )
                 p[0] = Node(type='error')
 
@@ -1186,7 +1186,7 @@ def main():
     
     result = parser.parse(source_code, lexer = lexer.lexer)
     
-    print(sym_table)
+    #print(sym_table)
     if len(Errors.get_all_error()):
         for error in Errors.get_all_error():
             print(error)
