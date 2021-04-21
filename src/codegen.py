@@ -32,4 +32,24 @@ def opcode(op, opr1, opr2=None, tmp = None):
     return tmp + ' = ' + opr1 + op + opr2
 
 
+def break_continue(input, break_label, continue_label):
+    assert break_label, "label1 not given"
+    assert continue_label, "label2 not given"
+
+    input = input.replace("continue", "goto " + continue_label)
+    input = input.replace("break", "goto " + break_label)
+
+    return input
+
+
+def ifcode(tmp, label1 , label2 = None):
+
+    assert label1, "provide first label"
+
+    code = "if ze " + tmp + " goto " + label1
+    if label2:
+        code += "goto " + label2
+    return code
+
+    
     

@@ -482,7 +482,7 @@ class SymbolTable:
         self.width += entry.type.width
         return self.width
     
-    def start_scope(self, name =None, scope_type = None):
+    def start_scope(self, name =None, scope_type = None, unused = False):
 
         if SymbolTable.curr_symbol_table is None:
             if SymbolTable.symbol_table_dict:
@@ -495,7 +495,8 @@ class SymbolTable:
             base = SymbolTable.curr_symbol_table.offset
             )
         #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
-        self.add_scope(symbol_table = new_symbol_table)
+        if unused:
+            self.add_scope(symbol_table = new_symbol_table)
 
         SymbolTable.curr_symbol_table = new_symbol_table
 
