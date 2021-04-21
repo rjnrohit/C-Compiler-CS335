@@ -9,6 +9,7 @@ class Node:
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
+        self.constant = False  #store if Node has constant value or not (helps in optimization and type checking)
         if children:
             self.children = children
         else:
@@ -129,7 +130,7 @@ class BasicType(Type):
 
 class PointerType(Type):
 
-    def __init__(self, type = None, array_size = 0):
+    def __init__(self, type = None, array_size = [],array_type=None):
         super().__init__()
         self.class_type = "PointerType"
         self.is_pointer = True
@@ -138,6 +139,7 @@ class PointerType(Type):
         self.stype = type.stype + "*"
         assert not isinstance(array_size,str), "array_size can't be string, provided: " + str(array_size)
         self.array_size = array_size
+        self.array_type = array_type
         self.width = self.update_width()
 
     def __str__(self) -> str:
@@ -148,19 +150,21 @@ class PointerType(Type):
         return self.__str__()
     
     def update_width(self):
-        self.width = 8
+        if len(self.array_size) == 0:
+            return 8
         matrix_size = 1
-        if hasattr(self.array_size, '__iter__'):
-            for s in self.array_size:
-                matrix_size *= s
-        else:
-            matrix_size *= self.array_size
-        if isinstance(self.type, Type):
+        # print(self.array_size)
+        for s in self.array_size:
+            if s == float('inf'):
+                continue
+            matrix_size *= s
+
+        assert self.array_type != None, "array_type cannot be None"
+        if isinstance(self.array_type, Type):
             #print(self.type, self.type.width, matrix_size)
-            self.width += matrix_size*self.type.width
+            return matrix_size*self.array_type.width
         else:
-            self.width += matrix_size*self.size_dict[self.type]
-        return self.width
+            return matrix_size*self.size_dict[self.array_type]
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
