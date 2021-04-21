@@ -8,7 +8,11 @@ int c;
 
 void *d = &c;
 
+void g();
+
 void g(){}
+
+int func(int a);
 
 int p;
 
@@ -24,6 +28,7 @@ int main(){
     int *c = &main;
     *c = 2;
     *str[1] = 'g';
+    int l = func(1);
     return &p;
 }
 

@@ -201,7 +201,7 @@ class StructType(Type):
         self.name = name
         self.symbol_table = symbol_table
         self.type = "struct " + str(self.name)
-        self.stype = "struct"
+        self.stype = "struct_"+str(self.name)
         self.width = self.update_width()
         self.arg_dict = arg_dict
 
@@ -228,7 +228,7 @@ class StructType(Type):
 
 class FunctionType(Type):
 
-    def __init__(self, return_type = None, param_list = None, symbol_table = None):
+    def __init__(self, return_type = None, param_list = None, symbol_table = None,defined=True):
         super().__init__()
         self.class_type = "FunctionType"
         self.is_function = True
@@ -238,6 +238,7 @@ class FunctionType(Type):
         self.type = str(self.return_type) + " function("  +str(param_list)+")"
         self.stype = "function"
         self.width = self.update_width()
+        self.defined = defined
 
     def __str__(self) -> str:
         return self.type
