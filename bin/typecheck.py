@@ -10,9 +10,9 @@ def type_check_init(init,type,token):
         else:
             Errors(
             errorType='TypeError',
-            errorText="cannot assign "+init.types.stype+" to "+type.stype,
+            errorText="cannot assign "+init.type.stype+" to "+type.stype,
             token_object= token
-        )
+            )
         return Node(type="error")
     if type.class_type != "PointerType":
         Errors(

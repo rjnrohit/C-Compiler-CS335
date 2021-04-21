@@ -62,7 +62,7 @@ def p_func_scope(p):
     '''
     func_scope : L_PAREN
     '''
-    decl = p.stack[-1].value
+    decl = p.stack[-1].value #getting function name and return type
     sym_table.start_scope(name=decl.value) #starting scope of function
     sym_table.add_entry(name='return',type=decl.type) #creating entry to check return type
     p[0] = (decl,FunctionType(return_type=decl.type,symbol_table=sym_table.curr_symbol_table)) #type of function
@@ -114,8 +114,9 @@ def p_primary_expression(p):
                 p[0] = Node(name="id",value=p[1],type=success.type)
             else:
                 p[0] = Node(name="id",type='error')
+            return
 
-        elif p.slice[-1].type in ["INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"]:
+        if p.slice[-1].type in ["INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"]:
             p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
         
         elif p.slice[-1].type in ["EXPONENT_CONSTANT","REAL_CONSTANT"]:
@@ -129,6 +130,7 @@ def p_primary_expression(p):
             p[0] = Node(name="constant",value=p[1],type=str_type)
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
+        p[0].constant = p[0].value
     
     else:
         p[0] = p[2]
@@ -177,7 +179,7 @@ def p_postfix_expression_1(p):
     elif p[3].type.class_type not in allowed_class or p[3].type.type not in allowd_base:
         Errors(
             errorType='TypeError',
-            errorText='wrong index type'+p[3].type.stype,
+            errorText='wrong index type '+p[3].type.stype,
             token_object= p.slice[-1]
         )
         check1  = False
@@ -190,7 +192,7 @@ def p_postfix_expression_1(p):
     elif p[1].type.class_type not in allowed_class:
         Errors(
             errorType='TypeError',
-            errorText='cannot reference type'+p[1].type.stype,
+            errorText='cannot reference type '+p[1].type.stype,
             token_object= p.slice[-1]
         )
         check2  = False
@@ -659,16 +661,22 @@ def p_init_declarator(p):
     init_declarator : declarator
 	                | declarator ASSIGNMENT initializer
     '''
-
-    success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
-    if len(p) == 2:
+    if p[1].type == "error":
         p[0] = [None]
+        return
+    if len(p) == 2:
+        success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
+        p[0] = [None]
+        
     else:
+        # type checking
+        # check for initliazer
+        init = type_check_init(p[3],p[1].type,p.slice[2])
+        if init.type == "error":
+            p[0] = [None]
+            return
+        success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
-            # type checking
-            # check for initliazer
-            # print(p[1].type.stype)
-            init = type_check_init(p[3],p[1].type,p.slice[2])
             p[0] = [Node(name="initialization",children = [p[1],init],type="ok")]
         else:
             p[0] = [None]
@@ -809,22 +817,33 @@ def p_direct_declarator(p):
     direct_declarator : IDENTIFIER
                       | L_PAREN declarator R_PAREN
                       | direct_declarator L_SQBR INT_CONSTANT R_SQBR
-                      | direct_declarator L_SQBR R_SQBR
     '''
+    # | direct_declarator L_SQBR R_SQBR
 
     if len(p) == 2:
         p[0] = Node(value=p[1], type = p.stack[-1].value.type)
         p[0].data['token'] = p.slice[-1]
     elif p[1] == '(':
         p[0] = p[2]
-    elif len(p) == 5:
-        p[0] = p[1]
-        if p[0].type != "error":
-            p[0].type = PointerType(type = p[0].type,array_size=p[3])
     else:
         p[0] = p[1]
-        if p[0].type != "error":
-            p[0].type = PointerType(type = p[0].type)
+        if p[0].type == "error":
+            return
+        if p[0].type.class_type != "PointerType" or len(p[0].type.array_size) == 0:
+            p[0].type = PointerType(type = p[0].type,array_size=[p[3]],array_type=p[0].type)
+        else:
+            p[0].type = PointerType(type=p[0].type,array_size=p[0].type.array_size+[p[3]],array_type=p[0].type.array_type)
+        # else:
+        #     if p[0].type.class_type == "PointerType" and len(p[0].type.array_size) != 0:
+        #         Errors(
+        #             errorType='DeclarationError',
+        #             errorText="left side size cannot be empty in array",
+        #             token_object= p.slice[2]
+        #         )
+        #         p[0] = Node(type="error")
+        #     else:   
+        #         p[0].type = PointerType(type = p[0].type,array_size=[float('inf')],array_type=p[0].type)   
+
     
     assert isinstance(p[0], Node), "return object is not Node"
     assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
@@ -945,8 +964,7 @@ def p_initializer_list(p):
 # Node
 def p_statement(p):
     '''
-    statement : labeled_statement
-	          | compound_statement
+    statement : compound_statement
 	          | expression_statement
 	          | selection_statement
 	          | iteration_statement
@@ -955,6 +973,17 @@ def p_statement(p):
     p[0] = p[1]
 
 # Node
+
+def p_labeled_statement_list(p):
+    '''
+    labeled_statement_list : labeled_statement_list labeled_statement
+                           | labeled_statement
+    '''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1]+[p[2]]
+
 def p_labeled_statement(p):
     '''
     labeled_statement : CASE constant_expression COLON statement
@@ -1031,7 +1060,7 @@ def p_selection_statement(p):
     '''
     selection_statement : IF L_PAREN expression R_PAREN statement
 	                    | IF L_PAREN expression R_PAREN statement ELSE statement
-	                    | SWITCH L_PAREN expression R_PAREN statement
+	                    | SWITCH L_PAREN expression R_PAREN L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
     '''
     if p[1] == "if":
         if len(p) == 6:
@@ -1047,10 +1076,11 @@ def p_selection_statement(p):
             p[0] = Node(name="if_else",children=[p[3],p[5],p[7]],type="ok")
     
     else:
-        if p[3].type=="error" or p[5].type=="error":
+        if p[3].type=="error":
             p[0] = Node(type="error")
             return
-        p[0] = Node(name="switch",children=[p[3],p[5]],type="ok")
+        label_list = Node(name="labeled list",value="{}",children=p[7],type="ok")
+        p[0] = Node(name="switch",children=[p[3],label_list],type="ok")
 
 # Node
 def p_iteration_statement(p):
