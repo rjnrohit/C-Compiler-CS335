@@ -126,7 +126,7 @@ def p_primary_expression(p):
             p[0] = Node(name="constant",value=p[1],type=BasicType('char'))
 
         elif p.slice[-1].type == "STR_CONSTANT":
-            str_type = PointerType(type=BasicType('char'),array_size=len(p[1]))
+            str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
@@ -151,9 +151,9 @@ def p_postfix_expression(p):
         if p[1].type == 'error':
             p[0] = p[1]
         elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
-            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
         elif p[1].type.class_type in allowed_class:
-            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
         else:
             p[0] = p[1]
             p[0].type = 'error'

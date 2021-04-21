@@ -5,6 +5,8 @@ from structure import implicit_casting
 
 def type_check_init(init,type,token):
     if isinstance(init,Node):
+        if init.type == "error":
+            return Node(type="error")
         if init.type.is_convertible_to(type):
             return init
         else:

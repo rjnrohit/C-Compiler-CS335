@@ -12,7 +12,7 @@ int take_or(float a, int b){
 //     return a;
 // }
 
-int main(int argc, int argv[]){
+int main(int argc, int argv[5]){
     int a,b;
     int array[12][13][14];
 
