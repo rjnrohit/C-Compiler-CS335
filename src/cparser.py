@@ -1211,7 +1211,7 @@ def main():
     if args.l:
         print_lexeme(source_code)
 
-    parser = yacc.yacc(debug=0)
+    parser = yacc.yacc(debug=1)
     lexer.lexer.filename = args.source_code
     
     result = parser.parse(source_code, lexer = lexer.lexer)

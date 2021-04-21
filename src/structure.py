@@ -310,7 +310,7 @@ class SymbolTable:
     symbol_table_dict= {}
     curr_symbol_table = None
     next_symbol_table = None
-    def __init__(self, parent = None, id =None, name = None,scope_type = None, base =0):
+    def __init__(self, parent = None, id =None, name = None,scope_type = None, base =0, unused = False):
         if parent:
             assert isinstance(parent, SymbolTable) 
 
@@ -328,6 +328,7 @@ class SymbolTable:
         #TODO enum table for enum
         self.scopes_list= []
         self.scopes = {}
+        self.unused = unused
 
         self.width = 0
         self.base = base
@@ -492,7 +493,8 @@ class SymbolTable:
             name = name,
             scope_type = scope_type,
             parent = SymbolTable.curr_symbol_table, 
-            base = SymbolTable.curr_symbol_table.offset
+            base = SymbolTable.curr_symbol_table.offset,
+            unused = unused
             )
         #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
         if not unused:
