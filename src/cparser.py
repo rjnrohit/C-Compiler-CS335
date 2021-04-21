@@ -71,6 +71,8 @@ def p_function_definition_1(p):
     '''
     p[0] = []
     #make unused sym = True
+    # if len(p) == 8: p[7].unused = True
+    # else: p[6].unused = True
     success = sym_table.look_up(name=p[2].value,token_object=p[2].data['token'],no_error=True)
     if success != None:
          Errors(
@@ -131,6 +133,8 @@ def p_func_rparen_1(p):
                 token_object= p.slice[-1]
             )
         else:
+            #removing sym table of decl
+            success.type.symbol_table.unused = True
             success.type.symbol_table = sym_table.curr_symbol_table
     else:
         sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
@@ -162,6 +166,7 @@ def p_func_rparen_2(p):
                 token_object= p.slice[-1]
             )
         else:
+            success.type.symbol_table.unused = True
             success.type.symbol_table = sym_table.curr_symbol_table
     else:
         sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
