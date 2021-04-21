@@ -1,30 +1,42 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-main,int function(None),0,4
+prime,int function([int]),0,4
+main,"int function([int, pointer of (char)])",0,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,1,symbol table name:,main
+          symbol table id:,1,symbol table name:,A
 name,type,offset,width
-operator,char,4,1
-a,long,5,8
-b,long,13,8
-equal,bool,21,1
-x,long,22,8
+ptr,pointer of (struct A),0,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,_temp_name_2
+          symbol table id:,2,symbol table name:,prime
 name,type,offset,width
+a,int,4,4
+i,int,8,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,4,symbol table name:,main
+name,type,offset,width
+argc,int,4,4
+argv,pointer of (char),8,8
+d,struct A,16,0
+s,int,16,4
+str,pointer of (char),20,8
+cd,float,28,4
+a,double,32,8
+ptr,pointer of (double),40,8
+c,double,48,8
+ptr3,pointer of (int),56,8
+ptr1,pointer of (pointer of (long)),64,8
+i,int,72,4
+n,int,76,4
 -------------------------------------------------------------------------------------------
           symbol table id:,3,symbol table name:,_temp_name_3
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,_temp_name_4
-name,type,offset,width
--------------------------------------------------------------------------------------------
           symbol table id:,5,symbol table name:,_temp_name_5
 name,type,offset,width
+sieve,pointer of (int),0,4008
+j,int,4008,4
+c,int,4012,4
 -------------------------------------------------------------------------------------------
           symbol table id:,6,symbol table name:,_temp_name_6
-name,type,offset,width
--------------------------------------------------------------------------------------------
-          symbol table id:,7,symbol table name:,_temp_name_7
 name,type,offset,width

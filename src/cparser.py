@@ -73,10 +73,10 @@ def p_func_rparen_1(p):
     '''
     func_rparen_1 : R_PAREN
     '''
-    func_name = p.stack[-2].value[0].value #name of function
-    token = p.stack[-2].value[0].data['token'] #token no
-    func_type = p.stack[-2].value[1] #type of function
-    func_type.param_list = p.stack[-1].value
+    func_name = p.stack[-2].value[0].value
+    token = p.stack[-2].value[0].data['token']
+    func_type = p.stack[-2].value[1]
+    func_type.add_param_list(p.stack[-1].value)
     #adding function to global table after creating paramlist
     sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
@@ -225,7 +225,7 @@ def p_postfix_expression_2(p):
     param_list = p[1].type.param_list
     return_type = p[1].type.return_type
 
-    if len(p) == 3:
+    if len(p) == 4:
         if len(param_list) != 0:
             p[0] = Node(type="error")
             Errors(
@@ -402,7 +402,7 @@ def p_cast_expression(p):
                 Errors(
                     errorType='TypeError',
                     errorText="cannot typecast "+p[4].types.stype+" to "+p[2].type.stype,
-                    token_object= token
+                    token_object= p.slice[1]
                 )
                 p[0] = Node(type='error')
 
@@ -1216,7 +1216,7 @@ def main():
     
     result = parser.parse(source_code, lexer = lexer.lexer)
     
-    print(sym_table)
+    #print(sym_table)
     if len(Errors.get_all_error()):
         for error in Errors.get_all_error():
             print(error)

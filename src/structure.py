@@ -3,13 +3,13 @@ import builtins
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,name = None, value=None,type=None,children=None):
+    def __init__(self,name = None, value=None,type=None,children=None, eval =None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
-        self.constant = False  #store if Node has constant value or not (helps in optimization and type checking)
+        self.eval = eval
         if children:
             self.children = children
         else:
@@ -26,6 +26,7 @@ class Node:
         res += ",name:" + str(self.name)
         res += ",value:" + str(self.value)
         res += ",type:" + str(self.type)
+        res += ",eval:" + str(self.eval)
         res += ",info:" + str(self.data)
         res += ")"
         return res
@@ -38,6 +39,9 @@ class Node:
     
     def __repr__(self) -> str:
         return self.__str__()
+    
+    def get_copy(self):
+        return Node(self.name, self.value, self.type, self.children, self.eval)
 
 
 
@@ -72,6 +76,13 @@ class Type:
     
     def __ne__(self, other):
         return not self == other
+    
+    def __str__(self) -> str:
+        res  = str(self.type)
+        return res
+    
+    def __repr__(self) -> str:
+        return self.__str__()
         
 
 #! There are four class of entries: 
@@ -240,6 +251,7 @@ class FunctionType(Type):
     
     def add_param_list(self, param_list=None):
         self.param_list = param_list
+        self.type = str(self.return_type) + " function("  +str(param_list)+")"
         return self.param_list
     
     def is_same(self, t):
@@ -257,13 +269,14 @@ class FunctionType(Type):
 
 #! class corresponding to symbol table entry
 class Entry:
-    def __init__(self, name = None, type = None, symbol_table = None, token_object=None):
+    def __init__(self, name = None, type = None, symbol_table = None, token_object=None, eval = None):
         self.name = name
 
         assert isinstance(type,Type), str(type) + "expected Type object, provided:" + str(builtins.type(type))
 
         self.type = type
-        
+        self.eval = eval
+
         self.symbol_table = symbol_table
         self.token_object = token_object
 
@@ -274,6 +287,7 @@ class Entry:
         res = "Entry("
         res += "name:" + str(self.name)
         res += ",type:" + str(self.type)
+        res += ",eval:" + str(self.eval)
         res += ",offset:" + str(self.offset)
         res += ",width:" + str(self.width)
         res +=",symbol_table_id:" + str(self.symbol_table.id)
@@ -346,7 +360,7 @@ class SymbolTable:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def _add_entry(self,name = None, type = None, token_object = None):
+    def _add_entry(self,name = None, type = None, token_object = None, eval = None):
 
         assert name, "name not provided for entry"
         assert type is not None, "type not specified for entry"
@@ -360,7 +374,7 @@ class SymbolTable:
             )
             return None
 
-        self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object)
+        self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object, eval = eval)
 
         if type.class_type != "FunctionType":
             #update offset
@@ -496,8 +510,8 @@ class SymbolTable:
     def get_next_symbol_table(self):
         return SymbolTable.next_symbol_table
     
-    def add_entry(self,name = None, type = None, token_object = None):
-        return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object)
+    def add_entry(self,name = None, type = None, token_object = None, eval = None):
+        return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object, eval=eval)
     
     def add_struct_entry(self, name = None, symbol_table = None, token_object = None,arg_dict=None):
         return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object,arg_dict=arg_dict)

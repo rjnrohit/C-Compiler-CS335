@@ -1,19 +1,22 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-main,int function(None),0,4
+prime,pointer of (int),0,40008
+n,int,40008,4
+sieve,void function(None),40012,0
+main,int function(None),40012,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,1,symbol table name:,main
+          symbol table id:,1,symbol table name:,sieve
 name,type,offset,width
-n,int,4,4
-a,long,8,8
-b,long,16,8
-temp,long,24,8
-d,int,32,4
+i,int,0,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,4,symbol table name:,main
+name,type,offset,width
+i,int,4,4
 -------------------------------------------------------------------------------------------
           symbol table id:,2,symbol table name:,_temp_name_2
 name,type,offset,width
-i,int,0,4
+j,int,0,4
 -------------------------------------------------------------------------------------------
           symbol table id:,3,symbol table name:,_temp_name_3
 name,type,offset,width

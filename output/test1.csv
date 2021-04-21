@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-f,float function([float]),0,8
-df,float function([float]),0,8
-fabs,float function([float]),0,8
-main,int function([]),0,28
+f,float function([float]),0,4
+df,float function([float]),0,4
+fabs,float function([float]),0,4
+main,int function(None),0,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,f
 name,type,offset,width

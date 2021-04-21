@@ -1,17 +1,20 @@
+import builtins
+
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,name = None, value=None,type=None,children=None):
+    def __init__(self,name = None, value=None,type=None,children=None, eval =None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
-        self.type = type
-        self.name = name
+        self.type = type #type of node
+        self.name = name #name of node (or class of node)
+        self.eval = eval
         if children:
             self.children = children
         else:
             self.children = []
-        self.value = value
+        self.value = value #value in node (some attributes to use in ast)
 
         #A dictionary to contain info like(eg. width, offset..)
         #!Info may be Synthesised Attributes and Inherited Attributes
@@ -20,9 +23,10 @@ class Node:
     def __str__(self):
         res = "Node("
         res += "id:" + str(self.id)
-        res += ",name" + str(self.name)
-        res += ",value" + str(self.value)
-        res += ",type" + str(self.type)
+        res += ",name:" + str(self.name)
+        res += ",value:" + str(self.value)
+        res += ",type:" + str(self.type)
+        res += ",eval:" + str(self.eval)
         res += ",info:" + str(self.data)
         res += ")"
         return res
@@ -32,6 +36,12 @@ class Node:
 
     def getChild(self):
         return self.children
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+    
+    def get_copy(self):
+        return Node(self.name, self.value, self.type, self.children, self.eval)
 
 
 
@@ -45,8 +55,7 @@ class Type:
         'float':4,
         'double':8,
         'void':0,
-        'bool': 1,
-        'short':2,
+        'bool': 1
     }
     def __init__(self):
         self.class_type = None
@@ -54,7 +63,26 @@ class Type:
         self.is_pointer = False
         self.is_struct = False
         self.is_function = False
+        self.stype = 'void'
+        self.type = 'void'
         self.width = 0
+    
+    def __eq__(self, other):
+        if builtins.type(self) != builtins.type(other):
+            return False
+        if other.class_type != self.class_type:
+            return False
+        return self.type == other.type
+    
+    def __ne__(self, other):
+        return not self == other
+    
+    def __str__(self) -> str:
+        res  = str(self.type)
+        return res
+    
+    def __repr__(self) -> str:
+        return self.__str__()
         
 
 #! There are four class of entries: 
@@ -65,11 +93,16 @@ class Type:
 #TODO EnumType, TypeDef
 
 class BasicType(Type):
-    
+    allowed_all_type = ['int', 'long', 'float', 'double','bool', 'char']
+    allowed_bool_type = ['bool']
+    allowed_int_type = ['long', 'int', 'char']
+    allowed_read_type = ['float', 'double']
     def __init__(self, type = None):
         super().__init__()
         self.class_type = "BasicType"
         self.is_basic = True
+        assert isinstance(type,str), str(type) + "expected Type object, provided:" + str(builtins.type(type))
+        assert type in self.allowed_all_type, "unknown type:" +type + " given"
         self.type = type
         self.stype = self.type
         self.width = self.size_dict[type]
@@ -112,8 +145,10 @@ class PointerType(Type):
         super().__init__()
         self.class_type = "PointerType"
         self.is_pointer = True
+        assert isinstance(type,Type), str(type) + " expected Type object, provided:" + str(builtins.type(type))
         self.type = type
         self.stype = type.stype + "*"
+        assert not isinstance(array_size,str), "array_size can't be string, provided: " + str(array_size)
         self.array_size = array_size
         self.width = self.update_width()
 
@@ -133,6 +168,7 @@ class PointerType(Type):
         else:
             matrix_size *= self.array_size
         if isinstance(self.type, Type):
+            #print(self.type, self.type.width, matrix_size)
             self.width += matrix_size*self.type.width
         else:
             self.width += matrix_size*self.size_dict[self.type]
@@ -212,6 +248,7 @@ class FunctionType(Type):
     
     def add_param_list(self, param_list=None):
         self.param_list = param_list
+        self.type = str(self.return_type) + " function("  +str(param_list)+")"
         return self.param_list
     
     def is_same(self, t):
@@ -229,10 +266,14 @@ class FunctionType(Type):
 
 #! class corresponding to symbol table entry
 class Entry:
-    def __init__(self, name = None, type = None, symbol_table = None, token_object=None):
+    def __init__(self, name = None, type = None, symbol_table = None, token_object=None, eval = None):
         self.name = name
+
+        assert isinstance(type,Type), str(type) + "expected Type object, provided:" + str(builtins.type(type))
+
         self.type = type
-        
+        self.eval = eval
+
         self.symbol_table = symbol_table
         self.token_object = token_object
 
@@ -243,6 +284,7 @@ class Entry:
         res = "Entry("
         res += "name:" + str(self.name)
         res += ",type:" + str(self.type)
+        res += ",eval:" + str(self.eval)
         res += ",offset:" + str(self.offset)
         res += ",width:" + str(self.width)
         res +=",symbol_table_id:" + str(self.symbol_table.id)
@@ -315,11 +357,11 @@ class SymbolTable:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def _add_entry(self,name = None, type = None, token_object = None):
+    def _add_entry(self,name = None, type = None, token_object = None, eval = None):
 
         assert name, "name not provided for entry"
         assert type is not None, "type not specified for entry"
-        
+        assert isinstance(type, Type), "type: '"+ str(type) + "' is not of Type class, provided: " + str((builtins.type(type)))
 
         if self.table.get(name):
             Errors(
@@ -329,7 +371,7 @@ class SymbolTable:
             )
             return None
 
-        self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object)
+        self.table[name] = Entry(name=name, type = type, symbol_table = self, token_object = token_object, eval = eval)
 
         if type.class_type != "FunctionType":
             #update offset
@@ -378,17 +420,23 @@ class SymbolTable:
         
         return parent.scopes_list[-1]
 
-    def _look_up(self, name = None, token_object = None):
+    def _look_up(self, name = None, token_object = None, in_struct = False, no_error = False):
         symbol_table =self
-        while symbol_table != None and name not in symbol_table.table:
-            symbol_table = symbol_table.parent
+        if not in_struct:
+            while symbol_table != None and name not in symbol_table.table:
+                symbol_table = symbol_table.parent
+        else:
+            if name not in symbol_table.table:
+                symbol_table = None
+            
         
         if symbol_table is None:
-            Errors(
-                errorType='DeclarationError', 
-                errorText='variable/function not declared before',
-                token_object = token_object
-            )
+            if no_error == False:
+                Errors(
+                    errorType='DeclarationError', 
+                    errorText='variable/function not declared before',
+                    token_object = token_object
+                )
             return None
 
         return symbol_table.table[name]
@@ -459,14 +507,14 @@ class SymbolTable:
     def get_next_symbol_table(self):
         return SymbolTable.next_symbol_table
     
-    def add_entry(self,name = None, type = None, token_object = None):
-        return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object)
+    def add_entry(self,name = None, type = None, token_object = None, eval = None):
+        return SymbolTable.curr_symbol_table._add_entry(name = name, type = type, token_object=token_object, eval=eval)
     
     def add_struct_entry(self, name = None, symbol_table = None, token_object = None,arg_dict=None):
         return SymbolTable.curr_symbol_table._add_struct_entry(name = name, symbol_table=symbol_table, token_object = token_object,arg_dict=arg_dict)
     
-    def look_up(self, name = None, token_object = None):
-        return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object)
+    def look_up(self, name = None, token_object = None, in_struct = False, no_error = False):
+        return SymbolTable.curr_symbol_table._look_up(name = name, token_object = token_object, in_struct = in_struct, no_error = no_error)
 
     def look_up_struct(self, name = None, token_object = None):
         return SymbolTable.curr_symbol_table._look_up_struct(name = name, token_object = token_object)
@@ -497,6 +545,8 @@ class SymbolTable:
 
 #=================================== ERRORS ==================================#
 
+from clexer import lexer
+
 class Errors:
     error_id = 0
     error_list = []
@@ -510,7 +560,7 @@ class Errors:
         if token_object:
             self.lineno = token_object.lineno
             # print(token_object, token_object.__dict__)
-            # self.filename = token_object.lexer.filename
+            self.filename = lexer.filename
             if token_object.lexeme:
                 self.lexeme = token_object.lexeme
             else:
@@ -527,13 +577,9 @@ class Errors:
 
 
     def __str__(self):
-        res  = "Error("
-        res += self.errorType + ","
-        # res += "in file: " + self.filename + ","
-        res += "at line no. " + str(self.lineno) + ","
-        res += "errorenous lexeme: " + self.lexeme + ","
-        res += self.errorText
-        res += ")"
+        res = self.filename + " "
+        res += "at line no: "+ str(self.lineno)
+        res += ", "+self.errorType +": " + self.errorText
         return res
 
 def getMutliPointerType(type = None, level = 0):
