@@ -187,6 +187,7 @@ def p_primary_expression(p):
                        | L_PAREN expression R_PAREN
                        | TRUE
                        | FALSE
+                       | NULL
     '''
     if len(p) == 2:
         if p.slice[-1].type == "IDENTIFIER":
@@ -210,6 +211,8 @@ def p_primary_expression(p):
         elif p.slice[-1].type == "STR_CONSTANT":
             str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
+        elif p.slice[-1].type == "NULL":
+            p[0] = Node(name="constant",value=p[1],type=PointerType(type=Type()))
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
         p[0].constant = p[0].value
