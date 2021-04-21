@@ -1,0 +1,30 @@
+-------------------------------------------------------------------------------------------
+          symbol table id:,0,symbol table name:,global
+name,type,offset,width
+main,int function(None),0,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,1,symbol table name:,main
+name,type,offset,width
+operator,char,4,1
+a,long,5,8
+b,long,13,8
+equal,bool,21,1
+x,long,22,8
+-------------------------------------------------------------------------------------------
+          symbol table id:,2,symbol table name:,_temp_name_2
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,3,symbol table name:,_temp_name_3
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,4,symbol table name:,_temp_name_4
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,5,symbol table name:,_temp_name_5
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,6,symbol table name:,_temp_name_6
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,7,symbol table name:,_temp_name_7
+name,type,offset,width
