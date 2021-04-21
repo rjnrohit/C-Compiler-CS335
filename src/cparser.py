@@ -96,9 +96,7 @@ def p_func_scope(p):
                 errorText='Function cannot have array return type',
                 token_object= p.slice[-1]
             )
-        p[0] = "error"
-        return
-
+       
     sym_table.start_scope(name=decl.value) #starting scope of function
     sym_table.add_entry(name='return',type=decl.type) #creating entry to check return type
     p[0] = (decl,FunctionType(return_type=decl.type,symbol_table=sym_table.curr_symbol_table)) #type of function
