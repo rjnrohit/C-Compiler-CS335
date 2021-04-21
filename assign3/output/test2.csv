@@ -1,0 +1,15 @@
+-------------------------------------------------------------------------------------------
+          symbol table id:,0,symbol table name:,global
+name,type,offset,width
+main,int function(None),0,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,1,symbol table name:,main
+name,type,offset,width
+reversedN,long,4,8
+remainder,long,12,8
+originalN,long,20,8
+n,long,28,8
+is_palindrome,int,36,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,2,symbol table name:,_temp_name_2
+name,type,offset,width

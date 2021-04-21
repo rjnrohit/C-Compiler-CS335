@@ -4,9 +4,7 @@ int b;
 struct A{
     struct A *ptr;
 };
-
-
-
+        
 int main(){
     
     struct A d;

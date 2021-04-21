@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------------------
+          symbol table id:,0,symbol table name:,global
+name,type,offset,width
+a,pointer of (int),0,100
+n,int,100,4
+main,int function(None),104,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,1,symbol table name:,main
+name,type,offset,width
+i,int,4,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,2,symbol table name:,_temp_name_2
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,3,symbol table name:,_temp_name_3
+name,type,offset,width
