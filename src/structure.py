@@ -495,7 +495,7 @@ class SymbolTable:
             base = SymbolTable.curr_symbol_table.offset
             )
         #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
-        if unused:
+        if not unused:
             self.add_scope(symbol_table = new_symbol_table)
 
         SymbolTable.curr_symbol_table = new_symbol_table
