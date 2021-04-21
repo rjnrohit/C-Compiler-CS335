@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-prime,int function(None),0,4
-main,int function(None),0,4
+prime,int function([int]),0,4
+main,"int function([int, pointer of (char)])",0,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,A
 name,type,offset,width

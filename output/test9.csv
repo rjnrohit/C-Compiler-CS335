@@ -3,7 +3,7 @@
 name,type,offset,width
 prime,pointer of (int),0,40008
 n,int,40008,4
-sieve,<structure.Type object at 0x7f197c7e4ee0> function(None),40012,0
+sieve,void function(None),40012,0
 main,int function(None),40012,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,sieve

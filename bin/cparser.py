@@ -76,7 +76,7 @@ def p_func_rparen_1(p):
     func_name = p.stack[-2].value[0].value
     token = p.stack[-2].value[0].data['token']
     func_type = p.stack[-2].value[1]
-    func_type.param_list = p.stack[-1].value
+    func_type.add_param_list(p.stack[-1].value)
     #adding function to global table after creating paramlist
     sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 

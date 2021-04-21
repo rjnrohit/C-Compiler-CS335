@@ -1,0 +1,28 @@
+-------------------------------------------------------------------------------------------
+          symbol table id:,0,symbol table name:,global
+name,type,offset,width
+a,pointer of (void) function([int]),0,8
+c,int,0,4
+d,pointer of (void),4,8
+g,void function(None),12,0
+p,int,12,4
+ptr,pointer of (int),16,8
+ptr1,pointer of (pointer of (int)),24,8
+ptr2,pointer of (pointer of (pointer of (int))),32,8
+ptr3,pointer of (pointer of (pointer of (pointer of (int)))),40,8
+cc,pointer of (char),48,8
+b,char,56,1
+str,pointer of (pointer of (char)),57,88
+main,int function(None),145,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,1,symbol table name:,a
+name,type,offset,width
+b,int,8,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,2,symbol table name:,g
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,3,symbol table name:,main
+name,type,offset,width
+vd,pointer of (pointer of (pointer of (pointer of (void)))),4,8
+c,pointer of (int),12,8
