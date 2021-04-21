@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-prime,pointer of (int),0,40008
-n,int,40008,4
-sieve,void function(None),40012,0
-main,int function(None),40012,4
+prime,pointer of (int),0,40000
+n,int,40000,4
+sieve,void function(None),40004,0
+main,int function(None),40004,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,sieve
 name,type,offset,width

@@ -12,8 +12,8 @@ ptr2,pointer of (pointer of (pointer of (int))),32,8
 ptr3,pointer of (pointer of (pointer of (pointer of (int)))),40,8
 cc,pointer of (char),48,8
 b,char,56,1
-str,pointer of (pointer of (char)),57,88
-main,int function(None),145,4
+str,pointer of (pointer of (char)),57,48
+main,int function(None),105,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,a
 name,type,offset,width
