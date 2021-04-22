@@ -295,7 +295,7 @@ class Entry:
         res +=",symbol_table_id:" + str(self.symbol_table.id)
         res += ")\n"
         return res
-
+    
     def __repr__(self) -> str:
         return self.__str__()
 

@@ -8,6 +8,8 @@ from typecheck import *
 
 temp_cnt = 0
 lable_cnt = 0
+label_list = []
+
 
 
 class gen:
@@ -67,8 +69,10 @@ def newtmp(type = None):
     sym_table.add_entry(name  = name, type = type)
 
 def newlabel():
+    label = "label#" + str(lable_cnt)
     lable_cnt += 1
-    return "label#" + str(lable_cnt) + ':\n'
+    label_list.append(label)
+    return label
 
 
 
