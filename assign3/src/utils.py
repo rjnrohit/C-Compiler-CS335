@@ -57,7 +57,8 @@ def print_csv(sym_table =None , filename = None):
     while queue:
         top = queue[0]
         queue.pop(0)
-        print_csv_sym_table(top, writer)
+        if not top.unused:
+            print_csv_sym_table(top, writer)
         # print(top.id)
         for table in top.scopes_list:
             # print(table.id, end=' ')

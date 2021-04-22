@@ -4,7 +4,9 @@ name,type,offset,width
 a,pointer of (void) function([int]),0,8
 c,int,0,4
 d,pointer of (void),4,8
-g,void function(None),12,0
+g,void function([]),12,0
+func,int function([int]),12,8
+printf,"int function([pointer of (char), int])",12,16
 p,int,12,4
 ptr,pointer of (int),16,8
 ptr1,pointer of (pointer of (int)),24,8
@@ -12,17 +14,27 @@ ptr2,pointer of (pointer of (pointer of (int))),32,8
 ptr3,pointer of (pointer of (pointer of (pointer of (int)))),40,8
 cc,pointer of (char),48,8
 b,char,56,1
-str,pointer of (pointer of (char)),57,88
-main,int function(None),145,4
+str,pointer of (pointer of (char)),57,48
+main,int function(None),105,4
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,a
 name,type,offset,width
 b,int,8,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,g
+          symbol table id:,3,symbol table name:,g
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,main
+          symbol table id:,4,symbol table name:,func
+name,type,offset,width
+a,int,4,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,5,symbol table name:,printf
+name,type,offset,width
+s,pointer of (char),4,8
+d,int,12,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,6,symbol table name:,main
 name,type,offset,width
 vd,pointer of (pointer of (pointer of (pointer of (void)))),4,8
 c,pointer of (int),12,8
+l,int,20,4

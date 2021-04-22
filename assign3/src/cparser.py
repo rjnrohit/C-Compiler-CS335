@@ -45,6 +45,13 @@ def p_external_declaration(p):
     p[0] = p[1]
 
 #List
+# def p_external_declaration_1(p):
+#     '''
+#     external_declaration : function_declaration
+#     '''
+#     p[0] = []
+
+#List
 def p_function_definition(p):
     '''
     function_definition : type_specifier declarator func_scope parameter_type_list func_rparen_1 function_body pop_sym
@@ -57,12 +64,41 @@ def p_function_definition(p):
         p[0] = Node("function",p[2].value,children=[p[5]])
     p[0] = [p[0]]
 
+def p_function_definition_1(p):
+    '''
+    function_definition  : type_specifier declarator func_scope parameter_type_list R_PAREN SEMI_COLON pop_sym
+                         | type_specifier declarator func_scope R_PAREN SEMI_COLON pop_sym
+    '''
+    p[0] = []
+    #make unused sym = True
+    # if len(p) == 8: p[7].unused = True
+    # else: p[6].unused = True
+    success = sym_table.look_up(name=p[2].value,token_object=p[2].data['token'],no_error=True)
+    if success != None:
+         Errors(
+                errorType='DeclarationError',
+                errorText='Function is already declared/defined',
+                token_object= p[2].data['token']
+            )
+    else:
+        if len(p) == 8:
+            sym_table.add_entry(name=p[2].value,type=FunctionType(return_type=p[2].type,param_list=p[4],defined=False,symbol_table=p[7]))
+        else:
+            sym_table.add_entry(name=p[2].value,type=FunctionType(return_type=p[2].type,param_list=[],defined=False,symbol_table=p[6]))
+
 
 def p_func_scope(p):
     '''
     func_scope : L_PAREN
     '''
     decl = p.stack[-1].value #getting function name and return type
+    if decl.type.class_type == "PointerType" and len(decl.type.array_size) != 0:
+        Errors(
+                errorType='DeclarationError',
+                errorText='Function cannot have array return type',
+                token_object= p.slice[-1]
+            )
+       
     sym_table.start_scope(name=decl.value) #starting scope of function
     sym_table.add_entry(name='return',type=decl.type) #creating entry to check return type
     p[0] = (decl,FunctionType(return_type=decl.type,symbol_table=sym_table.curr_symbol_table)) #type of function
@@ -73,23 +109,69 @@ def p_func_rparen_1(p):
     '''
     func_rparen_1 : R_PAREN
     '''
+    if p.stack[-2].value == "error":
+        return
     func_name = p.stack[-2].value[0].value
     token = p.stack[-2].value[0].data['token']
     func_type = p.stack[-2].value[1]
-    func_type.add_param_list(p.stack[-1].value)
+    param_list = p.stack[-1].value
+    func_type.add_param_list(param_list)
     #adding function to global table after creating paramlist
-    sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
+    success = sym_table.curr_symbol_table.parent._look_up(name=func_name,token_object=p.slice[-1],no_error=True)
+    if success and success.type.class_type == "FunctionType":
+        if success.type.defined == True:
+            Errors(
+                errorType='DeclarationError',
+                errorText='Function is already defined',
+                token_object= p.slice[-1]
+            )
+        #checking if same parameters
+        elif func_type.is_same(success.type) == False:
+            Errors(
+                errorType='DeclarationError',
+                errorText='Function is declared with different parameters/return type',
+                token_object= p.slice[-1]
+            )
+        else:
+            #removing sym table of decl
+            success.type.symbol_table.unused = True
+            success.type.symbol_table = sym_table.curr_symbol_table
+    else:
+        sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
 #without parameters    
 def p_func_rparen_2(p):
     '''
     func_rparen_2 : R_PAREN
     '''
+    if p.stack[-2].value == "error":
+        return
     func_name = p.stack[-1].value[0].value
     token = p.stack[-1].value[0].data['token']
     func_type = p.stack[-1].value[1]
     func_type.param_list = []
-    sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
+    success = sym_table.curr_symbol_table.parent._look_up(name=func_name,token_object=token,no_error=True)
+    if success:
+        if success.type.defined == True:
+            Errors(
+                errorType='DeclarationError',
+                errorText='Function is already defined',
+                token_object= p.slice[-1]
+            )
+        #checking if same parameters
+        elif func_type.is_same(success.type) == False:
+            Errors(
+                errorType='DeclarationError',
+                errorText='Function is declared with different parameters/return type',
+                token_object= p.slice[-1]
+            )
+        else:
+            success.type.symbol_table.unused = True
+            success.type.symbol_table = sym_table.curr_symbol_table
+    else:
+        sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
+
+    # sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
 
 def p_primary_expression(p):
@@ -105,6 +187,7 @@ def p_primary_expression(p):
                        | L_PAREN expression R_PAREN
                        | TRUE
                        | FALSE
+                       | NULL
     '''
     if len(p) == 2:
         if p.slice[-1].type == "IDENTIFIER":
@@ -126,8 +209,10 @@ def p_primary_expression(p):
             p[0] = Node(name="constant",value=p[1],type=BasicType('char'))
 
         elif p.slice[-1].type == "STR_CONSTANT":
-            str_type = PointerType(type=BasicType('char'),array_size=len(p[1]))
+            str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
+        elif p.slice[-1].type == "NULL":
+            p[0] = Node(name="constant",value=p[1],type=PointerType(type=Type()))
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
         p[0].constant = p[0].value
@@ -151,9 +236,9 @@ def p_postfix_expression(p):
         if p[1].type == 'error':
             p[0] = p[1]
         elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
-            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
         elif p[1].type.class_type in allowed_class:
-            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],type=p[1].type)
+            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
         else:
             p[0] = p[1]
             p[0].type = 'error'
@@ -896,7 +981,28 @@ def p_no_pointer(p):
     assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
 
+# List
+# def p_type_list(p):
+#     '''
+#     type_list : type_specifier
+#               | type_list COMMA type_specifier
+#     '''
+#     if len(p) == 2:
+#         p[0] = [p[1].type]
+#     else:
+#         p[0] = p[1] + [p[3].type]
 
+# # Node
+# def p_pointer_type_specifier(p):
+#     '''
+#     pointer_type_specifier : type_specifier
+#                            | pointer_type_specifier MULTIPLY 
+#     '''
+#     p[0] = p[1]
+#     if len(p) == 2 and p[0].type != error:
+#         p[0].type = PointerType(type=p[0].type)
+
+#List
 def p_parameter_type_list(p):
     '''
     parameter_type_list : parameter_declaration
@@ -907,7 +1013,7 @@ def p_parameter_type_list(p):
     else:
         p[0] = p[1]+p[3]
     
-# Node 
+# List
 def p_parameter_declaration(p):
     '''
     parameter_declaration : type_specifier declarator
@@ -1211,7 +1317,7 @@ def main():
     if args.l:
         print_lexeme(source_code)
 
-    parser = yacc.yacc(debug=0)
+    parser = yacc.yacc(debug=1)
     lexer.lexer.filename = args.source_code
     
     result = parser.parse(source_code, lexer = lexer.lexer)
