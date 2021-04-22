@@ -18,14 +18,14 @@ b,int,8,4
           symbol table id:,3,symbol table name:,main
 name,type,offset,width
 argc,int,4,4
-argv,pointer of (int),8,8
-a,int,16,4
-b,int,20,4
-array,pointer of (pointer of (pointer of (int))),24,10312
-i,int,10336,4
-j,int,10340,4
-k,int,10344,4
-d,int,10348,4
+argv,pointer of (int),8,20
+a,int,28,4
+b,int,32,4
+array,pointer of (pointer of (pointer of (int))),36,8736
+i,int,8772,4
+j,int,8776,4
+k,int,8780,4
+d,int,8784,4
 -------------------------------------------------------------------------------------------
           symbol table id:,4,symbol table name:,_temp_name_4
 name,type,offset,width

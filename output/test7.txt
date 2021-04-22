@@ -21,9 +21,10 @@ COMMA                 ,                               8      18
 CHAR                  char                            8      20     
 IDENTIFIER            argv                            8      25     
 L_SQBR                [                               8      29     
-R_SQBR                ]                               8      30     
-R_PAREN               )                               8      31     
-L_BRACES              {                               8      32     
+INT_CONSTANT          4                               8      30     
+R_SQBR                ]                               8      31     
+R_PAREN               )                               8      32     
+L_BRACES              {                               8      33     
 STRUCT                struct                          10     5      
 IDENTIFIER            A                               10     12     
 IDENTIFIER            d                               10     14     

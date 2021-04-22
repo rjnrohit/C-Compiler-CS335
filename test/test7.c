@@ -5,7 +5,7 @@ struct A{
     struct A *ptr;
 };
 
-int main(int argc, char argv[]){
+int main(int argc, char argv[4]){
     
     struct A d;
     int s = sizeof(d);

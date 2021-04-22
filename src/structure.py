@@ -270,13 +270,14 @@ class FunctionType(Type):
 
 #! class corresponding to symbol table entry
 class Entry:
-    def __init__(self, name = None, type = None, symbol_table = None, token_object=None, eval = None):
+    def __init__(self, name = None, type = None, symbol_table = None, token_object=None, label = None,eval = None):
         self.name = name
 
         assert isinstance(type,Type), str(type) + "expected Type object, provided:" + str(builtins.type(type))
 
         self.type = type
         self.eval = eval
+        self.label = label
 
         self.symbol_table = symbol_table
         self.token_object = token_object
@@ -339,7 +340,7 @@ class SymbolTable:
         if name:
             self.name = name
         else:
-            self.name = '_temp_name_' + str(self.id)
+            self.name = 'scope@' + str(self.id)
 
         SymbolTable.symbol_table_dict[id] = self
 

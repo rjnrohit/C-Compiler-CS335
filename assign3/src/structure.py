@@ -201,7 +201,7 @@ class StructType(Type):
         self.name = name
         self.symbol_table = symbol_table
         self.type = "struct " + str(self.name)
-        self.stype = "struct"
+        self.stype = "struct_"+str(self.name)
         self.width = self.update_width()
         self.arg_dict = arg_dict
 
@@ -228,7 +228,7 @@ class StructType(Type):
 
 class FunctionType(Type):
 
-    def __init__(self, return_type = None, param_list = None, symbol_table = None):
+    def __init__(self, return_type = None, param_list = None, symbol_table = None,defined=True):
         super().__init__()
         self.class_type = "FunctionType"
         self.is_function = True
@@ -238,6 +238,7 @@ class FunctionType(Type):
         self.type = str(self.return_type) + " function("  +str(param_list)+")"
         self.stype = "function"
         self.width = self.update_width()
+        self.defined = defined
 
     def __str__(self) -> str:
         return self.type
@@ -310,7 +311,7 @@ class SymbolTable:
     symbol_table_dict= {}
     curr_symbol_table = None
     next_symbol_table = None
-    def __init__(self, parent = None, id =None, name = None,scope_type = None, base =0):
+    def __init__(self, parent = None, id =None, name = None,scope_type = None, base =0, unused = False):
         if parent:
             assert isinstance(parent, SymbolTable) 
 
@@ -328,6 +329,7 @@ class SymbolTable:
         #TODO enum table for enum
         self.scopes_list= []
         self.scopes = {}
+        self.unused = unused
 
         self.width = 0
         self.base = base
@@ -482,7 +484,7 @@ class SymbolTable:
         self.width += entry.type.width
         return self.width
     
-    def start_scope(self, name =None, scope_type = None):
+    def start_scope(self, name =None, scope_type = None, unused = False):
 
         if SymbolTable.curr_symbol_table is None:
             if SymbolTable.symbol_table_dict:
@@ -492,10 +494,12 @@ class SymbolTable:
             name = name,
             scope_type = scope_type,
             parent = SymbolTable.curr_symbol_table, 
-            base = SymbolTable.curr_symbol_table.offset
+            base = SymbolTable.curr_symbol_table.offset,
+            unused = unused
             )
         #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
-        self.add_scope(symbol_table = new_symbol_table)
+        if not unused:
+            self.add_scope(symbol_table = new_symbol_table)
 
         SymbolTable.curr_symbol_table = new_symbol_table
 

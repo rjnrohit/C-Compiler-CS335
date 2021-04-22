@@ -46,9 +46,10 @@ COMMA                 ,                               15     18
 INT                   int                             15     20     
 IDENTIFIER            argv                            15     24     
 L_SQBR                [                               15     28     
-R_SQBR                ]                               15     29     
-R_PAREN               )                               15     30     
-L_BRACES              {                               15     31     
+INT_CONSTANT          5                               15     29     
+R_SQBR                ]                               15     30     
+R_PAREN               )                               15     31     
+L_BRACES              {                               15     32     
 INT                   int                             16     5      
 IDENTIFIER            a                               16     9      
 COMMA                 ,                               16     10     

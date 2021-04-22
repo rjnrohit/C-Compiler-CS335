@@ -1,3 +1,4 @@
+import re
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import getMutliPointerType
@@ -16,7 +17,7 @@ def newtmp(type = None):
     sym_table.add_entry(name  = name, type = type)
 
 def newlabel():
-    label = "label#" + str(lable_cnt)
+    label = "label#" + str(lable_cnt)+"\n"
     lable_cnt += 1
     label_list.append(label)
     return label
@@ -25,16 +26,21 @@ def newlabel():
 def unary_opcode(op, opr1, tmp):
 
     assert tmp, "please provide variable to assign final value"
-    return tmp +' = ' + op + opr1
+    return tmp +' = ' + op + opr1 + '\n'
 
-def opcode(op, opr1, opr2=None, tmp = None):
+def opcode(op = None, opr1 = None, opr2=None, tmp = None):
 
     assert tmp, "please provide variable to assign final value"
+    assert opr1, "there must be atleast one operand in 3AC"
+
+    if op is None or op == 'assign':
+        assert opr2 is None, "extra operand given for assignment"
+        return assign(opr1, tmp)
 
     if not opr2:
         return unary_opcode(op, opr1, tmp)
     
-    return tmp + ' = ' + opr1 + op + opr2
+    return tmp + ' = ' + opr1 + op + opr2 + '\n'
 
 
 def break_continue(input, break_label, continue_label):
@@ -51,10 +57,21 @@ def ifcode(tmp, label1 , label2 = None):
 
     assert label1, "provide first label"
 
-    code = "if ze " + tmp + " goto " + label1
+    code = "ifnz " + tmp + " goto " + label1
     if label2:
         code += "goto " + label2
-    return code
+    return code + '\n'
 
+def assign(opr1, tmp):
+    assert opr1, "cannot assign with single operand"
+    assert tmp, "cannot assign with single operand"
+
+    code = tmp +' = ' + opr1
+
+    return code + '\n'
+
+
+def add_scope_info(sym_table):
+    return '@' + sym_table.curr_symbol_table.name
     
     
