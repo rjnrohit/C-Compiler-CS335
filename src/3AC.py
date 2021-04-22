@@ -6,6 +6,8 @@ from typecheck import *
 
 temp_cnt = 0
 lable_cnt = 0
+label_list = []
+
 
 def newtmp(type = None):
     assert isinstance(type, Type), "inconsistent type for newtmp"
@@ -14,7 +16,10 @@ def newtmp(type = None):
     sym_table.add_entry(name  = name, type = type)
 
 def newlabel():
-    return "label#" + str(lable_cnt)
+    label = "label#" + str(lable_cnt)
+    lable_cnt += 1
+    label_list.append(label)
+    return label
 
 
 def unary_opcode(op, opr1, tmp):
