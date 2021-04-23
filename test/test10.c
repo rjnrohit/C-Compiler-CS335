@@ -18,7 +18,10 @@ int main(int argc, int argv[5]){
     int *ptr;
     int i,j,k;
     i++;
+    ptr += 1;
     ptr[5];
+    bool l;
+    l = 5&&3;
     array[0][0][1];
     for(i=0;i<12;i++){
         for(j=i;j<13;j++){
@@ -27,6 +30,7 @@ int main(int argc, int argv[5]){
         int b = array[i] + (int)array[j];
     }
     ++*(++*array);
+    a = take_and(a,b);
     int d = ***array;
     return 0.1;
 }

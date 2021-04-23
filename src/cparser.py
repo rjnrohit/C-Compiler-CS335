@@ -15,7 +15,6 @@ from clexer import tokens,print_lexeme
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import getMutliPointerType
-from structure import implicit_casting
 from typecheck import *
 from utils import print_csv
 from threeaddr import *
@@ -235,7 +234,7 @@ def p_primary_expression(p):
         if p[0].constant == "false" or p[0].constant == "null":
             p[0].constant = 0
         elif p[0].constant == "true":
-            p[0].constant = 0
+            p[0].constant = 1
         p[0].place = get_newtmp(type=p[0].type)
         p[0].code = [gen(op="=",place1=str(p[0].constant),place3=p[0].place)]
     
@@ -367,8 +366,11 @@ def p_postfix_expression_2(p):
             )
         else:
             p[0] = Node(name="func_call",type=return_type,children=[p[1]])
+            p[0].place = get_newtmp(type=return_type)
+            p[0].code = p[1].code
+            p[0].code += [gen(op="func_call",place1=p[1].value,place3=p[0].place)]
     else:
-        arg_list = p[3].data['args_type']
+        arg_list = p[3].children
         if len(arg_list) != len(param_list):
             p[0] = Node(type="error")
             Errors(
@@ -376,9 +378,30 @@ def p_postfix_expression_2(p):
                 errorText='No of arguments is not matching',
                 token_object= p.slice[-1]
             )
-        # check for type cast if possible
-        else:
-            p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
+            return
+        arg_places = []
+        code = []
+        push_code = []
+        pop_code = []
+        for i in range(len(arg_list)):
+            if arg_list[i].type.is_convertible_to(param_list[i]) == False:
+                p[0] = Node(type="error")
+                Errors(
+                    errorType='TypeError',
+                    errorText="cannot convert "+arglist[i].types.stype+" to "+param_list[i].stype,
+                    token_object= p.slice[-1]
+                )
+                return
+            node = typecast(arg_list[i],param_list[i])
+            arg_places.append(node.place)
+            code += node.code
+            push_code += [gen(op = "push",place1=node.place,code="push "+node.place)]
+            pop_code += [gen(op = "pop",place1=node.place,code="pop "+node.place)]
+        
+        p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
+        p[0].place = get_newtmp(type=return_type)
+        p[0].code = p[1].code+code+push_code + [gen(op="func_call",place1=p[1].value,place3=p[0].place)] + pop_code[::-1]
+
         
         
 
@@ -543,7 +566,7 @@ def p_cast_expression(p):
             p[0] = Node(type='error')
         else:
             if p[4].type.is_convertible_to(p[2].type):
-                p[0] = Node(name ="type_cast",value=p[2].type.stype,type = p[2].type,children=[p[4]])
+                p[0] = typecast(p[4],p[2].type)
             else:
                 Errors(
                     errorType='TypeError',
@@ -623,7 +646,7 @@ def p_equality_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2],is_bool=True)
+        p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 #Node
 def p_and_expression(p):
     '''
@@ -1296,7 +1319,7 @@ def p_jump_statement(p):
     '''
     
     p[0] = Node(name=p[1],type="ok")
-    p[0].code = [gen(op = 'goto', code = p[1])]
+    p[0].code = [gen(op = p[1], code = p[1])]
 
 def p_jump_statement_1(p):
     '''
