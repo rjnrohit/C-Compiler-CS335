@@ -613,7 +613,7 @@ def p_logical_and_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-       type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+       p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
 def p_logical_or_expression(p):
@@ -625,7 +625,7 @@ def p_logical_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+        p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
     
 
 #Node
@@ -756,6 +756,7 @@ def p_init_declarator(p):
     else:
         # type checking
         # check for initliazer
+        print(type(p[3]))
         init = type_check_init(p[3],p[1].type,p.slice[2])
         if init.type == "error":
             p[0] = [None]

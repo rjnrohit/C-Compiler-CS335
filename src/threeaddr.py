@@ -17,7 +17,7 @@ def newtmp(type = None):
     sym_table.add_entry(name  = name, type = type)
 
 def newlabel():
-    label = "label#" + str(lable_cnt)+"\n"
+    label = "label#" + str(lable_cnt)
     lable_cnt += 1
     label_list.append(label)
     return label

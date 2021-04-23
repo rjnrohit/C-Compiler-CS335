@@ -31,6 +31,8 @@ int main(){
     int l = func(1);
     *c = NULL;
     printf("hello",5);
+    bool b = 6&&3;
+    if ((5>3)&&3);
     return &p;
 }
 
