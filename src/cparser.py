@@ -27,6 +27,9 @@ start = 'program' #start action
 def p_program(p):
     'program : translation_unit'
     p[0] = Node("program",children=p[1])
+    p[0].code = []
+    for node in p[0].children:
+        p[0].code += [node.code]
 
 #List
 def p_translation_unit(p):

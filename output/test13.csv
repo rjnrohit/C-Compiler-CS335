@@ -1,0 +1,65 @@
+-------------------------------------------------------------------------------------------
+          symbol table id:,0,symbol table name:,global
+name,type,offset,width
+a,int,0,4
+b,long,4,8
+solve,int function([]),12,4
+main,"int function([int, pointer of (int)])",12,16
+min,"int function([int, int])",12,12
+max,"int function([int, int])",12,12
+printf,"int function([pointer of (char), int])",12,16
+scanf,"int function([pointer of (char), pointer of (int)])",12,20
+-------------------------------------------------------------------------------------------
+          symbol table id:,2,symbol table name:,main
+name,type,offset,width
+argc,int,4,4
+argv,pointer of (int),8,8
+n,int,16,4
+power_of_2,long,20,8
+ans,long,28,8
+-------------------------------------------------------------------------------------------
+          symbol table id:,4,symbol table name:,min
+name,type,offset,width
+a,int,4,4
+b,int,8,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,5,symbol table name:,max
+name,type,offset,width
+a,int,4,4
+b,int,8,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,6,symbol table name:,printf
+name,type,offset,width
+stmt,pointer of (char),4,8
+d,int,12,4
+-------------------------------------------------------------------------------------------
+          symbol table id:,7,symbol table name:,scanf
+name,type,offset,width
+stmt,pointer of (char),4,8
+d,pointer of (int),12,8
+-------------------------------------------------------------------------------------------
+          symbol table id:,8,symbol table name:,solve
+name,type,offset,width
+n,long,4,8
+c,pointer of (int),12,4000
+os,pointer of (int),4012,4000
+es,pointer of (int),8012,4000
+mes,pointer of (int),12012,4000
+mos,pointer of (int),16012,4000
+i,int,20012,4
+ans,long,20016,8
+-------------------------------------------------------------------------------------------
+          symbol table id:,3,symbol table name:,scope@3
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,9,symbol table name:,scope@9
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,10,symbol table name:,scope@10
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,11,symbol table name:,scope@11
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+          symbol table id:,12,symbol table name:,scope@12
+name,type,offset,width

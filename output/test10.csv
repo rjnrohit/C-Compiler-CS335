@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-take_and,"int function([int, float])",0,4
-take_or,"int function([float, int])",0,4
-main,"int function([int, pointer of (int)])",0,4
+take_and,"int function([int, float])",0,12
+take_or,"int function([float, int])",0,12
+main,"int function([int, pointer of (int)])",0,28
 -------------------------------------------------------------------------------------------
           symbol table id:,1,symbol table name:,take_and
 name,type,offset,width
@@ -27,9 +27,9 @@ j,int,8776,4
 k,int,8780,4
 d,int,8784,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,_temp_name_4
+          symbol table id:,4,symbol table name:,scope@4
 name,type,offset,width
 b,int,0,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,5,symbol table name:,_temp_name_5
+          symbol table id:,5,symbol table name:,scope@5
 name,type,offset,width

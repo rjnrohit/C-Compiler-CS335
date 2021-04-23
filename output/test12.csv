@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------------------
           symbol table id:,0,symbol table name:,global
 name,type,offset,width
-a,pointer of (void) function([int]),0,8
+a,pointer of (void) function([int]),0,12
 c,int,0,4
 d,pointer of (void),4,8
 g,void function([]),12,0
