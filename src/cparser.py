@@ -322,6 +322,7 @@ def p_postfix_expression_1(p):
         if len(p[1].type.array_size) == 0:
             tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=p[1].type.type_size,type="long")
         else:
+            p[0].type.array_size = p[1].type.array_size[1:]
             width = 1
             for i in p[1].type.array_size[1:]:
                 width = width*i
@@ -415,6 +416,13 @@ def p_postfix_expression_3(p):
         return
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
+    p[0].code = p[1].code
+    tmp = get_newtmp()
+    p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
+    tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
+    p[0].code += [code]
+    p[0].place = tmp
+
     
 
 
@@ -450,7 +458,10 @@ def p_postfix_expression_4(p):
         return
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
-
+    p[0].code = p[1].code
+    tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=success.offset,type="long")
+    p[0].code += [code]
+    p[0].place = tmp
 
 
 

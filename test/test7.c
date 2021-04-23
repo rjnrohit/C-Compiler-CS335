@@ -3,11 +3,13 @@ int b;
 
 struct A{
     struct A *ptr;
+    int a;
 };
 
 int main(int argc, char argv[4]){
     
-    struct A d;
+    struct A *d;
+    d->a;
     int s = sizeof(d);
     char* str = {'q','r','s'};
     float cd;

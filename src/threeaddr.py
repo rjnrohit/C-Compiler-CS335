@@ -86,7 +86,7 @@ class gen:
 
 
 
-def get_newtmp(type = None):
+def get_newtmp(type = BasicType("long")):
     assert isinstance(type, Type), "inconsistent type for newtmp"
     global temp_cnt
     name = "tmp@"+str(temp_cnt)

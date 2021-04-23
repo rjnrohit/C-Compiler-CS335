@@ -8,6 +8,7 @@ int take_or(float a, int b){
     return (long)a | b;
 }
 
+
 // int take_and(int a){
 //     return a;
 // }
