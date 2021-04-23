@@ -20,7 +20,7 @@ from typecheck import *
 from utils import print_csv
 from threeaddr import *
 #####################Grammar section #################
-print(temp_cnt)
+# print(temp_cnt)
 
 start = 'program' #start action
 
@@ -29,7 +29,8 @@ def p_program(p):
     'program : translation_unit'
     p[0] = Node("program",children=p[1])
     for node in p[1]:
-        p[0].code += node.code
+        if node != None:
+            p[0].code += node.code
 
 #List
 def p_translation_unit(p):
@@ -261,14 +262,14 @@ def p_postfix_expression(p):
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
             p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
-            p[0].code += [gen(op=str(p[1].type)+p[2]+"_c",place1=p[1].place,place2="1",place3=p[1].place)]
+            p[0].code += [gen(op=str(p[1].type)+p[2][0]+"_c",place1=p[1].place,place2="1",place3=p[1].place)]
         elif p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
             p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
             width = p[1].type.width
-            p[0].code += [gen(op="long"+p[2]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
+            p[0].code += [gen(op="long"+p[2][0]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
 
         else:
             p[0] = p[1]
@@ -318,13 +319,15 @@ def p_postfix_expression_1(p):
         #type_casting
         p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
         p[0].code = p[1].code + p[3].code
-        p[0].place = get_newtmp(BasicType("long"))
         if len(p[1].type.array_size) == 0:
             tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=p[1].type.type_size,type="long")
         else:
-            width = 1 if len(p[1].type.array_size) == 1 else p[1].type.array_size[1]
+            width = 1
+            for i in p[1].type.array_size[1:]:
+                width = width*i
             width = width*p[1].type.array_type.width
             tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=width,type="long")
+        p[0].place = get_newtmp(BasicType("long"))
         p[0].code += [code] + [gen(op="long+",place1=p[1].place,place2=tmp,place3=p[0].place)]
 
 
@@ -799,7 +802,7 @@ def p_init_declarator(p):
     else:
         # type checking
         # check for initliazer
-        print(type(p[3]))
+        # print(type(p[3]))
         init = type_check_init(p[3],p[1].type,p.slice[2])
         if init.type == "error":
             p[0] = [None]
@@ -1161,6 +1164,9 @@ def p_compound_statement(p):
         p[0] = Node("compound_statement","{}",type="ok")
     else:
         p[0] = Node("compound_statement","{}",children=p[3],type="ok")
+        for node in p[3]:
+            if node != None:
+                p[0].code += node.code
     # print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
 
 def p_function_body(p):
@@ -1172,6 +1178,9 @@ def p_function_body(p):
         p[0] = Node("compound_statement","{}",type="ok")
     else:
         p[0] = Node("compound_statement","{}",children=p[2],type="ok")
+        for node in p[2]:
+            if node != None:
+                p[0].code += node.code
 
 # List
 def p_block_item_list(p):

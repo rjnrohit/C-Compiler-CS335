@@ -4,7 +4,7 @@ from typing import List
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,name = None, value=None,type=None,children=None, constant =None, place = "", code = []):
+    def __init__(self,name = None, value=None,type=None,children=None, constant =None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
@@ -12,8 +12,8 @@ class Node:
         self.name = name #name of node (or class of node)
         self.constan = constant
 
-        self.place = place
-        self.code = code
+        self.place = ""
+        self.code = []
         
         @property
         def code(self):

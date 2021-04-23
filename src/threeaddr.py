@@ -29,7 +29,7 @@ class gen:
 
     def unary_opcode(self, op = None, place3 = None, place1 = None):
         assert place3, "please provide variable to assign final value"
-        return place3 +' = ' + op + place1
+        return place3 +' = ' + op + " " + place1
 
     def opcode(self,op  = None, place3 = None, place2 = None, place1 = None):
 
@@ -54,7 +54,7 @@ class gen:
         if not place2:
             return self.unary_opcode(op, place1, place3)
         
-        return place3 + ' = ' + place1 + op + place2
+        return place3 + ' = ' + place1 + " " + op + " " + place2
     
     def ifcode(self,place, label1):
 
