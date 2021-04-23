@@ -1,15 +1,29 @@
 import builtins
+from typing import List
 
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,name = None, value=None,type=None,children=None, eval =None):
+    def __init__(self,name = None, value=None,type=None,children=None, eval =None, place = None, code = None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
         self.eval = eval
+
+        self.place = place
+        self.code = code
+        
+        @property
+        def code(self):
+            return self._code
+        
+        @code.setter
+        def code(self, code):
+            assert isinstance(code, List), "code object must be list of gen's / labels"
+            self._code = code
+
         if children:
             self.children = children
         else:
