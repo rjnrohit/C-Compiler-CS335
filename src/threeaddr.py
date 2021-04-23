@@ -15,7 +15,7 @@ label_list = []
 class gen:
 
     def __init__(self,op  = None, place3 = None, place2 = None, place1 = None, code = None):
-        assert place3, "place3 must be present"
+        # assert place3, "place3 must be present"
         self.op = op
         self.place3 = place3
         self.place2 = place2
@@ -91,7 +91,8 @@ def get_newtmp(type = None):
     global temp_cnt
     name = "tmp@"+str(temp_cnt)
     temp_cnt += 1
-    return sym_table.add_entry(name  = name, type = type)
+    sym_table.add_entry(name  = name, type = type)
+    return name
 
 def get_newlabel():
     global label_list

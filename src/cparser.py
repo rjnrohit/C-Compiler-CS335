@@ -28,7 +28,7 @@ start = 'program' #start action
 def p_program(p):
     'program : translation_unit'
     p[0] = Node("program",children=p[1])
-    for node in p[0].children:
+    for node in p[1]:
         p[0].code += node.code
 
 #List
@@ -1371,7 +1371,7 @@ def main():
         for error in Errors.get_all_error():
             print(error)
         return
-
+    print_code(result.code)
     Graph = draw_ast(result)
     # print(args)
     if args.p:
