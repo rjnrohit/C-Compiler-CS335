@@ -65,7 +65,7 @@ class Type:
         self.is_function = False
         self.stype = 'void'
         self.type = 'void'
-        self.width = 0
+        self._width = 0
     
     def __eq__(self, other):
         if builtins.type(self) != builtins.type(other):
@@ -83,6 +83,13 @@ class Type:
     
     def __repr__(self) -> str:
         return self.__str__()
+    
+    def update_width(self):
+        return self._width
+    
+    @property
+    def width(self):
+        return self.update_width()
         
 
 #! There are four class of entries: 
@@ -105,7 +112,7 @@ class BasicType(Type):
         assert type in self.allowed_all_type, "unknown type:" +type + " given"
         self.type = type
         self.stype = self.type
-        self.width = self.size_dict[type]
+        self._width = self.size_dict[type]
 
     def __str__(self) -> str:
         res  = str(self.type)
@@ -115,8 +122,8 @@ class BasicType(Type):
         return self.__str__()
     
     def update_width(self):
-        self.width = self.size_dict[self.type]
-        return self.width
+        self._width = self.size_dict[self.type]
+        return self._width
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
@@ -151,7 +158,7 @@ class PointerType(Type):
         assert not isinstance(array_size,str), "array_size can't be string, provided: " + str(array_size)
         self.array_size = array_size
         self.array_type = array_type
-        self.width = self.update_width()
+        self._width = self.update_width()
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
@@ -202,7 +209,7 @@ class StructType(Type):
         self.symbol_table = symbol_table
         self.type = "struct " + str(self.name)
         self.stype = "struct_"+str(self.name)
-        self.width = self.update_width()
+        self._width = self.update_width()
         self.arg_dict = arg_dict
 
     def __str__(self) -> str:
@@ -212,8 +219,8 @@ class StructType(Type):
         return self.__str__()
 
     def update_width(self):
-        self.width = self.symbol_table.width
-        return self.width
+        self._width = self.symbol_table.width
+        return self._width
 
     def is_same(self, t):
         assert isinstance(t, Type), "please pass Type object"
@@ -237,7 +244,7 @@ class FunctionType(Type):
         self.param_list = param_list
         self.type = str(self.return_type) + " function("  +str(param_list)+")"
         self.stype = "function"
-        self.width = self.update_width()
+        self._width = self.update_width()
         self.defined = defined
 
     def __str__(self) -> str:
@@ -247,8 +254,8 @@ class FunctionType(Type):
         return self.__str__()
 
     def update_width(self):
-        self.width = self.symbol_table.width
-        return self.width
+        self._width = self.symbol_table.width
+        return self._width
     
     def add_param_list(self, param_list=None):
         self.param_list = param_list
