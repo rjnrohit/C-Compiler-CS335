@@ -4,13 +4,13 @@ from typing import List
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,name = None, value=None,type=None,children=None, eval =None, place = None, code = None):
+    def __init__(self,name = None, value=None,type=None,children=None, constant =None, place = "", code = []):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
-        self.eval = eval
+        self.constan = constant
 
         self.place = place
         self.code = code
@@ -40,7 +40,6 @@ class Node:
         res += ",name:" + str(self.name)
         res += ",value:" + str(self.value)
         res += ",type:" + str(self.type)
-        res += ",eval:" + str(self.eval)
         res += ",info:" + str(self.data)
         res += ")"
         return res
@@ -173,6 +172,7 @@ class PointerType(Type):
         self.array_size = array_size
         self.array_type = array_type
         self._width = self.update_width()
+        self.type_size = 8 if type.class_type =="PointerType" else type.width
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"

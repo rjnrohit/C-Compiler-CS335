@@ -18,8 +18,9 @@ from structure import getMutliPointerType
 from structure import implicit_casting
 from typecheck import *
 from utils import print_csv
+from threeaddr import *
 #####################Grammar section #################
-
+print(temp_cnt)
 
 start = 'program' #start action
 
@@ -27,9 +28,8 @@ start = 'program' #start action
 def p_program(p):
     'program : translation_unit'
     p[0] = Node("program",children=p[1])
-    p[0].code = []
     for node in p[0].children:
-        p[0].code += [node.code]
+        p[0].code += node.code
 
 #List
 def p_translation_unit(p):
@@ -65,6 +65,13 @@ def p_function_definition(p):
         p[0] = Node("function",p[2].value,children=[p[6]])
     else:
         p[0] = Node("function",p[2].value,children=[p[5]])
+    p[0].code = [gen(op="label",place1=p[2].value,code=p[2].value+":")]
+    p[0].code += [gen(op="BeginFunc",place1=p[2].value,code="BeginFunc")]
+    if len(p) == 8:
+        p[0].code += p[6].code
+    else:
+        p[0].code += p[5].code
+    p[0].code += [gen(op="EndFunc",place1=p[2].value,code="EndFunc")]
     p[0] = [p[0]]
 
 def p_function_definition_1(p):
@@ -198,12 +205,17 @@ def p_primary_expression(p):
             success = sym_table.look_up(name=p[1],token_object=p.slice[-1])
             if success:
                 p[0] = Node(name="id",value=p[1],type=success.type)
+                p[0].place = p[1]+"|"+success.symbol_table.name
             else:
                 p[0] = Node(name="id",type='error')
             return
 
         if p.slice[-1].type in ["INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"]:
-            p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
+            if int(p[1]) <= 2^31-1 and int(p[1]) >= -(2^31):
+                p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
+            else:
+                p[0] = Node(name="constant",value=p[1],type=BasicType('long'))
+                
         
         elif p.slice[-1].type in ["EXPONENT_CONSTANT","REAL_CONSTANT"]:
             p[0] = Node(name="constant",value=p[1],type=BasicType('float'))
@@ -219,6 +231,12 @@ def p_primary_expression(p):
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
         p[0].constant = p[0].value
+        if p[0].constant == "false" or p[0].constant == "null":
+            p[0].constant = 0
+        elif p[0].constant == "true":
+            p[0].constant = 0
+        p[0].place = get_newtmp(type=p[0].type)
+        p[0].code = [gen(op="=",place1=str(p[0].constant),place3=p[0].place)]
     
     else:
         p[0] = p[2]
@@ -240,8 +258,18 @@ def p_postfix_expression(p):
             p[0] = p[1]
         elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+            p[0].place = get_newtmp(type=p[1].type)
+            p[0].code = p[1].code
+            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
+            p[0].code += [gen(op=str(p[1].type)+p[2]+"_c",place1=p[1].place,place2="1",place3=p[1].place)]
         elif p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+            p[0].place = get_newtmp(type=p[1].type)
+            p[0].code = p[1].code
+            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
+            width = p[1].type.width
+            p[0].code += [gen(op="long"+p[2]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
+
         else:
             p[0] = p[1]
             p[0].type = 'error'
@@ -287,7 +315,19 @@ def p_postfix_expression_1(p):
         p[0] = Node(type="error")
 
     if check1 and check2:
+        #type_casting
         p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
+        p[0].code = p[1].code + p[3].code
+        p[0].place = get_newtmp(BasicType("long"))
+        if len(p[1].type.array_size) == 0:
+            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=p[1].type.type_size,type="long")
+        else:
+            width = 1 if len(p[1].type.array_size) == 1 else p[1].type.array_size[1]
+            width = width*p[1].type.array_type.width
+            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=width,type="long")
+        p[0].code += [code] + [gen(op="long+",place1=p[1].place,place2=tmp,place3=p[0].place)]
+
+
 
 
 def p_postfix_expression_2(p):

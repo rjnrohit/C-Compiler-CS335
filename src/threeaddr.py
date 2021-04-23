@@ -14,17 +14,20 @@ label_list = []
 
 class gen:
 
-    def __init__(self,op  = None, plcae3 = None, place2 = None, place1 = None):
-        assert plcae3, "place3 must be present"
+    def __init__(self,op  = None, place3 = None, place2 = None, place1 = None,code=None):
+        # assert place3, "place3 must be present"
         self.op = op
-        self.place3 = plcae3
+        self.place3 = place3
         self.place2 = place2
         self.place1 = place1
-        self.code = self.get_code()
+        if code:
+            self.code = code
+        else:
+            self.code = self.get_code()
     
     def unary_opcode(self, op = None, place3 = None, place1 = None):
         assert place3, "please provide variable to assign final value"
-        return place3 +' = ' + op + place1 + '\n'
+        return place3 +' = ' + op + place1
 
     def opcode(self,op  = None, place3 = None, place2 = None, place1 = None):
 
@@ -38,7 +41,7 @@ class gen:
         if not place2:
             return self.unary_opcode(op, place1, place3)
         
-        return place3 + ' = ' + place1 + op + place2 + '\n'
+        return place3 + ' = ' + place1 + op + place2
     
     def ifcode(self,place, label1 , label2 = None):
 
@@ -47,7 +50,7 @@ class gen:
         code = "ifnz " + place + " goto " + label1
         if label2:
             code += "goto " + label2
-        return code + '\n'
+        return code
 
     def assign(self,place1, place3):
         assert place1, "cannot assign with single operand"
@@ -55,20 +58,24 @@ class gen:
 
         code = place3 +' = ' + place1
 
-        return code + '\n'
+        return code
     
     def get_code(self):
         return self.opcode(op = self.op, place1 = self.place1, place2 = self.place2, place3 = self.place3)
 
 
 
-def newtmp(type = None):
+def get_newtmp(type = None):
     assert isinstance(type, Type), "inconsistent type for newtmp"
+    global temp_cnt
     name = "tmp@"+str(temp_cnt)
     temp_cnt += 1
     sym_table.add_entry(name  = name, type = type)
+    return name
 
-def newlabel():
+def get_newlabel():
+    global label_list
+    global lable_cnt
     label = "label#" + str(lable_cnt)
     lable_cnt += 1
     label_list.append(label)
@@ -92,4 +99,14 @@ def add_scope_info(entry):
     return '|' + entry.symbol_table.name
 
     
-    
+def get_opcode(op=None,place1=None,place2=None,type=None):
+    if isinstance(type,str):
+        type = BasicType(type)
+    tmp = get_newtmp(type)
+    place1 = str(place1)
+    place2 = str(place2)
+    if op != "=":
+        code = gen(op=op,place1=place1,place2=place2,place3=tmp)
+    else:
+        code = gen(op=op,place1=place1,place3=tmp)
+    return tmp,code
