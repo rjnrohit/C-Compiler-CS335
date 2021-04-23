@@ -28,5 +28,5 @@ int main(int argc, int argv[5]){
     }
     ++*(++*array);
     int d = ***array;
-    return 0;
+    return 0.1;
 }

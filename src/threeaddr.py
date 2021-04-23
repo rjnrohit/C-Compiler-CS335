@@ -140,18 +140,28 @@ def print_code(code_list):
         if obj.code:
             print(obj.code)
 
-def typecast(type1, type2, place):
-
-    if type2.class_type == 'PointerType':
-        type2.stype = 'long'
-    if type1.class_type == 'PointerType':
-        type1.stype = 'long'
-    
-    if type2.class_type == 'StructType':
-        type2.stype += '|' + type2.symbol_table.name
-
-    if type1.class_type == 'StructType':
-        type1.stype += '|' + type1.symbol_table.name
-    
-    return type1.stype + '2' + type2.stype, type1.stype + '2' + type2.stype + ' ' + place
+def typecast(node1,type):
+    assert isinstance(type,Type), "not of class Type"
+    assert type.class_type in {"BasicType","PointerType"}, "not valid type"
+    assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
+    if str(node1.type) == str(type):
+        return node1
+    else:
+        node = Node(name="type_cast",value=type.stype,children=[node1],type=type)
+        node.code = node1.code
+        node.place = node1.place
+        if type.class_type == 'PointerType':
+            type1 = 'long'
+        else:
+            type1 = type.type
+        if node1.type.class_type == 'PointerType':
+            type2 = 'long'
+        else:
+            type2 = node1.type.type
+        
+        if type1 == type2:
+            return node
+        node.place = get_newtmp(type=BasicType(type1))
+        node.code += [gen(op=type2+"_to_"+type1,place1=node1.place,place3=node.place,code=node.place + " = "+type2+"_to_"+type1+" "+node1.place)]
+    return node
 
