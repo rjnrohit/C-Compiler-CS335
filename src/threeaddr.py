@@ -14,17 +14,19 @@ label_list = []
 
 class gen:
 
-    def __init__(self,op  = None, place3 = None, place2 = None, place1 = None,code=None):
-        # assert place3, "place3 must be present"
+    def __init__(self,op  = None, place3 = None, place2 = None, place1 = None, code = None):
+        assert place3, "place3 must be present"
         self.op = op
         self.place3 = place3
         self.place2 = place2
         self.place1 = place1
-        if code:
-            self.code = code
-        else:
+
+        if not code:
             self.code = self.get_code()
-    
+        else:
+            self.code = code
+
+
     def unary_opcode(self, op = None, place3 = None, place1 = None):
         assert place3, "please provide variable to assign final value"
         return place3 +' = ' + op + place1
@@ -34,7 +36,18 @@ class gen:
         assert place3, "please provide variable to assign final value"
         assert place1, "there must be atleast one operand in 3AC"
 
-        if op is None or op == 'assign':
+        if "label" in op:
+            assert place2 is None, "place2 is not None"
+            assert place3 is None, "place3 is not None"
+            return op + place1
+        
+        if op == 'if' or op == 'ifz':
+            return self.ifcode(self.place1, self.place2)
+
+        if op == 'ifn' or op == 'ifnz':
+            return self.ifncode(self.place1, self.place2)
+
+        if op == 'assign' or op == '=':
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3)
 
@@ -43,13 +56,17 @@ class gen:
         
         return place3 + ' = ' + place1 + op + place2
     
-    def ifcode(self,place, label1 , label2 = None):
+    def ifcode(self,place, label1):
 
-        assert label1, "provide first label"
+        assert label1, "provide label in if"
+
+        code = "ifz " + place + " goto " + label1
+        return code 
+    
+    def ifncode(self, place, label1):
+        assert label1, "provide label in if"
 
         code = "ifnz " + place + " goto " + label1
-        if label2:
-            code += "goto " + label2
         return code
 
     def assign(self,place1, place3):
@@ -62,6 +79,10 @@ class gen:
     
     def get_code(self):
         return self.opcode(op = self.op, place1 = self.place1, place2 = self.place2, place3 = self.place3)
+    
+    def goto(self, label):
+        assert label , "goto None not possible"
+        return "goto " + label
 
 
 
@@ -70,8 +91,7 @@ def get_newtmp(type = None):
     global temp_cnt
     name = "tmp@"+str(temp_cnt)
     temp_cnt += 1
-    sym_table.add_entry(name  = name, type = type)
-    return name
+    return sym_table.add_entry(name  = name, type = type)
 
 def get_newlabel():
     global label_list
@@ -110,3 +130,10 @@ def get_opcode(op=None,place1=None,place2=None,type=None):
     else:
         code = gen(op=op,place1=place1,place3=tmp)
     return tmp,code
+
+def print_code(code_list):
+    for obj in code_list:
+        if obj.code:
+            print(obj.code)
+
+
