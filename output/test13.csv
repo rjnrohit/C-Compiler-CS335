@@ -4,9 +4,9 @@ name,type,offset,width
 a,int,0,4
 b,long,4,8
 solve,int function([]),12,4
-main,"int function([int, pointer of (int)])",12,4
-min,"int function([int, int])",12,4
-max,"int function([int, int])",12,4
+main,"int function([int, pointer of (int)])",12,16
+min,"int function([int, int])",12,12
+max,"int function([int, int])",12,12
 printf,"int function([pointer of (char), int])",12,16
 scanf,"int function([pointer of (char), pointer of (int)])",12,20
 -------------------------------------------------------------------------------------------

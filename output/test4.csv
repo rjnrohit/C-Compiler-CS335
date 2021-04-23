@@ -11,20 +11,20 @@ b,long,13,8
 equal,bool,21,1
 x,long,22,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,_temp_name_2
+          symbol table id:,2,symbol table name:,scope@2
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,_temp_name_3
+          symbol table id:,3,symbol table name:,scope@3
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,_temp_name_4
+          symbol table id:,4,symbol table name:,scope@4
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,5,symbol table name:,_temp_name_5
+          symbol table id:,5,symbol table name:,scope@5
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,6,symbol table name:,_temp_name_6
+          symbol table id:,6,symbol table name:,scope@6
 name,type,offset,width
 -------------------------------------------------------------------------------------------
-          symbol table id:,7,symbol table name:,_temp_name_7
+          symbol table id:,7,symbol table name:,scope@7
 name,type,offset,width
