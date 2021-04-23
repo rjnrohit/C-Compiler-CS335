@@ -113,7 +113,10 @@ def break_continue(input, break_label, continue_label):
 
     return input
 
-
+def fill_return(input, label):
+    assert label, "wrong label"
+    input = input.replace("return", "goto " + label)
+    return input
 
 def add_scope_info(entry):
     assert isinstance(entry, Entry), "entry object is of wrong class"
@@ -137,4 +140,18 @@ def print_code(code_list):
         if obj.code:
             print(obj.code)
 
+def typecast(type1, type2, place):
+
+    if type2.class_type == 'PointerType':
+        type2.stype = 'long'
+    if type1.class_type == 'PointerType':
+        type1.stype = 'long'
+    
+    if type2.class_type == 'StructType':
+        type2.stype += '|' + type2.symbol_table.name
+
+    if type1.class_type == 'StructType':
+        type1.stype += '|' + type1.symbol_table.name
+    
+    return type1.stype + '2' + type2.stype, type1.stype + '2' + type2.stype + ' ' + place
 

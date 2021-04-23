@@ -1294,7 +1294,10 @@ def p_jump_statement(p):
 	               | BREAK SEMI_COLON
 	                 
     '''
+    
     p[0] = Node(name=p[1],type="ok")
+    p[0].code = [gen(op = 'goto', code = p[1])]
+
 def p_jump_statement_1(p):
     '''
     jump_statement : RETURN SEMI_COLON
@@ -1303,6 +1306,7 @@ def p_jump_statement_1(p):
     success = sym_table.look_up(name='return',token_object=p.slice[1],no_error=True)
     if success:
         if len(p) == 3:
+
             if success.type != Type():
                 p[0] = Node(type="error")
                 Errors(
@@ -1310,18 +1314,39 @@ def p_jump_statement_1(p):
                     errorText='return type not matching',
                     token_object= p.slice[2]
                 )
+                p[0].code = []
                 return
+
             p[0] = Node(name="return",type="ok")
+            p[0].code = gen(op = 'goto',code = 'return')
+    
         else:
             if p[2].type == "error":
+
                 p[0] = Node(type="error")
+                p[0].code = []
                 return
+
             if p[2].type.is_convertible_to(success.type):
+
                 if str(p[2].type) != str(success.type):
                     p[2] = Node(name="type_cast",value=success.type.stype,children=[p[2]],type=success.type)
                 p[0] = Node(name="return",children=[p[2]],type="ok")
+
+                tmp = get_newtmp(type = p[2].type)
+
+                p[0].code = [gen(op = '=',place3 = tmp, place1 = p[2].place,  code = tmp +'=' + p[2].place)]
+
+                if success.type != p[2].type:
+                    op, code = typecast(p[2].type, success.type, tmp)
+                    p[0].code += [gen(op = op, code = code)]
+                
+                p[0].code += [gen(op = 'goto', place1 = tmp, code = 'return ' + tmp)]
+
                 return
+
             p[0] = Node(type="error")
+
             Errors(
                 errorType='TypeError',
                 errorText='return type not matching',
@@ -1334,6 +1359,7 @@ def p_jump_statement_1(p):
             errorText='Not Function',
             token_object= p.slice[2]
         )
+    p[0].code = []
 
 def p_add_sym(p):
     '''
