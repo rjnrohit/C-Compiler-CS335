@@ -1323,7 +1323,9 @@ def p_jump_statement_1(p):
                 p[0] = Node(type="error")
                 return
             if p[2].type.is_convertible_to(success.type):
-                p[0] = typecast(p[2],success.type)    
+                node = typecast(p[2],success.type)    
+                p[0] = Node(name="return",type="ok",children=[node])
+                p[0] = node.code
                 p[0].code += [gen(op = 'return', place1 = p[0].place, code = 'return ' + p[0].place)]
                 return
 
