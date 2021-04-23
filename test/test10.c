@@ -26,6 +26,7 @@ int main(int argc, int argv[5]){
         }
         int b = array[i] + (int)array[j];
     }
+    ++*(++*array);
     int d = ***array;
     return 0;
 }

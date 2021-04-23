@@ -268,7 +268,7 @@ def p_postfix_expression(p):
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
             p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
-            width = p[1].type.width
+            width = p[1].type.type_size
             p[0].code += [gen(op="long"+p[2][0]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
 
         else:
@@ -475,9 +475,13 @@ def p_argument_expression_list(p):
     if len(p) == 2:
         p[0] = Node("argument_expression_list",children=[p[1]])
         p[0].data['args_type'] = [p[1].type]
+        p[0].place = [p[1].place]
+        p[0].code += p[1].code
     else:
         p[1].addChild(p[3])
         p[1].data['args_type'] += [p[3].type]
+        p[1].code += p[3].code
+        p[1].place += [p[3].place]
         p[0] = p[1]
 
 

@@ -172,7 +172,7 @@ class PointerType(Type):
         self.array_size = array_size
         self.array_type = array_type
         self._width = self.update_width()
-        self.type_size = 8 if type.class_type =="PointerType" else type.width
+        self.type_size = 8 if self.type.class_type =="PointerType" else type.width
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"

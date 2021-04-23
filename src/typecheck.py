@@ -1,6 +1,7 @@
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import implicit_casting
+from threeaddr import *
 
 
 def type_check_init(init,type,token):
@@ -54,19 +55,40 @@ def type_check_unary(node1,op,token,is_typename=False):
         return Node(type="error")
     if op == "++" or op == "--":
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
-            return Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node.code = node1.code
+            node.code += [gen(op=node1.type.stype+op[0]+"_c",place1=node1.place,place2="1",place3=node1.place)]
+            node.place = node1.place
+            return node
         if node1.type.class_type == "PointerType":
-            return Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node.code = node1.code
+            width = node1.type.type_size
+            node.code += [gen(op="long"+op[0]+"_c",place1=node1.place,place2=str(width),place3=node1.place)]
+            node.place = node1.place
+            return node
         error = True
     elif op == "+" or op == "-":
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
-            return Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node.code = node1.code
+            node.place = get_newtmp(type=node1.type)
+            node.code += [gen(op=node1.type.stype+op,place1=node1.code,place3=node.place)]
+            return node
         error = True
     elif op == "&":
-        return Node(name="unary_op",value=op,children=[node1],type=PointerType(node1.type))
+        node =  Node(name="unary_op",value=op,children=[node1],type=PointerType(node1.type))
+        node.code = node1.code
+        node.place = get_newtmp()
+        node.code += [gen(op="addr",place1=node1.place,place3=node.place,code=node.place+" = "+"addr("+node1.place+")")]
+        return node
     elif op == "*":
         if node1.type.class_type == "PointerType":
-            return Node(name="unary_op",value=op,children=[node1],type=node1.type.type)
+            node = Node(name="unary_op",value=op,children=[node1],type=node1.type.type)
+            node.code = node1.code
+            node.place = get_newtmp(node1.type.type)
+            node.code += [gen(op="*",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]
+            return node
         Errors(
             errorType='TypeError',
             errorText="cannot dereference non-pointer type "+node1.type.stype,
@@ -75,15 +97,26 @@ def type_check_unary(node1,op,token,is_typename=False):
         return Node(type="error")
     elif op == "~":
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base_1:
-            return Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            node.code = node1.code
+            node.place = get_newtmp(type=node1.type)
+            node.code += [gen(op=node1.type.stype+op,place1=node1.place,place3=node.place)]
+            return node
         error = True
     elif op == "!":
         if node1.type.is_convertible_to(BasicType('bool')):
-            return Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=BasicType('bool'))
+            node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=BasicType('bool'))
+            node.code = node1.code
+            node.place = get_newtmp(type=BasicType('bool'))
+            node.code += [gen(op="not_bool",place1=node1.place,place3=node.place)]
+            return node
         error = True
     elif op == "sizeof":
         if is_typename:
-            return Node(name = "unary_op", value=op+':'+node1.type.stype,type = BasicType(type = 'long'))
+            node = Node(name = "unary_op", value=op+':'+node1.type.stype,type = BasicType(type = 'long'))
+            node.place = get_newtmp()
+            node.code += [gen(op="=",place1=str(node1.type.width),place3=node.place)]
+            return node
         if isinstance(node1.type,Type) == False:
             Errors(
                 errorType='TypeError',
@@ -92,7 +125,10 @@ def type_check_unary(node1,op,token,is_typename=False):
             )
             return Node(type="error")
         if node1.type.class_type in {'BasicType','PointerType','StructType'}:
-            return Node(name = "unary_op",value=op,type = BasicType(type='long'),children=[node1])
+            node =  Node(name = "unary_op",value=op,type = BasicType(type='long'),children=[node1])
+            node.place = get_newtmp()
+            node.code += [gen(op="=",place1=str(node1.type.width),place3=node.place)]
+            return node
         error = True
     
     if error:
@@ -104,7 +140,7 @@ def type_check_unary(node1,op,token,is_typename=False):
         return Node(type="error")
 
 
-
+#handle type casting
 def type_check_multi(node1,node2,op,token,decimal=True):
     allowed_class = {'BasicType'}
     allowed_base = {'int','long','char'}
@@ -177,6 +213,7 @@ def type_check_add(node1,node2,op,token):
         return Node(name="binary_op",value=typ.stype+op,children = [node1,node2],type=typ)
 
 #bitwise xor,and,or,shift
+#handle type casting
 def type_check_bit(node1,node2,op,token):
     allowed_class = {'BasicType'}
     allowed_base = {'int','long','char'}
@@ -254,6 +291,7 @@ def type_check_logical(node1,node2,op,token):
         node2 = Node(name="type_cast",value='bool',children=[node2],type=BasicType('bool'))
     return Node(name="binary_op",value=op,children = [node1,node2],type=BasicType('bool'))
 
+#type casting
 def type_check_assign(node1,node2,token):
     if node1.type == "error" or node2.type == "error":
         return Node(type="error")
