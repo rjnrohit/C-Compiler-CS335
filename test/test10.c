@@ -34,3 +34,14 @@ int main(int argc, int argv[5]){
     int d = ***array;
     return 0.1;
 }
+
+
+int jj =0;
+
+void foo(){
+    for(;jj<50;jj++){
+        jj++;
+        if(jj < 15)continue;
+        if(jj > 50)break;
+    }
+}

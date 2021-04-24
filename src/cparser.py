@@ -388,7 +388,7 @@ def p_postfix_expression_2(p):
                 p[0] = Node(type="error")
                 Errors(
                     errorType='TypeError',
-                    errorText="cannot convert "+arglist[i].types.stype+" to "+param_list[i].stype,
+                    errorText="cannot convert "+arg_list[i].types.stype+" to "+param_list[i].stype,
                     token_object= p.slice[-1]
                 )
                 return
@@ -1299,7 +1299,7 @@ def p_iteration_statement(p):
 
         p[0].code = [gen(op = label1, code = label1)]
         p[0].code += p[3].code
-        p[0].code += [gen(op = 'ifnz', place1 = p[3].place, place2  = label2, code = "goto " + label2)]
+        p[0].code += [gen(op = 'ifnz', place1 = p[3].place, place2  = label2)]
         p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
         p[0].code += [gen(op = label2, code = label2)]
         p[0].code += p[5].code
@@ -1322,7 +1322,7 @@ def p_iteration_statement(p):
         p[0].code += p[2].code
         p[0].code = [gen(op = label2, code = label2)]
         p[0].code += p[5].code
-        p[0].code += [gen(op = 'ifnz', place1 = p[5].place, place2 = label1, code = "goto " + label1)]
+        p[0].code += [gen(op = 'ifnz', place1 = p[5].place, place2 = label1)]
         p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
         p[0].code += [gen(op = label3, code = label3)]
 
@@ -1344,7 +1344,7 @@ def p_iteration_statement(p):
 
             if p[4].code:
                 code += p[4].code
-                code += [gen(op = 'ifnz', place1 = p[4].place, place2  = label2, code = "goto " + label2)]
+                code += [gen(op = 'ifnz', place1 = p[4].place, place2  = label2)]
                 code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
             
             code += [gen(op = label2, code = label2)]
@@ -1370,7 +1370,7 @@ def p_iteration_statement(p):
 
             if p[4].code:
                 code += p[4].code
-                code += [gen(op = 'ifnz', place1 = p[4].place, place2  = label2, code = "goto " + label2)]
+                code += [gen(op = 'ifnz', place1 = p[4].place, place2  = label2)]
                 code += [gen(op= 'goto', place1 = label4, code = 'goto '+ label4)]
             
             code += [gen(op = label2, code = label2)]

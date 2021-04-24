@@ -32,7 +32,6 @@ class gen:
 
     def opcode(self,op  = None, place3 = None, place2 = None, place1 = None):
 
-        assert place3, "please provide variable to assign final value"
         assert place1, "there must be atleast one operand in 3AC"
 
         if "label" in op:
@@ -45,6 +44,8 @@ class gen:
 
         if op == 'ifn' or op == 'ifnz':
             return self.ifncode(self.place1, self.place2)
+
+        assert place3, "please provide variable to assign final value"
 
         if op == 'assign' or op == '=':
             assert place2 is None, "extra operand given for assignment"
