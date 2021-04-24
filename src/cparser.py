@@ -456,6 +456,7 @@ def p_postfix_expression_3(p):
     p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
     tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
     p[0].code += [code]
+    p[0].code += [gen(op="*",place1=tmp1,place3=tmp1,code=tmp1+" = "+"load("+tmp1+")")]
     p[0].place = tmp1
 
     
@@ -496,6 +497,7 @@ def p_postfix_expression_4(p):
     p[0].code = p[1].code
     tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=success.offset,type="long")
     p[0].code += [code]
+    p[0].code += [gen(op="*",place1=tmp,place3=tmp,code=tmp+" = "+"load("+tmp+")")]
     p[0].place = tmp
 
 
