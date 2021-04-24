@@ -759,15 +759,17 @@ def p_conditional_expression(p):
 
         p[0].place = get_newtmp()
         label = get_newlabel()
-        
+        label1 = get_newlabel()
+
         p[0].code = p[1].code
         p[0].code += [gen(op='ifz', place1=p[1].place, place2 = label)]
         p[0].code += p[3].code
-        p[0].code = [gen(op='=', place3 = p[0].place, place1 = p[3].place)]
+        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[3].place)]
+        p[0].code += [gen(op='goto', place1=label1)]
         p[0].code += [gen(op = 'label', place1 = label)]
         p[0].code += p[5].code
         p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[5].place)]
-
+        p[0].code += [gen(op = 'label', place1 = label1)]
 
 
 #Node
