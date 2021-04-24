@@ -46,4 +46,7 @@ int main(){
     while(5<3){
         if (a == NULL) break;
     }
+    if(5){
+        break;
+    }
 }

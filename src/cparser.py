@@ -68,8 +68,20 @@ def p_function_definition(p):
     p[0].code = [gen(op="label",place1=p[2].value,code=p[2].value+":")]
     p[0].code += [gen(op="BeginFunc",place1=p[2].value,code="BeginFunc")]
     if len(p) == 8:
+        if has_break_continue(p[6].code):
+            Errors(
+                errorType='SyntaxError',
+                errorText='invalid break/continue in function',
+                token_object= p[2].data['token']
+            )
         p[0].code += p[6].code
     else:
+        if has_break_continue(p[5].code):
+            Errors(
+                errorType='SyntaxError',
+                errorText='invalid break/continue in function',
+                token_object= p[2].data['token']
+            )
         p[0].code += p[5].code
     p[0].code += [gen(op="EndFunc",place1=p[2].value,code="EndFunc")]
     p[0] = [p[0]]
