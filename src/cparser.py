@@ -1292,23 +1292,99 @@ def p_iteration_statement(p):
             p[0] = Node(type="error")
             return
         p[0] = Node(name="iteration_statement",value="while",children=[p[3],p[5]],type="ok")
+
+        label1 = get_newlabel()
+        label2 = get_newlabel()
+        label3 = get_newlabel()
+
+        p[0].code = [gen(op = label1, code = label1)]
+        p[0].code += p[3].code
+        p[0].code += [gen(op = 'ifnz', place1 = p[3].place, place2  = label2, code = "goto " + label2)]
+        p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
+        p[0].code += [gen(op = label2, code = label2)]
+        p[0].code += p[5].code
+        p[0].code += [gen(op = "goto", place1 = label1, code = "goto "+ label1)]
+        p[0].code += [gen(op = label3, code = label3)]
+
+        p[0].code = break_continue(p[0].code, label3, label1)
+
     elif p[1] == "do":
         if p[2].type=="error" or p[5].type=="error":
             p[0] = Node(type="error")
             return
         p[0] = Node(name="iteration_statement",value="do",children=[p[2],p[5]],type="ok")
+
+        label1 = get_newlabel()
+        label2 = get_newlabel()
+        label3 = get_newlabel()
+
+        p[0].code = [gen(op = label1, code = label1)]
+        p[0].code += p[2].code
+        p[0].code = [gen(op = label2, code = label2)]
+        p[0].code += p[5].code
+        p[0].code += [gen(op = 'ifnz', place1 = p[5].place, place2 = label1, code = "goto " + label1)]
+        p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
+        p[0].code += [gen(op = label3, code = label3)]
+
+        p[0].code = break_continue(p[0].code, label3, label2)
+
     else:
         if len(p) == 7:
             if p[3].type=="error" or p[4].type=="error" or p[6].type=="error":
                 p[0] = Node(type="error")
                 return
             child = [p[3],p[4],p[6]]
+
+            label1 = get_newlabel()
+            label2 = get_newlabel()
+            label3 = get_newlabel()
+
+            code = p[3].code
+            code += [gen(op = label1, code = label1)]
+
+            if p[4].code:
+                code += p[4].code
+                code += [gen(op = 'ifnz', place1 = p[4].place, place2  = label2, code = "goto " + label2)]
+                code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
+            
+            code += [gen(op = label2, code = label2)]
+            code += p[6].code
+            code += [gen(op = "goto", place1 = label1, code = "goto "+ label1)]
+            code += [gen(op = label3, code = label3)]
+            
+            code = break_continue(code, label3, label1)
+
         else:
             if p[3].type=="error" or p[4].type=="error" or p[5].type=="error" or p[7].type=="error":
                 p[0] = Node(type="error")
                 return
             child = [p[3],p[4],p[5],p[7]]
+
+            label1 = get_newlabel()
+            label2 = get_newlabel()
+            label3 = get_newlabel()
+            label4 = get_newlabel()
+
+            code = p[3].code
+            code += [gen(op = label1, code = label1)]
+
+            if p[4].code:
+                code += p[4].code
+                code += [gen(op = 'ifnz', place1 = p[4].place, place2  = label2, code = "goto " + label2)]
+                code += [gen(op= 'goto', place1 = label4, code = 'goto '+ label4)]
+            
+            code += [gen(op = label2, code = label2)]
+            code += p[7].code
+            code += [gen(op = "goto", place1 = label3, code = "goto "+ label3)]
+            code += [gen(op = label3, code = label3)]
+            code += p[5].code
+            code += [gen(op = "goto", place1 = label1, code = "goto "+ label1)]
+            code += [gen(op = label4, code = label4)]
+
+            code = break_continue(code, label4, label3)
+
         p[0] = Node(name="iteration_statement",value="for",children=child,type="ok")
+        p[0].code = code
     
 # Node
 def p_jump_statement(p):
