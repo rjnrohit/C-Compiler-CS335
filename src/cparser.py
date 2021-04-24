@@ -211,7 +211,7 @@ def p_primary_expression(p):
             return
 
         if p.slice[-1].type in ["INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"]:
-            if int(p[1]) <= 2^31-1 and int(p[1]) >= -(2^31):
+            if int(p[1]) <= (2**31 - 1) and int(p[1]) >= -(2**31 -1):
                 p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
             else:
                 p[0] = Node(name="constant",value=p[1],type=BasicType('long'))
@@ -1266,12 +1266,27 @@ def p_selection_statement(p):
                 return
             p[0] = Node(name="if",children=[p[3],p[5]],type="ok")
 
+            label = get_newlabel()
+
+            p[0].code = p[3].code
+            p[0].code += [gen(op = 'ifz', place1=p[3].place, place2 = label)]
+            p[0].code += p[5].code
+            p[0].code += [gen(op = label, code = label)]
+
         else:
             if p[3].type=="error" or p[5].type=="error" or p[7].type=="error":
                 p[0] = Node(type="error")
                 return
             p[0] = Node(name="if_else",children=[p[3],p[5],p[7]],type="ok")
-    
+
+            label = get_newlabel()
+
+            p[0].code = p[3].code
+            p[0].code += [gen(op = 'ifz', place1=p[3].place, place2 = label)]
+            p[0].code += p[5].code
+            p[0].code += [gen(op = label, code = label)]
+            p[0].code += p[7].code
+
     else:
         if p[3].type=="error":
             p[0] = Node(type="error")
@@ -1320,7 +1335,7 @@ def p_iteration_statement(p):
 
         p[0].code = [gen(op = label1, code = label1)]
         p[0].code += p[2].code
-        p[0].code = [gen(op = label2, code = label2)]
+        p[0].code += [gen(op = label2, code = label2)]
         p[0].code += p[5].code
         p[0].code += [gen(op = 'ifnz', place1 = p[5].place, place2 = label1)]
         p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]

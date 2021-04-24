@@ -44,4 +44,19 @@ void foo(){
         if(jj < 15)continue;
         if(jj > 50)break;
     }
+    do{
+        continue;
+        int c=  jj++;
+    }while(jj);
+    for(;true;){
+        break;
+    }
+    for(jj=45;jj %3;){
+        continue;
+        break;
+    }
+    int c;
+    while(c != ++jj){
+        continue;
+    }
 }
