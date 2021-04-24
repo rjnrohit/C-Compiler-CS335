@@ -231,7 +231,7 @@ def p_primary_expression(p):
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
         p[0].constant = p[0].value
-        if p[0].constant == "false" or p[0].constant == "null":
+        if p[0].constant == "false" or p[0].constant == "NULL":
             p[0].constant = 0
         elif p[0].constant == "true":
             p[0].constant = 1

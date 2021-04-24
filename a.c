@@ -42,4 +42,8 @@ int main(){
     int a;
     a = "aman";
     printf("%d",a);
+    // printf("%s",(char *)a);
+    while(5<3){
+        if (a == NULL) break;
+    }
 }
