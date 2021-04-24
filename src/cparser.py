@@ -456,7 +456,7 @@ def p_postfix_expression_3(p):
     p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
     tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
     p[0].code += [code]
-    p[0].place = tmp
+    p[0].place = tmp1
 
     
 
@@ -831,7 +831,6 @@ def p_constant_expression(p):
 def p_declaration(p):
     '''
     declaration : struct_specifier SEMI_COLON
-                | enum_specifier SEMI_COLON
 	            | type_specifier init_declarator_list SEMI_COLON
     '''
     if len(p) == 4:
@@ -888,12 +887,10 @@ def p_type_specifier(p):
                    | FLOAT
                    | DOUBLE
                    | STRUCT IDENTIFIER
-                   | ENUM IDENTIFIER
                    | BOOL
     '''
-    if p[1] == 'enum':
-        pass
-    elif p[1] == 'struct':
+
+    if p[1] == 'struct':
         success = sym_table.look_up_struct(name = p[2],token_object=p.slice[-1])
         if success:
             p[0] = Node(type = success)
@@ -974,27 +971,27 @@ def p_struct_declarator_list(p):
 
 
 #string
-def p_enum_specifier(p):
-    '''
-    enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
-    '''
-    # p[0] = p[1]
+# def p_enum_specifier(p):
+#     '''
+#     enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
+#     '''
+#     # p[0] = p[1]
 
 # None
-def p_enumerator_list(p):
-    '''
-    enumerator_list : enumerator
-	                | enumerator_list COMMA enumerator
-    '''
-    # p[0] = None
+# def p_enumerator_list(p):
+#     '''
+#     enumerator_list : enumerator
+# 	                | enumerator_list COMMA enumerator
+#     '''
+#     # p[0] = None
 
 # None
-def p_enumerator(p):
-    '''
-    enumerator : IDENTIFIER
-	           | IDENTIFIER ASSIGNMENT constant_expression
-    '''
-    # p[0] = None
+# def p_enumerator(p):
+#     '''
+#     enumerator : IDENTIFIER
+# 	           | IDENTIFIER ASSIGNMENT constant_expression
+#     '''
+#     # p[0] = None
 
 
 # Node
