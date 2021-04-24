@@ -248,7 +248,7 @@ def p_primary_expression(p):
         elif p[0].constant == "true":
             p[0].constant = 1
         p[0].place = get_newtmp(type=p[0].type)
-        p[0].code = [gen(op="=",place1=str(p[0].constant),place3=p[0].place)]
+        p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=str(p[0].constant),place3=p[0].place)]
     
     else:
         p[0] = p[2]
@@ -835,6 +835,7 @@ def p_declaration(p):
     '''
     declaration : struct_specifier SEMI_COLON
 	            | type_specifier init_declarator_list SEMI_COLON
+                | AUTO auto_declarator_list SEMI_COLON
     '''
     if len(p) == 4:
         p[0] = p[2]
@@ -857,7 +858,7 @@ def p_init_declarator_list(p):
 def p_init_declarator(p):
     '''
     init_declarator : declarator
-	                | declarator ASSIGNMENT initializer
+	                | declarator ASSIGNMENT assignment_expression
     '''
     if p[1].type == "error":
         p[0] = [None]
@@ -867,18 +868,59 @@ def p_init_declarator(p):
         p[0] = [None]
         
     else:
-        # type checking
-        # check for initliazer
-        # print(type(p[3]))
-        init = type_check_init(p[3],p[1].type,p.slice[2])
-        if init.type == "error":
-            p[0] = [None]
+        p[0] = [None]
+        if p[3].type == "errror":
             return
+        if p[3].type.is_convertible_to(p[1].type) == False:
+            Errors(
+                errorType='TypeError',
+                errorText="cannot assign "+p[3].type.stype+" to "+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            return
+        node = typecast(node1=p[3],type=p[1].type)
         success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
-            p[0] = [Node(name="initialization",children = [p[1],init],type="ok")]
+            p[0] = Node(name="binary_op",value=p[1].type.stype+"=",children = [p[1],node],type="ok")
+            p[0].code = node.code
+            p[0].place = p[1].value+"|"+success.symbol_table.name
+            p[0].code += [gen(op="=",place1=node.place,place3=p[0].place)]
+            p[0] = [p[0]]
         else:
             p[0] = [None]
+
+#List
+def p_auto_declarator_list(p):
+    '''
+    auto_declarator_list : auto_declarator
+                         | auto_declarator_list COMMA auto_declarator
+    '''
+    p[0] = p[1] if len(p) == 2  else p[1]+p[3]
+
+#List
+def p_auto_declarator(p):
+    '''
+    auto_declarator : IDENTIFIER ASSIGNMENT assignment_expression
+                    | IDENTIFIER
+    '''
+    p[0] = [None]
+    if len(p) == 2:
+        Errors(
+                errorType='DeclarationError',
+                errorText="cannot declare auto variable without initialization",
+                token_object= p.slice[1]
+        )
+        return
+    if p[3].type == "error":
+        return
+    success = sym_table.add_entry(name=p[1],type=p[3].type,token_object=p.slice[1])
+    node = Node(name="id",value=p[1],type=p[3].type)
+    if success:
+        p[0] = Node(name="binary_op",value=p[3].type.stype+"=",children = [node,p[3]],type="ok")
+        p[0].code = p[3].code
+        p[0].place = p[1]+"|"+success.symbol_table.name
+        p[0].code += [gen(op="=",place1=p[3].place,place3=p[0].place)]
+        p[0] = [p[0]]
 
 # Node
 def p_type_specifier(p):
@@ -1150,28 +1192,28 @@ def p_type_name(p):
 
 
 # List or Node
-def p_initializer(p):
-    '''
-    initializer : assignment_expression
-	            | L_BRACES initializer_list R_BRACES
-	            | L_BRACES initializer_list COMMA R_BRACES
-    '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[2]
+# def p_initializer(p):
+#     '''
+#     initializer : assignment_expression
+# 	            | L_BRACES initializer_list R_BRACES
+# 	            | L_BRACES initializer_list COMMA R_BRACES
+#     '''
+#     if len(p) == 2:
+#         p[0] = p[1]
+#     else:
+#         p[0] = p[2]
 
-#List
-def p_initializer_list(p):
-    '''
-    initializer_list : initializer
-	                 | initializer_list COMMA initializer
-    '''
-    # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = p[1]+[p[3]]
+# #List
+# def p_initializer_list(p):
+#     '''
+#     initializer_list : initializer
+# 	                 | initializer_list COMMA initializer
+#     '''
+#     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
+#     if len(p) == 2:
+#         p[0] = [p[1]]
+#     else:
+#         p[0] = p[1]+[p[3]]
 
         
 

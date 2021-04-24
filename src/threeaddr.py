@@ -50,7 +50,7 @@ class gen:
 
         assert place3, "please provide variable to assign final value"
 
-        if op == 'assign' or op == '=':
+        if op == 'assign' or op == '=' or op[:2] == "eq":
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3)
 

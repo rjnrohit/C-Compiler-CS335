@@ -11,7 +11,8 @@ int main(int argc, char argv[4]){
     struct A *d;
     d->a;
     int s = sizeof(d);
-    char* str = {'q','r','s'};
+    char* str = "aman";
+    auto w = 4;
     float cd;
     double a = 3.2, *ptr, c=cd;
     int * ptr3 = &s;
