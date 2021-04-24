@@ -37,7 +37,10 @@ class gen:
         if "label" in op:
             assert place2 is None, "place2 is not None"
             assert place3 is None, "place3 is not None"
-            return op + place1
+            return place1+":"
+        
+        if op == "goto":
+            return "goto "+place1
         
         if op == 'if' or op == 'ifz':
             return self.ifcode(self.place1, self.place2)
@@ -80,9 +83,9 @@ class gen:
     def get_code(self):
         return self.opcode(op = self.op, place1 = self.place1, place2 = self.place2, place3 = self.place3)
     
-    def goto(self, label):
-        assert label , "goto None not possible"
-        return "goto " + label
+    # def goto(self, label):
+    #     assert label , "goto None not possible"
+    #     return "goto " + label
 
 
 
