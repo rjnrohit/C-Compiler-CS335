@@ -155,6 +155,6 @@ def print_code(code_list):
 def has_break_continue(input):
     for gens in input:
         assert isinstance(gens, gen), "input must list of gen's"
-        if gens.op == "break" or "continue":
+        if gens.op == "break" or gens.op == "continue":
             return True
     return False
