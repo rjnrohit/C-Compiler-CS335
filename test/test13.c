@@ -16,12 +16,12 @@ int main(int argc, int*argv){
 }
 
 int min(int a, int b){
-    return a >b?b:a;
+    return a>b?b:a;
 }
 
-int max(int a, int b){
-    return a > b?a:b;
-}
+// int max(int a, int b){
+//     return a&&b?a:b;
+// }
 
 int printf(char* stmt, int d);
 

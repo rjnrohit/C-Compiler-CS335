@@ -722,6 +722,7 @@ def p_logical_or_expression(p):
         p[0] = p[1]
     else:
         p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+        
     
 
 #Node
@@ -754,7 +755,7 @@ def p_conditional_expression(p):
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
-        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+            return
         p[0] = Node("ternary_op",children = [p[1],p[3],p[5]],type=p[3].type)
 
         p[0].place = get_newtmp()
@@ -1368,11 +1369,10 @@ def p_iteration_statement(p):
         p[0].code = [gen(op = "label", place1 = label1)]
         p[0].code += p[2].code
         p[0].code += [gen(op = "label", place1 = label2)]
-        code = break_continue(p[5].code, label3, label2)
-        p[0].code += code
+        p[0].code += p[5].code
         p[0].code += [gen(op = 'ifnz', place1 = p[5].place, place2 = label1)]
         p[0].code += [gen(op = "label", place1 = label3)]
-
+        p[0].code = break_continue(p[0].code, label3, label2)
 
     else:
         if len(p) == 7:
@@ -1419,7 +1419,7 @@ def p_iteration_statement(p):
             code += [gen(op = "label", place1 = label2)]
             code += p[5].code
             code += [gen(op = "goto", place1 = label1)]
-            code += [gen(op = "label", code = label3)]
+            code += [gen(op = "label",place1 = label3)]
 
             code = break_continue(code, label3, label2)
 
@@ -1465,7 +1465,7 @@ def p_jump_statement_1(p):
                 node = typecast(p[2],success.type)    
                 p[0] = Node(name="return",type="ok",children=[node])
                 p[0].code = node.code
-                p[0].code += [gen(op = 'return', place1 = p[0].place, code = 'return ' + p[0].place)]
+                p[0].code += [gen(op = 'return', place1 = node.place, code = 'return ' + node.place)]
                 return
 
             p[0] = Node(type="error")

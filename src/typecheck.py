@@ -72,7 +72,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
             node.code = node1.code
             node.place = get_newtmp(type=node1.type)
-            node.code += [gen(op=node1.type.stype+op,place1=node1.code,place3=node.place)]
+            node.code += [gen(op=node1.type.stype+op,place1=node1.place,place3=node.place)]
             return node
         error = True
     elif op == "&":
@@ -334,6 +334,7 @@ def type_check_logical(node1,node2,op,token):
     tmp,code = get_opcode(op=op,place1=node1.place,place2=node2.place,type=BasicType('bool'))
     node.code += [code]
     node.place = tmp
+    # print(tmp)
     return node
 
 
