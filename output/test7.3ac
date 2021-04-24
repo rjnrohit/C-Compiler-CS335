@@ -1,0 +1,40 @@
+main:
+BeginFunc
+tmp@0 = d|main long+_c 8
+label#5:
+tmp@10 = i|main
+i|main = i|main int+_c 1
+tmp@11 = tmp@10 int< n|main
+ifz tmp@11 goto label#6
+label#2:
+tmp@12 = j|scope@3 int< n|main
+ifz tmp@12 goto label#4
+tmp@14 = j|scope@3 long*_c 4
+tmp@15 = sieve|scope@3 long+ tmp@14
+tmp@16 = 1
+tmp@15 = tmp@16
+tmp@17 = 2
+tmp@18 = j|scope@3 int% tmp@17
+tmp@19 = 3
+tmp@20 = tmp@18 int% tmp@19
+tmp@21 = 4
+tmp@22 = tmp@20 int== tmp@21
+ifz tmp@22 goto label#0
+goto label#4
+goto label#1
+label#0:
+goto label#3
+label#1:
+label#3:
+tmp@13 = j|scope@3
+j|scope@3 = j|scope@3 int+_c 1
+goto label#2
+label#4:
+tmp@23 = i|main
+i|main = i|main int-_c 1
+goto label#5
+label#6:
+tmp@27 = 3.2
+tmp@28 = float_to_int tmp@27
+return tmp@28
+EndFunc

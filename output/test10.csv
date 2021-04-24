@@ -1,35 +1,146 @@
 -------------------------------------------------------------------------------------------
-          symbol table id:,0,symbol table name:,global
+symbol table id,symbol table name
+0,global
 name,type,offset,width
 take_and,"int function([int, float])",0,12
 take_or,"int function([float, int])",0,12
-main,"int function([int, pointer of (int)])",0,28
+array,pointer of (pointer of (pointer of (int))),0,8736
+main,"int function([int, pointer of (int)])",8736,28
+tmp@60,int,8736,4
+jj,int,8740,4
+foo,void function(None),8744,0
 -------------------------------------------------------------------------------------------
-          symbol table id:,1,symbol table name:,take_and
+symbol table id,symbol table name,parent id
+1,take_and,0
 name,type,offset,width
 a,int,4,4
 b,float,8,4
+tmp@0,int,12,4
+tmp@1,int,16,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,take_or
+symbol table id,symbol table name,parent id
+2,take_or,0
 name,type,offset,width
 a,float,4,4
 b,int,8,4
+tmp@2,long,12,8
+tmp@3,long,20,8
+tmp@4,long,28,8
+tmp@5,int,36,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,main
+symbol table id,symbol table name,parent id
+3,main,0
 name,type,offset,width
 argc,int,4,4
 argv,pointer of (int),8,20
 a,int,28,4
 b,int,32,4
-array,pointer of (pointer of (pointer of (int))),36,8736
-i,int,8772,4
-j,int,8776,4
-k,int,8780,4
-d,int,8784,4
+ptr,pointer of (int),36,8
+i,int,44,4
+j,int,48,4
+k,int,52,4
+tmp@6,int,56,4
+tmp@7,int,60,4
+tmp@8,long,64,8
+tmp@9,int,72,4
+tmp@10,long,76,8
+tmp@11,long,84,8
+l,bool,92,1
+tmp@12,int,93,4
+tmp@13,int,97,4
+tmp@14,bool,101,1
+tmp@15,bool,102,1
+tmp@16,bool,103,1
+tmp@17,int,104,4
+tmp@18,long,108,8
+tmp@19,long,116,8
+tmp@20,int,124,4
+tmp@21,long,128,8
+tmp@22,long,136,8
+tmp@23,int,144,4
+tmp@24,long,148,8
+tmp@25,long,156,8
+tmp@26,int,164,4
+tmp@27,int,168,4
+tmp@28,bool,172,1
+tmp@29,int,173,4
+tmp@51,pointer of (pointer of (int)),177,728
+tmp@52,pointer of (int),905,56
+tmp@53,float,961,4
+tmp@54,int,965,4
+tmp@55,pointer of (pointer of (int)),969,728
+tmp@56,pointer of (int),1697,56
+tmp@57,int,1753,4
+d,int,1757,4
+tmp@58,float,1761,4
+tmp@59,int,1765,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,scope@4
+symbol table id,symbol table name,parent id
+6,foo,0
 name,type,offset,width
-b,int,0,4
+tmp@61,int,0,4
+tmp@62,bool,4,1
+tmp@63,int,5,4
+tmp@70,bool,9,1
+tmp@71,int,10,4
+tmp@72,int,14,4
+tmp@73,int,18,4
+c,int,22,4
+tmp@74,bool,26,1
 -------------------------------------------------------------------------------------------
-          symbol table id:,5,symbol table name:,scope@5
+symbol table id,symbol table name,parent id
+4,scope@4,3
 name,type,offset,width
+tmp@30,int,0,4
+tmp@31,bool,4,1
+tmp@32,int,5,4
+tmp@45,long,9,8
+tmp@46,long,17,8
+tmp@47,long,25,8
+tmp@48,long,33,8
+tmp@49,int,41,4
+tmp@50,long,45,8
+b,int,53,4
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+7,scope@7,6
+name,type,offset,width
+tmp@64,int,0,4
+tmp@65,int,4,4
+tmp@66,bool,8,1
+tmp@67,int,9,4
+tmp@68,bool,13,1
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+8,scope@8,6
+name,type,offset,width
+tmp@69,int,0,4
+c,int,4,4
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+9,scope@9,6
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+10,scope@10,6
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+11,scope@11,6
+name,type,offset,width
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+5,scope@5,4
+name,type,offset,width
+tmp@33,int,0,4
+tmp@34,bool,4,1
+tmp@35,int,5,4
+tmp@36,long,9,8
+tmp@37,long,17,8
+tmp@38,long,25,8
+tmp@39,long,33,8
+tmp@40,long,41,8
+tmp@41,long,49,8
+tmp@42,int,57,4
+tmp@43,int,61,4
+tmp@44,int,65,4

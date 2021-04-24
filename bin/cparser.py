@@ -15,11 +15,11 @@ from clexer import tokens,print_lexeme
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import getMutliPointerType
-from structure import implicit_casting
 from typecheck import *
-from utils import print_csv
+from utils import print_csv, print_code
+from threeaddr import *
 #####################Grammar section #################
-
+# print(temp_cnt)
 
 start = 'program' #start action
 
@@ -27,6 +27,9 @@ start = 'program' #start action
 def p_program(p):
     'program : translation_unit'
     p[0] = Node("program",children=p[1])
+    for node in p[1]:
+        if node != None:
+            p[0].code += node.code
 
 #List
 def p_translation_unit(p):
@@ -62,6 +65,25 @@ def p_function_definition(p):
         p[0] = Node("function",p[2].value,children=[p[6]])
     else:
         p[0] = Node("function",p[2].value,children=[p[5]])
+    p[0].code = [gen(op="label",place1=p[2].value,code=p[2].value+":")]
+    p[0].code += [gen(op="BeginFunc",place1=p[2].value,code="BeginFunc")]
+    if len(p) == 8:
+        if has_break_continue(p[6].code):
+            Errors(
+                errorType='SyntaxError',
+                errorText='invalid break/continue in function',
+                token_object= p[2].data['token']
+            )
+        p[0].code += p[6].code
+    else:
+        if has_break_continue(p[5].code):
+            Errors(
+                errorType='SyntaxError',
+                errorText='invalid break/continue in function',
+                token_object= p[2].data['token']
+            )
+        p[0].code += p[5].code
+    p[0].code += [gen(op="EndFunc",place1=p[2].value,code="EndFunc")]
     p[0] = [p[0]]
 
 def p_function_definition_1(p):
@@ -195,12 +217,17 @@ def p_primary_expression(p):
             success = sym_table.look_up(name=p[1],token_object=p.slice[-1])
             if success:
                 p[0] = Node(name="id",value=p[1],type=success.type)
+                p[0].place = p[1]+"|"+success.symbol_table.name
             else:
                 p[0] = Node(name="id",type='error')
             return
 
         if p.slice[-1].type in ["INT_CONSTANT","HEX_CONSTANT","OCTAL_CONSTANT"]:
-            p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
+            if int(p[1]) <= (2**31 - 1) and int(p[1]) >= -(2**31 -1):
+                p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
+            else:
+                p[0] = Node(name="constant",value=p[1],type=BasicType('long'))
+                
         
         elif p.slice[-1].type in ["EXPONENT_CONSTANT","REAL_CONSTANT"]:
             p[0] = Node(name="constant",value=p[1],type=BasicType('float'))
@@ -216,6 +243,12 @@ def p_primary_expression(p):
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
         p[0].constant = p[0].value
+        if p[0].constant == "false" or p[0].constant == "NULL":
+            p[0].constant = 0
+        elif p[0].constant == "true":
+            p[0].constant = 1
+        p[0].place = get_newtmp(type=p[0].type)
+        p[0].code = [gen(op="=",place1=str(p[0].constant),place3=p[0].place)]
     
     else:
         p[0] = p[2]
@@ -237,8 +270,18 @@ def p_postfix_expression(p):
             p[0] = p[1]
         elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+            p[0].place = get_newtmp(type=p[1].type)
+            p[0].code = p[1].code
+            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
+            p[0].code += [gen(op=str(p[1].type)+p[2][0]+"_c",place1=p[1].place,place2="1",place3=p[1].place)]
         elif p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+            p[0].place = get_newtmp(type=p[1].type)
+            p[0].code = p[1].code
+            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
+            width = p[1].type.type_size
+            p[0].code += [gen(op="long"+p[2][0]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
+
         else:
             p[0] = p[1]
             p[0].type = 'error'
@@ -284,7 +327,22 @@ def p_postfix_expression_1(p):
         p[0] = Node(type="error")
 
     if check1 and check2:
+        #type_casting
         p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
+        p[0].code = p[1].code + p[3].code
+        if len(p[1].type.array_size) == 0:
+            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=p[1].type.type_size,type="long")
+        else:
+            p[0].type.array_size = p[1].type.array_size[1:]
+            width = 1
+            for i in p[1].type.array_size[1:]:
+                width = width*i
+            width = width*p[1].type.array_type.width
+            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=width,type="long")
+        p[0].place = get_newtmp(BasicType("long"))
+        p[0].code += [code] + [gen(op="long+",place1=p[1].place,place2=tmp,place3=p[0].place)]
+
+
 
 
 def p_postfix_expression_2(p):
@@ -320,8 +378,11 @@ def p_postfix_expression_2(p):
             )
         else:
             p[0] = Node(name="func_call",type=return_type,children=[p[1]])
+            p[0].place = get_newtmp(type=return_type)
+            p[0].code = p[1].code
+            p[0].code += [gen(op="func_call",place1=p[1].value,place3=p[0].place)]
     else:
-        arg_list = p[3].data['args_type']
+        arg_list = p[3].children
         if len(arg_list) != len(param_list):
             p[0] = Node(type="error")
             Errors(
@@ -329,9 +390,30 @@ def p_postfix_expression_2(p):
                 errorText='No of arguments is not matching',
                 token_object= p.slice[-1]
             )
-        # check for type cast if possible
-        else:
-            p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
+            return
+        arg_places = []
+        code = []
+        push_code = []
+        pop_code = []
+        for i in range(len(arg_list)):
+            if arg_list[i].type.is_convertible_to(param_list[i]) == False:
+                p[0] = Node(type="error")
+                Errors(
+                    errorType='TypeError',
+                    errorText="cannot convert "+arg_list[i].types.stype+" to "+param_list[i].stype,
+                    token_object= p.slice[-1]
+                )
+                return
+            node = typecast(arg_list[i],param_list[i])
+            arg_places.append(node.place)
+            code += node.code
+            push_code += [gen(op = "push",place1=node.place,code="push "+node.place)]
+            pop_code += [gen(op = "pop",place1=node.place,code="pop "+node.place)]
+        
+        p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
+        p[0].place = get_newtmp(type=return_type)
+        p[0].code = p[1].code+code+push_code + [gen(op="func_call",place1=p[1].value,place3=p[0].place)] + pop_code[::-1]
+
         
         
 
@@ -369,6 +451,13 @@ def p_postfix_expression_3(p):
         return
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
+    p[0].code = p[1].code
+    tmp = get_newtmp()
+    p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
+    tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
+    p[0].code += [code]
+    p[0].place = tmp1
+
     
 
 
@@ -404,7 +493,10 @@ def p_postfix_expression_4(p):
         return
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
-
+    p[0].code = p[1].code
+    tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=success.offset,type="long")
+    p[0].code += [code]
+    p[0].place = tmp
 
 
 
@@ -418,9 +510,13 @@ def p_argument_expression_list(p):
     if len(p) == 2:
         p[0] = Node("argument_expression_list",children=[p[1]])
         p[0].data['args_type'] = [p[1].type]
+        p[0].place = [p[1].place]
+        p[0].code += p[1].code
     else:
         p[1].addChild(p[3])
         p[1].data['args_type'] += [p[3].type]
+        p[1].code += p[3].code
+        p[1].place += [p[3].place]
         p[0] = p[1]
 
 
@@ -482,7 +578,7 @@ def p_cast_expression(p):
             p[0] = Node(type='error')
         else:
             if p[4].type.is_convertible_to(p[2].type):
-                p[0] = Node(name ="type_cast",value=p[2].type.stype,type = p[2].type,children=[p[4]])
+                p[0] = typecast(p[4],p[2].type)
             else:
                 Errors(
                     errorType='TypeError',
@@ -562,7 +658,7 @@ def p_equality_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2],is_bool=True)
+        p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 #Node
 def p_and_expression(p):
     '''
@@ -613,7 +709,7 @@ def p_logical_and_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-       type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+       p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
 def p_logical_or_expression(p):
@@ -625,7 +721,8 @@ def p_logical_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+        p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+        
     
 
 #Node
@@ -658,8 +755,23 @@ def p_conditional_expression(p):
                 token_object= p.slice[2]
             )
             p[0] = Node(type="error")
-        p[1] = Node(name="type_cast",value='bool',children=[p[1]],type=BasicType('bool'))
+            return
         p[0] = Node("ternary_op",children = [p[1],p[3],p[5]],type=p[3].type)
+
+        p[0].place = get_newtmp()
+        label = get_newlabel()
+        label1 = get_newlabel()
+
+        p[0].code = p[1].code
+        p[0].code += [gen(op='ifz', place1=p[1].place, place2 = label)]
+        p[0].code += p[3].code
+        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[3].place)]
+        p[0].code += [gen(op='goto', place1=label1)]
+        p[0].code += [gen(op = 'label', place1 = label)]
+        p[0].code += p[5].code
+        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[5].place)]
+        p[0].code += [gen(op = 'label', place1 = label1)]
+
 
 #Node
 def p_assignment_expression(p):
@@ -720,7 +832,6 @@ def p_constant_expression(p):
 def p_declaration(p):
     '''
     declaration : struct_specifier SEMI_COLON
-                | enum_specifier SEMI_COLON
 	            | type_specifier init_declarator_list SEMI_COLON
     '''
     if len(p) == 4:
@@ -756,6 +867,7 @@ def p_init_declarator(p):
     else:
         # type checking
         # check for initliazer
+        # print(type(p[3]))
         init = type_check_init(p[3],p[1].type,p.slice[2])
         if init.type == "error":
             p[0] = [None]
@@ -776,12 +888,10 @@ def p_type_specifier(p):
                    | FLOAT
                    | DOUBLE
                    | STRUCT IDENTIFIER
-                   | ENUM IDENTIFIER
                    | BOOL
     '''
-    if p[1] == 'enum':
-        pass
-    elif p[1] == 'struct':
+
+    if p[1] == 'struct':
         success = sym_table.look_up_struct(name = p[2],token_object=p.slice[-1])
         if success:
             p[0] = Node(type = success)
@@ -862,27 +972,27 @@ def p_struct_declarator_list(p):
 
 
 #string
-def p_enum_specifier(p):
-    '''
-    enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
-    '''
-    # p[0] = p[1]
+# def p_enum_specifier(p):
+#     '''
+#     enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
+#     '''
+#     # p[0] = p[1]
 
 # None
-def p_enumerator_list(p):
-    '''
-    enumerator_list : enumerator
-	                | enumerator_list COMMA enumerator
-    '''
-    # p[0] = None
+# def p_enumerator_list(p):
+#     '''
+#     enumerator_list : enumerator
+# 	                | enumerator_list COMMA enumerator
+#     '''
+#     # p[0] = None
 
 # None
-def p_enumerator(p):
-    '''
-    enumerator : IDENTIFIER
-	           | IDENTIFIER ASSIGNMENT constant_expression
-    '''
-    # p[0] = None
+# def p_enumerator(p):
+#     '''
+#     enumerator : IDENTIFIER
+# 	           | IDENTIFIER ASSIGNMENT constant_expression
+#     '''
+#     # p[0] = None
 
 
 # Node
@@ -1117,6 +1227,9 @@ def p_compound_statement(p):
         p[0] = Node("compound_statement","{}",type="ok")
     else:
         p[0] = Node("compound_statement","{}",children=p[3],type="ok")
+        for node in p[3]:
+            if node != None:
+                p[0].code += node.code
     # print(p, p.__dict__, p[-1], p.stack[-1], p.stack[-1].__dict__)
 
 def p_function_body(p):
@@ -1128,6 +1241,10 @@ def p_function_body(p):
         p[0] = Node("compound_statement","{}",type="ok")
     else:
         p[0] = Node("compound_statement","{}",children=p[2],type="ok")
+        for node in p[2]:
+            if node != None:
+                assert isinstance(node.code,list), print(node.code)
+                p[0].code += node.code
 
 # List
 def p_block_item_list(p):
@@ -1175,12 +1292,30 @@ def p_selection_statement(p):
                 return
             p[0] = Node(name="if",children=[p[3],p[5]],type="ok")
 
+            label = get_newlabel()
+
+            p[0].code = p[3].code
+            p[0].code += [gen(op = 'ifz', place1=p[3].place, place2 = label)]
+            p[0].code += p[5].code
+            p[0].code += [gen(op = "label",place1=label)]
+
         else:
             if p[3].type=="error" or p[5].type=="error" or p[7].type=="error":
                 p[0] = Node(type="error")
                 return
             p[0] = Node(name="if_else",children=[p[3],p[5],p[7]],type="ok")
-    
+
+            label1 = get_newlabel()
+            label2 = get_newlabel()
+
+            p[0].code = p[3].code
+            p[0].code += [gen(op = 'ifz', place1=p[3].place, place2 = label1)]
+            p[0].code += p[5].code
+            p[0].code += [gen(op="goto",place1=label2)]
+            p[0].code += [gen(op = "label",place1=label1)]
+            p[0].code += p[7].code
+            p[0].code += [gen(op = "label",place1=label2)]
+
     else:
         if p[3].type=="error":
             p[0] = Node(type="error")
@@ -1201,23 +1336,95 @@ def p_iteration_statement(p):
             p[0] = Node(type="error")
             return
         p[0] = Node(name="iteration_statement",value="while",children=[p[3],p[5]],type="ok")
+
+        label1 = get_newlabel()
+        label2 = get_newlabel()
+        # label3 = get_newlabel()
+        # p[0].code = [gen(op = "label",place1=label1)]
+        # p[0].code += p[3].code
+        # p[0].code += [gen(op = 'ifnz', place1 = p[3].place, place2  = label2)]
+        # p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
+        # p[0].code += [gen(op = "label",place1=label2)]
+        # p[0].code += p[5].code
+        # p[0].code += [gen(op = "goto", place1 = label1, code = "goto "+ label1)]
+        # p[0].code += [gen(op = label3, code = label3)]
+        p[0].code = [gen(op = "label",place1=label1)]
+        p[0].code += p[3].code
+        p[0].code += [gen(op = 'ifz', place1 = p[3].place, place2  = label2)]
+        code = break_continue(p[5].code,label2,label1)
+        p[0].code += code
+        p[0].code += [gen(op = "goto", place1 = label1)]
+        p[0].code += [gen(op = "label",place1=label2)]
+
     elif p[1] == "do":
         if p[2].type=="error" or p[5].type=="error":
             p[0] = Node(type="error")
             return
         p[0] = Node(name="iteration_statement",value="do",children=[p[2],p[5]],type="ok")
+
+        label1 = get_newlabel()
+        label2 = get_newlabel()
+        label3 = get_newlabel()
+
+        p[0].code = [gen(op = "label", place1 = label1)]
+        p[0].code += p[2].code
+        p[0].code += [gen(op = "label", place1 = label2)]
+        p[0].code += p[5].code
+        p[0].code += [gen(op = 'ifnz', place1 = p[5].place, place2 = label1)]
+        p[0].code += [gen(op = "label", place1 = label3)]
+        p[0].code = break_continue(p[0].code, label3, label2)
+
     else:
         if len(p) == 7:
             if p[3].type=="error" or p[4].type=="error" or p[6].type=="error":
                 p[0] = Node(type="error")
                 return
             child = [p[3],p[4],p[6]]
+
+            label1 = get_newlabel()
+            label2 = get_newlabel()
+            # label3 = get_newlabel()
+
+            code = p[3].code
+            code += [gen(op = "label", place1 = label1)]
+
+            if p[4].code:
+                code += p[4].code
+                code += [gen(op = 'ifz', place1 = p[4].place, place2  = label2)]
+               
+            code += p[6].code
+            code += [gen(op = "goto", place1 = label1)]
+            code += [gen(op = "label", place1 = label2)]
+            code = break_continue(code, label2, label1)
+
         else:
             if p[3].type=="error" or p[4].type=="error" or p[5].type=="error" or p[7].type=="error":
                 p[0] = Node(type="error")
                 return
             child = [p[3],p[4],p[5],p[7]]
+
+            label1 = get_newlabel()
+            label2 = get_newlabel()
+            label3 = get_newlabel()
+            # label4 = get_newlabel()
+
+            code = p[3].code
+            code += [gen(op = "label", place1 = label1)]
+
+            if p[4].code:
+                code += p[4].code
+                code += [gen(op = 'ifz', place1 = p[4].place, place2  = label3)]
+        
+            code += p[7].code
+            code += [gen(op = "label", place1 = label2)]
+            code += p[5].code
+            code += [gen(op = "goto", place1 = label1)]
+            code += [gen(op = "label",place1 = label3)]
+
+            code = break_continue(code, label3, label2)
+
         p[0] = Node(name="iteration_statement",value="for",children=child,type="ok")
+        p[0].code = code
     
 # Node
 def p_jump_statement(p):
@@ -1226,7 +1433,10 @@ def p_jump_statement(p):
 	               | BREAK SEMI_COLON
 	                 
     '''
+    
     p[0] = Node(name=p[1],type="ok")
+    p[0].code = [gen(op = p[1], code = p[1])]
+
 def p_jump_statement_1(p):
     '''
     jump_statement : RETURN SEMI_COLON
@@ -1242,17 +1452,22 @@ def p_jump_statement_1(p):
                     errorText='return type not matching',
                     token_object= p.slice[2]
                 )
+                p[0].code = []
                 return
             p[0] = Node(name="return",type="ok")
+            p[0].code = [gen(op = 'return',code = 'return')]
+    
         else:
             if p[2].type == "error":
                 p[0] = Node(type="error")
                 return
             if p[2].type.is_convertible_to(success.type):
-                if str(p[2].type) != str(success.type):
-                    p[2] = Node(name="type_cast",value=success.type.stype,children=[p[2]],type=success.type)
-                p[0] = Node(name="return",children=[p[2]],type="ok")
+                node = typecast(p[2],success.type)    
+                p[0] = Node(name="return",type="ok",children=[node])
+                p[0].code = node.code
+                p[0].code += [gen(op = 'return', place1 = node.place, code = 'return ' + node.place)]
                 return
+
             p[0] = Node(type="error")
             Errors(
                 errorType='TypeError',
@@ -1303,6 +1518,7 @@ def main():
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
     arg_parser.add_argument('-f',help="take the name of png file", default="ast.png")
     arg_parser.add_argument('-d',help="take the name of csv file", default="dump.csv")
+    arg_parser.add_argument('-t',help="take the name of 3ac file", default="3ac.3ac")
     arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
     arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
     args = arg_parser.parse_args()
@@ -1327,7 +1543,7 @@ def main():
         for error in Errors.get_all_error():
             print(error)
         return
-
+    
     Graph = draw_ast(result)
     # print(args)
     if args.p:
@@ -1344,7 +1560,7 @@ def main():
     # print(sym_table)
     # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
-
+    print_code(result.code, filename = args.t)
 if __name__ == "__main__":
     main()
 

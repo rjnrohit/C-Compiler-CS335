@@ -1,65 +1,261 @@
 -------------------------------------------------------------------------------------------
-          symbol table id:,0,symbol table name:,global
+symbol table id,symbol table name
+0,global
 name,type,offset,width
-a,int,0,4
-b,long,4,8
-solve,int function([]),12,4
-main,"int function([int, pointer of (int)])",12,16
-min,"int function([int, int])",12,12
-max,"int function([int, int])",12,12
-printf,"int function([pointer of (char), int])",12,16
-scanf,"int function([pointer of (char), pointer of (int)])",12,20
+tmp@0,int,0,4
+tmp@1,int,4,4
+tmp@2,bool,8,1
+a,int,9,4
+tmp@3,int,13,4
+tmp@4,int,17,4
+tmp@5,int,21,4
+b,long,25,8
+solve,int function([]),33,4
+main,"int function([int, pointer of (int)])",33,16
+min,"int function([int, int])",33,12
+printf,"int function([pointer of (char), int])",33,16
+scanf,"int function([pointer of (char), pointer of (int)])",33,20
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,main
+symbol table id,symbol table name,parent id
+2,main,0
 name,type,offset,width
 argc,int,4,4
 argv,pointer of (int),8,8
-n,int,16,4
-power_of_2,long,20,8
-ans,long,28,8
+tmp@6,int,16,4
+n,int,20,4
+tmp@7,int,24,4
+power_of_2,long,28,8
+tmp@8,int,36,4
+ans,long,40,8
+tmp@9,int,48,4
+tmp@13,int,52,4
+tmp@14,int,56,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,min
+symbol table id,symbol table name,parent id
+4,min,0
 name,type,offset,width
 a,int,4,4
 b,int,8,4
+tmp@15,bool,12,1
+tmp@16,long,13,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,5,symbol table name:,max
-name,type,offset,width
-a,int,4,4
-b,int,8,4
--------------------------------------------------------------------------------------------
-          symbol table id:,6,symbol table name:,printf
+symbol table id,symbol table name,parent id
+5,printf,0
 name,type,offset,width
 stmt,pointer of (char),4,8
 d,int,12,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,7,symbol table name:,scanf
+symbol table id,symbol table name,parent id
+6,scanf,0
 name,type,offset,width
 stmt,pointer of (char),4,8
 d,pointer of (int),12,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,8,symbol table name:,solve
+symbol table id,symbol table name,parent id
+7,solve,0
 name,type,offset,width
 n,long,4,8
-c,pointer of (int),12,4000
-os,pointer of (int),4012,4000
-es,pointer of (int),8012,4000
-mes,pointer of (int),12012,4000
-mos,pointer of (int),16012,4000
-i,int,20012,4
-ans,long,20016,8
+tmp@17,pointer of (char),12,5
+tmp@18,long,17,8
+tmp@19,int,25,4
+c,pointer of (int),29,4000
+os,pointer of (int),4029,4000
+es,pointer of (int),8029,4000
+mes,pointer of (int),12029,4000
+mos,pointer of (int),16029,4000
+tmp@20,int,20029,4
+i,int,20033,4
+tmp@21,long,20037,8
+tmp@22,bool,20045,1
+tmp@23,int,20046,4
+tmp@29,int,20050,4
+tmp@30,long,20054,8
+tmp@31,long,20062,8
+tmp@32,int,20070,4
+tmp@33,long,20074,8
+tmp@34,long,20082,8
+tmp@35,int,20090,4
+tmp@36,long,20094,8
+tmp@37,long,20102,8
+tmp@38,int,20110,4
+tmp@39,long,20114,8
+tmp@40,long,20122,8
+tmp@41,int,20130,4
+tmp@42,long,20134,8
+tmp@43,long,20142,8
+tmp@44,int,20150,4
+tmp@45,long,20154,8
+tmp@46,long,20162,8
+tmp@47,int,20170,4
+tmp@48,long,20174,8
+tmp@49,long,20182,8
+tmp@50,int,20190,4
+tmp@51,long,20194,8
+tmp@52,long,20202,8
+tmp@53,int,20210,4
+tmp@54,long,20214,8
+tmp@55,long,20222,8
+tmp@56,long,20230,8
+tmp@57,long,20238,8
+tmp@58,int,20246,4
+tmp@59,long,20250,8
+tmp@60,long,20258,8
+tmp@61,long,20266,8
+tmp@62,long,20274,8
+tmp@63,long,20282,8
+ans,long,20290,8
+tmp@64,int,20298,4
+tmp@65,long,20302,8
+tmp@66,bool,20310,1
+tmp@67,int,20311,4
+tmp@186,pointer of (char),20315,5
+tmp@187,int,20320,4
+tmp@188,int,20324,4
+tmp@189,int,20328,4
+tmp@190,int,20332,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,scope@3
+symbol table id,symbol table name,parent id
+3,scope@3,2
 name,type,offset,width
+tmp@10,int,0,4
+tmp@11,long,4,8
+tmp@12,long,12,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,9,symbol table name:,scope@9
+symbol table id,symbol table name,parent id
+8,scope@8,7
 name,type,offset,width
+tmp@24,pointer of (char),0,5
+tmp@25,long,5,8
+tmp@26,long,13,8
+tmp@27,long,21,8
+tmp@28,int,29,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,10,symbol table name:,scope@10
+symbol table id,symbol table name,parent id
+9,scope@9,7
 name,type,offset,width
+tmp@68,int,0,4
+tmp@69,int,4,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,11,symbol table name:,scope@11
+symbol table id,symbol table name,parent id
+10,scope@10,9
 name,type,offset,width
+tmp@70,long,0,8
+tmp@71,long,8,8
+tmp@72,int,16,4
+tmp@73,int,20,4
+tmp@74,long,24,8
+tmp@75,long,32,8
+tmp@76,long,40,8
+tmp@77,long,48,8
+tmp@78,int,56,4
+tmp@79,int,60,4
+tmp@80,long,64,8
+tmp@81,long,72,8
+tmp@82,long,80,8
+tmp@83,long,88,8
+tmp@84,long,96,8
+tmp@85,long,104,8
+tmp@86,long,112,8
+tmp@87,long,120,8
+tmp@88,int,128,4
+tmp@89,int,132,4
+tmp@90,long,136,8
+tmp@91,long,144,8
+tmp@92,int,152,4
+tmp@93,long,156,8
+tmp@94,long,164,8
+tmp@95,int,172,4
+tmp@96,int,176,4
+tmp@97,long,180,8
+tmp@98,long,188,8
+tmp@99,int,196,4
+tmp@100,int,200,4
+tmp@101,int,204,4
+tmp@102,int,208,4
+tmp@103,int,212,4
+tmp@104,long,216,8
+tmp@105,long,224,8
+tmp@106,long,232,8
+tmp@107,long,240,8
+tmp@108,long,248,8
+tmp@109,long,256,8
+tmp@110,long,264,8
+tmp@111,long,272,8
+tmp@112,int,280,4
+tmp@113,int,284,4
+tmp@114,int,288,4
+tmp@115,int,292,4
+tmp@116,long,296,8
+tmp@117,long,304,8
+tmp@118,int,312,4
+tmp@119,int,316,4
+tmp@120,long,320,8
+tmp@121,long,328,8
+tmp@122,long,336,8
+tmp@123,long,344,8
+tmp@124,long,352,8
+tmp@125,int,360,4
+tmp@126,int,364,4
+tmp@127,int,368,4
+tmp@128,long,372,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,12,symbol table name:,scope@12
+symbol table id,symbol table name,parent id
+11,scope@11,9
 name,type,offset,width
+tmp@129,long,0,8
+tmp@130,long,8,8
+tmp@131,int,16,4
+tmp@132,int,20,4
+tmp@133,long,24,8
+tmp@134,long,32,8
+tmp@135,long,40,8
+tmp@136,long,48,8
+tmp@137,int,56,4
+tmp@138,int,60,4
+tmp@139,long,64,8
+tmp@140,long,72,8
+tmp@141,long,80,8
+tmp@142,long,88,8
+tmp@143,long,96,8
+tmp@144,long,104,8
+tmp@145,long,112,8
+tmp@146,long,120,8
+tmp@147,int,128,4
+tmp@148,int,132,4
+tmp@149,long,136,8
+tmp@150,long,144,8
+tmp@151,int,152,4
+tmp@152,long,156,8
+tmp@153,long,164,8
+tmp@154,int,172,4
+tmp@155,int,176,4
+tmp@156,long,180,8
+tmp@157,long,188,8
+tmp@158,int,196,4
+tmp@159,int,200,4
+tmp@160,int,204,4
+tmp@161,int,208,4
+tmp@162,int,212,4
+tmp@163,long,216,8
+tmp@164,long,224,8
+tmp@165,long,232,8
+tmp@166,long,240,8
+tmp@167,long,248,8
+tmp@168,long,256,8
+tmp@169,long,264,8
+tmp@170,long,272,8
+tmp@171,int,280,4
+tmp@172,int,284,4
+tmp@173,long,288,8
+tmp@174,long,296,8
+tmp@175,int,304,4
+tmp@176,int,308,4
+tmp@177,long,312,8
+tmp@178,long,320,8
+tmp@179,long,328,8
+tmp@180,long,336,8
+tmp@181,long,344,8
+tmp@182,int,352,4
+tmp@183,int,356,4
+tmp@184,int,360,4
+tmp@185,long,364,8

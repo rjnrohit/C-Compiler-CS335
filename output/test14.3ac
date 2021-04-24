@@ -1,0 +1,15 @@
+main:
+BeginFunc
+tmp@0 = 1
+tmp@1 = 2
+tmp@2 = tmp@0 int> tmp@1
+ifz tmp@2 goto label#0
+tmp@3 = 2
+tmp@5 = tmp@3
+goto label#1
+label#0:
+tmp@4 = 3
+tmp@5 = tmp@4
+label#1:
+c|global = tmp@5
+EndFunc

@@ -1,30 +1,62 @@
 -------------------------------------------------------------------------------------------
-          symbol table id:,0,symbol table name:,global
+symbol table id,symbol table name
+0,global
 name,type,offset,width
 main,int function(None),0,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,1,symbol table name:,main
+symbol table id,symbol table name,parent id
+1,main,0
 name,type,offset,width
-operator,char,4,1
-a,long,5,8
-b,long,13,8
-equal,bool,21,1
-x,long,22,8
+tmp@0,char,4,1
+operator,char,5,1
+tmp@1,int,6,4
+a,long,10,8
+tmp@2,int,18,4
+b,long,22,8
+tmp@3,bool,30,1
+equal,bool,31,1
+x,long,32,8
+tmp@4,char,40,1
+tmp@5,bool,41,1
+tmp@7,char,42,1
+tmp@8,bool,43,1
+tmp@10,char,44,1
+tmp@11,bool,45,1
+tmp@13,char,46,1
+tmp@14,bool,47,1
+tmp@16,char,48,1
+tmp@17,bool,49,1
+tmp@20,char,50,1
+tmp@21,bool,51,1
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,scope@2
+symbol table id,symbol table name,parent id
+2,scope@2,1
 name,type,offset,width
+tmp@6,long,0,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,scope@3
+symbol table id,symbol table name,parent id
+3,scope@3,1
 name,type,offset,width
+tmp@9,long,0,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,scope@4
+symbol table id,symbol table name,parent id
+4,scope@4,1
 name,type,offset,width
+tmp@12,long,0,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,5,symbol table name:,scope@5
+symbol table id,symbol table name,parent id
+5,scope@5,1
 name,type,offset,width
+tmp@15,long,0,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,6,symbol table name:,scope@6
+symbol table id,symbol table name,parent id
+6,scope@6,1
 name,type,offset,width
+tmp@18,bool,0,1
+tmp@19,long,1,8
 -------------------------------------------------------------------------------------------
-          symbol table id:,7,symbol table name:,scope@7
+symbol table id,symbol table name,parent id
+7,scope@7,1
 name,type,offset,width
+tmp@22,bool,0,1
+tmp@23,long,1,8

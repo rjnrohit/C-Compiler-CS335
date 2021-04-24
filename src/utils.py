@@ -68,7 +68,14 @@ def print_csv(sym_table =None , filename = None):
 def print_csv_sym_table(sym_table, writer):
     # print(sym_table.name, sym_table.id)
     writer.writerow(['-------------------------------------------------------------------------------------------'])
-    writer.writerow(["          symbol table id:" , sym_table.id, "symbol table name:", sym_table.name])
+    
+    if sym_table.parent:
+        writer.writerow(["symbol table id" , "symbol table name", "parent id"])
+        writer.writerow([sym_table.id, sym_table.name, sym_table.parent.id])
+    else:
+        writer.writerow(["symbol table id" , "symbol table name"])
+        writer.writerow([sym_table.id, sym_table.name])
+
     writer.writerow(["name", "type", "offset","width"])
     for entry_key in sym_table.table:
         if entry_key == 'return':
@@ -77,3 +84,9 @@ def print_csv_sym_table(sym_table, writer):
         writer.writerow([sym_table.table[entry_key].name, sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].width])
 
 # csv_file.close()
+
+def print_code(code_list, filename):
+    file = open(filename, 'w')
+    for obj in code_list:
+        if obj.code:
+            print(obj.code,file = file)

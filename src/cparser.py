@@ -16,7 +16,7 @@ from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from structure import getMutliPointerType
 from typecheck import *
-from utils import print_csv
+from utils import print_csv, print_code
 from threeaddr import *
 #####################Grammar section #################
 # print(temp_cnt)
@@ -1518,6 +1518,7 @@ def main():
     arg_parser.add_argument('-o',help="take the name of dot script", default="ast.dot")
     arg_parser.add_argument('-f',help="take the name of png file", default="ast.png")
     arg_parser.add_argument('-d',help="take the name of csv file", default="dump.csv")
+    arg_parser.add_argument('-t',help="take the name of 3ac file", default="3ac.3ac")
     arg_parser.add_argument('-p',action='store_true',help="output dot script to console")
     arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
     args = arg_parser.parse_args()
@@ -1542,7 +1543,7 @@ def main():
         for error in Errors.get_all_error():
             print(error)
         return
-    print_code(result.code)
+    
     Graph = draw_ast(result)
     # print(args)
     if args.p:
@@ -1559,7 +1560,7 @@ def main():
     # print(sym_table)
     # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
-
+    print_code(result.code, filename = args.t)
 if __name__ == "__main__":
     main()
 
