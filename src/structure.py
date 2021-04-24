@@ -22,7 +22,7 @@ class Node:
         
         @code.setter
         def code(self, code):
-            assert isinstance(code, List), "code object must be list of gen's / labels"
+            assert isinstance(code, list), "code object must be list of gen's / labels"
             self._code = code
 
         if children:

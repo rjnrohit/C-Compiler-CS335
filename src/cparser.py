@@ -1242,6 +1242,7 @@ def p_function_body(p):
         p[0] = Node("compound_statement","{}",children=p[2],type="ok")
         for node in p[2]:
             if node != None:
+                assert isinstance(node.code,list), print(node.code)
                 p[0].code += node.code
 
 # List
@@ -1454,7 +1455,7 @@ def p_jump_statement_1(p):
                 p[0].code = []
                 return
             p[0] = Node(name="return",type="ok")
-            p[0].code = gen(op = 'return',code = 'return')
+            p[0].code = [gen(op = 'return',code = 'return')]
     
         else:
             if p[2].type == "error":
