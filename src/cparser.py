@@ -542,7 +542,7 @@ def p_unary_expression_2(p):
     '''
     unary_expression : unary_operator cast_expression
     '''    
-    p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
+    p[0] = type_check_unary(node1=p[2],op=p[1]['op'],token=p[1]['token'])
 
 #Node
 def p_unary_expression_3(p):
@@ -565,7 +565,7 @@ def p_unary_operator(p):
                    | BITWISE_ONE_COMPLEMENT
                    | LOGICAL_NOT
     '''
-    p[0] = p[1]
+    p[0] = {'op':p[1],'token':p.slice[1]}
 
 #Node
 def p_cast_expression(p):
@@ -785,7 +785,7 @@ def p_assignment_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = type_check_assign_op(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
+        p[0] = type_check_assign_op(node1=p[1],node2=p[3],op=p[2]['op'],token=p[2]['token'])
 
 
 #String
@@ -803,7 +803,7 @@ def p_assignment_operator(p):
                         | BITWISE_XOR_ASSIGNMENT
                         | BITWISE_OR_ASSIGNMENT
     '''
-    p[0] = p[1]
+    p[0] = {'op':p[1],'token':p.slice[1]}
 
 # Node
 def p_expression(p):
@@ -926,7 +926,6 @@ def p_add_sym_struct(p):
     name = p.stack[-1].value
     sym_table.start_scope(name)
     sym_table.curr_symbol_table.parent._add_struct_entry(name=name,symbol_table=sym_table.curr_symbol_table,token_object=p.slice[1])
-
 # dict
 def p_struct_declaration_list(p):
     '''
@@ -955,19 +954,40 @@ def p_struct_declarator_list(p):
     '''
     success = None
     if len(p) == 2:
-        if p[1].type != "error":
-            success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
-            if success:
-                p[0] = {p[1].value:p[1].type}
+        if p[1].type == "error":
+            p[0] = dict({})
+            return
+        # print(p[1].type.class_type,p[1].value)
+        if p[1].type.class_type == "StructType" and p[1].type.name == sym_table.curr_symbol_table.name:
+            Errors(
+                    errorType='DeclarationError',
+                    errorText='cannot declare variable with same struct type within same struct',
+                    token_object= p[1].data['token']
+            )
+            p[0] = dict({})
+            return
+        success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
+        if success:
+            p[0] = {p[1].value:p[1].type}
         else:
             p[0] = dict({})
 
     else:
-        if p[3].type != "error":
-            success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
-            if success:
-                p[0] = p[1]
-                p[0].update({p[3].value:p[3].type})
+        if p[3].type == "error":
+            p[0] = p[1]
+            return
+        if p[3].type.class_type == "StructType" and p[3].type.name == sym_table.curr_symbol_table.name:
+            Errors(
+                    errorType='DeclarationError',
+                    errorText='cannot declare variable with same struct type within same struct',
+                    token_object= p[3].data['token']
+            )
+            p[0] = p[1]
+            return
+        success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
+        if success:
+            p[0] = p[1]
+            p[0].update({p[3].value:p[3].type})
         else:
             p[0] = p[1]
 
@@ -1189,6 +1209,15 @@ def p_labeled_statement(p):
         if p[2].type == "error" or p[4].type == "error":
             p[0] = Node(type="error")
             return 
+        if p[2].type.class_type != "BasicType":
+            Errors(
+                    errorType='TypeError',
+                    errorText='invalid type ' + p[2].type.stype + ' in case',
+                    token_object= p.slice[1]
+                )
+            p[0] = Node(type="error")
+            return   
+
         p[0] = Node("case",children=[p[2],p[4]],type="ok")
         p[0].data['expr'] = p[2]
         p[0].data['stmt'] = p[4]
@@ -1302,9 +1331,16 @@ def p_selection_statement(p):
             p[0].code += [gen(op = "label",place1=label2)]
 
     else:
+        p[0] = Node(type="error")
         if p[3].type=="error":
-            p[0] = Node(type="error")
             return
+        if p[3].type.class_type != "BasicType":
+            Errors(
+                    errorType='TypeError',
+                    errorText='invalid type ' + p[3].type.stype + ' in switch',
+                    token_object= p.slice[1]
+                )
+            return    
         label_list = Node(name="labeled list",children=p[7],type="ok")
         p[0] = Node(name="switch",children=[p[3],label_list],type="ok")
         label_list = p[7]
@@ -1313,22 +1349,17 @@ def p_selection_statement(p):
         end_label = get_newlabel()
         for labels in label_list:
             assert isinstance(labels,Node), "labels should be node"
+            if labels.type == "error":
+                p[0] = Node(type="error")
+                return
             if labels.data['expr'] == None:
                 p[0].code += labels.data["stmt"].code
             else:
                 const = labels.data['expr']
-                if const.type.is_convertible_to(p[3].type) == False:
-                    Errors(
-                        errorType='TypeError',
-                        errorText='cannot covert '+const.type.stype+' to '+p[3].type.stype,
-                        token_object= p.slice[2]
-                    )
-                    p[0] = Node(type="error")
-                    return
                 const = typecast(const,type=p[3].type)
                 new_label = get_newlabel()
                 p[0].code += const.code
-                p[0].code += [gen(op="if_not_cmp",place1=place,place2=const.place,place3=new_label,code="if "+place+" <> "+const.place+" goto "+new_label)]
+                p[0].code += [gen(op="if_not_cmp_"+p[3].type.stype,place1=place,place2=const.place,place3=new_label,code="if "+place+" <> "+const.place+" goto "+new_label)]
                 p[0].code += labels.data["stmt"].code
                 p[0].code += [gen("label",place1=new_label)]
         p[0].code += [gen("label",place1=end_label)]

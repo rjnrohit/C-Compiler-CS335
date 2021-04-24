@@ -1,46 +1,226 @@
-main:
+insert:
 BeginFunc
-tmp@4 = '|'
-if operator|main <> tmp@4 goto label#1
-tmp@5 = a|main long| b|main
-x|main = tmp@5
-goto label#0
+tmp@1 = ptr|insert long+_c 0
+tmp@1 = load(tmp@1)
+tmp@2 = 45
+tmp@1 = tmp@2
+tmp@3 = ptr|insert long+_c 8
+tmp@3 = load(tmp@3)
+tmp@4 = 0
+tmp@3 = tmp@4
+EndFunc
+foo:
+BeginFunc
+label#3:
+tmp@5 = t|foo
+t|foo = t|foo int-_c 1
+ifz tmp@5 goto label#4
+tmp@6 = 0
+i|scope@6 = tmp@6
+tmp@7 = 0
+i|scope@6 = tmp@7
+label#0:
+tmp@8 = 24
+tmp@9 = i|scope@6 int< tmp@8
+ifz tmp@9 goto label#2
+tmp@11 = i|scope@6 long*_c 1
+tmp@12 = str|foo long+ tmp@11
+tmp@13 = 'a'
+tmp@14 = char_to_int tmp@13
+tmp@15 = tmp@14 int+ i|scope@6
+tmp@16 = int_to_char tmp@15
+tmp@12 = tmp@16
 label#1:
-tmp@6 = 4
-tmp@7 = 3
-tmp@8 = tmp@6 int* tmp@7
-tmp@20 = int_to_char tmp@8
-if operator|main <> tmp@20 goto label#2
-tmp@9 = a|main long& b|main
-x|main = tmp@9
+tmp@10 = i|scope@6
+i|scope@6 = i|scope@6 int+_c 1
 goto label#0
 label#2:
-tmp@10 = '^'
-if operator|main <> tmp@10 goto label#3
-tmp@11 = a|main long^ b|main
-x|main = tmp@11
-goto label#0
-label#3:
-tmp@12 = '~'
-if operator|main <> tmp@12 goto label#4
-tmp@13 = long~ a|main
-x|main = tmp@13
-goto label#0
+goto label#3
 label#4:
-tmp@14 = '<'
-if operator|main <> tmp@14 goto label#5
-tmp@15 = a|main long< b|main
-tmp@16 = bool_to_long tmp@15
-x|main = tmp@16
-goto label#0
+tmp@17 = int_to_long t|foo
+tmp@18 = u|foo long*_c 0
+tmp@18 = tmp@17 long+ tmp@18
+return tmp@18
+EndFunc
+zoo:
+BeginFunc
+tmp@19 = float_to_int a|zoo
+tmp@21 = int_to_long tmp@19
+tmp@20 = double_to_long d|zoo
+tmp@22 = tmp@21 long% tmp@20
+tmp@23 = long_to_int tmp@22
+return tmp@23
+EndFunc
+ter:
+BeginFunc
+tmp@24 = a|global int> b|global
+ifz tmp@24 goto label#7
+tmp@27 = a|global
+goto label#8
+label#7:
+tmp@25 = b|global int% a|global
+ifz tmp@25 goto label#5
+tmp@26 = c|ter
+goto label#6
 label#5:
-tmp@17 = '>'
-if operator|main <> tmp@17 goto label#6
-tmp@18 = a|main long> b|main
-tmp@19 = bool_to_long tmp@18
-x|main = tmp@19
-goto label#0
+tmp@26 = c|ter
 label#6:
-x|main = a|main
-label#0:
+tmp@27 = tmp@26
+label#8:
+return tmp@27
+EndFunc
+main:
+BeginFunc
+tmp@28 = addr(main1|main)
+tmp@29 = tmp@28 long+_c 0
+tmp@29 = load(tmp@29)
+tmp@30 = addr(main1|main)
+tmp@31 = tmp@30 long+_c 4
+tmp@31 = load(tmp@31)
+tmp@32 = addr(tmp@31)
+tmp@33 = tmp@32 long+_c 0
+tmp@33 = load(tmp@33)
+tmp@29 = tmp@33
+tmp@34 = 0
+z|main = tmp@34
+label#12:
+tmp@37 = 12
+tmp@38 = tmp@37 long*_c 200
+tmp@39 = a|main long+ tmp@38
+tmp@40 = 13
+tmp@41 = tmp@40 long*_c 4
+tmp@42 = tmp@39 long+ tmp@41
+tmp@43 = j|scope@11
+j|scope@11 = j|scope@11 int+_c 1
+tmp@42 = tmp@43
+tmp@49 = int_to_float j|scope@11
+tmp@44 = 1000
+tmp@47 = int_to_float tmp@44
+tmp@45 = 1
+tmp@46 = int_to_float tmp@45
+tmp@48 = tmp@47 float+ tmp@46
+tmp@50 = tmp@49 float== tmp@48
+ifz tmp@50 goto label#10
+goto label#14
+goto label#11
+label#10:
+tmp@57 = int_to_double j|scope@11
+tmp@51 = 23
+tmp@52 = int+ tmp@51
+tmp@55 = int_to_double tmp@52
+tmp@53 = 23.4
+tmp@54 = float_to_double tmp@53
+tmp@56 = tmp@55 double+ tmp@54
+tmp@58 = tmp@57 double!= tmp@56
+ifz tmp@58 goto label#9
+goto label#13
+label#9:
+label#11:
+z|main = z|main int+_c 1
+z|main = z|main
+label#13:
+tmp@59 = 100
+tmp@60 = z|main int< tmp@59
+ifnz tmp@60 goto label#12
+label#14:
+label#24:
+tmp@71 = 22
+tmp@72 = cc|main int% tmp@71
+tmp@73 = 34
+tmp@74 = tmp@72 int% tmp@73
+ifz tmp@74 goto label#22
+tmp@75 = 23
+k|scope@14 = tmp@75
+label#17:
+tmp@76 = 46
+tmp@77 = k|scope@14 int< tmp@76
+ifz tmp@77 goto label#18
+tmp@78 = 0
+tmp@79 = k|scope@14 int!= tmp@78
+tmp@80 = cc|main int== k|scope@14
+tmp@81 = tmp@79 && tmp@80
+ifz tmp@81 goto label#15
+tmp@82 = 0
+tmp@83 = int_to_bool tmp@82
+flag|scope@13 = tmp@83
+goto label#16
+label#15:
+goto label#18
+label#16:
+goto label#17
+label#18:
+label#20:
+tmp@87 = bool_to_int flag|scope@13
+tmp@85 = bool_to_int flag|scope@13
+tmp@84 = 3
+tmp@86 = tmp@85 int+ tmp@84
+tmp@88 = tmp@87 int!= tmp@86
+ifz tmp@88 goto label#21
+goto label#20
+tmp@90 = bool_to_int flag|scope@13
+tmp@89 = 3
+tmp@91 = tmp@90 int^ tmp@89
+ifz tmp@91 goto label#19
+goto label#21
+label#19:
+goto label#20
+label#21:
+label#22:
+tmp@92 = not_bool flag|scope@13
+ifz tmp@92 goto label#23
+goto label#25
+label#23:
+label#25:
+tmp@67 = int_to_float cc|main
+tmp@67 = int_to_float cc|main
+tmp@62 = 2
+tmp@63 = cc|main int% tmp@62
+tmp@65 = int_to_float tmp@63
+tmp@64 = 3.45
+tmp@66 = tmp@65 float+ tmp@64
+tmp@68 = tmp@67 float+ tmp@66
+tmp@69 = float_to_int tmp@68
+cc|main = tmp@69
+goto label#24
+label#26:
+tmp@93 = 23
+tmp@94 = int_to_long tmp@93
+tmp@95 = 23
+tmp@108 = int_to_long tmp@95
+if tmp@94 <> tmp@108 goto label#28
+tmp@96 = load(a|main)
+tmp@97 = load(tmp@96)
+tmp@96 = load(a|main)
+tmp@97 = load(tmp@96)
+tmp@98 = tmp@97 int+ b|global
+tmp@97 = tmp@98
+goto label#27
+label#28:
+tmp@99 = load(a|main)
+tmp@100 = load(tmp@99)
+tmp@103 = int_to_bool tmp@100
+tmp@101 = 4
+tmp@102 = c|global int+ tmp@101
+tmp@104 = int_to_bool tmp@102
+tmp@105 = tmp@103 || tmp@104
+tmp@106 = bool_to_int tmp@105
+tmp@107 = b|global int+ tmp@106
+b|global = tmp@107
+goto label#27
+label#27:
+tmp@109 = 4
+tmp@110 = 5
+tmp@111 = "str24"
+push tmp@109
+push tmp@110
+push tmp@111
+tmp@112 = func_call foo
+pop tmp@111
+pop tmp@110
+pop tmp@109
+tmp@113 = addr(z|main)
+tmp@114 = tmp@113 long*_c 4
+tmp@114 = tmp@112 long+ tmp@114
+tmp@115 = load(tmp@114)
+return tmp@115
 EndFunc

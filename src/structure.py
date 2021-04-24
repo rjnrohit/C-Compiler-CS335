@@ -246,7 +246,8 @@ class StructType(Type):
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        return self.is_same(t)
+        # return self.is_same(t)
+        return False
 
 class FunctionType(Type):
 
@@ -286,7 +287,8 @@ class FunctionType(Type):
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        return self.is_same(t)
+        # return self.is_same(t)
+        return False
 
 #=================================== SYMBOL TABLE ==================================#
 
