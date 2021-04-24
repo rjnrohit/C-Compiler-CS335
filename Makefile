@@ -1,11 +1,12 @@
 all: bin/lexer bin/parser
 
-bin/parser : src/cparser.py src/structure.py src/typecheck.py bin/lexer src/utils.py
+bin/parser : src/cparser.py src/structure.py src/typecheck.py bin/lexer src/utils.py src/threeaddr.py
 	rm -rf bin/parser
 	cp src/cparser.py bin/parser
 	cp src/cparser.py bin/cparser.py
 	cp src/structure.py bin/structure.py
 	cp src/typecheck.py bin/typecheck.py
+	cp src/threeaddr.py bin/threeaddr.py
 	cp src/utils.py bin/utils.py
 	chmod +x bin/parser
 

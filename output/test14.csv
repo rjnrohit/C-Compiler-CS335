@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name
+0,global
+name,type,offset,width
+c,int,0,4
+main,int function(None),4,4
+-------------------------------------------------------------------------------------------
+symbol table id,symbol table name,parent id
+1,main,0
+name,type,offset,width
+tmp@0,int,4,4
+tmp@1,int,8,4
+tmp@2,bool,12,1
+tmp@3,int,13,4
+tmp@4,int,17,4
+tmp@5,long,21,8

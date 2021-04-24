@@ -1,34 +1,69 @@
 -------------------------------------------------------------------------------------------
-          symbol table id:,0,symbol table name:,global
+symbol table id,symbol table name
+0,global
 name,type,offset,width
 b,int,0,4
 main,"int function([int, pointer of (char)])",4,12
 -------------------------------------------------------------------------------------------
-          symbol table id:,1,symbol table name:,A
+symbol table id,symbol table name,parent id
+1,A,0
 name,type,offset,width
 ptr,pointer of (struct A),0,8
+a,int,8,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,main
+symbol table id,symbol table name,parent id
+2,main,0
 name,type,offset,width
 argc,int,4,4
 argv,pointer of (char),8,4
-d,struct A,12,8
-s,int,20,4
-str,pointer of (char),24,8
-cd,float,32,4
-a,double,36,8
-ptr,pointer of (double),44,8
-c,double,52,8
-ptr3,pointer of (int),60,8
-ptr1,pointer of (pointer of (long)),68,8
-i,int,76,4
-n,int,80,4
+d,pointer of (struct A),12,8
+tmp@0,long,20,8
+tmp@1,long,28,8
+s,int,36,4
+tmp@2,char,40,1
+tmp@3,char,41,1
+tmp@4,char,42,1
+str,pointer of (char),43,8
+cd,float,51,4
+tmp@5,float,55,4
+a,double,59,8
+ptr,pointer of (double),67,8
+c,double,75,8
+tmp@6,long,83,8
+ptr3,pointer of (int),91,8
+tmp@7,long,99,8
+ptr1,pointer of (pointer of (long)),107,8
+tmp@8,int,115,4
+i,int,119,4
+tmp@9,int,123,4
+n,int,127,4
+tmp@10,int,131,4
+tmp@11,bool,135,1
+tmp@27,float,136,4
+tmp@28,int,140,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,scope@3
+symbol table id,symbol table name,parent id
+3,scope@3,2
 name,type,offset,width
 sieve,pointer of (int),0,4000
 j,int,4000,4
-c,int,4004,4
+tmp@12,bool,4004,1
+tmp@13,int,4005,4
+tmp@23,int,4009,4
+tmp@24,int,4013,4
+tmp@25,int,4017,4
+tmp@26,int,4021,4
+c,int,4025,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,scope@4
+symbol table id,symbol table name,parent id
+4,scope@4,3
 name,type,offset,width
+tmp@14,long,0,8
+tmp@15,long,8,8
+tmp@16,int,16,4
+tmp@17,int,20,4
+tmp@18,int,24,4
+tmp@19,int,28,4
+tmp@20,int,32,4
+tmp@21,int,36,4
+tmp@22,bool,40,1

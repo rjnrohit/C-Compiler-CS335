@@ -1,0 +1,42 @@
+a:
+BeginFunc
+tmp@0 = addr(b|a)
+return tmp@0
+EndFunc
+g:
+BeginFunc
+EndFunc
+main:
+BeginFunc
+tmp@12 = load(c|main)
+tmp@13 = 2
+tmp@12 = tmp@13
+tmp@14 = 1
+tmp@15 = tmp@14 long*_c 4
+tmp@16 = str|global long+ tmp@15
+tmp@17 = load(tmp@16)
+tmp@18 = 'g'
+tmp@17 = tmp@18
+tmp@21 = load(c|main)
+tmp@22 = 0
+tmp@23 = long_to_int tmp@22
+tmp@21 = tmp@23
+tmp@24 = "hello"
+tmp@25 = 5
+push tmp@24
+push tmp@25
+tmp@26 = func_call printf
+pop tmp@25
+pop tmp@24
+tmp@32 = 5
+tmp@33 = 3
+tmp@34 = tmp@32 int> tmp@33
+tmp@35 = 3
+tmp@36 = int_to_bool tmp@35
+tmp@37 = tmp@34 && tmp@36
+ifz tmp@37 goto label#0
+label#0:
+tmp@38 = addr(p|global)
+tmp@39 = long_to_int tmp@38
+return tmp@39
+EndFunc

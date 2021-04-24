@@ -10,7 +10,7 @@ do
     if [ $fname.c  = $test ]
     then
         python3 ../bin/lexer $test > ../output/$fname.txt
-        python3 ../bin/parser $test -f ../output/$fname.png -o ../output/$fname.dot -d ../output/$fname.csv
+        python3 ../bin/parser $test -f ../output/$fname.png -o ../output/$fname.dot -d ../output/$fname.csv -t ../output/$fname.3ac
     else 
         continue
     fi

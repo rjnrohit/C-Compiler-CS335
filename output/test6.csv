@@ -1,19 +1,37 @@
 -------------------------------------------------------------------------------------------
-          symbol table id:,0,symbol table name:,global
+symbol table id,symbol table name
+0,global
 name,type,offset,width
 f,float function([int]),0,8
 main,int function(None),0,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,1,symbol table name:,f
+symbol table id,symbol table name,parent id
+1,f,0
 name,type,offset,width
 a,int,4,4
+tmp@0,int,8,4
+tmp@1,bool,12,1
 -------------------------------------------------------------------------------------------
-          symbol table id:,4,symbol table name:,main
+symbol table id,symbol table name,parent id
+4,main,0
 name,type,offset,width
-b,int,4,4
+tmp@10,float,4,4
+tmp@11,int,8,4
+tmp@12,float,12,4
+b,int,16,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,2,symbol table name:,scope@2
+symbol table id,symbol table name,parent id
+2,scope@2,1
 name,type,offset,width
+tmp@2,int,0,4
+tmp@3,float,4,4
 -------------------------------------------------------------------------------------------
-          symbol table id:,3,symbol table name:,scope@3
+symbol table id,symbol table name,parent id
+3,scope@3,1
 name,type,offset,width
+tmp@4,int,0,4
+tmp@5,int,4,4
+tmp@6,float,8,4
+tmp@7,int,12,4
+tmp@8,float,16,4
+tmp@9,float,20,4

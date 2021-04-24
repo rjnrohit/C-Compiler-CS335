@@ -1,0 +1,51 @@
+main:
+BeginFunc
+tmp@4 = '|'
+tmp@5 = operator|main char== tmp@4
+ifz tmp@5 goto label#9
+tmp@6 = a|main long| b|main
+x|main = tmp@6
+goto label#10
+label#9:
+tmp@7 = '&'
+tmp@8 = operator|main char== tmp@7
+ifz tmp@8 goto label#7
+tmp@9 = a|main long& b|main
+x|main = tmp@9
+goto label#8
+label#7:
+tmp@10 = '^'
+tmp@11 = operator|main char== tmp@10
+ifz tmp@11 goto label#5
+tmp@12 = a|main long^ b|main
+x|main = tmp@12
+goto label#6
+label#5:
+tmp@13 = '~'
+tmp@14 = operator|main char== tmp@13
+ifz tmp@14 goto label#3
+tmp@15 = long~ a|main
+x|main = tmp@15
+goto label#4
+label#3:
+tmp@16 = '<'
+tmp@17 = operator|main char== tmp@16
+ifz tmp@17 goto label#1
+tmp@18 = a|main long< b|main
+tmp@19 = bool_to_long tmp@18
+x|main = tmp@19
+goto label#2
+label#1:
+tmp@20 = '>'
+tmp@21 = operator|main char== tmp@20
+ifz tmp@21 goto label#0
+tmp@22 = a|main long> b|main
+tmp@23 = bool_to_long tmp@22
+x|main = tmp@23
+label#0:
+label#2:
+label#4:
+label#6:
+label#8:
+label#10:
+EndFunc

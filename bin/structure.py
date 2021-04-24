@@ -1,15 +1,30 @@
 import builtins
+from typing import List
+
 
 class Node:
     count_nodes = 0
     nodes = []
-    def __init__(self,name = None, value=None,type=None,children=None, eval =None):
+    def __init__(self,name = None, value=None,type=None,children=None, constant =None):
         self.id = Node.count_nodes
         Node.count_nodes += 1
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
-        self.eval = eval
+        self.constan = constant
+
+        self.place = ""
+        self.code = []
+        
+        @property
+        def code(self):
+            return self._code
+        
+        @code.setter
+        def code(self, code):
+            assert isinstance(code, list), "code object must be list of gen's / labels"
+            self._code = code
+
         if children:
             self.children = children
         else:
@@ -26,7 +41,6 @@ class Node:
         res += ",name:" + str(self.name)
         res += ",value:" + str(self.value)
         res += ",type:" + str(self.type)
-        res += ",eval:" + str(self.eval)
         res += ",info:" + str(self.data)
         res += ")"
         return res
@@ -159,6 +173,7 @@ class PointerType(Type):
         self.array_size = array_size
         self.array_type = array_type
         self._width = self.update_width()
+        self.type_size = 8 if self.type.class_type =="PointerType" else type.width
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
@@ -610,23 +625,5 @@ sym_table = SymbolTable(name = 'global', scope_type='global')
 sym_table.set_curr_scope(symbol_table = sym_table)
 
 # checking type
-def implicit_casting(node1,node2):
-    list_type = {'double':1,'float':2,'long':3,'int':4,'char':5,'bool':6}
-    if node1.type.class_type != 'BasicType' or  node2.type.class_type != 'BasicType':
-        #print('1')
-        return None
-    if node1.type.type not in list_type or  node1.type.type not in list_type:
-        #print('2')
-        return None
-    else:
-        rank1 = list_type[node1.type.type]
-        rank2 = list_type[node2.type.type]
-        if rank1 == rank2:
-            return node1,node2,node1.type
-        elif rank1 < rank2:
-            new_node = Node(name="type_cast",value=node1.type.stype,children=[node2],type=node1.type)
-            return node1,new_node,node1.type
-        else:
-            new_node = Node(name="type_cast",value=node2.type.stype,children=[node1],type=node2.type)
-            return new_node,node2,node2.type
+
 
