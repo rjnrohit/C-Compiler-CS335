@@ -1051,11 +1051,7 @@ def p_pointer(p):
     pointer : MULTIPLY
             | pointer MULTIPLY
     '''
-    # | MULTIPLY type_qualifier_list
-    # | MULTIPLY type_qualifier_list pointer
-    # p[0] = [Node("pointer_ref",p[1])]
-    # for i in range(2,len(p)):
-    #     p[0] += p[i]
+  
     if len(p) == 2:
         type_specifier_symbol = None
         for symbol in reversed(p.stack):
@@ -1093,26 +1089,7 @@ def p_no_pointer(p):
     assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
 
-# List
-# def p_type_list(p):
-#     '''
-#     type_list : type_specifier
-#               | type_list COMMA type_specifier
-#     '''
-#     if len(p) == 2:
-#         p[0] = [p[1].type]
-#     else:
-#         p[0] = p[1] + [p[3].type]
 
-# # Node
-# def p_pointer_type_specifier(p):
-#     '''
-#     pointer_type_specifier : type_specifier
-#                            | pointer_type_specifier MULTIPLY 
-#     '''
-#     p[0] = p[1]
-#     if len(p) == 2 and p[0].type != error:
-#         p[0].type = PointerType(type=p[0].type)
 
 #List
 def p_parameter_type_list(p):
@@ -1213,11 +1190,17 @@ def p_labeled_statement(p):
             p[0] = Node(type="error")
             return 
         p[0] = Node("case",children=[p[2],p[4]],type="ok")
+        p[0].data['expr'] = p[2]
+        p[0].data['stmt'] = p[4]
+        p[0].data['token'] = p.slice[1]
     else:
         if p[3].type == "error":
             p[0] = Node(type="error")
             return 
         p[0] = Node("default",children=[p[3]],type="ok")
+        p[0].data['expr'] = None
+        p[0].data['stmt'] = p[3]
+        p[0].data['token'] = p.slice[1]
 
 # Node
 def p_compound_statement(p):
@@ -1322,8 +1305,34 @@ def p_selection_statement(p):
         if p[3].type=="error":
             p[0] = Node(type="error")
             return
-        label_list = Node(name="labeled list",value="{}",children=p[7],type="ok")
+        label_list = Node(name="labeled list",children=p[7],type="ok")
         p[0] = Node(name="switch",children=[p[3],label_list],type="ok")
+        label_list = p[7]
+        p[0].code = p[3].code
+        place = p[3].place
+        end_label = get_newlabel()
+        for labels in label_list:
+            assert isinstance(labels,Node), "labels should be node"
+            if labels.data['expr'] == None:
+                p[0].code += labels.data["stmt"].code
+            else:
+                const = labels.data['expr']
+                if const.type.is_convertible_to(p[3].type) == False:
+                    Errors(
+                        errorType='TypeError',
+                        errorText='cannot covert '+const.type.stype+' to '+p[3].type.stype,
+                        token_object= p.slice[2]
+                    )
+                    p[0] = Node(type="error")
+                    return
+                const = typecast(const,type=p[3].type)
+                new_label = get_newlabel()
+                p[0].code += const.code
+                p[0].code += [gen(op="if_not_cmp",place1=place,place2=const.place,place3=new_label,code="if "+place+" <> "+const.place+" goto "+new_label)]
+                p[0].code += labels.data["stmt"].code
+                p[0].code += [gen("label",place1=new_label)]
+        p[0].code += [gen("label",place1=end_label)]
+        p[0].code = break_continue(p[0].code,break_label=end_label,continue_label=None)
 
 # Node
 def p_iteration_statement(p):
@@ -1341,15 +1350,6 @@ def p_iteration_statement(p):
 
         label1 = get_newlabel()
         label2 = get_newlabel()
-        # label3 = get_newlabel()
-        # p[0].code = [gen(op = "label",place1=label1)]
-        # p[0].code += p[3].code
-        # p[0].code += [gen(op = 'ifnz', place1 = p[3].place, place2  = label2)]
-        # p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
-        # p[0].code += [gen(op = "label",place1=label2)]
-        # p[0].code += p[5].code
-        # p[0].code += [gen(op = "goto", place1 = label1, code = "goto "+ label1)]
-        # p[0].code += [gen(op = label3, code = label3)]
         p[0].code = [gen(op = "label",place1=label1)]
         p[0].code += p[3].code
         p[0].code += [gen(op = 'ifz', place1 = p[3].place, place2  = label2)]

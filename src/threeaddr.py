@@ -109,7 +109,7 @@ def get_newlabel():
 
 def break_continue(input, break_label, continue_label):
     assert break_label, "label1 not given"
-    assert continue_label, "label2 not given"
+    # assert continue_label, "label2 not given"
 
     for gens in input:
         assert isinstance(gens, gen), "input must list of gen's"

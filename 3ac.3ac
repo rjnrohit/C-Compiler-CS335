@@ -1,0 +1,46 @@
+main:
+BeginFunc
+tmp@4 = '|'
+if operator|main <> tmp@4 goto label#1
+tmp@5 = a|main long| b|main
+x|main = tmp@5
+goto label#0
+label#1:
+tmp@6 = 4
+tmp@7 = 3
+tmp@8 = tmp@6 int* tmp@7
+tmp@20 = int_to_char tmp@8
+if operator|main <> tmp@20 goto label#2
+tmp@9 = a|main long& b|main
+x|main = tmp@9
+goto label#0
+label#2:
+tmp@10 = '^'
+if operator|main <> tmp@10 goto label#3
+tmp@11 = a|main long^ b|main
+x|main = tmp@11
+goto label#0
+label#3:
+tmp@12 = '~'
+if operator|main <> tmp@12 goto label#4
+tmp@13 = long~ a|main
+x|main = tmp@13
+goto label#0
+label#4:
+tmp@14 = '<'
+if operator|main <> tmp@14 goto label#5
+tmp@15 = a|main long< b|main
+tmp@16 = bool_to_long tmp@15
+x|main = tmp@16
+goto label#0
+label#5:
+tmp@17 = '>'
+if operator|main <> tmp@17 goto label#6
+tmp@18 = a|main long> b|main
+tmp@19 = bool_to_long tmp@18
+x|main = tmp@19
+goto label#0
+label#6:
+x|main = a|main
+label#0:
+EndFunc

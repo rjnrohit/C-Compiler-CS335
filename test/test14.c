@@ -1,4 +1,39 @@
-int c;
+// Performing multiple bitwise operations using switch case
+
 int main(){
-    c = 1>2?2:3;
+    char operator = '^';
+    
+    long a = 0x56a, b = 0x44f;
+    bool equal = (a==b);
+    long x;
+
+    switch (operator)
+    {
+    case '|':{
+        x = a|b;
+        break;
+    }
+    case '&':{
+        x = a&b;
+        break;
+    }
+    case '^':{
+        x = a^b;
+        break;
+    }
+    case '~':{
+        x = ~a;
+        break;
+    }
+    case '<':{
+        x = a<b;
+        break;
+    }
+    case '>':{
+        x = a>b;
+        break;
+    }
+    default: x = a;
+    }
+    
 }
