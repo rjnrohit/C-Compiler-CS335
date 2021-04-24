@@ -108,8 +108,16 @@ def break_continue(input, break_label, continue_label):
     assert break_label, "label1 not given"
     assert continue_label, "label2 not given"
 
-    input = input.replace("continue", "goto " + continue_label)
-    input = input.replace("break", "goto " + break_label)
+    for gens in input:
+        assert isinstance(gens, gen), "input must list of gen's"
+        if gens.op == 'continue':
+            #input.op == 'goto'
+            gens.place1 == continue_label
+            gens.code = 'goto ' + continue_label
+        elif gens.op == 'break':
+            #input.op == 'goto'
+            gens.place1 == break_label
+            gens.code = 'goto ' + break_label
 
     return input
 
