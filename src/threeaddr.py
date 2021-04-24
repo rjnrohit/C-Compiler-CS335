@@ -114,12 +114,12 @@ def break_continue(input, break_label, continue_label):
     for gens in input:
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == 'continue':
-            gens.op == 'goto'
-            gens.place1 == continue_label
+            gens.op = 'goto'
+            gens.place1 = continue_label
             gens.code = 'goto ' + continue_label
         elif gens.op == 'break':
-            gens.op == 'goto'
-            gens.place1 == break_label
+            gens.op = 'goto'
+            gens.place1 = break_label
             gens.code = 'goto ' + break_label
 
     return input
