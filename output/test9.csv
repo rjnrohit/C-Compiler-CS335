@@ -1,53 +1,27 @@
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name
 0,global
 name,type,offset,width
 prime,pointer of (int),0,40000
-tmp@0,int,40000,4
 n,int,40004,4
 sieve,void function(None),40008,0
 main,int function(None),40008,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 1,sieve,0
 name,type,offset,width
-tmp@1,int,0,4
 i,int,4,4
-tmp@2,int,8,4
-tmp@3,int,12,4
-tmp@4,bool,16,1
-tmp@5,int,17,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 4,main,0
 name,type,offset,width
 i,int,4,4
-tmp@17,int,8,4
-tmp@18,int,12,4
-tmp@19,bool,16,1
-tmp@20,int,17,4
-tmp@21,long,21,8
-tmp@22,long,29,8
-tmp@23,int,37,4
-tmp@24,void,41,0
-tmp@25,int,41,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
-tmp@6,long,0,8
-tmp@7,long,8,8
-tmp@8,int,16,4
-tmp@9,bool,20,1
 j,int,21,4
-tmp@10,int,25,4
-tmp@11,int,29,4
-tmp@12,bool,33,1
-tmp@13,int,34,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 3,scope@3,2
 name,type,offset,width
-tmp@14,long,0,8
-tmp@15,long,8,8
-tmp@16,int,16,4

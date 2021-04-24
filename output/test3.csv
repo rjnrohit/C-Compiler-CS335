@@ -1,37 +1,23 @@
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name
 0,global
 name,type,offset,width
 main,int function(None),0,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
-tmp@0,int,4,4
 n,int,8,4
 a,long,12,8
 b,long,20,8
 temp,long,28,8
-tmp@1,int,36,4
-tmp@2,int,40,4
 d,int,44,4
-tmp@3,int,48,4
-tmp@4,bool,52,1
-tmp@5,int,53,4
-tmp@13,int,57,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
-tmp@6,int,0,4
-tmp@7,long,4,8
-tmp@8,int,12,4
-tmp@9,long,16,8
 i,int,24,4
-tmp@10,int,28,4
-tmp@11,bool,32,1
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 3,scope@3,2
 name,type,offset,width
-tmp@12,long,0,8

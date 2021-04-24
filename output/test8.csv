@@ -1,38 +1,20 @@
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name
 0,global
 name,type,offset,width
 a,pointer of (int),0,92
-tmp@0,int,92,4
 n,int,96,4
 main,int function(None),100,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
 i,int,4,4
-tmp@1,int,8,4
-tmp@2,bool,12,1
-tmp@3,int,13,4
-tmp@7,int,17,4
-tmp@8,bool,21,1
-tmp@9,int,22,4
-tmp@17,int,26,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
-tmp@4,long,0,8
-tmp@5,long,8,8
-tmp@6,int,16,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 3,scope@3,1
 name,type,offset,width
-tmp@10,long,0,8
-tmp@11,long,8,8
-tmp@12,int,16,4
-tmp@13,int,20,4
-tmp@14,long,24,8
-tmp@15,long,32,8
-tmp@16,int,40,4

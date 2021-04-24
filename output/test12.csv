@@ -1,87 +1,47 @@
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name
 0,global
 name,type,offset,width
 a,pointer of (void) function([int]),0,12
 c,int,0,4
-tmp@1,long,4,8
 d,pointer of (void),12,8
 g,void function([]),20,0
 func,int function([int]),20,8
 printf,"int function([pointer of (char), int])",20,16
 p,int,20,4
-tmp@2,long,24,8
 ptr,pointer of (int),32,8
-tmp@3,long,40,8
 ptr1,pointer of (pointer of (int)),48,8
-tmp@4,long,56,8
 ptr2,pointer of (pointer of (pointer of (int))),64,8
-tmp@5,long,72,8
 ptr3,pointer of (pointer of (pointer of (pointer of (int)))),80,8
-tmp@6,pointer of (char),88,22
 cc,pointer of (char),110,8
 b,char,118,1
-tmp@7,pointer of (char),119,6
-tmp@8,pointer of (char),125,6
-tmp@9,pointer of (char),131,8
-tmp@10,pointer of (char),139,7
 str,pointer of (pointer of (char)),146,48
 main,int function(None),194,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 1,a,0
 name,type,offset,width
 b,int,8,4
-tmp@0,long,12,8
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 3,g,0
 name,type,offset,width
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 4,func,0
 name,type,offset,width
 a,int,4,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 5,printf,0
 name,type,offset,width
 s,pointer of (char),4,8
 d,int,12,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 6,main,0
 name,type,offset,width
 vd,pointer of (pointer of (pointer of (pointer of (void)))),4,8
-tmp@11,long,12,8
 c,pointer of (int),20,8
-tmp@12,int,28,4
-tmp@13,int,32,4
-tmp@14,int,36,4
-tmp@15,long,40,8
-tmp@16,long,48,8
-tmp@17,char,56,1
-tmp@18,char,57,1
-tmp@19,int,58,4
-tmp@20,int,62,4
 l,int,66,4
-tmp@21,int,70,4
-tmp@22,pointer of (void),74,8
-tmp@23,int,82,4
-tmp@24,pointer of (char),86,7
-tmp@25,int,93,4
-tmp@26,int,97,4
-tmp@27,int,101,4
-tmp@28,int,105,4
-tmp@29,bool,109,1
-tmp@30,bool,110,1
-tmp@31,bool,111,1
 b,bool,112,1
-tmp@32,int,113,4
-tmp@33,int,117,4
-tmp@34,bool,121,1
-tmp@35,int,122,4
-tmp@36,bool,126,1
-tmp@37,bool,127,1
-tmp@38,long,128,8
-tmp@39,int,136,4

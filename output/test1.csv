@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name
 0,global
 name,type,offset,width
@@ -6,40 +6,22 @@ f,float function([float]),0,8
 df,float function([float]),0,8
 fabs,float function([float]),0,8
 main,int function(None),0,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 1,f,0
 name,type,offset,width
 x,float,4,4
-tmp@0,float,8,4
-tmp@1,int,12,4
-tmp@2,float,16,4
-tmp@3,float,20,4
-tmp@4,float,24,4
-tmp@5,float,28,4
-tmp@6,float,32,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 2,df,0
 name,type,offset,width
 x,float,4,4
-tmp@7,int,8,4
-tmp@8,float,12,4
-tmp@9,float,16,4
-tmp@10,int,20,4
-tmp@11,float,24,4
-tmp@12,float,28,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 3,fabs,0
 name,type,offset,width
 x,float,4,4
-tmp@13,int,8,4
-tmp@14,float,12,4
-tmp@15,bool,16,1
-tmp@16,float,17,4
-tmp@17,long,21,8
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 4,main,0
 name,type,offset,width
@@ -49,26 +31,11 @@ h,float,12,4
 x0,float,16,4
 x1,float,20,4
 allerr,float,24,4
-tmp@18,int,28,4
-tmp@19,float,32,4
-tmp@20,float,36,4
-tmp@21,int,40,4
-tmp@22,int,44,4
-tmp@23,bool,48,1
-tmp@24,int,49,4
-tmp@32,int,53,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 5,scope@5,4
 name,type,offset,width
-tmp@25,float,0,4
-tmp@26,float,4,4
-tmp@27,float,8,4
-tmp@28,float,12,4
-tmp@29,float,16,4
-tmp@30,bool,20,1
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 6,scope@6,5
 name,type,offset,width
-tmp@31,int,0,4

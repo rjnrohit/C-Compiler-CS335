@@ -1,37 +1,18 @@
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name
 0,global
 name,type,offset,width
 main,int function(None),0,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
-tmp@0,int,4,4
 reversedN,long,8,8
 remainder,long,16,8
 originalN,long,24,8
-tmp@1,int,32,4
 n,long,36,8
-tmp@2,int,44,4
-tmp@3,long,48,8
-tmp@4,bool,56,1
 is_palindrome,int,57,4
-tmp@15,bool,61,1
-tmp@16,int,62,4
-tmp@17,int,66,4
-tmp@18,int,70,4
--------------------------------------------------------------------------------------------
+
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
-tmp@5,int,0,4
-tmp@6,long,4,8
-tmp@7,long,12,8
-tmp@8,int,20,4
-tmp@9,long,24,8
-tmp@10,long,32,8
-tmp@11,long,40,8
-tmp@12,int,48,4
-tmp@13,long,52,8
-tmp@14,long,60,8
