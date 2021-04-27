@@ -21,7 +21,7 @@ int** ptr1 = &ptr;
 int*** ptr2 = &ptr1;
 int**** ptr3 = &ptr2;
 
-char *cc = "this is pointer test", b, str[12][4] = {"aham", "hmmm", "braham", "samhi"};
+char *cc = "this is pointer test", b, str[12][4];
 
 int main(){
     void**** vd = ptr3;
