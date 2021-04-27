@@ -84,6 +84,8 @@ def type_check_unary(node1,op,token,is_typename=False):
     elif op == "*":
         if node1.type.class_type == "PointerType":
             node = Node(name="unary_op",value=op,children=[node1],type=node1.type.type)
+            if node.type.class_type == "PointerType":
+                node.type.array_size = node1.type.array_size[1:]
             node.code = node1.code
             node.place = get_newtmp(node1.type.type)
             node.code += [gen(op="*",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]

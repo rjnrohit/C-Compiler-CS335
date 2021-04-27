@@ -162,7 +162,7 @@ class BasicType(Type):
 
 class PointerType(Type):
 
-    def __init__(self, type = None, array_size = [],array_type=None):
+    def __init__(self, type = None, array_size = list(),array_type=None):
         super().__init__()
         self.class_type = "PointerType"
         self.is_pointer = True
