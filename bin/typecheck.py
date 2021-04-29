@@ -84,6 +84,8 @@ def type_check_unary(node1,op,token,is_typename=False):
     elif op == "*":
         if node1.type.class_type == "PointerType":
             node = Node(name="unary_op",value=op,children=[node1],type=node1.type.type)
+            if node.type.class_type == "PointerType":
+                node.type.array_size = node1.type.array_size[1:]
             node.code = node1.code
             node.place = get_newtmp(node1.type.type)
             node.code += [gen(op="*",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]
@@ -325,16 +327,38 @@ def type_check_logical(node1,node2,op,token):
         )
         return Node(type="error")
         
-    if node1.type.type != "bool":
-        node1 = typecast(node1,BasicType("bool"))
-    if node2.type.type != "bool":
-        node2 = typecast(node2,BasicType("bool"))
+    # if node1.type.type != "bool":
+    #     node1 = typecast(node1,BasicType("bool"))
+    # if node2.type.type != "bool":
+    #     node2 = typecast(node2,BasicType("bool"))
     node = Node(name="binary_op",value=op,children = [node1,node2],type=BasicType('bool'))
-    node.code = node1.code + node2.code
-    tmp,code = get_opcode(op=op,place1=node1.place,place2=node2.place,type=BasicType('bool'))
-    node.code += [code]
-    node.place = tmp
-    # print(tmp)
+    # node.code = node1.code + node2.code
+    # tmp,code = get_opcode(op=op,place1=node1.place,place2=node2.place,type=BasicType('bool'))
+    # node.code += [code]
+    # node.place = tmp
+    node.place = get_newtmp(BasicType('bool'))
+    label1 = get_newlabel()
+    label2 = get_newlabel()
+    if op == "&&":
+        node.code = node1.code
+        node.code += [gen(op="ifz",place1=node1.place,place2=label1)]
+        node.code += node2.code
+        node.code += [gen(op="ifz",place1=node2.place,place2=label1)]
+        node.code += [gen(op="eqc",place1="1",place3=node.place)]
+        node.code += [gen(op="goto",place1=label2)]
+        node.code += [gen(op="label",place1=label1)]
+        node.code += [gen(op="eqc",place1="0",place3=node.place)]
+        node.code += [gen(op="label",place1=label2)]
+    else:
+        node.code = node1.code
+        node.code += [gen(op="ifnz",place1=node1.place,place2=label1)]
+        node.code += node2.code
+        node.code += [gen(op="ifnz",place1=node2.place,place2=label1)]
+        node.code += [gen(op="eqc",place1="0",place3=node.place)]
+        node.code += [gen(op="goto",place1=label2)]
+        node.code += [gen(op="label",place1=label1)]
+        node.code += [gen(op="eqc",place1="1",place3=node.place)]
+        node.code += [gen(op="label",place1=label2)]
     return node
 
 

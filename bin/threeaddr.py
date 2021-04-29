@@ -50,7 +50,7 @@ class gen:
 
         assert place3, "please provide variable to assign final value"
 
-        if op == 'assign' or op == '=':
+        if op == 'assign' or op == '=' or op[:2] == "eq":
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3)
 
@@ -109,7 +109,7 @@ def get_newlabel():
 
 def break_continue(input, break_label, continue_label):
     assert break_label, "label1 not given"
-    assert continue_label, "label2 not given"
+    # assert continue_label, "label2 not given"
 
     for gens in input:
         assert isinstance(gens, gen), "input must list of gen's"
@@ -154,3 +154,22 @@ def has_break_continue(input):
         if gens.op == "break" or gens.op == "continue":
             return True
     return False
+
+def remove_label(code_list):
+    global label_list
+    new_label = dict()
+    new_label_cnt = 0
+    i = 0
+    while(i<len(code_list)):
+        if code_list[i].op == "label":
+            label = "label#" + str(new_lable_cnt)
+            new_label_cnt += 1
+            new_label[code_list[i].place1] = label
+            i += 1
+            while(i<len(code_list) and code_list[i].op == "label"):
+                new_label[code_list[i].place1] = label
+                i += 1
+        else:
+            i += 1
+
+    

@@ -35,6 +35,9 @@ return tmp@17
 EndFunc
 main:
 BeginFunc
+tmp@18 = 1
+tmp@19 = int_to_float tmp@18
+x0|main = tmp@19
 tmp@21 = 10000
 maxmitr|main = tmp@21
 tmp@22 = 1

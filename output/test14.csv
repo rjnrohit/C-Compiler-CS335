@@ -2,9 +2,41 @@
 symbol table id,symbol table name
 0,global
 name,type,offset,width
-c,int,0,4
-main,int function(None),4,4
+main,int function(None),0,4
 
 symbol table id,symbol table name,parent id
 1,main,0
+name,type,offset,width
+operator,char,5,1
+a,long,18,8
+b,long,38,8
+equal,bool,47,1
+x,long,48,8
+
+symbol table id,symbol table name,parent id
+2,scope@2,1
+name,type,offset,width
+
+symbol table id,symbol table name,parent id
+3,scope@3,2
+name,type,offset,width
+
+symbol table id,symbol table name,parent id
+4,scope@4,2
+name,type,offset,width
+
+symbol table id,symbol table name,parent id
+5,scope@5,2
+name,type,offset,width
+
+symbol table id,symbol table name,parent id
+6,scope@6,2
+name,type,offset,width
+
+symbol table id,symbol table name,parent id
+7,scope@7,2
+name,type,offset,width
+
+symbol table id,symbol table name,parent id
+8,scope@8,2
 name,type,offset,width

@@ -33,7 +33,7 @@ i,int,44,4
 j,int,48,4
 k,int,52,4
 l,bool,92,1
-d,int,1757,4
+d,int,1755,4
 
 symbol table id,symbol table name,parent id
 6,foo,0
@@ -43,7 +43,7 @@ c,int,22,4
 symbol table id,symbol table name,parent id
 4,scope@4,3
 name,type,offset,width
-b,int,53,4
+b,int,57,4
 
 symbol table id,symbol table name,parent id
 7,scope@7,6

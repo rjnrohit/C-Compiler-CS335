@@ -3,40 +3,75 @@ BeginFunc
 tmp@0 = addr(b|a)
 return tmp@0
 EndFunc
+tmp@1 = addr(c|global)
+d|global = tmp@1
 g:
 BeginFunc
 EndFunc
+tmp@2 = addr(p|global)
+ptr|global = tmp@2
+tmp@3 = addr(ptr|global)
+ptr1|global = tmp@3
+tmp@4 = addr(ptr1|global)
+ptr2|global = tmp@4
+tmp@5 = addr(ptr2|global)
+ptr3|global = tmp@5
+tmp@6 = "this is pointer test"
+cc|global = tmp@6
 main:
 BeginFunc
-tmp@12 = load(c|main)
-tmp@13 = 2
-tmp@12 = tmp@13
-tmp@14 = 1
-tmp@15 = tmp@14 long*_c 4
-tmp@16 = str|global long+ tmp@15
-tmp@17 = load(tmp@16)
-tmp@18 = 'g'
-tmp@17 = tmp@18
-tmp@21 = load(c|main)
-tmp@22 = 0
-tmp@23 = long_to_int tmp@22
-tmp@21 = tmp@23
-tmp@24 = "hello"
-tmp@25 = 5
-push tmp@24
-push tmp@25
-tmp@26 = func_call printf
-pop tmp@25
-pop tmp@24
-tmp@32 = 5
-tmp@33 = 3
-tmp@34 = tmp@32 int> tmp@33
-tmp@35 = 3
-tmp@36 = int_to_bool tmp@35
-tmp@37 = tmp@34 && tmp@36
-ifz tmp@37 goto label#0
+vd|main = ptr3|global
+tmp@7 = addr(main|global)
+c|main = tmp@7
+tmp@8 = load(c|main)
+tmp@9 = 2
+tmp@8 = tmp@9
+tmp@10 = 1
+tmp@11 = tmp@10 long*_c 4
+tmp@12 = str|global long+ tmp@11
+tmp@13 = load(tmp@12)
+tmp@14 = 'g'
+tmp@13 = tmp@14
+tmp@15 = 1
+push tmp@15
+tmp@16 = func_call func
+pop tmp@15
+l|main = tmp@16
+tmp@17 = load(c|main)
+tmp@18 = 0
+tmp@19 = long_to_int tmp@18
+tmp@17 = tmp@19
+tmp@20 = "hello"
+tmp@21 = 5
+push tmp@20
+push tmp@21
+tmp@22 = func_call printf
+pop tmp@21
+pop tmp@20
+tmp@23 = 6
+ifz tmp@23 goto label#0
+tmp@24 = 3
+ifz tmp@24 goto label#0
+tmp@25 = 1
+goto label#1
 label#0:
-tmp@38 = addr(p|global)
-tmp@39 = long_to_int tmp@38
-return tmp@39
+tmp@25 = 0
+label#1:
+b|main = tmp@25
+tmp@26 = 5
+tmp@27 = 3
+tmp@28 = tmp@26 int> tmp@27
+ifz tmp@28 goto label#2
+tmp@29 = 3
+ifz tmp@29 goto label#2
+tmp@30 = 1
+goto label#3
+label#2:
+tmp@30 = 0
+label#3:
+ifz tmp@30 goto label#4
+label#4:
+tmp@31 = addr(p|global)
+tmp@32 = long_to_int tmp@31
+return tmp@32
 EndFunc

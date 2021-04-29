@@ -24,125 +24,147 @@ tmp@9 = 5
 tmp@10 = tmp@9 long*_c 4
 tmp@11 = ptr|main long+ tmp@10
 tmp@12 = 5
-tmp@14 = int_to_bool tmp@12
+ifz tmp@12 goto label#0
 tmp@13 = 3
-tmp@15 = int_to_bool tmp@13
-tmp@16 = tmp@14 && tmp@15
-l|main = tmp@16
-tmp@17 = 0
-tmp@18 = tmp@17 long*_c 728
-tmp@19 = array|global long+ tmp@18
-tmp@20 = 0
-tmp@21 = tmp@20 long*_c 56
-tmp@22 = tmp@19 long+ tmp@21
-tmp@23 = 1
-tmp@24 = tmp@23 long*_c 4
-tmp@25 = tmp@22 long+ tmp@24
-tmp@26 = 0
-i|main = tmp@26
-label#6:
-tmp@27 = 12
-tmp@28 = i|main int< tmp@27
-ifz tmp@28 goto label#8
-j|main = i|main
-label#3:
-tmp@30 = 13
-tmp@31 = j|main int< tmp@30
-ifz tmp@31 goto label#5
-k|main = j|main
+ifz tmp@13 goto label#0
+tmp@14 = 1
+goto label#1
 label#0:
-tmp@33 = 14
-tmp@34 = j|main int< tmp@33
-ifz tmp@34 goto label#2
-tmp@36 = i|main long*_c 728
-tmp@37 = array|global long+ tmp@36
-tmp@38 = j|main long*_c 56
-tmp@39 = tmp@37 long+ tmp@38
-tmp@40 = k|main long*_c 4
-tmp@41 = tmp@39 long+ tmp@40
-tmp@42 = i|main int+ j|main
-tmp@43 = tmp@42 int% k|main
-tmp@44 = tmp@43 int* k|main
-tmp@41 = tmp@44
+tmp@14 = 0
 label#1:
-tmp@35 = j|main
-j|main = j|main int+_c 1
-goto label#0
-label#2:
-label#4:
-tmp@32 = j|main
-j|main = j|main int+_c 1
-goto label#3
-label#5:
-label#7:
-tmp@29 = i|main
-i|main = i|main int+_c 1
-goto label#6
+l|main = tmp@14
+tmp@15 = 0
+tmp@16 = tmp@15 long*_c 728
+tmp@17 = array|global long+ tmp@16
+tmp@18 = 0
+tmp@19 = tmp@18 long*_c 56
+tmp@20 = tmp@17 long+ tmp@19
+tmp@21 = 1
+tmp@22 = tmp@21 long*_c 4
+tmp@23 = tmp@20 long+ tmp@22
+tmp@24 = 0
+i|main = tmp@24
 label#8:
-tmp@51 = load(array|global)
-tmp@51 = tmp@51 long+_c 8
-tmp@52 = load(tmp@51)
-tmp@52 = tmp@52 long+_c 4
-tmp@53 = int_to_float b|main
+tmp@25 = 12
+tmp@26 = i|main int< tmp@25
+ifz tmp@26 goto label#10
+j|main = i|main
+label#5:
+tmp@28 = 13
+tmp@29 = j|main int< tmp@28
+ifz tmp@29 goto label#7
+k|main = j|main
+label#2:
+tmp@31 = 14
+tmp@32 = j|main int< tmp@31
+ifz tmp@32 goto label#4
+tmp@34 = i|main long*_c 728
+tmp@35 = array|global long+ tmp@34
+tmp@36 = j|main long*_c 56
+tmp@37 = tmp@35 long+ tmp@36
+tmp@38 = k|main long*_c 4
+tmp@39 = tmp@37 long+ tmp@38
+tmp@40 = i|main int+ j|main
+tmp@41 = tmp@40 int% k|main
+tmp@42 = tmp@41 int* k|main
+tmp@39 = tmp@42
+label#3:
+tmp@33 = j|main
+j|main = j|main int+_c 1
+goto label#2
+label#4:
+label#6:
+tmp@30 = j|main
+j|main = j|main int+_c 1
+goto label#5
+label#7:
+tmp@43 = i|main long*_c 728
+tmp@44 = array|global long+ tmp@43
+tmp@45 = j|main long*_c 728
+tmp@46 = array|global long+ tmp@45
+tmp@47 = long_to_int tmp@46
+tmp@48 = tmp@47 long*_c 8
+tmp@48 = tmp@44 long+ tmp@48
+tmp@49 = long_to_int tmp@48
+b|scope@4 = tmp@49
+label#9:
+tmp@27 = i|main
+i|main = i|main int+_c 1
+goto label#8
+label#10:
+tmp@50 = load(array|global)
+tmp@50 = tmp@50 long+_c 8
+tmp@51 = load(tmp@50)
+tmp@51 = tmp@51 long+_c 4
+tmp@52 = int_to_float b|main
 push a|main
-push tmp@53
-tmp@54 = func_call take_and
-pop tmp@53
+push tmp@52
+tmp@53 = func_call take_and
+pop tmp@52
 pop a|main
-a|main = tmp@54
-tmp@58 = 0.1
-tmp@59 = float_to_int tmp@58
-return tmp@59
+a|main = tmp@53
+tmp@54 = load(array|global)
+tmp@55 = load(tmp@54)
+tmp@56 = load(tmp@55)
+d|main = tmp@56
+tmp@57 = 0.1
+tmp@58 = float_to_int tmp@57
+return tmp@58
 EndFunc
+tmp@59 = 0
+jj|global = tmp@59
 foo:
 BeginFunc
-label#11:
-tmp@61 = 50
-tmp@62 = jj|global int< tmp@61
-ifz tmp@62 goto label#13
-tmp@64 = jj|global
-jj|global = jj|global int+_c 1
-tmp@65 = 15
-tmp@66 = jj|global int< tmp@65
-ifz tmp@66 goto label#9
-goto label#12
-label#9:
-tmp@67 = 50
-tmp@68 = jj|global int> tmp@67
-ifz tmp@68 goto label#10
-goto label#13
-label#10:
-label#12:
+label#13:
+tmp@60 = 50
+tmp@61 = jj|global int< tmp@60
+ifz tmp@61 goto label#15
 tmp@63 = jj|global
 jj|global = jj|global int+_c 1
-goto label#11
-label#13:
-label#14:
+tmp@64 = 15
+tmp@65 = jj|global int< tmp@64
+ifz tmp@65 goto label#11
+goto label#14
+label#11:
+tmp@66 = 50
+tmp@67 = jj|global int> tmp@66
+ifz tmp@67 goto label#12
 goto label#15
+label#12:
+label#14:
+tmp@62 = jj|global
+jj|global = jj|global int+_c 1
+goto label#13
 label#15:
-ifnz jj|global goto label#14
 label#16:
-label#17:
-tmp@70 = 1
-ifz tmp@70 goto label#18
-goto label#18
 goto label#17
+tmp@68 = jj|global
+jj|global = jj|global int+_c 1
+c|scope@8 = tmp@68
+label#17:
+ifnz jj|global goto label#16
 label#18:
-tmp@71 = 45
-jj|global = tmp@71
 label#19:
-tmp@72 = 3
-tmp@73 = jj|global int% tmp@72
-ifz tmp@73 goto label#20
-goto label#19
+tmp@69 = 1
+ifz tmp@69 goto label#20
 goto label#20
 goto label#19
 label#20:
+tmp@70 = 45
+jj|global = tmp@70
 label#21:
-jj|global = jj|global int+_c 1
-tmp@74 = c|foo int!= jj|global
-ifz tmp@74 goto label#22
+tmp@71 = 3
+tmp@72 = jj|global int% tmp@71
+ifz tmp@72 goto label#22
 goto label#21
+goto label#22
 goto label#21
 label#22:
+label#23:
+jj|global = jj|global int+_c 1
+tmp@73 = c|foo int!= jj|global
+ifz tmp@73 goto label#24
+goto label#23
+goto label#23
+label#24:
 EndFunc

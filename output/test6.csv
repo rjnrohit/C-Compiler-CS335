@@ -13,7 +13,7 @@ a,int,4,4
 symbol table id,symbol table name,parent id
 4,main,0
 name,type,offset,width
-b,int,16,4
+b,int,20,4
 
 symbol table id,symbol table name,parent id
 2,scope@2,1

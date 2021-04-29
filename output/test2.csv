@@ -7,11 +7,11 @@ main,int function(None),0,4
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
-reversedN,long,8,8
-remainder,long,16,8
-originalN,long,24,8
-n,long,36,8
-is_palindrome,int,57,4
+reversedN,long,16,8
+remainder,long,24,8
+originalN,long,32,8
+n,long,52,8
+is_palindrome,int,73,4
 
 symbol table id,symbol table name,parent id
 2,scope@2,1

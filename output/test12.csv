@@ -15,8 +15,8 @@ ptr2,pointer of (pointer of (pointer of (int))),64,8
 ptr3,pointer of (pointer of (pointer of (pointer of (int)))),80,8
 cc,pointer of (char),110,8
 b,char,118,1
-str,pointer of (pointer of (char)),146,48
-main,int function(None),194,4
+str,pointer of (pointer of (char)),119,48
+main,int function(None),167,4
 
 symbol table id,symbol table name,parent id
 1,a,0
@@ -44,4 +44,4 @@ name,type,offset,width
 vd,pointer of (pointer of (pointer of (pointer of (void)))),4,8
 c,pointer of (int),20,8
 l,int,66,4
-b,bool,112,1
+b,bool,110,1

@@ -1,5 +1,9 @@
+tmp@0 = 10000
+n|global = tmp@0
 sieve:
 BeginFunc
+tmp@1 = 2
+i|sieve = tmp@1
 tmp@2 = 2
 i|sieve = tmp@2
 label#4:

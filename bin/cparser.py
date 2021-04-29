@@ -248,7 +248,7 @@ def p_primary_expression(p):
         elif p[0].constant == "true":
             p[0].constant = 1
         p[0].place = get_newtmp(type=p[0].type)
-        p[0].code = [gen(op="=",place1=str(p[0].constant),place3=p[0].place)]
+        p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=str(p[0].constant),place3=p[0].place)]
     
     else:
         p[0] = p[2]
@@ -456,6 +456,7 @@ def p_postfix_expression_3(p):
     p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
     tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
     p[0].code += [code]
+    p[0].code += [gen(op="*",place1=tmp1,place3=tmp1,code=tmp1+" = "+"load("+tmp1+")")]
     p[0].place = tmp1
 
     
@@ -496,6 +497,7 @@ def p_postfix_expression_4(p):
     p[0].code = p[1].code
     tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=success.offset,type="long")
     p[0].code += [code]
+    p[0].code += [gen(op="*",place1=tmp,place3=tmp,code=tmp+" = "+"load("+tmp+")")]
     p[0].place = tmp
 
 
@@ -540,7 +542,7 @@ def p_unary_expression_2(p):
     '''
     unary_expression : unary_operator cast_expression
     '''    
-    p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
+    p[0] = type_check_unary(node1=p[2],op=p[1]['op'],token=p[1]['token'])
 
 #Node
 def p_unary_expression_3(p):
@@ -563,7 +565,7 @@ def p_unary_operator(p):
                    | BITWISE_ONE_COMPLEMENT
                    | LOGICAL_NOT
     '''
-    p[0] = p[1]
+    p[0] = {'op':p[1],'token':p.slice[1]}
 
 #Node
 def p_cast_expression(p):
@@ -783,7 +785,7 @@ def p_assignment_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = type_check_assign_op(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
+        p[0] = type_check_assign_op(node1=p[1],node2=p[3],op=p[2]['op'],token=p[2]['token'])
 
 
 #String
@@ -801,7 +803,7 @@ def p_assignment_operator(p):
                         | BITWISE_XOR_ASSIGNMENT
                         | BITWISE_OR_ASSIGNMENT
     '''
-    p[0] = p[1]
+    p[0] = {'op':p[1],'token':p.slice[1]}
 
 # Node
 def p_expression(p):
@@ -817,9 +819,10 @@ def p_expression(p):
         if isinstance(p[1],Node) and p[1].name == "expression":
             p[1].addChild(p[3])
             p[0] = p[1]
+            p[0].code += p[3].code
         else:
             p[0] = Node(name="expression",children=[p[1],p[3]],type="ok")
-    
+            p[0].code = p[1].code
 #Node
 def p_constant_expression(p):
     '''
@@ -833,6 +836,7 @@ def p_declaration(p):
     '''
     declaration : struct_specifier SEMI_COLON
 	            | type_specifier init_declarator_list SEMI_COLON
+                | AUTO auto_declarator_list SEMI_COLON
     '''
     if len(p) == 4:
         p[0] = p[2]
@@ -855,7 +859,7 @@ def p_init_declarator_list(p):
 def p_init_declarator(p):
     '''
     init_declarator : declarator
-	                | declarator ASSIGNMENT initializer
+	                | declarator ASSIGNMENT assignment_expression
     '''
     if p[1].type == "error":
         p[0] = [None]
@@ -865,18 +869,59 @@ def p_init_declarator(p):
         p[0] = [None]
         
     else:
-        # type checking
-        # check for initliazer
-        # print(type(p[3]))
-        init = type_check_init(p[3],p[1].type,p.slice[2])
-        if init.type == "error":
-            p[0] = [None]
+        p[0] = [None]
+        if p[3].type == "errror":
             return
+        if p[3].type.is_convertible_to(p[1].type) == False:
+            Errors(
+                errorType='TypeError',
+                errorText="cannot assign "+p[3].type.stype+" to "+p[1].type.stype,
+                token_object= p.slice[2]
+            )
+            return
+        node = typecast(node1=p[3],type=p[1].type)
         success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
-            p[0] = [Node(name="initialization",children = [p[1],init],type="ok")]
+            p[0] = Node(name="binary_op",value=p[1].type.stype+"=",children = [p[1],node],type="ok")
+            p[0].code = node.code
+            p[0].place = p[1].value+"|"+success.symbol_table.name
+            p[0].code += [gen(op="=",place1=node.place,place3=p[0].place)]
+            p[0] = [p[0]]
         else:
             p[0] = [None]
+
+#List
+def p_auto_declarator_list(p):
+    '''
+    auto_declarator_list : auto_declarator
+                         | auto_declarator_list COMMA auto_declarator
+    '''
+    p[0] = p[1] if len(p) == 2  else p[1]+p[3]
+
+#List
+def p_auto_declarator(p):
+    '''
+    auto_declarator : IDENTIFIER ASSIGNMENT assignment_expression
+                    | IDENTIFIER
+    '''
+    p[0] = [None]
+    if len(p) == 2:
+        Errors(
+                errorType='DeclarationError',
+                errorText="cannot declare auto variable without initialization",
+                token_object= p.slice[1]
+        )
+        return
+    if p[3].type == "error":
+        return
+    success = sym_table.add_entry(name=p[1],type=p[3].type,token_object=p.slice[1])
+    node = Node(name="id",value=p[1],type=p[3].type)
+    if success:
+        p[0] = Node(name="binary_op",value=p[3].type.stype+"=",children = [node,p[3]],type="ok")
+        p[0].code = p[3].code
+        p[0].place = p[1]+"|"+success.symbol_table.name
+        p[0].code += [gen(op="=",place1=p[3].place,place3=p[0].place)]
+        p[0] = [p[0]]
 
 # Node
 def p_type_specifier(p):
@@ -924,7 +969,6 @@ def p_add_sym_struct(p):
     name = p.stack[-1].value
     sym_table.start_scope(name)
     sym_table.curr_symbol_table.parent._add_struct_entry(name=name,symbol_table=sym_table.curr_symbol_table,token_object=p.slice[1])
-
 # dict
 def p_struct_declaration_list(p):
     '''
@@ -953,19 +997,40 @@ def p_struct_declarator_list(p):
     '''
     success = None
     if len(p) == 2:
-        if p[1].type != "error":
-            success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
-            if success:
-                p[0] = {p[1].value:p[1].type}
+        if p[1].type == "error":
+            p[0] = dict({})
+            return
+        # print(p[1].type.class_type,p[1].value)
+        if p[1].type.class_type == "StructType" and p[1].type.name == sym_table.curr_symbol_table.name:
+            Errors(
+                    errorType='DeclarationError',
+                    errorText='cannot declare variable with same struct type within same struct',
+                    token_object= p[1].data['token']
+            )
+            p[0] = dict({})
+            return
+        success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
+        if success:
+            p[0] = {p[1].value:p[1].type}
         else:
             p[0] = dict({})
 
     else:
-        if p[3].type != "error":
-            success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
-            if success:
-                p[0] = p[1]
-                p[0].update({p[3].value:p[3].type})
+        if p[3].type == "error":
+            p[0] = p[1]
+            return
+        if p[3].type.class_type == "StructType" and p[3].type.name == sym_table.curr_symbol_table.name:
+            Errors(
+                    errorType='DeclarationError',
+                    errorText='cannot declare variable with same struct type within same struct',
+                    token_object= p[3].data['token']
+            )
+            p[0] = p[1]
+            return
+        success = sym_table.add_entry(name=p[3].value,type=p[3].type,token_object=p[3].data['token'])
+        if success:
+            p[0] = p[1]
+            p[0].update({p[3].value:p[3].type})
         else:
             p[0] = p[1]
 
@@ -1049,11 +1114,7 @@ def p_pointer(p):
     pointer : MULTIPLY
             | pointer MULTIPLY
     '''
-    # | MULTIPLY type_qualifier_list
-    # | MULTIPLY type_qualifier_list pointer
-    # p[0] = [Node("pointer_ref",p[1])]
-    # for i in range(2,len(p)):
-    #     p[0] += p[i]
+  
     if len(p) == 2:
         type_specifier_symbol = None
         for symbol in reversed(p.stack):
@@ -1091,26 +1152,7 @@ def p_no_pointer(p):
     assert p[0].type == 'error' or isinstance(p[0].type, Type), "unexpected type attribute of return object"
 
 
-# List
-# def p_type_list(p):
-#     '''
-#     type_list : type_specifier
-#               | type_list COMMA type_specifier
-#     '''
-#     if len(p) == 2:
-#         p[0] = [p[1].type]
-#     else:
-#         p[0] = p[1] + [p[3].type]
 
-# # Node
-# def p_pointer_type_specifier(p):
-#     '''
-#     pointer_type_specifier : type_specifier
-#                            | pointer_type_specifier MULTIPLY 
-#     '''
-#     p[0] = p[1]
-#     if len(p) == 2 and p[0].type != error:
-#         p[0].type = PointerType(type=p[0].type)
 
 #List
 def p_parameter_type_list(p):
@@ -1151,28 +1193,28 @@ def p_type_name(p):
 
 
 # List or Node
-def p_initializer(p):
-    '''
-    initializer : assignment_expression
-	            | L_BRACES initializer_list R_BRACES
-	            | L_BRACES initializer_list COMMA R_BRACES
-    '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[2]
+# def p_initializer(p):
+#     '''
+#     initializer : assignment_expression
+# 	            | L_BRACES initializer_list R_BRACES
+# 	            | L_BRACES initializer_list COMMA R_BRACES
+#     '''
+#     if len(p) == 2:
+#         p[0] = p[1]
+#     else:
+#         p[0] = p[2]
 
-#List
-def p_initializer_list(p):
-    '''
-    initializer_list : initializer
-	                 | initializer_list COMMA initializer
-    '''
-    # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = p[1]+[p[3]]
+# #List
+# def p_initializer_list(p):
+#     '''
+#     initializer_list : initializer
+# 	                 | initializer_list COMMA initializer
+#     '''
+#     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
+#     if len(p) == 2:
+#         p[0] = [p[1]]
+#     else:
+#         p[0] = p[1]+[p[3]]
 
         
 
@@ -1210,12 +1252,27 @@ def p_labeled_statement(p):
         if p[2].type == "error" or p[4].type == "error":
             p[0] = Node(type="error")
             return 
+        if p[2].type.class_type != "BasicType":
+            Errors(
+                    errorType='TypeError',
+                    errorText='invalid type ' + p[2].type.stype + ' in case',
+                    token_object= p.slice[1]
+                )
+            p[0] = Node(type="error")
+            return   
+
         p[0] = Node("case",children=[p[2],p[4]],type="ok")
+        p[0].data['expr'] = p[2]
+        p[0].data['stmt'] = p[4]
+        p[0].data['token'] = p.slice[1]
     else:
         if p[3].type == "error":
             p[0] = Node(type="error")
             return 
         p[0] = Node("default",children=[p[3]],type="ok")
+        p[0].data['expr'] = None
+        p[0].data['stmt'] = p[3]
+        p[0].data['token'] = p.slice[1]
 
 # Node
 def p_compound_statement(p):
@@ -1317,11 +1374,39 @@ def p_selection_statement(p):
             p[0].code += [gen(op = "label",place1=label2)]
 
     else:
+        p[0] = Node(type="error")
         if p[3].type=="error":
-            p[0] = Node(type="error")
             return
-        label_list = Node(name="labeled list",value="{}",children=p[7],type="ok")
+        if p[3].type.class_type != "BasicType":
+            Errors(
+                    errorType='TypeError',
+                    errorText='invalid type ' + p[3].type.stype + ' in switch',
+                    token_object= p.slice[1]
+                )
+            return    
+        label_list = Node(name="labeled list",children=p[7],type="ok")
         p[0] = Node(name="switch",children=[p[3],label_list],type="ok")
+        label_list = p[7]
+        p[0].code = p[3].code
+        place = p[3].place
+        end_label = get_newlabel()
+        for labels in label_list:
+            assert isinstance(labels,Node), "labels should be node"
+            if labels.type == "error":
+                p[0] = Node(type="error")
+                return
+            if labels.data['expr'] == None:
+                p[0].code += labels.data["stmt"].code
+            else:
+                const = labels.data['expr']
+                const = typecast(const,type=p[3].type)
+                new_label = get_newlabel()
+                p[0].code += const.code
+                p[0].code += [gen(op="if_not_cmp_"+p[3].type.stype,place1=place,place2=const.place,place3=new_label,code="if "+place+" <> "+const.place+" goto "+new_label)]
+                p[0].code += labels.data["stmt"].code
+                p[0].code += [gen("label",place1=new_label)]
+        p[0].code += [gen("label",place1=end_label)]
+        p[0].code = break_continue(p[0].code,break_label=end_label,continue_label=None)
 
 # Node
 def p_iteration_statement(p):
@@ -1339,15 +1424,6 @@ def p_iteration_statement(p):
 
         label1 = get_newlabel()
         label2 = get_newlabel()
-        # label3 = get_newlabel()
-        # p[0].code = [gen(op = "label",place1=label1)]
-        # p[0].code += p[3].code
-        # p[0].code += [gen(op = 'ifnz', place1 = p[3].place, place2  = label2)]
-        # p[0].code += [gen(op= 'goto', place1 = label3, code = 'goto '+ label3)]
-        # p[0].code += [gen(op = "label",place1=label2)]
-        # p[0].code += p[5].code
-        # p[0].code += [gen(op = "goto", place1 = label1, code = "goto "+ label1)]
-        # p[0].code += [gen(op = label3, code = label3)]
         p[0].code = [gen(op = "label",place1=label1)]
         p[0].code += p[3].code
         p[0].code += [gen(op = 'ifz', place1 = p[3].place, place2  = label2)]
@@ -1560,6 +1636,7 @@ def main():
     # print(sym_table)
     # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
+    # tac_code = remove_label(result.code)
     print_code(result.code, filename = args.t)
 if __name__ == "__main__":
     main()

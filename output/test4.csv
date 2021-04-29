@@ -8,10 +8,10 @@ symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
 operator,char,5,1
-a,long,10,8
-b,long,22,8
-equal,bool,31,1
-x,long,32,8
+a,long,18,8
+b,long,38,8
+equal,bool,47,1
+x,long,48,8
 
 symbol table id,symbol table name,parent id
 2,scope@2,1

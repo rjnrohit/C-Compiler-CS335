@@ -1,5 +1,11 @@
 main:
 BeginFunc
+tmp@0 = 10
+n|main = tmp@0
+tmp@1 = 0
+t1|main = tmp@1
+tmp@2 = 1
+t2|main = tmp@2
 tmp@3 = 1
 i|main = tmp@3
 label#0:

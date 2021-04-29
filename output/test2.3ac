@@ -1,35 +1,41 @@
 main:
 BeginFunc
+tmp@0 = 0
+tmp@1 = int_to_long tmp@0
+reversedN|main = tmp@1
+tmp@2 = 123454321
+tmp@3 = int_to_long tmp@2
+n|main = tmp@3
 originalN|main = n|main
 label#0:
-tmp@2 = 0
-tmp@3 = int_to_long tmp@2
-tmp@4 = n|main long!= tmp@3
-ifz tmp@4 goto label#1
-tmp@5 = 10
-tmp@6 = int_to_long tmp@5
-tmp@7 = n|main long% tmp@6
-remainder|main = tmp@7
-tmp@8 = 10
-tmp@9 = int_to_long tmp@8
-tmp@10 = reversedN|main long* tmp@9
-tmp@11 = tmp@10 long+ remainder|main
-reversedN|main = tmp@11
-tmp@12 = 10
-tmp@13 = int_to_long tmp@12
-tmp@14 = n|main long/ tmp@13
-n|main = tmp@14
+tmp@4 = 0
+tmp@5 = int_to_long tmp@4
+tmp@6 = n|main long!= tmp@5
+ifz tmp@6 goto label#1
+tmp@7 = 10
+tmp@8 = int_to_long tmp@7
+tmp@9 = n|main long% tmp@8
+remainder|main = tmp@9
+tmp@10 = 10
+tmp@11 = int_to_long tmp@10
+tmp@12 = reversedN|main long* tmp@11
+tmp@13 = tmp@12 long+ remainder|main
+reversedN|main = tmp@13
+tmp@14 = 10
+tmp@15 = int_to_long tmp@14
+tmp@16 = n|main long/ tmp@15
+n|main = tmp@16
 goto label#0
 label#1:
-tmp@15 = originalN|main long== reversedN|main
-ifz tmp@15 goto label#2
-tmp@16 = 1
-is_palindrome|main = tmp@16
+tmp@17 = originalN|main long== reversedN|main
+ifz tmp@17 goto label#2
+tmp@18 = 1
+is_palindrome|main = tmp@18
 goto label#3
 label#2:
-tmp@17 = 0
-is_palindrome|main = tmp@17
+tmp@19 = 0
+is_palindrome|main = tmp@19
 label#3:
-tmp@18 = 0
-return tmp@18
+tmp@20 = 0
+return tmp@20
 EndFunc

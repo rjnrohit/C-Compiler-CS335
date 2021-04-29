@@ -162,7 +162,7 @@ class BasicType(Type):
 
 class PointerType(Type):
 
-    def __init__(self, type = None, array_size = [],array_type=None):
+    def __init__(self, type = None, array_size = list(),array_type=None):
         super().__init__()
         self.class_type = "PointerType"
         self.is_pointer = True
@@ -246,7 +246,8 @@ class StructType(Type):
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        return self.is_same(t)
+        # return self.is_same(t)
+        return False
 
 class FunctionType(Type):
 
@@ -286,7 +287,8 @@ class FunctionType(Type):
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        return self.is_same(t)
+        # return self.is_same(t)
+        return False
 
 #=================================== SYMBOL TABLE ==================================#
 

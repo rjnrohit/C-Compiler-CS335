@@ -21,4 +21,11 @@ label#1:
 EndFunc
 main:
 BeginFunc
+tmp@10 = 5.1
+tmp@11 = float_to_int tmp@10
+push tmp@11
+tmp@12 = func_call f
+pop tmp@11
+tmp@13 = float_to_int tmp@12
+b|main = tmp@13
 EndFunc

@@ -17,16 +17,17 @@ name,type,offset,width
 argc,int,4,4
 argv,pointer of (char),8,4
 d,pointer of (struct A),12,8
-s,int,36,4
-str,pointer of (char),43,8
-cd,float,51,4
-a,double,59,8
-ptr,pointer of (double),67,8
-c,double,75,8
-ptr3,pointer of (int),91,8
-ptr1,pointer of (pointer of (long)),107,8
-i,int,119,4
-n,int,127,4
+s,int,40,4
+str,pointer of (char),50,8
+w,int,62,4
+cd,float,66,4
+a,double,82,8
+ptr,pointer of (double),90,8
+c,double,106,8
+ptr3,pointer of (int),122,8
+ptr1,pointer of (pointer of (long)),138,8
+i,int,150,4
+n,int,158,4
 
 symbol table id,symbol table name,parent id
 3,scope@3,2

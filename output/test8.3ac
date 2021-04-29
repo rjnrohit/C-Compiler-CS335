@@ -1,3 +1,5 @@
+tmp@0 = 23
+n|global = tmp@0
 main:
 BeginFunc
 tmp@1 = 0

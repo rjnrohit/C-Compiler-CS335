@@ -819,9 +819,10 @@ def p_expression(p):
         if isinstance(p[1],Node) and p[1].name == "expression":
             p[1].addChild(p[3])
             p[0] = p[1]
+            p[0].code += p[3].code
         else:
             p[0] = Node(name="expression",children=[p[1],p[3]],type="ok")
-    
+            p[0].code = p[1].code
 #Node
 def p_constant_expression(p):
     '''
@@ -1635,7 +1636,11 @@ def main():
     # print(sym_table)
     # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
-    print_code(result.code, filename = args.t)
+    tac_code = result.code
+    #to remove redundant labels
+    #can also add as args for optimization
+    # tac_code = remove_label(tac_code)
+    print_code(tac_code, filename = args.t)
 if __name__ == "__main__":
     main()
 

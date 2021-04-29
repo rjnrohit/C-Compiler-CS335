@@ -1,40 +1,66 @@
 main:
 BeginFunc
 tmp@0 = d|main long+_c 8
+tmp@0 = load(tmp@0)
+tmp@1 = 8
+tmp@2 = long_to_int tmp@1
+s|main = tmp@2
+tmp@3 = "aman"
+str|main = tmp@3
+tmp@4 = 4
+w|main = tmp@4
+tmp@5 = 3.2
+tmp@6 = float_to_double tmp@5
+a|main = tmp@6
+tmp@7 = float_to_double cd|main
+c|main = tmp@7
+tmp@8 = addr(s|main)
+ptr3|main = tmp@8
+tmp@9 = addr(ptr3|main)
+ptr1|main = tmp@9
+tmp@10 = 0
+i|main = tmp@10
+tmp@11 = 1000
+n|main = tmp@11
 label#5:
-tmp@10 = i|main
+tmp@12 = i|main
 i|main = i|main int+_c 1
-tmp@11 = tmp@10 int< n|main
-ifz tmp@11 goto label#6
+tmp@13 = tmp@12 int< n|main
+ifz tmp@13 goto label#6
 label#2:
-tmp@12 = j|scope@3 int< n|main
-ifz tmp@12 goto label#4
-tmp@14 = j|scope@3 long*_c 4
-tmp@15 = sieve|scope@3 long+ tmp@14
-tmp@16 = 1
-tmp@15 = tmp@16
-tmp@17 = 2
-tmp@18 = j|scope@3 int% tmp@17
-tmp@19 = 3
-tmp@20 = tmp@18 int% tmp@19
-tmp@21 = 4
-tmp@22 = tmp@20 int== tmp@21
-ifz tmp@22 goto label#0
+tmp@14 = j|scope@3 int< n|main
+ifz tmp@14 goto label#4
+tmp@16 = j|scope@3 long*_c 4
+tmp@17 = sieve|scope@3 long+ tmp@16
+tmp@18 = 1
+tmp@17 = tmp@18
+tmp@19 = 2
+tmp@20 = j|scope@3 int% tmp@19
+tmp@21 = 3
+tmp@22 = tmp@20 int% tmp@21
+tmp@23 = 4
+tmp@24 = tmp@22 int== tmp@23
+ifz tmp@24 goto label#0
 goto label#4
 goto label#1
 label#0:
 goto label#3
 label#1:
 label#3:
-tmp@13 = j|scope@3
+tmp@15 = j|scope@3
 j|scope@3 = j|scope@3 int+_c 1
 goto label#2
 label#4:
-tmp@23 = i|main
+tmp@25 = i|main
 i|main = i|main int-_c 1
+tmp@26 = i|main
+i|main = i|main int+_c 1
+tmp@27 = 1
+tmp@28 = tmp@26 int+ tmp@27
+c|scope@3 = tmp@28
 goto label#5
 label#6:
-tmp@27 = 3.2
-tmp@28 = float_to_int tmp@27
-return tmp@28
+tmp@29 = 3.2
+tmp@30 = float_to_int tmp@29
+return tmp@30
 EndFunc

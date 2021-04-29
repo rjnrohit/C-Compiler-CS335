@@ -1,9 +1,17 @@
 main:
 BeginFunc
+tmp@0 = 20
+n|main = tmp@0
+tmp@1 = 5
+tmp@2 = int- tmp@1
+d|main = tmp@2
 label#3:
 tmp@3 = 10
 tmp@4 = d|main int<= tmp@3
 ifz tmp@4 goto label#5
+tmp@6 = 0
+tmp@7 = int_to_long tmp@6
+a|main = tmp@7
 tmp@10 = 2
 i|scope@2 = tmp@10
 label#0:

@@ -44,12 +44,12 @@ int main(){
 
     struct inside{
         int x;
-        struct inside s;
+        struct inside *s;
     };
 
     struct inside main1;
 
-    main1.x= main1.s.x;
+    main1.x= main1.s->x;
 
     int a[45][50];
     int z;

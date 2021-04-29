@@ -154,3 +154,38 @@ def has_break_continue(input):
         if gens.op == "break" or gens.op == "continue":
             return True
     return False
+
+def remove_label(code_list):
+    global label_list
+    new_label = dict()
+    new_label_cnt = 0
+    i = 0
+    while(i<len(code_list)):
+        if code_list[i].op == "label" and code_list[i].place1[:6] == "label#":
+            label = "label#" + str(new_label_cnt)
+            new_label_cnt += 1
+            new_label[code_list[i].place1] = label
+            i += 1
+            while(i<len(code_list) and code_list[i].op == "label" and code_list[i].place1[:6] == "label#"):
+                new_label[code_list[i].place1] = label
+                i += 1
+        else:
+            i += 1
+    # for k,v in new_label.items():
+    #     print(k,v,sep=": ")
+    new_code_list = []
+    for code in code_list:
+        if code.op == "label":
+            label = new_label.get(code.place1,code.place1)
+            if len(new_code_list) == 0 or new_code_list[-1].op != "label" or new_code_list[-1].place1 != label:
+                new_code_list.append(gen(op="label",place1=label))
+        elif code.op == "goto":
+            label = new_label.get(code.place1,code.place1)
+            new_code_list.append(gen(op="goto",place1=label))
+        elif code.op == "ifz" or code.op == "ifnz":
+            label = new_label.get(code.place2,code.place2)
+            new_code_list.append(gen(op=code.op,place1=code.place1,place2=label))
+        else:
+            new_code_list.append(code)
+    return new_code_list
+    

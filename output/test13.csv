@@ -2,13 +2,13 @@
 symbol table id,symbol table name
 0,global
 name,type,offset,width
-a,int,9,4
-b,long,25,8
-solve,int function([]),33,4
-main,"int function([int, pointer of (int)])",33,16
-min,"int function([int, int])",33,12
-printf,"int function([pointer of (char), int])",33,16
-scanf,"int function([pointer of (char), pointer of (int)])",33,20
+a,int,13,4
+b,long,37,8
+solve,int function([]),45,4
+main,"int function([int, pointer of (int)])",45,16
+min,"int function([int, int])",45,12
+printf,"int function([pointer of (char), int])",45,16
+scanf,"int function([pointer of (char), pointer of (int)])",45,20
 
 symbol table id,symbol table name,parent id
 2,main,0
@@ -16,8 +16,8 @@ name,type,offset,width
 argc,int,4,4
 argv,pointer of (int),8,8
 n,int,20,4
-power_of_2,long,28,8
-ans,long,40,8
+power_of_2,long,36,8
+ans,long,56,8
 
 symbol table id,symbol table name,parent id
 4,min,0
