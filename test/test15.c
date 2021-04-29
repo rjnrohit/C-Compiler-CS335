@@ -32,7 +32,7 @@ int* foo(int t, int u, char str[24]){
     return (void*)t + u;
 }
 
-int zoo(float a, double d){
+int zoo(float a, float d){
     return (int)a%(long)d;
 }
 
@@ -59,7 +59,7 @@ int main(){
         a[12][13] = j++;
         if(j == 1000 + (float)1){
             break;
-        }else if(j != +23  + (double)23.4)continue;
+        }else if(j != +23  + (float)23.4)continue;
         z = ++z;
     }while(z < 100);
 

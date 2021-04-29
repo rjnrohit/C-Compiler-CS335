@@ -8,7 +8,7 @@ c,int,8,4
 main,int function([]),12,4
 insert,void function(None),12,0
 foo,"pointer of (int) function([int, int, pointer of (char)])",12,40
-zoo,"int function([float, double])",12,16
+zoo,"int function([float, float])",12,12
 ter,int function([int]),12,8
 
 symbol table id,symbol table name,parent id
@@ -43,7 +43,7 @@ symbol table id,symbol table name,parent id
 7,zoo,0
 name,type,offset,width
 a,float,4,4
-d,double,8,8
+d,float,8,4
 
 symbol table id,symbol table name,parent id
 8,ter,0

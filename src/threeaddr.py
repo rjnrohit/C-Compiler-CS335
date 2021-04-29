@@ -54,7 +54,7 @@ class gen:
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3)
 
-        if not place2:
+        if not place2 or op == "func_call":
             return self.unary_opcode(op, place1, place3)
         
         return place3 + ' = ' + place1 + " " + op + " " + place2

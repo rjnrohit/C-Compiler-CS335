@@ -47,7 +47,7 @@ def type_check_init(init,type,token):
 
 #multiplication, division, modulus
 def type_check_unary(node1,op,token,is_typename=False):
-    allowed_base = {'int','float','double','char','long'}
+    allowed_base = {'int','float','char','long'}
     allowed_base_1 = {'int','char','long'}
     error = False
     if node1.type == "error":
@@ -145,7 +145,7 @@ def type_check_unary(node1,op,token,is_typename=False):
 def type_check_multi(node1,node2,op,token,decimal=True):
     allowed_class = {'BasicType'}
     allowed_base = {'int','long','char'}
-    if decimal: allowed_base = {'int','long','char','float','double'}
+    if decimal: allowed_base = {'int','long','char','float'}
     if node1.type == "error" or node2.type == "error":
         return Node(type="error")
     if node1.type.class_type not in allowed_class or node2.type.class_type not in allowed_class:
@@ -175,7 +175,7 @@ def type_check_multi(node1,node2,op,token,decimal=True):
 # addition, subtraction
 def type_check_add(node1,node2,op,token):
     allowed_class = [('PointerType','BasicType'),('BasicType','PointerType'),('BasicType','BasicType')]
-    allowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','double','float','bool'}]
+    allowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','float','bool'}]
     if node1.type == "error" or node2.type == "error":
         return Node(type="error") 
     class1 = node1.type.class_type
@@ -270,7 +270,7 @@ def type_check_bit(node1,node2,op,token):
 #less than, greater than, equal , not equal
 def type_check_relational(node1,node2,op,token):
     allowed_class = {'BasicType','PointerType'}
-    allowed_base = {'int','long','char','double','float','bool'}
+    allowed_base = {'int','long','char','float','bool'}
     if node1.type == "error" or node2.type == "error":
         return Node(type="error")
     if node1.type.class_type not in allowed_class or node2.type.class_type not in allowed_class:
@@ -302,7 +302,7 @@ def type_check_relational(node1,node2,op,token):
 
 def type_check_logical(node1,node2,op,token):
     allowed_class = {'BasicType','PointerType'}
-    allowed_base = {'int','long','char','double','float','bool'}
+    allowed_base = {'int','long','char','float','bool'}
     if node1.type == "error" or node2.type == "error":
         return Node(type="error")
     if node1.type.class_type not in allowed_class or node2.type.class_type not in allowed_class:

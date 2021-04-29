@@ -14,7 +14,7 @@ int main(int argc, char argv[4]){
     char* str = "aman";
     auto w = 4;
     float cd;
-    double a = 3.2, *ptr, c=cd;
+    float a = 3.2, *ptr, c=cd;
     int * ptr3 = &s;
     long** ptr1 = &ptr3;
     int i =0, n = 1000;

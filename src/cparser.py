@@ -264,7 +264,7 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        allowed_base = {'int','float','double','char','long'}
+        allowed_base = {'int','float','char','long'}
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
             p[0] = p[1]
@@ -412,7 +412,7 @@ def p_postfix_expression_2(p):
         
         p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
         p[0].place = get_newtmp(type=return_type)
-        p[0].code = p[1].code+code+push_code + [gen(op="func_call",place1=p[1].value,place3=p[0].place)] + pop_code[::-1]
+        p[0].code = p[1].code+code+push_code + [gen(op="func_call",place1=p[1].value,place2=arg_places,place3=p[0].place)] + pop_code[::-1]
 
         
         
@@ -741,7 +741,7 @@ def p_conditional_expression(p):
             p[0] = Node(type="error")
             return
         allowed_class = {'BasicType'}
-        allowed_base = {'int','long','char','bool','double','float'}
+        allowed_base = {'int','long','char','bool','float'}
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
@@ -931,7 +931,6 @@ def p_type_specifier(p):
                    | INT
                    | LONG
                    | FLOAT
-                   | DOUBLE
                    | STRUCT IDENTIFIER
                    | BOOL
     '''

@@ -264,7 +264,7 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        allowed_base = {'int','float','double','char','long'}
+        allowed_base = {'int','float','char','long'}
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
             p[0] = p[1]
@@ -741,7 +741,7 @@ def p_conditional_expression(p):
             p[0] = Node(type="error")
             return
         allowed_class = {'BasicType'}
-        allowed_base = {'int','long','char','bool','double','float'}
+        allowed_base = {'int','long','char','bool','float'}
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
@@ -870,7 +870,7 @@ def p_init_declarator(p):
         
     else:
         p[0] = [None]
-        if p[3].type == "errror":
+        if p[3].type == "error":
             return
         if p[3].type.is_convertible_to(p[1].type) == False:
             Errors(
@@ -931,7 +931,6 @@ def p_type_specifier(p):
                    | INT
                    | LONG
                    | FLOAT
-                   | DOUBLE
                    | STRUCT IDENTIFIER
                    | BOOL
     '''
@@ -1636,8 +1635,11 @@ def main():
     # print(sym_table)
     # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
-    # tac_code = remove_label(result.code)
-    print_code(result.code, filename = args.t)
+    tac_code = result.code
+    #to remove redundant labels
+    #can also add as args for optimization
+    # tac_code = remove_label(tac_code)
+    print_code(tac_code, filename = args.t)
 if __name__ == "__main__":
     main()
 
