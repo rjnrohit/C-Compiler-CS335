@@ -37,16 +37,19 @@
 
 // }
 // #include<stdio.h>
-void printf(char *s,int a);
-int main(){
+// void printf(char *s,int a);
+float b(int c){
+    return c*5;
+}
+struct z{
     int a;
-    a = "aman";
-    printf("%d",a);
-    // printf("%s",(char *)a);
-    while(5<3){
-        if (a == NULL) break;
-    }
-    if(5){
-        break;
-    }
+    int b;
+    struct z *c;
+    int d[10][5][3];
+};
+int main(){
+    struct z c;
+    bool d[4][3];
+    int a = sizeof(b);
+    
 }

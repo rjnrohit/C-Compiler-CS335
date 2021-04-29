@@ -870,7 +870,7 @@ def p_init_declarator(p):
         
     else:
         p[0] = [None]
-        if p[3].type == "errror":
+        if p[3].type == "error":
             return
         if p[3].type.is_convertible_to(p[1].type) == False:
             Errors(
