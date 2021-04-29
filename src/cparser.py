@@ -238,6 +238,10 @@ def p_primary_expression(p):
         elif p.slice[-1].type == "STR_CONSTANT":
             str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
+            #string is assigned as tmp not const
+            p[0].place = get_newtmp(type=p[0].type)
+            p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=p[1],place3=p[0].place)]
+            return
         elif p.slice[-1].type == "NULL":
             p[0] = Node(name="constant",value=p[1],type=PointerType(type=Type()))
         else:
@@ -247,8 +251,8 @@ def p_primary_expression(p):
             p[0].constant = 0
         elif p[0].constant == "true":
             p[0].constant = 1
-        p[0].place = get_newtmp(type=p[0].type)
-        p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=str(p[0].constant),place3=p[0].place)]
+        p[0].place = get_const(const=p[0].constant,type=p[0].type)
+        # p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=str(p[0].constant),place3=p[0].place)]
     
     else:
         p[0] = p[2]
@@ -268,19 +272,28 @@ def p_postfix_expression(p):
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
             p[0] = p[1]
+        elif 'const@' in p[1].place:
+            Errors(
+            errorType='TypeError',
+            errorText=p[2] + "not valid on constant",
+            token_object= p.slice[-1]
+            )
+            p[0] = Node(type="error")
         elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
             p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
-            p[0].code += [gen(op=str(p[1].type)+p[2][0]+"_c",place1=p[1].place,place2="1",place3=p[1].place)]
+            const_place = get_const(const=1,type=node1.type,use=True)
+            p[0].code += [gen(op=str(p[1].type)+p[2][0]+"_c",place1=p[1].place,place2=const_place,place3=p[1].place)]
         elif p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
             p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
             width = p[1].type.type_size
-            p[0].code += [gen(op="long"+p[2][0]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
+            const_place = get_const(const=width,type="long",use=True)
+            p[0].code += [gen(op="long"+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
 
         else:
             p[0] = p[1]
@@ -331,16 +344,20 @@ def p_postfix_expression_1(p):
         p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
         p[0].code = p[1].code + p[3].code
         if len(p[1].type.array_size) == 0:
-            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=p[1].type.type_size,type="long")
+            const_place = get_const(p[1].type.type_size,type="long")
+            tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
         else:
             p[0].type.array_size = p[1].type.array_size[1:]
             width = 1
             for i in p[1].type.array_size[1:]:
                 width = width*i
             width = width*p[1].type.array_type.width
-            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=width,type="long")
-        p[0].place = get_newtmp(BasicType("long"))
-        p[0].code += [code] + [gen(op="long+",place1=p[1].place,place2=tmp,place3=p[0].place)]
+            const_place = get_const(width,type="long")
+            tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
+        p[0].code += [code]
+        tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
+        p[0].place = tmp
+        p[0].code += [code]
 
 
 
@@ -454,9 +471,10 @@ def p_postfix_expression_3(p):
     p[0].code = p[1].code
     tmp = get_newtmp()
     p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
-    tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
+    const_place = get_const(const=success.offset,type="long")
+    tmp1,code = get_opcode(op="long+",place1=tmp,place2=const_place,type="long")
     p[0].code += [code]
-    p[0].code += [gen(op="*",place1=tmp1,place3=tmp1,code=tmp1+" = "+"load("+tmp1+")")]
+    p[0].code += [gen(op="load",place1=tmp1,place3=tmp1,code=tmp1+" = "+"load("+tmp1+")")]
     p[0].place = tmp1
 
     
@@ -495,9 +513,10 @@ def p_postfix_expression_4(p):
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     p[0].code = p[1].code
-    tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=success.offset,type="long")
+    const_place = get_const(const=success.offset,type="long")
+    tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=const_place,type="long")
     p[0].code += [code]
-    p[0].code += [gen(op="*",place1=tmp,place3=tmp,code=tmp+" = "+"load("+tmp+")")]
+    p[0].code += [gen(op="load",place1=tmp,place3=tmp,code=tmp+" = "+"load("+tmp+")")]
     p[0].place = tmp
 
 

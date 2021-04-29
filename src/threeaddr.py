@@ -7,8 +7,9 @@ from typecheck import *
 
 temp_cnt = 0
 lable_cnt = 0
-label_list = []
-
+label_list = list()
+const_cnt = 0
+const_list = list()
 
 
 class gen:
@@ -105,6 +106,28 @@ def get_newlabel():
     label_list.append(label)
     return label
 
+def get_const(const,type,use=False):
+    assert isinstance(type,str) or isinstance(type,Type)
+    if isinstance(type,str):
+        assert type in {"bool","long","char","int","float"}
+        type = BasicType(type=type)
+    global const_list
+    if const in const_list:
+        name = "const@"+const_list.index(const)
+    else
+        name = "const@"+len(const_list)
+        const_list.append(const)
+        #add in symbol table
+        #have two options 1) add now 2) on need basis (for need basis maintain dict to tell if added)
+        #not declare int const as long
+        #use helps in need basis
+    return name
+
+def get_const_value(place):
+    global const_list
+    assert "const@" in place
+    index = int(place[6:])
+    return const_list[index]
 
 
 def break_continue(input, break_label, continue_label):
