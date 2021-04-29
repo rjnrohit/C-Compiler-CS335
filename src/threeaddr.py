@@ -113,15 +113,18 @@ def get_const(const,type,use=False):
         type = BasicType(type=type)
     global const_list
     if const in const_list:
-        name = "const@"+const_list.index(const)
-    else
-        name = "const@"+len(const_list)
+        name = "const@"+str(const_list.index(const))
+    else:
+        name = "const@"+str(len(const_list))
         const_list.append(const)
         #add in symbol table
         #have two options 1) add now 2) on need basis (for need basis maintain dict to tell if added)
         #not declare int const as long
         #use helps in need basis
     return name
+
+def const_use(place):
+    pass
 
 def get_const_value(place):
     global const_list
@@ -135,6 +138,8 @@ def break_continue(input, break_label, continue_label):
     # assert continue_label, "label2 not given"
 
     for gens in input:
+        if gens == None:
+            continue
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == 'continue':
             gens.op = 'goto'
@@ -156,27 +161,68 @@ def add_scope_info(entry):
     assert isinstance(entry, Entry), "entry object is of wrong class"
     return '|' + entry.symbol_table.name
 
-    
+def op_on_const(op,place1,place2):
+    value1 = get_const_value(place1)
+    value2 = get_const_value(place2)
+    #length 2 op <= , => , == , >> , << , !=
+    if op[-2:] == "<=": return int(value1<=value2)
+    if op[-2:] == ">=": return int(value>=value2)
+    if op[-2:] == "==": return int(value1==value2)
+    if op[-2:] == "!=": return int(value1!=value2)
+    if op[-2:] == ">>": return value1>>value2
+    if op[-2:] == "<<": return value1<<value2
+    #length 1 +,-,/,*,%,^,&,|
+    if op[-1] == "+": return value1+value2
+    if op[-1] == "-": return value1-value2
+    if op[-1] == "/": return value1 / value2 #handle division by zero
+    if op[-1] == "*": return value1*value2
+    if op[-1] == "%": return value1%value2
+    if op[-1] == "^": return value1^value2
+    if op[-1] == "&": return value1&value2
+    if op[-1] == "|": return value1|value2
+    if op[-1] == ">": return int(value1>value2)
+    if op[-1] == "<": return int(value1<value2)
+    assert False, op + "not in list"
+
+
+
 def get_opcode(op=None,place1=None,place2=None,type=None):
     if isinstance(type,str):
         type = BasicType(type)
+    if "const@" in place1 and "const@" in place2:
+        return get_const(op_on_const(op,place1,place2),type=type), None
     tmp = get_newtmp(type)
     place1 = str(place1)
     place2 = str(place2)
     if op != "=":
         code = gen(op=op,place1=place1,place2=place2,place3=tmp)
+        if "const@" in place1:
+            const_use(place1)
+        if "const@" in place2:
+            const_use(place2)
     else:
         code = gen(op=op,place1=place1,place3=tmp)
+        if "const@" in place1:
+            const_use(place1)
     return tmp,code
 
 
 
 def has_break_continue(input):
     for gens in input:
+        if gens == None:
+            continue
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == "break" or gens.op == "continue":
             return True
     return False
+
+def remove_none(code_list):
+    new_code_list = []
+    for code in code_list:
+        if code != None:
+            new_code_list.append(code)
+    return new_code_list
 
 def remove_label(code_list):
     global label_list

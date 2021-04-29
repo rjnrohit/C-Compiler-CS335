@@ -26,7 +26,8 @@ char *cc = "this is pointer test", b, str[12][4];
 int main(){
     void**** vd = ptr3;
     int *c = &main;
-    *c = 2;
+    *c = 2*3+5-2;
+    // 5=3;
     *str[1] = 'g';
     int l = func(1);
     *c = NULL;
