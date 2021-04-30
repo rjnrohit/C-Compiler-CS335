@@ -1,42 +1,202 @@
+insert:
+BeginFunc
+tmp@0 = addr(a|insert)
+ptr|insert = tmp@0
+tmp@1 = ptr|insert long+ lconst@0
+tmp@1 = load(tmp@1)
+tmp@1 = lconst@45
+tmp@2 = ptr|insert long+ lconst@8
+tmp@2 = load(tmp@2)
+tmp@2 = lconst@0
+EndFunc
+foo:
+BeginFunc
+label#0:
+tmp@3 = t|foo
+t|foo = t|foo int- lconst@1
+ifz tmp@3 goto label#4
+i|scope@6 = lconst@0
+i|scope@6 = lconst@0
+label#1:
+tmp@4 = i|scope@6 int< lconst@24
+ifz tmp@4 goto label#3
+tmp@6 = i|scope@6 long* lconst@1
+tmp@7 = str|foo long+ tmp@6
+tmp@8 = lconst@97 int+ i|scope@6
+tmp@9 = int_to_char tmp@8
+tmp@7 = tmp@9
+label#2:
+tmp@5 = i|scope@6
+i|scope@6 = i|scope@6 int+ lconst@1
+goto label#1
+label#3:
+goto label#0
+label#4:
+tmp@10 = int_to_long t|foo
+tmp@11 = u|foo long* lconst@0
+tmp@12 = tmp@10 long+ tmp@11
+return tmp@12
+EndFunc
+zoo:
+BeginFunc
+tmp@13 = float_to_int a|zoo
+tmp@15 = int_to_long tmp@13
+tmp@14 = float_to_long d|zoo
+tmp@16 = tmp@15 long% tmp@14
+tmp@17 = long_to_int tmp@16
+return tmp@17
+EndFunc
+ter:
+BeginFunc
+tmp@18 = a|global int> b|global
+ifz tmp@18 goto label#5
+tmp@21 = a|global
+goto label#8
+label#5:
+tmp@19 = b|global int% a|global
+ifz tmp@19 goto label#6
+tmp@20 = c|ter
+goto label#7
+label#6:
+tmp@20 = c|ter
+label#7:
+tmp@21 = tmp@20
+label#8:
+return tmp@21
+EndFunc
 main:
 BeginFunc
-operator|main = lconst@94
-a|main = lconst@1386
-b|main = lconst@1103
-tmp@0 = a|main long== b|main
-equal|main = tmp@0
-if operator|main <> lconst@124 goto label#1
-tmp@1 = a|main long| b|main
-x|main = tmp@1
-goto label#6
-label#0:
-if operator|main <> lconst@38 goto label#2
-tmp@2 = a|main long& b|main
-x|main = tmp@2
-goto label#6
-label#1:
-if operator|main <> lconst@94 goto label#3
-tmp@3 = a|main long^ b|main
-x|main = tmp@3
-goto label#6
-label#2:
-if operator|main <> lconst@126 goto label#4
-tmp@4 = long~ a|main
-x|main = tmp@4
-goto label#6
-label#3:
-if operator|main <> lconst@60 goto label#5
-tmp@5 = a|main long< b|main
-tmp@6 = bool_to_long tmp@5
-x|main = tmp@6
-goto label#6
-label#4:
-if operator|main <> lconst@62 goto label#6
-tmp@7 = a|main long> b|main
-tmp@8 = bool_to_long tmp@7
-x|main = tmp@8
-goto label#6
-label#5:
-x|main = a|main
-label#6:
+tmp@22 = addr(main1|main)
+tmp@23 = tmp@22 long+ lconst@0
+tmp@23 = load(tmp@23)
+tmp@24 = addr(main1|main)
+tmp@25 = tmp@24 long+ lconst@4
+tmp@25 = load(tmp@25)
+tmp@26 = tmp@25 long+ lconst@0
+tmp@26 = load(tmp@26)
+tmp@23 = tmp@26
+tmp@27 = addr(a|main)
+tmp@28 = long_to_int tmp@27
+z|main = tmp@28
+z|main = lconst@0
+label#9:
+tmp@29 = z|main int+ lconst@1
+j|scope@11 = tmp@29
+tmp@30 = a|main long+ lconst@2400
+tmp@31 = tmp@30 long+ lconst@52
+tmp@32 = j|scope@11
+j|scope@11 = j|scope@11 int+ lconst@1
+tmp@31 = tmp@32
+tmp@33 = a|main long+ lconst@1800
+tmp@34 = tmp@33 long+ lconst@60
+tmp@34 = lconst@0
+tmp@35 = int_to_float j|scope@11
+tmp@36 = tmp@35 float== fconst@1001.0
+ifz tmp@36 goto label#10
+goto label#13
+goto label#11
+label#10:
+tmp@37 = int_to_float j|scope@11
+tmp@38 = tmp@37 float!= fconst@46.4
+ifz tmp@38 goto label#11
+goto label#12
+label#11:
+z|main = z|main int+ lconst@1
+z|main = z|main
+label#12:
+tmp@39 = z|main int< lconst@100
+ifnz tmp@39 goto label#9
+label#13:
+cc|main = lconst@0
+cc|main = lconst@1000312
+label#14:
+flag|scope@13 = lconst@1
+tmp@46 = cc|main int% lconst@22
+tmp@47 = tmp@46 int% lconst@34
+ifz tmp@47 goto label#22
+k|scope@14 = lconst@23
+label#15:
+tmp@48 = k|scope@14 int< lconst@46
+ifz tmp@48 goto label#20
+tmp@49 = k|scope@14 int!= lconst@0
+ifz tmp@49 goto label#16
+tmp@50 = cc|main int== k|scope@14
+ifz tmp@50 goto label#16
+tmp@51 = lconst@1
+goto label#17
+label#16:
+tmp@51 = lconst@0
+label#17:
+ifz tmp@51 goto label#18
+flag|scope@13 = lconst@0
+goto label#19
+label#18:
+goto label#20
+label#19:
+goto label#15
+label#20:
+tmp@54 = bool_to_int flag|scope@13
+tmp@52 = bool_to_int flag|scope@13
+tmp@53 = tmp@52 int+ lconst@3
+tmp@55 = tmp@54 int!= tmp@53
+ifz tmp@55 goto label#22
+goto label#20
+tmp@56 = bool_to_int flag|scope@13
+tmp@57 = tmp@56 int^ lconst@3
+ifz tmp@57 goto label#21
+goto label#22
+label#21:
+goto label#20
+label#22:
+tmp@58 = not_bool flag|scope@13
+ifz tmp@58 goto label#23
+goto label#23
+label#23:
+tmp@43 = int_to_float cc|main
+tmp@43 = int_to_float cc|main
+tmp@40 = cc|main int% lconst@2
+tmp@41 = int_to_float tmp@40
+tmp@42 = tmp@41 float+ fconst@3.45
+tmp@44 = tmp@43 float+ tmp@42
+tmp@45 = float_to_int tmp@44
+cc|main = tmp@45
+goto label#14
+label#24:
+if lconst@23 <> lconst@23 goto label#32
+tmp@59 = load(a|main)
+tmp@60 = load(tmp@59)
+tmp@59 = load(a|main)
+tmp@60 = load(tmp@59)
+tmp@61 = tmp@60 int+ b|global
+tmp@60 = tmp@61
+goto label#28
+label#25:
+tmp@62 = load(a|main)
+tmp@63 = load(tmp@62)
+ifnz tmp@63 goto label#26
+tmp@64 = c|global int+ lconst@4
+ifnz tmp@64 goto label#26
+tmp@65 = get_const(0,type='bool',use=True)
+goto label#27
+label#26:
+tmp@65 = lconst@1
+label#27:
+tmp@66 = bool_to_int tmp@65
+tmp@67 = b|global int+ tmp@66
+b|global = tmp@67
+goto label#28
+label#28:
+tmp@68 = sconst@str24
+push lconst@4
+push lconst@5
+push tmp@68
+tmp@69 = func_call foo
+pop tmp@68
+pop lconst@5
+pop lconst@4
+tmp@70 = addr(z|main)
+tmp@71 = tmp@70 long* lconst@4
+tmp@72 = tmp@69 long+ tmp@71
+tmp@73 = load(tmp@72)
+return tmp@73
 EndFunc

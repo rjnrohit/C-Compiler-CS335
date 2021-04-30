@@ -125,7 +125,18 @@ def get_const(const,type,use=False):
     if use: const_use(name)
     return name
 
+def get_str_const(string):
+    assert isinstance(string,str)
+    place = "sconst@"+string
+    # if place not in alloc.keys():
+    #     type = PointerType(type=BasicType("char"),array_size=len(string)+1,array_type=BasicType("char"))
+    #     sym_table._add_entry(name=place,type=type)
+    #     alloc[place] = string+"\0"
+    return place
+
 def const_use(place):
+    if "sconst@" in place:
+        return
     if place not in alloc.keys():
         type = BasicType("long") if place[0] == "l" else BasicType("float") 
         sym_table._add_entry(name=place,type=type)
@@ -134,6 +145,8 @@ def const_use(place):
 def get_const_value(place):
     global const_list
     assert "const@" in place
+    if "sconst@" in place:
+        return 1
     value = place.split("@")[-1]
     if "fconst@" in place:
         return float(value)
@@ -197,6 +210,7 @@ def op_on_const(op,place1,place2):
 def get_opcode(op=None,place1=None,place2=None,type=None):
     if isinstance(type,str):
         type = BasicType(type)
+    assert "sconst@" not in place1 and "sconst@" not in place2, "string"
     if "const@" in place1 and "const@" in place2:
         return get_const(op_on_const(op,place1,place2),type=type), None
     tmp = get_newtmp(type)

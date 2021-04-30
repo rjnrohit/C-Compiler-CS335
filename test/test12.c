@@ -6,7 +6,7 @@ void* a(int b){
 
 int c;
 
-void *d = &c;
+void *d = 'c';
 
 void g();
 
@@ -16,10 +16,10 @@ int func(int a);
 int printf(char *s,int d);
 int p;
 
-int *ptr = &p;
-int** ptr1 = &ptr;
-int*** ptr2 = &ptr1;
-int**** ptr3 = &ptr2;
+// int *ptr = &p;
+// int** ptr1 = &ptr;
+// int*** ptr2 = &ptr1;
+int**** ptr3;
 
 char *cc = "this is pointer test", b, str[12][4];
 

@@ -175,7 +175,14 @@ def type_check_add(node1,node2,op,token):
     allowed_class = [('PointerType','BasicType'),('BasicType','PointerType'),('BasicType','BasicType')]
     allowed_base = [{'int','long','char'},{'int','long','char'},{'int','long','char','float','bool'}]
     if node1.type == "error" or node2.type == "error":
-        return Node(type="error") 
+        return Node(type="error")
+    if "sconst@" in node1.place or "sconst@" in node2.place:
+        Errors(
+            errorType='TypeError',
+            errorText=op+' not support string constant',
+            token_object= token
+        )
+        return Node(type="error")
     class1 = node1.type.class_type
     class2 = node2.type.class_type
     if (class1,class2) not in allowed_class:
@@ -275,6 +282,13 @@ def type_check_relational(node1,node2,op,token):
     allowed_base = {'int','long','char','float','bool'}
     if node1.type == "error" or node2.type == "error":
         return Node(type="error")
+    if "sconst@" in node1.place or "sconst@" in node2.place:
+        Errors(
+            errorType='TypeError',
+            errorText=op+' not support string constant',
+            token_object= token
+        )
+        return Node(type="error")
     if node1.type.class_type not in allowed_class or node2.type.class_type not in allowed_class:
             Errors(
                 errorType='TypeError',
@@ -306,6 +320,13 @@ def type_check_logical(node1,node2,op,token):
     allowed_class = {'BasicType','PointerType'}
     allowed_base = {'int','long','char','float','bool'}
     if node1.type == "error" or node2.type == "error":
+        return Node(type="error")
+    if "sconst@" in node1.place or "sconst@" in node2.place:
+        Errors(
+            errorType='TypeError',
+            errorText=op+' not support string constant',
+            token_object= token
+        )
         return Node(type="error")
     if node1.type.class_type not in allowed_class or node2.type.class_type not in allowed_class:
             Errors(
@@ -393,6 +414,13 @@ def type_check_assign(node1,node2,token):
                 token_object= token
         )
         return Node(type="error")
+    if "sconst@" in node2.place:
+        Errors(
+                errorType='TypeError',
+                errorText="can asign string constant only in declaration",
+                token_object= token
+        )
+        return Node(type="error")
     if node2.type.is_convertible_to(node1.type):
         node2 = typecast(node2,type=node1.type)
         node = Node("binary_op",node1.type.stype+"=",children = [node1,node2],type=node1.type)
@@ -434,12 +462,23 @@ def type_check_assign_op(node1,node2,op,token):
     return type_check_assign(node1,node,token)
     
 
-def typecast(node1,type):
+def typecast(node1,type,token=None):
     assert isinstance(type,Type), "not of class Type"
     assert type.class_type in {"BasicType","PointerType"}, "not valid type"
-    assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
+    # assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
+    # assert "sconst@" not in node1.place, "string in typecast"
     if str(node1.type) == str(type):
         return node1
+    elif "sconst@" in node1.place:
+        if token:
+            Errors(
+                errorType='TypeError',
+                errorText="cannot assign string constant to type " + type.stype,
+                token_object= token
+            )
+            return Node(type="error")
+        else:
+            assert "string in typecast"
     else:
         node = Node(name="type_cast",value=type.stype,children=[node1],type=type)
         node.code = node1.code

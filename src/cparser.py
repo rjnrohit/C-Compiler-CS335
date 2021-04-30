@@ -239,11 +239,10 @@ def p_primary_expression(p):
             p[0].constant = ord(p[1][1])
 
         elif p.slice[-1].type == "STR_CONSTANT":
-            str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])],array_type=BasicType('char'))
+            str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])+1],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
             #string is assigned as tmp not const
-            p[0].place = get_newtmp(type=p[0].type)
-            p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=p[1],place3=p[0].place)]
+            p[0].place = get_str_const(p[1][1:-1])
             return
         elif p.slice[-1].type == "NULL":
             p[0] = Node(name="constant",value=p[1],type=PointerType(type=Type()))
@@ -314,6 +313,14 @@ def p_postfix_expression_1(p):
     allowd_base = {'int','long'}
     check1 = True
     check2 = True
+    if "const@" in p[1].place:
+        Errors(
+            errorType='TypeError',
+            errorText="array ref not valid on constant",
+            token_object= p.slice[-1]
+            )
+        p[0] = Node(type="error")
+        return
     if p[3].type == "error":
         check1 = False
         p[0] = Node(type="error")
@@ -413,6 +420,9 @@ def p_postfix_expression_2(p):
         push_code = []
         pop_code = []
         for i in range(len(arg_list)):
+            if arg_list[i].type == "error" or param_list[i] == "error":
+                p[0] = Node(type="error")
+                return
             if arg_list[i].type.is_convertible_to(param_list[i]) == False:
                 p[0] = Node(type="error")
                 Errors(
@@ -421,7 +431,11 @@ def p_postfix_expression_2(p):
                     token_object= p.slice[-1]
                 )
                 return
-            node = typecast(arg_list[i],param_list[i])
+            node = typecast(arg_list[i],param_list[i],p.slice[-1])
+            if "sconst@" in node.place:
+                tmp = get_newtmp(type=node.type)
+                code += [gen(op="=",place1=node.place,place3=tmp)]
+                node.place = tmp
             arg_places.append(node.place)
             if "const@" in node.place:
                 const_use(node.place)
@@ -601,7 +615,7 @@ def p_cast_expression(p):
             p[0] = Node(type='error')
         else:
             if p[4].type.is_convertible_to(p[2].type):
-                p[0] = typecast(p[4],p[2].type)
+                p[0] = typecast(p[4],p[2].type,token=p.slice[1])
             else:
                 Errors(
                     errorType='TypeError',
@@ -910,7 +924,9 @@ def p_init_declarator(p):
                 token_object= p.slice[2]
             )
             return
-        node = typecast(node1=p[3],type=p[1].type)
+        node = typecast(node1=p[3],type=p[1].type,token=p.slice[2])
+        if node.type == "error":
+            return
         success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
             p[0] = Node(name="binary_op",value=p[1].type.stype+"=",children = [p[1],node],type="ok")
@@ -920,13 +936,16 @@ def p_init_declarator(p):
                 if "const@" not in node.place:
                     Errors(
                         errorType='DeclarationError',
-                        errorText="can declare global variable with only real value",
+                        errorText="can declare global variable with only constant value",
                         token_object= p.slice[2]
                     )
                     p[0] = [None]
                     return 
                 else:
-                    alloc[p[0].place] = get_const_value(node.place)   
+                    if "sconst@" in  node.place:
+                        alloc[p[0].place] = node.place.split("@")[-1]+"\0" 
+                    else:
+                        alloc[p[0].place] = get_const_value(node.place)   
                     p[0] = [p[0]]
                     return
             p[0].code += [gen(op="=",place1=node.place,place3=p[0].place)]
@@ -970,13 +989,16 @@ def p_auto_declarator(p):
             if "const@" not in node.place:
                 Errors(
                     errorType='DeclarationError',
-                    errorText="can declare global variable with only real value",
+                    errorText="can declare global variable with only global value",
                     token_object= p.slice[2]
                 )
                 p[0] = [None]
                 return 
             else:
-                alloc[p[0].place] = get_const_value(node.place)   
+                if "sconst@" in  node.place:
+                    alloc[p[0].place] = node.place.split("@")[-1]+"\0"  
+                else:
+                    alloc[p[0].place] = get_const_value(node.place)   
                 p[0] = [p[0]]
                 return
         p[0].code += [gen(op="=",place1=p[3].place,place3=p[0].place)]
