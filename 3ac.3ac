@@ -1,49 +1,42 @@
-a:
-BeginFunc
-tmp@0 = addr(b|a)
-return tmp@0
-EndFunc
-tmp@1 = addr(c|global)
-d|global = tmp@1
-g:
-BeginFunc
-EndFunc
-tmp@2 = addr(p|global)
-ptr|global = tmp@2
-tmp@3 = addr(ptr|global)
-ptr1|global = tmp@3
-tmp@4 = addr(ptr1|global)
-ptr2|global = tmp@4
-tmp@5 = addr(ptr2|global)
-ptr3|global = tmp@5
-tmp@6 = "this is pointer test"
-cc|global = tmp@6
 main:
 BeginFunc
-vd|main = ptr3|global
-tmp@7 = addr(main|global)
-c|main = tmp@7
-tmp@8 = load(c|main)
-tmp@8 = const@5
-tmp@9 = str|global long+ const@7
-tmp@10 = load(tmp@9)
-tmp@10 = const@8
-push const@6
-tmp@11 = func_call func
-pop const@6
-l|main = tmp@11
-tmp@12 = load(c|main)
-tmp@12 = const@9
-tmp@13 = "hello"
-push tmp@13
-push const@3
-tmp@14 = func_call printf
-pop const@3
-pop tmp@13
-b|main = const@6
-ifz const@6 goto label#0
+operator|main = lconst@94
+a|main = lconst@1386
+b|main = lconst@1103
+tmp@0 = a|main long== b|main
+equal|main = tmp@0
+if operator|main <> lconst@124 goto label#1
+tmp@1 = a|main long| b|main
+x|main = tmp@1
+goto label#6
 label#0:
-tmp@15 = addr(p|global)
-tmp@16 = long_to_int tmp@15
-return tmp@16
+if operator|main <> lconst@38 goto label#2
+tmp@2 = a|main long& b|main
+x|main = tmp@2
+goto label#6
+label#1:
+if operator|main <> lconst@94 goto label#3
+tmp@3 = a|main long^ b|main
+x|main = tmp@3
+goto label#6
+label#2:
+if operator|main <> lconst@126 goto label#4
+tmp@4 = long~ a|main
+x|main = tmp@4
+goto label#6
+label#3:
+if operator|main <> lconst@60 goto label#5
+tmp@5 = a|main long< b|main
+tmp@6 = bool_to_long tmp@5
+x|main = tmp@6
+goto label#6
+label#4:
+if operator|main <> lconst@62 goto label#6
+tmp@7 = a|main long> b|main
+tmp@8 = bool_to_long tmp@7
+x|main = tmp@8
+goto label#6
+label#5:
+x|main = a|main
+label#6:
 EndFunc

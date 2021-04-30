@@ -8,8 +8,7 @@ from typecheck import *
 temp_cnt = 0
 lable_cnt = 0
 label_list = list()
-const_cnt = 0
-const_list = list()
+alloc = dict()
 
 
 class gen:
@@ -110,27 +109,36 @@ def get_const(const,type,use=False):
     assert isinstance(type,str) or isinstance(type,Type)
     if isinstance(type,str):
         assert type in {"bool","long","char","int","float"}
-        type = BasicType(type=type)
-    global const_list
-    if const in const_list:
-        name = "const@"+str(const_list.index(const))
+    if isinstance(type,Type):
+        assert type.class_type in ["PointerType","BasicType"]
+        if type.class_type == "PointerType":
+            type = "long"
+        else:
+            assert type.type in {"bool","long","char","int","float"}
+            type = type.type
+    #long const
+    if type != "float":
+        name = "lconst@"+str(int(const))
+    #float
     else:
-        name = "const@"+str(len(const_list))
-        const_list.append(const)
-        #add in symbol table
-        #have two options 1) add now 2) on need basis (for need basis maintain dict to tell if added)
-        #not declare int const as long
-        #use helps in need basis
+        name = "fconst@"+str(const)
+    if use: const_use(name)
     return name
 
 def const_use(place):
-    pass
+    if place not in alloc.keys():
+        type = BasicType("long") if place[0] == "l" else BasicType("float") 
+        sym_table._add_entry(name=place,type=type)
+        alloc[place] = get_const_value(place)
 
 def get_const_value(place):
     global const_list
     assert "const@" in place
-    index = int(place[6:])
-    return const_list[index]
+    value = place.split("@")[-1]
+    if "fconst@" in place:
+        return float(value)
+    else:
+        return int(value)
 
 
 def break_continue(input, break_label, continue_label):

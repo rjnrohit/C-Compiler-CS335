@@ -268,7 +268,7 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        allowed_base = {'int','float','double','char','long'}
+        allowed_base = {'int','float','char','long'}
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
             p[0] = p[1]
@@ -308,7 +308,7 @@ def p_postfix_expression(p):
 def p_postfix_expression_1(p):
     # Array ref
     ''' 
-    postfix_expression : postfix_expression L_SQBR expression R_SQBR
+    postfix_expression : postfix_expression L_SQBR constant_expression R_SQBR
     '''
     allowed_class = {'BasicType'}
     allowd_base = {'int','long'}
@@ -423,6 +423,8 @@ def p_postfix_expression_2(p):
                 return
             node = typecast(arg_list[i],param_list[i])
             arg_places.append(node.place)
+            if "const@" in node.place:
+                const_use(node.place)
             code += node.code
             push_code += [gen(op = "push",place1=node.place,code="push "+node.place)]
             pop_code += [gen(op = "pop",place1=node.place,code="pop "+node.place)]
@@ -760,7 +762,7 @@ def p_conditional_expression(p):
             p[0] = Node(type="error")
             return
         allowed_class = {'BasicType'}
-        allowed_base = {'int','long','char','bool','double','float'}
+        allowed_base = {'int','long','char','bool','float'}
         if p[1].type.class_type not in allowed_class or p[1].type.type not in allowed_base:
             Errors(
                 errorType='TypeError',
@@ -856,8 +858,8 @@ def p_constant_expression(p):
     constant_expression : conditional_expression
     '''
     p[0] = p[1]
-    if "const@" in p[1].place:
-        const_use(p[1].place)
+    # if "const@" in p[1].place:
+    #     const_use(p[1].place)
 
 
 #List
@@ -914,7 +916,22 @@ def p_init_declarator(p):
             p[0] = Node(name="binary_op",value=p[1].type.stype+"=",children = [p[1],node],type="ok")
             p[0].code = node.code
             p[0].place = p[1].value+"|"+success.symbol_table.name
+            if success.symbol_table.name == "global":
+                if "const@" not in node.place:
+                    Errors(
+                        errorType='DeclarationError',
+                        errorText="can declare global variable with only real value",
+                        token_object= p.slice[2]
+                    )
+                    p[0] = [None]
+                    return 
+                else:
+                    alloc[p[0].place] = get_const_value(node.place)   
+                    p[0] = [p[0]]
+                    return
             p[0].code += [gen(op="=",place1=node.place,place3=p[0].place)]
+            if "const@" in node.place:
+                const_use(node.place)
             p[0] = [p[0]]
         else:
             p[0] = [None]
@@ -949,6 +966,19 @@ def p_auto_declarator(p):
         p[0] = Node(name="binary_op",value=p[3].type.stype+"=",children = [node,p[3]],type="ok")
         p[0].code = p[3].code
         p[0].place = p[1]+"|"+success.symbol_table.name
+        if success.symbol_table.name == "global":
+            if "const@" not in node.place:
+                Errors(
+                    errorType='DeclarationError',
+                    errorText="can declare global variable with only real value",
+                    token_object= p.slice[2]
+                )
+                p[0] = [None]
+                return 
+            else:
+                alloc[p[0].place] = get_const_value(node.place)   
+                p[0] = [p[0]]
+                return
         p[0].code += [gen(op="=",place1=p[3].place,place3=p[0].place)]
         p[0] = [p[0]]
 
@@ -960,7 +990,6 @@ def p_type_specifier(p):
                    | INT
                    | LONG
                    | FLOAT
-                   | DOUBLE
                    | STRUCT IDENTIFIER
                    | BOOL
     '''
@@ -1238,6 +1267,7 @@ def p_labeled_statement(p):
 
         p[0] = Node("case",children=[p[2],p[4]],type="ok")
         p[0].data['expr'] = p[2]
+        const_use(p[2].place)
         p[0].data['stmt'] = p[4]
         p[0].data['token'] = p.slice[1]
     else:
@@ -1617,7 +1647,7 @@ def main():
     #can also add as args for optimization
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
-    print(const_list)
+    print(alloc)
 if __name__ == "__main__":
     main()
 

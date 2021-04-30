@@ -37,7 +37,8 @@ def type_check_unary(node1,op,token,is_typename=False):
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
             if "const@" in node1.place:
-                node.place = get_const(-1*get_const_value(node1.place),type=node1.type)
+                neg = -1 if op == "-" else 1
+                node.place = get_const(neg*get_const_value(node1.place),type=node1.type)
                 return node
             node.code = node1.code
             node.place = get_newtmp(type=node1.type)
