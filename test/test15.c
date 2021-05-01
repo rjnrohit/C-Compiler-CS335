@@ -52,11 +52,12 @@ int main(){
     main1.x= main1.s->x;
 
     int a[45][50];
-    int z;
+    int z = &a;
     z = 0;
     do{
         int j = z + 1;
         a[12][13] = j++;
+        a[9][15] = 0;
         if(j == 1000 + (float)1){
             break;
         }else if(j != +23  + (float)23.4)continue;
@@ -64,6 +65,7 @@ int main(){
     }while(z < 100);
 
     int cc = 0;
+    cc = 4*5+1000292;
     for(;;cc += cc%2 + 3.45){
         bool flag = 1;
         if(cc%22 % 34){

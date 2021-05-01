@@ -36,7 +36,7 @@
 //     // printf("%c",c[1][1]);
 
 // }
-// #include<stdio.h>
+#include<stdio.h>
 // void printf(char *s,int a);
 float b(int c){
     return c*5;
@@ -49,7 +49,10 @@ struct z{
 };
 int main(){
     struct z c;
-    bool d[4][3];
+    // bool d[4][3];
     int a = sizeof(b);
+    float b = 3.1;
+    b++;
+    printf("%f",b);
     
 }

@@ -7,8 +7,8 @@ from typecheck import *
 
 temp_cnt = 0
 lable_cnt = 0
-label_list = []
-
+label_list = list()
+alloc = dict()
 
 
 class gen:
@@ -105,6 +105,53 @@ def get_newlabel():
     label_list.append(label)
     return label
 
+def get_const(const,type,use=False):
+    assert isinstance(type,str) or isinstance(type,Type)
+    if isinstance(type,str):
+        assert type in {"bool","long","char","int","float"}
+    if isinstance(type,Type):
+        assert type.class_type in ["PointerType","BasicType"]
+        if type.class_type == "PointerType":
+            type = "long"
+        else:
+            assert type.type in {"bool","long","char","int","float"}
+            type = type.type
+    #long const
+    if type != "float":
+        name = "lconst@"+str(int(const))
+    #float
+    else:
+        name = "fconst@"+str(const)
+    if use: const_use(name)
+    return name
+
+def get_str_const(string):
+    assert isinstance(string,str)
+    place = "sconst@"+string
+    # if place not in alloc.keys():
+    #     type = PointerType(type=BasicType("char"),array_size=len(string)+1,array_type=BasicType("char"))
+    #     sym_table._add_entry(name=place,type=type)
+    #     alloc[place] = string+"\0"
+    return place
+
+def const_use(place):
+    if "sconst@" in place:
+        return
+    if place not in alloc.keys():
+        type = BasicType("long") if place[0] == "l" else BasicType("float") 
+        sym_table._add_entry(name=place,type=type)
+        alloc[place] = get_const_value(place)
+
+def get_const_value(place):
+    global const_list
+    assert "const@" in place
+    if "sconst@" in place:
+        return 1
+    value = place.split("@")[-1]
+    if "fconst@" in place:
+        return float(value)
+    else:
+        return int(value)
 
 
 def break_continue(input, break_label, continue_label):
@@ -112,6 +159,8 @@ def break_continue(input, break_label, continue_label):
     # assert continue_label, "label2 not given"
 
     for gens in input:
+        if gens == None:
+            continue
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == 'continue':
             gens.op = 'goto'
@@ -133,27 +182,69 @@ def add_scope_info(entry):
     assert isinstance(entry, Entry), "entry object is of wrong class"
     return '|' + entry.symbol_table.name
 
-    
+def op_on_const(op,place1,place2):
+    value1 = get_const_value(place1)
+    value2 = get_const_value(place2)
+    #length 2 op <= , => , == , >> , << , !=
+    if op[-2:] == "<=": return int(value1<=value2)
+    if op[-2:] == ">=": return int(value>=value2)
+    if op[-2:] == "==": return int(value1==value2)
+    if op[-2:] == "!=": return int(value1!=value2)
+    if op[-2:] == ">>": return value1>>value2
+    if op[-2:] == "<<": return value1<<value2
+    #length 1 +,-,/,*,%,^,&,|
+    if op[-1] == "+": return value1+value2
+    if op[-1] == "-": return value1-value2
+    if op[-1] == "/": return value1 / value2 #handle division by zero
+    if op[-1] == "*": return value1*value2
+    if op[-1] == "%": return value1%value2
+    if op[-1] == "^": return value1^value2
+    if op[-1] == "&": return value1&value2
+    if op[-1] == "|": return value1|value2
+    if op[-1] == ">": return int(value1>value2)
+    if op[-1] == "<": return int(value1<value2)
+    assert False, op + "not in list"
+
+
+
 def get_opcode(op=None,place1=None,place2=None,type=None):
     if isinstance(type,str):
         type = BasicType(type)
+    assert "sconst@" not in place1 and "sconst@" not in place2, "string"
+    if "const@" in place1 and "const@" in place2:
+        return get_const(op_on_const(op,place1,place2),type=type), None
     tmp = get_newtmp(type)
     place1 = str(place1)
     place2 = str(place2)
     if op != "=":
         code = gen(op=op,place1=place1,place2=place2,place3=tmp)
+        if "const@" in place1:
+            const_use(place1)
+        if "const@" in place2:
+            const_use(place2)
     else:
         code = gen(op=op,place1=place1,place3=tmp)
+        if "const@" in place1:
+            const_use(place1)
     return tmp,code
 
 
 
 def has_break_continue(input):
     for gens in input:
+        if gens == None:
+            continue
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == "break" or gens.op == "continue":
             return True
     return False
+
+def remove_none(code_list):
+    new_code_list = []
+    for code in code_list:
+        if code != None:
+            new_code_list.append(code)
+    return new_code_list
 
 def remove_label(code_list):
     global label_list
