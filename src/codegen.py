@@ -1,5 +1,5 @@
 from structure import sym_table
-
+from threeaddr import gen
 #add global variables with inital value zero
 #float will set to 0.0
 #int will set to 0
@@ -10,7 +10,9 @@ gp_regs32 = ['eax', 'ebx', 'ecx', 'edx','esi','edi', 'ebp' + 'esp'] + ['r' + str
 gp_regs16 = ['ax', 'bx', 'cx', 'dx','si','di', 'bp' + 'sp'] + ['r' + str(i) + 'w' for i in range(8,16)]
 gp_regs8 = ['al', 'bl', 'cl', 'dl','sil','dil', 'bpl' + 'spl'] + ['r' + str(i) + 'b' for i in range(8,16)]
 
-fp_regs = ['xmm' + str(i) for i in range(1,16)]
+fp_regs = ['xmm' + str(i) for i in range(16)]
+
+
 
 def add_standard_constant():
     code = ['; this section for standard constants']
@@ -34,6 +36,13 @@ def add_standard_constant():
     return code
 
 
+def add_bss(vars):
+    code = ['section .bss']
+    #code for uninitialized vars
+    #add for arrays 
+    #add for structs
+    return code
+
 def add_global_variables():
     pass
 
@@ -46,10 +55,12 @@ def add_data():
 def add_start(gcode):
     code = ['global _start']
     code += ['_start:']
+    code += ['mov r12 qword [rsp]'] #argc
+    code += ['mov r13 rsp']
+    code += ['add r13 8'] #starting address of argv
 
     #add code for 3ac for outside of all functions
 
-    #TODO support command line arguments
     code += ['call main']
     code += ['end:']
     code += ['mov rax, SYS_exit ; Call code for exit']
@@ -63,7 +74,6 @@ def add_text(gcode, func_codes):
     code += add_start(gcode)
     
     for func in func_codes:
-        #TODO check if function is defined
         code += add_func_code(func)
 
 def add_func_body_code(name, func_code):
@@ -78,6 +88,11 @@ def add_func_code(func):
     code += add_func_body_code(func['name'], func['code'])
     code += ['leave']
     code += ['ret']
+
+def add_func_call(gen_obj):
+    assert isinstance(gen_obj, gen), "object type error"
+    #TODO check if function is defined
+    pass
 
 def generate(tac_code):
     func_name =""
@@ -106,6 +121,7 @@ def generate(tac_code):
             gcode += [obj]
     #print(gcode, funcs)
     code = add_data()
+    code += add_bss()
     code += add_text(gcode, funcs)
 
 
