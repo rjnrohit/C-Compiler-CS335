@@ -46,7 +46,7 @@ Rule 24    primary_expression -> NULL
 Rule 25    postfix_expression -> primary_expression
 Rule 26    postfix_expression -> postfix_expression INCREMENT
 Rule 27    postfix_expression -> postfix_expression DECREMENT
-Rule 28    postfix_expression -> postfix_expression L_SQBR expression R_SQBR
+Rule 28    postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR
 Rule 29    postfix_expression -> postfix_expression L_PAREN R_PAREN
 Rule 30    postfix_expression -> postfix_expression L_PAREN argument_expression_list R_PAREN
 Rule 31    postfix_expression -> postfix_expression DOT IDENTIFIER
@@ -293,13 +293,13 @@ block_item_list      : 143 145 147
 cast_expression      : 38 48 49 50 51 52
 compound_statement   : 133
 conditional_expression : 78 79 94
-constant_expression  : 140
+constant_expression  : 28 140
 declaration          : 5 149
 declarator           : 6 7 8 9 100 101 118 119 123 130
 direct_declarator    : 120 121 124
 equality_expression  : 65 66 67 68
 exclusive_or_expression : 70 71 72
-expression           : 21 28 78 93 151 152 153 154 155 156 158 162
+expression           : 21 78 93 151 152 153 154 155 156 158 162
 expression_statement : 134 157 157 158 158
 external_declaration : 2 3
 func_rparen_1        : 6
@@ -808,7 +808,7 @@ state 29
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -1121,7 +1121,7 @@ state 40
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -1331,7 +1331,6 @@ state 50
     COMMA           reduce using rule 79 (assignment_expression -> conditional_expression .)
     R_PAREN         reduce using rule 79 (assignment_expression -> conditional_expression .)
     COLON           reduce using rule 79 (assignment_expression -> conditional_expression .)
-    R_SQBR          reduce using rule 79 (assignment_expression -> conditional_expression .)
 
 
 state 51
@@ -1373,7 +1372,6 @@ state 51
     COMMA           reduce using rule 47 (cast_expression -> unary_expression .)
     R_PAREN         reduce using rule 47 (cast_expression -> unary_expression .)
     COLON           reduce using rule 47 (cast_expression -> unary_expression .)
-    R_SQBR          reduce using rule 47 (cast_expression -> unary_expression .)
     ASSIGNMENT      shift and go to state 105
     MULTIPLY_ASSIGNMENT shift and go to state 106
     DIVIDE_ASSIGNMENT shift and go to state 107
@@ -1408,7 +1406,7 @@ state 53
     (35) unary_expression -> postfix_expression .
     (26) postfix_expression -> postfix_expression . INCREMENT
     (27) postfix_expression -> postfix_expression . DECREMENT
-    (28) postfix_expression -> postfix_expression . L_SQBR expression R_SQBR
+    (28) postfix_expression -> postfix_expression . L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> postfix_expression . L_PAREN R_PAREN
     (30) postfix_expression -> postfix_expression . L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> postfix_expression . DOT IDENTIFIER
@@ -1469,7 +1467,7 @@ state 54
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -1532,7 +1530,7 @@ state 55
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -1597,7 +1595,7 @@ state 56
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -1692,7 +1690,7 @@ state 58
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -1773,7 +1771,7 @@ state 59
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -3036,7 +3034,7 @@ state 101
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -3204,7 +3202,7 @@ state 104
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -3613,7 +3611,7 @@ state 116
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -3746,7 +3744,7 @@ state 117
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -3903,49 +3901,14 @@ state 119
 
 state 120
 
-    (28) postfix_expression -> postfix_expression L_SQBR . expression R_SQBR
-    (92) expression -> . assignment_expression
-    (93) expression -> . expression COMMA assignment_expression
-    (79) assignment_expression -> . conditional_expression
-    (80) assignment_expression -> . unary_expression assignment_operator assignment_expression
+    (28) postfix_expression -> postfix_expression L_SQBR . constant_expression R_SQBR
+    (94) constant_expression -> . conditional_expression
     (77) conditional_expression -> . logical_or_expression
     (78) conditional_expression -> . logical_or_expression QUES_MARK expression COLON conditional_expression
-    (35) unary_expression -> . postfix_expression
-    (36) unary_expression -> . INCREMENT unary_expression
-    (37) unary_expression -> . DECREMENT unary_expression
-    (38) unary_expression -> . unary_operator cast_expression
-    (39) unary_expression -> . SIZEOF unary_expression
-    (40) unary_expression -> . SIZEOF L_PAREN type_name R_PAREN
     (75) logical_or_expression -> . logical_and_expression
     (76) logical_or_expression -> . logical_or_expression LOGICAL_OR logical_and_expression
-    (25) postfix_expression -> . primary_expression
-    (26) postfix_expression -> . postfix_expression INCREMENT
-    (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
-    (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
-    (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
-    (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
-    (32) postfix_expression -> . postfix_expression ARROW IDENTIFIER
-    (41) unary_operator -> . BITWISE_AND
-    (42) unary_operator -> . MULTIPLY
-    (43) unary_operator -> . ADD
-    (44) unary_operator -> . SUBSTRACT
-    (45) unary_operator -> . BITWISE_ONE_COMPLEMENT
-    (46) unary_operator -> . LOGICAL_NOT
     (73) logical_and_expression -> . inclusive_or_expression
     (74) logical_and_expression -> . logical_and_expression LOGICAL_AND inclusive_or_expression
-    (13) primary_expression -> . IDENTIFIER
-    (14) primary_expression -> . INT_CONSTANT
-    (15) primary_expression -> . HEX_CONSTANT
-    (16) primary_expression -> . OCTAL_CONSTANT
-    (17) primary_expression -> . EXPONENT_CONSTANT
-    (18) primary_expression -> . REAL_CONSTANT
-    (19) primary_expression -> . CHAR_CONSTANT
-    (20) primary_expression -> . STR_CONSTANT
-    (21) primary_expression -> . L_PAREN expression R_PAREN
-    (22) primary_expression -> . TRUE
-    (23) primary_expression -> . FALSE
-    (24) primary_expression -> . NULL
     (71) inclusive_or_expression -> . exclusive_or_expression
     (72) inclusive_or_expression -> . inclusive_or_expression BITWISE_OR exclusive_or_expression
     (69) exclusive_or_expression -> . and_expression
@@ -3972,7 +3935,40 @@ state 120
     (52) multiplicative_expression -> . multiplicative_expression MODULUS cast_expression
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
+    (35) unary_expression -> . postfix_expression
+    (36) unary_expression -> . INCREMENT unary_expression
+    (37) unary_expression -> . DECREMENT unary_expression
+    (38) unary_expression -> . unary_operator cast_expression
+    (39) unary_expression -> . SIZEOF unary_expression
+    (40) unary_expression -> . SIZEOF L_PAREN type_name R_PAREN
+    (25) postfix_expression -> . primary_expression
+    (26) postfix_expression -> . postfix_expression INCREMENT
+    (27) postfix_expression -> . postfix_expression DECREMENT
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
+    (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
+    (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
+    (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
+    (32) postfix_expression -> . postfix_expression ARROW IDENTIFIER
+    (41) unary_operator -> . BITWISE_AND
+    (42) unary_operator -> . MULTIPLY
+    (43) unary_operator -> . ADD
+    (44) unary_operator -> . SUBSTRACT
+    (45) unary_operator -> . BITWISE_ONE_COMPLEMENT
+    (46) unary_operator -> . LOGICAL_NOT
+    (13) primary_expression -> . IDENTIFIER
+    (14) primary_expression -> . INT_CONSTANT
+    (15) primary_expression -> . HEX_CONSTANT
+    (16) primary_expression -> . OCTAL_CONSTANT
+    (17) primary_expression -> . EXPONENT_CONSTANT
+    (18) primary_expression -> . REAL_CONSTANT
+    (19) primary_expression -> . CHAR_CONSTANT
+    (20) primary_expression -> . STR_CONSTANT
+    (21) primary_expression -> . L_PAREN expression R_PAREN
+    (22) primary_expression -> . TRUE
+    (23) primary_expression -> . FALSE
+    (24) primary_expression -> . NULL
 
+    L_PAREN         shift and go to state 129
     INCREMENT       shift and go to state 54
     DECREMENT       shift and go to state 55
     SIZEOF          shift and go to state 58
@@ -3990,21 +3986,15 @@ state 120
     REAL_CONSTANT   shift and go to state 74
     CHAR_CONSTANT   shift and go to state 75
     STR_CONSTANT    shift and go to state 76
-    L_PAREN         shift and go to state 59
     TRUE            shift and go to state 77
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
     postfix_expression             shift and go to state 53
-    expression                     shift and go to state 190
-    assignment_expression          shift and go to state 134
-    conditional_expression         shift and go to state 50
-    unary_expression               shift and go to state 51
+    constant_expression            shift and go to state 190
+    conditional_expression         shift and go to state 191
     logical_or_expression          shift and go to state 52
-    unary_operator                 shift and go to state 56
-    cast_expression                shift and go to state 57
     logical_and_expression         shift and go to state 60
-    primary_expression             shift and go to state 61
     inclusive_or_expression        shift and go to state 69
     exclusive_or_expression        shift and go to state 80
     and_expression                 shift and go to state 81
@@ -4013,6 +4003,10 @@ state 120
     shift_expression               shift and go to state 84
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
+    cast_expression                shift and go to state 57
+    unary_expression               shift and go to state 128
+    unary_operator                 shift and go to state 56
+    primary_expression             shift and go to state 61
 
 state 121
 
@@ -4035,7 +4029,7 @@ state 121
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -4087,7 +4081,7 @@ state 121
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
 
-    R_PAREN         shift and go to state 191
+    R_PAREN         shift and go to state 192
     INCREMENT       shift and go to state 54
     DECREMENT       shift and go to state 55
     SIZEOF          shift and go to state 58
@@ -4111,8 +4105,8 @@ state 121
     NULL            shift and go to state 79
 
     postfix_expression             shift and go to state 53
-    argument_expression_list       shift and go to state 192
-    assignment_expression          shift and go to state 193
+    argument_expression_list       shift and go to state 193
+    assignment_expression          shift and go to state 194
     conditional_expression         shift and go to state 50
     unary_expression               shift and go to state 51
     logical_or_expression          shift and go to state 52
@@ -4133,14 +4127,14 @@ state 122
 
     (31) postfix_expression -> postfix_expression DOT . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 194
+    IDENTIFIER      shift and go to state 195
 
 
 state 123
 
     (32) postfix_expression -> postfix_expression ARROW . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 195
+    IDENTIFIER      shift and go to state 196
 
 
 state 124
@@ -4204,7 +4198,7 @@ state 125
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -4450,7 +4444,7 @@ state 129
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -4623,7 +4617,7 @@ state 131
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -4704,7 +4698,7 @@ state 131
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    type_name                      shift and go to state 196
+    type_name                      shift and go to state 197
     expression                     shift and go to state 132
     type_specifier                 shift and go to state 135
     assignment_expression          shift and go to state 134
@@ -4730,15 +4724,15 @@ state 132
     (21) primary_expression -> L_PAREN expression . R_PAREN
     (93) expression -> expression . COMMA assignment_expression
 
-    R_PAREN         shift and go to state 197
-    COMMA           shift and go to state 198
+    R_PAREN         shift and go to state 198
+    COMMA           shift and go to state 199
 
 
 state 133
 
     (48) cast_expression -> L_PAREN type_name . R_PAREN cast_expression
 
-    R_PAREN         shift and go to state 199
+    R_PAREN         shift and go to state 200
 
 
 state 134
@@ -4749,7 +4743,6 @@ state 134
     COMMA           reduce using rule 92 (expression -> assignment_expression .)
     SEMI_COLON      reduce using rule 92 (expression -> assignment_expression .)
     COLON           reduce using rule 92 (expression -> assignment_expression .)
-    R_SQBR          reduce using rule 92 (expression -> assignment_expression .)
 
 
 state 135
@@ -4762,7 +4755,7 @@ state 135
     R_PAREN         reduce using rule 131 (type_name -> type_specifier .)
     MULTIPLY        shift and go to state 22
 
-    pointer                        shift and go to state 200
+    pointer                        shift and go to state 201
 
 state 136
 
@@ -4802,7 +4795,7 @@ state 136
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -4848,7 +4841,7 @@ state 136
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    inclusive_or_expression        shift and go to state 201
+    inclusive_or_expression        shift and go to state 202
     exclusive_or_expression        shift and go to state 80
     and_expression                 shift and go to state 81
     equality_expression            shift and go to state 82
@@ -4898,7 +4891,7 @@ state 137
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -4944,7 +4937,7 @@ state 137
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    exclusive_or_expression        shift and go to state 202
+    exclusive_or_expression        shift and go to state 203
     and_expression                 shift and go to state 81
     equality_expression            shift and go to state 82
     relational_expression          shift and go to state 83
@@ -4991,7 +4984,7 @@ state 138
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5037,7 +5030,7 @@ state 138
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    and_expression                 shift and go to state 203
+    and_expression                 shift and go to state 204
     equality_expression            shift and go to state 82
     relational_expression          shift and go to state 83
     shift_expression               shift and go to state 84
@@ -5081,7 +5074,7 @@ state 139
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5127,7 +5120,7 @@ state 139
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    equality_expression            shift and go to state 204
+    equality_expression            shift and go to state 205
     relational_expression          shift and go to state 83
     shift_expression               shift and go to state 84
     additive_expression            shift and go to state 85
@@ -5167,92 +5160,7 @@ state 140
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
-    (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
-    (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
-    (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
-    (32) postfix_expression -> . postfix_expression ARROW IDENTIFIER
-    (41) unary_operator -> . BITWISE_AND
-    (42) unary_operator -> . MULTIPLY
-    (43) unary_operator -> . ADD
-    (44) unary_operator -> . SUBSTRACT
-    (45) unary_operator -> . BITWISE_ONE_COMPLEMENT
-    (46) unary_operator -> . LOGICAL_NOT
-    (13) primary_expression -> . IDENTIFIER
-    (14) primary_expression -> . INT_CONSTANT
-    (15) primary_expression -> . HEX_CONSTANT
-    (16) primary_expression -> . OCTAL_CONSTANT
-    (17) primary_expression -> . EXPONENT_CONSTANT
-    (18) primary_expression -> . REAL_CONSTANT
-    (19) primary_expression -> . CHAR_CONSTANT
-    (20) primary_expression -> . STR_CONSTANT
-    (21) primary_expression -> . L_PAREN expression R_PAREN
-    (22) primary_expression -> . TRUE
-    (23) primary_expression -> . FALSE
-    (24) primary_expression -> . NULL
-
-    L_PAREN         shift and go to state 129
-    INCREMENT       shift and go to state 54
-    DECREMENT       shift and go to state 55
-    SIZEOF          shift and go to state 58
-    BITWISE_AND     shift and go to state 63
-    MULTIPLY        shift and go to state 64
-    ADD             shift and go to state 65
-    SUBSTRACT       shift and go to state 66
-    BITWISE_ONE_COMPLEMENT shift and go to state 67
-    LOGICAL_NOT     shift and go to state 68
-    IDENTIFIER      shift and go to state 62
-    INT_CONSTANT    shift and go to state 70
-    HEX_CONSTANT    shift and go to state 71
-    OCTAL_CONSTANT  shift and go to state 72
-    EXPONENT_CONSTANT shift and go to state 73
-    REAL_CONSTANT   shift and go to state 74
-    CHAR_CONSTANT   shift and go to state 75
-    STR_CONSTANT    shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 78
-    NULL            shift and go to state 79
-
-    relational_expression          shift and go to state 205
-    shift_expression               shift and go to state 84
-    additive_expression            shift and go to state 85
-    multiplicative_expression      shift and go to state 86
-    cast_expression                shift and go to state 57
-    unary_expression               shift and go to state 128
-    postfix_expression             shift and go to state 53
-    unary_operator                 shift and go to state 56
-    primary_expression             shift and go to state 61
-
-state 141
-
-    (66) equality_expression -> equality_expression NOT_EQUALS . relational_expression
-    (59) relational_expression -> . shift_expression
-    (60) relational_expression -> . relational_expression LESS shift_expression
-    (61) relational_expression -> . relational_expression GREATER shift_expression
-    (62) relational_expression -> . relational_expression LESS_EQUALS shift_expression
-    (63) relational_expression -> . relational_expression GREATER_EQUALS shift_expression
-    (56) shift_expression -> . additive_expression
-    (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
-    (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
-    (53) additive_expression -> . multiplicative_expression
-    (54) additive_expression -> . additive_expression ADD multiplicative_expression
-    (55) additive_expression -> . additive_expression SUBSTRACT multiplicative_expression
-    (49) multiplicative_expression -> . cast_expression
-    (50) multiplicative_expression -> . multiplicative_expression MULTIPLY cast_expression
-    (51) multiplicative_expression -> . multiplicative_expression DIVIDE cast_expression
-    (52) multiplicative_expression -> . multiplicative_expression MODULUS cast_expression
-    (47) cast_expression -> . unary_expression
-    (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
-    (35) unary_expression -> . postfix_expression
-    (36) unary_expression -> . INCREMENT unary_expression
-    (37) unary_expression -> . DECREMENT unary_expression
-    (38) unary_expression -> . unary_operator cast_expression
-    (39) unary_expression -> . SIZEOF unary_expression
-    (40) unary_expression -> . SIZEOF L_PAREN type_name R_PAREN
-    (25) postfix_expression -> . primary_expression
-    (26) postfix_expression -> . postfix_expression INCREMENT
-    (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5308,9 +5216,14 @@ state 141
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 142
+state 141
 
-    (60) relational_expression -> relational_expression LESS . shift_expression
+    (66) equality_expression -> equality_expression NOT_EQUALS . relational_expression
+    (59) relational_expression -> . shift_expression
+    (60) relational_expression -> . relational_expression LESS shift_expression
+    (61) relational_expression -> . relational_expression GREATER shift_expression
+    (62) relational_expression -> . relational_expression LESS_EQUALS shift_expression
+    (63) relational_expression -> . relational_expression GREATER_EQUALS shift_expression
     (56) shift_expression -> . additive_expression
     (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
     (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
@@ -5332,7 +5245,7 @@ state 142
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5378,7 +5291,8 @@ state 142
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    shift_expression               shift and go to state 207
+    relational_expression          shift and go to state 207
+    shift_expression               shift and go to state 84
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
     cast_expression                shift and go to state 57
@@ -5387,9 +5301,9 @@ state 142
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 143
+state 142
 
-    (61) relational_expression -> relational_expression GREATER . shift_expression
+    (60) relational_expression -> relational_expression LESS . shift_expression
     (56) shift_expression -> . additive_expression
     (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
     (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
@@ -5411,7 +5325,7 @@ state 143
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5466,9 +5380,9 @@ state 143
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 144
+state 143
 
-    (62) relational_expression -> relational_expression LESS_EQUALS . shift_expression
+    (61) relational_expression -> relational_expression GREATER . shift_expression
     (56) shift_expression -> . additive_expression
     (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
     (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
@@ -5490,7 +5404,7 @@ state 144
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5545,9 +5459,9 @@ state 144
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 145
+state 144
 
-    (63) relational_expression -> relational_expression GREATER_EQUALS . shift_expression
+    (62) relational_expression -> relational_expression LESS_EQUALS . shift_expression
     (56) shift_expression -> . additive_expression
     (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
     (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
@@ -5569,7 +5483,7 @@ state 145
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5624,9 +5538,12 @@ state 145
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 146
+state 145
 
-    (57) shift_expression -> shift_expression LEFT_SHIFT . additive_expression
+    (63) relational_expression -> relational_expression GREATER_EQUALS . shift_expression
+    (56) shift_expression -> . additive_expression
+    (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
+    (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
     (53) additive_expression -> . multiplicative_expression
     (54) additive_expression -> . additive_expression ADD multiplicative_expression
     (55) additive_expression -> . additive_expression SUBSTRACT multiplicative_expression
@@ -5645,7 +5562,7 @@ state 146
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5691,7 +5608,8 @@ state 146
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    additive_expression            shift and go to state 211
+    shift_expression               shift and go to state 211
+    additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
     cast_expression                shift and go to state 57
     unary_expression               shift and go to state 128
@@ -5699,9 +5617,9 @@ state 146
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 147
+state 146
 
-    (58) shift_expression -> shift_expression RIGHT_SHIFT . additive_expression
+    (57) shift_expression -> shift_expression LEFT_SHIFT . additive_expression
     (53) additive_expression -> . multiplicative_expression
     (54) additive_expression -> . additive_expression ADD multiplicative_expression
     (55) additive_expression -> . additive_expression SUBSTRACT multiplicative_expression
@@ -5720,7 +5638,7 @@ state 147
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5774,9 +5692,12 @@ state 147
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 148
+state 147
 
-    (54) additive_expression -> additive_expression ADD . multiplicative_expression
+    (58) shift_expression -> shift_expression RIGHT_SHIFT . additive_expression
+    (53) additive_expression -> . multiplicative_expression
+    (54) additive_expression -> . additive_expression ADD multiplicative_expression
+    (55) additive_expression -> . additive_expression SUBSTRACT multiplicative_expression
     (49) multiplicative_expression -> . cast_expression
     (50) multiplicative_expression -> . multiplicative_expression MULTIPLY cast_expression
     (51) multiplicative_expression -> . multiplicative_expression DIVIDE cast_expression
@@ -5792,7 +5713,7 @@ state 148
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5838,16 +5759,17 @@ state 148
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    multiplicative_expression      shift and go to state 213
+    additive_expression            shift and go to state 213
+    multiplicative_expression      shift and go to state 86
     cast_expression                shift and go to state 57
     unary_expression               shift and go to state 128
     postfix_expression             shift and go to state 53
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 149
+state 148
 
-    (55) additive_expression -> additive_expression SUBSTRACT . multiplicative_expression
+    (54) additive_expression -> additive_expression ADD . multiplicative_expression
     (49) multiplicative_expression -> . cast_expression
     (50) multiplicative_expression -> . multiplicative_expression MULTIPLY cast_expression
     (51) multiplicative_expression -> . multiplicative_expression DIVIDE cast_expression
@@ -5863,7 +5785,7 @@ state 149
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5916,9 +5838,13 @@ state 149
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 150
+state 149
 
-    (50) multiplicative_expression -> multiplicative_expression MULTIPLY . cast_expression
+    (55) additive_expression -> additive_expression SUBSTRACT . multiplicative_expression
+    (49) multiplicative_expression -> . cast_expression
+    (50) multiplicative_expression -> . multiplicative_expression MULTIPLY cast_expression
+    (51) multiplicative_expression -> . multiplicative_expression DIVIDE cast_expression
+    (52) multiplicative_expression -> . multiplicative_expression MODULUS cast_expression
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
     (35) unary_expression -> . postfix_expression
@@ -5930,7 +5856,7 @@ state 150
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -5976,15 +5902,16 @@ state 150
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    cast_expression                shift and go to state 215
+    multiplicative_expression      shift and go to state 215
+    cast_expression                shift and go to state 57
     unary_expression               shift and go to state 128
     postfix_expression             shift and go to state 53
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 151
+state 150
 
-    (51) multiplicative_expression -> multiplicative_expression DIVIDE . cast_expression
+    (50) multiplicative_expression -> multiplicative_expression MULTIPLY . cast_expression
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
     (35) unary_expression -> . postfix_expression
@@ -5996,7 +5923,7 @@ state 151
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -6048,9 +5975,9 @@ state 151
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 152
+state 151
 
-    (52) multiplicative_expression -> multiplicative_expression MODULUS . cast_expression
+    (51) multiplicative_expression -> multiplicative_expression DIVIDE . cast_expression
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
     (35) unary_expression -> . postfix_expression
@@ -6062,7 +5989,7 @@ state 152
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -6114,11 +6041,77 @@ state 152
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
+state 152
+
+    (52) multiplicative_expression -> multiplicative_expression MODULUS . cast_expression
+    (47) cast_expression -> . unary_expression
+    (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
+    (35) unary_expression -> . postfix_expression
+    (36) unary_expression -> . INCREMENT unary_expression
+    (37) unary_expression -> . DECREMENT unary_expression
+    (38) unary_expression -> . unary_operator cast_expression
+    (39) unary_expression -> . SIZEOF unary_expression
+    (40) unary_expression -> . SIZEOF L_PAREN type_name R_PAREN
+    (25) postfix_expression -> . primary_expression
+    (26) postfix_expression -> . postfix_expression INCREMENT
+    (27) postfix_expression -> . postfix_expression DECREMENT
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
+    (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
+    (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
+    (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
+    (32) postfix_expression -> . postfix_expression ARROW IDENTIFIER
+    (41) unary_operator -> . BITWISE_AND
+    (42) unary_operator -> . MULTIPLY
+    (43) unary_operator -> . ADD
+    (44) unary_operator -> . SUBSTRACT
+    (45) unary_operator -> . BITWISE_ONE_COMPLEMENT
+    (46) unary_operator -> . LOGICAL_NOT
+    (13) primary_expression -> . IDENTIFIER
+    (14) primary_expression -> . INT_CONSTANT
+    (15) primary_expression -> . HEX_CONSTANT
+    (16) primary_expression -> . OCTAL_CONSTANT
+    (17) primary_expression -> . EXPONENT_CONSTANT
+    (18) primary_expression -> . REAL_CONSTANT
+    (19) primary_expression -> . CHAR_CONSTANT
+    (20) primary_expression -> . STR_CONSTANT
+    (21) primary_expression -> . L_PAREN expression R_PAREN
+    (22) primary_expression -> . TRUE
+    (23) primary_expression -> . FALSE
+    (24) primary_expression -> . NULL
+
+    L_PAREN         shift and go to state 129
+    INCREMENT       shift and go to state 54
+    DECREMENT       shift and go to state 55
+    SIZEOF          shift and go to state 58
+    BITWISE_AND     shift and go to state 63
+    MULTIPLY        shift and go to state 64
+    ADD             shift and go to state 65
+    SUBSTRACT       shift and go to state 66
+    BITWISE_ONE_COMPLEMENT shift and go to state 67
+    LOGICAL_NOT     shift and go to state 68
+    IDENTIFIER      shift and go to state 62
+    INT_CONSTANT    shift and go to state 70
+    HEX_CONSTANT    shift and go to state 71
+    OCTAL_CONSTANT  shift and go to state 72
+    EXPONENT_CONSTANT shift and go to state 73
+    REAL_CONSTANT   shift and go to state 74
+    CHAR_CONSTANT   shift and go to state 75
+    STR_CONSTANT    shift and go to state 76
+    TRUE            shift and go to state 77
+    FALSE           shift and go to state 78
+    NULL            shift and go to state 79
+
+    cast_expression                shift and go to state 218
+    unary_expression               shift and go to state 128
+    postfix_expression             shift and go to state 53
+    unary_operator                 shift and go to state 56
+    primary_expression             shift and go to state 61
+
 state 153
 
     (124) direct_declarator -> direct_declarator L_SQBR INT_CONSTANT . R_SQBR
 
-    R_SQBR          shift and go to state 218
+    R_SQBR          shift and go to state 219
 
 
 state 154
@@ -6137,7 +6130,7 @@ state 155
 
     (113) struct_specifier -> STRUCT IDENTIFIER add_sym_struct struct_declaration_list pop_sym . R_BRACES
 
-    R_BRACES        shift and go to state 219
+    R_BRACES        shift and go to state 220
 
 
 state 156
@@ -6159,8 +6152,8 @@ state 157
     (117) struct_declaration -> type_specifier struct_declarator_list . SEMI_COLON
     (119) struct_declarator_list -> struct_declarator_list . COMMA declarator
 
-    SEMI_COLON      shift and go to state 220
-    COMMA           shift and go to state 221
+    SEMI_COLON      shift and go to state 221
+    COMMA           shift and go to state 222
 
 
 state 158
@@ -6186,7 +6179,7 @@ state 159
     BOOL            reduce using rule 164 (pop_sym -> .)
     $end            reduce using rule 164 (pop_sym -> .)
 
-    pop_sym                        shift and go to state 222
+    pop_sym                        shift and go to state 223
 
 state 160
 
@@ -6203,7 +6196,7 @@ state 160
     BOOL            reduce using rule 164 (pop_sym -> .)
     $end            reduce using rule 164 (pop_sym -> .)
 
-    pop_sym                        shift and go to state 223
+    pop_sym                        shift and go to state 224
 
 state 161
 
@@ -6234,7 +6227,7 @@ state 163
     (143) compound_statement -> L_BRACES . add_sym block_item_list pop_sym R_BRACES
     (163) add_sym -> .
 
-    R_BRACES        shift and go to state 224
+    R_BRACES        shift and go to state 225
     AUTO            reduce using rule 163 (add_sym -> .)
     L_BRACES        reduce using rule 163 (add_sym -> .)
     SEMI_COLON      reduce using rule 163 (add_sym -> .)
@@ -6275,7 +6268,7 @@ state 163
     FALSE           reduce using rule 163 (add_sym -> .)
     NULL            reduce using rule 163 (add_sym -> .)
 
-    add_sym                        shift and go to state 225
+    add_sym                        shift and go to state 226
 
 state 164
 
@@ -6346,7 +6339,7 @@ state 165
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -6398,7 +6391,7 @@ state 165
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
 
-    R_BRACES        shift and go to state 226
+    R_BRACES        shift and go to state 227
     AUTO            shift and go to state 8
     L_BRACES        shift and go to state 163
     SEMI_COLON      shift and go to state 174
@@ -6439,7 +6432,7 @@ state 165
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    block_item                     shift and go to state 227
+    block_item                     shift and go to state 228
     statement                      shift and go to state 167
     declaration                    shift and go to state 168
     compound_statement             shift and go to state 169
@@ -6929,8 +6922,8 @@ state 176
     (151) expression_statement -> expression . SEMI_COLON
     (93) expression -> expression . COMMA assignment_expression
 
-    SEMI_COLON      shift and go to state 228
-    COMMA           shift and go to state 198
+    SEMI_COLON      shift and go to state 229
+    COMMA           shift and go to state 199
 
 
 state 177
@@ -6938,21 +6931,21 @@ state 177
     (152) selection_statement -> IF . L_PAREN expression R_PAREN statement
     (153) selection_statement -> IF . L_PAREN expression R_PAREN statement ELSE statement
 
-    L_PAREN         shift and go to state 229
+    L_PAREN         shift and go to state 230
 
 
 state 178
 
     (154) selection_statement -> SWITCH . L_PAREN expression R_PAREN L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
 
-    L_PAREN         shift and go to state 230
+    L_PAREN         shift and go to state 231
 
 
 state 179
 
     (155) iteration_statement -> WHILE . L_PAREN expression R_PAREN statement
 
-    L_PAREN         shift and go to state 231
+    L_PAREN         shift and go to state 232
 
 
 state 180
@@ -6995,7 +6988,7 @@ state 180
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -7079,7 +7072,7 @@ state 180
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    statement                      shift and go to state 232
+    statement                      shift and go to state 233
     expression                     shift and go to state 176
     compound_statement             shift and go to state 169
     expression_statement           shift and go to state 170
@@ -7109,21 +7102,21 @@ state 181
     (157) iteration_statement -> FOR . L_PAREN expression_statement expression_statement R_PAREN statement
     (158) iteration_statement -> FOR . L_PAREN expression_statement expression_statement expression R_PAREN statement
 
-    L_PAREN         shift and go to state 233
+    L_PAREN         shift and go to state 234
 
 
 state 182
 
     (159) jump_statement -> CONTINUE . SEMI_COLON
 
-    SEMI_COLON      shift and go to state 234
+    SEMI_COLON      shift and go to state 235
 
 
 state 183
 
     (160) jump_statement -> BREAK . SEMI_COLON
 
-    SEMI_COLON      shift and go to state 235
+    SEMI_COLON      shift and go to state 236
 
 
 state 184
@@ -7147,7 +7140,7 @@ state 184
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -7199,7 +7192,7 @@ state 184
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
 
-    SEMI_COLON      shift and go to state 236
+    SEMI_COLON      shift and go to state 237
     INCREMENT       shift and go to state 54
     DECREMENT       shift and go to state 55
     SIZEOF          shift and go to state 58
@@ -7222,7 +7215,7 @@ state 184
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    expression                     shift and go to state 237
+    expression                     shift and go to state 238
     assignment_expression          shift and go to state 134
     conditional_expression         shift and go to state 50
     unary_expression               shift and go to state 51
@@ -7246,7 +7239,7 @@ state 185
     (113) struct_specifier -> STRUCT . IDENTIFIER add_sym_struct struct_declaration_list pop_sym R_BRACES
     (111) type_specifier -> STRUCT . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 238
+    IDENTIFIER      shift and go to state 239
 
 
 state 186
@@ -7272,7 +7265,6 @@ state 187
     COMMA           reduce using rule 80 (assignment_expression -> unary_expression assignment_operator assignment_expression .)
     R_PAREN         reduce using rule 80 (assignment_expression -> unary_expression assignment_operator assignment_expression .)
     COLON           reduce using rule 80 (assignment_expression -> unary_expression assignment_operator assignment_expression .)
-    R_SQBR          reduce using rule 80 (assignment_expression -> unary_expression assignment_operator assignment_expression .)
 
 
 state 188
@@ -7280,8 +7272,8 @@ state 188
     (78) conditional_expression -> logical_or_expression QUES_MARK expression . COLON conditional_expression
     (93) expression -> expression . COMMA assignment_expression
 
-    COLON           shift and go to state 239
-    COMMA           shift and go to state 198
+    COLON           shift and go to state 240
+    COMMA           shift and go to state 199
 
 
 state 189
@@ -7301,14 +7293,20 @@ state 189
 
 state 190
 
-    (28) postfix_expression -> postfix_expression L_SQBR expression . R_SQBR
-    (93) expression -> expression . COMMA assignment_expression
+    (28) postfix_expression -> postfix_expression L_SQBR constant_expression . R_SQBR
 
-    R_SQBR          shift and go to state 240
-    COMMA           shift and go to state 198
+    R_SQBR          shift and go to state 241
 
 
 state 191
+
+    (94) constant_expression -> conditional_expression .
+
+    R_SQBR          reduce using rule 94 (constant_expression -> conditional_expression .)
+    COLON           reduce using rule 94 (constant_expression -> conditional_expression .)
+
+
+state 192
 
     (29) postfix_expression -> postfix_expression L_PAREN R_PAREN .
 
@@ -7355,16 +7353,16 @@ state 191
     R_SQBR          reduce using rule 29 (postfix_expression -> postfix_expression L_PAREN R_PAREN .)
 
 
-state 192
+state 193
 
     (30) postfix_expression -> postfix_expression L_PAREN argument_expression_list . R_PAREN
     (34) argument_expression_list -> argument_expression_list . COMMA assignment_expression
 
-    R_PAREN         shift and go to state 241
-    COMMA           shift and go to state 242
+    R_PAREN         shift and go to state 242
+    COMMA           shift and go to state 243
 
 
-state 193
+state 194
 
     (33) argument_expression_list -> assignment_expression .
 
@@ -7372,7 +7370,7 @@ state 193
     COMMA           reduce using rule 33 (argument_expression_list -> assignment_expression .)
 
 
-state 194
+state 195
 
     (31) postfix_expression -> postfix_expression DOT IDENTIFIER .
 
@@ -7419,7 +7417,7 @@ state 194
     R_SQBR          reduce using rule 31 (postfix_expression -> postfix_expression DOT IDENTIFIER .)
 
 
-state 195
+state 196
 
     (32) postfix_expression -> postfix_expression ARROW IDENTIFIER .
 
@@ -7466,14 +7464,14 @@ state 195
     R_SQBR          reduce using rule 32 (postfix_expression -> postfix_expression ARROW IDENTIFIER .)
 
 
-state 196
+state 197
 
     (40) unary_expression -> SIZEOF L_PAREN type_name . R_PAREN
 
-    R_PAREN         shift and go to state 243
+    R_PAREN         shift and go to state 244
 
 
-state 197
+state 198
 
     (21) primary_expression -> L_PAREN expression R_PAREN .
 
@@ -7520,7 +7518,7 @@ state 197
     R_SQBR          reduce using rule 21 (primary_expression -> L_PAREN expression R_PAREN .)
 
 
-state 198
+state 199
 
     (93) expression -> expression COMMA . assignment_expression
     (79) assignment_expression -> . conditional_expression
@@ -7538,7 +7536,7 @@ state 198
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -7612,7 +7610,7 @@ state 198
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    assignment_expression          shift and go to state 244
+    assignment_expression          shift and go to state 245
     conditional_expression         shift and go to state 50
     unary_expression               shift and go to state 51
     logical_or_expression          shift and go to state 52
@@ -7630,7 +7628,7 @@ state 198
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 199
+state 200
 
     (48) cast_expression -> L_PAREN type_name R_PAREN . cast_expression
     (47) cast_expression -> . unary_expression
@@ -7644,7 +7642,7 @@ state 199
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -7690,13 +7688,13 @@ state 199
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    cast_expression                shift and go to state 245
+    cast_expression                shift and go to state 246
     unary_expression               shift and go to state 128
     postfix_expression             shift and go to state 53
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 200
+state 201
 
     (132) type_name -> type_specifier pointer .
     (126) pointer -> pointer . MULTIPLY
@@ -7705,7 +7703,7 @@ state 200
     MULTIPLY        shift and go to state 34
 
 
-state 201
+state 202
 
     (74) logical_and_expression -> logical_and_expression LOGICAL_AND inclusive_or_expression .
     (72) inclusive_or_expression -> inclusive_or_expression . BITWISE_OR exclusive_or_expression
@@ -7721,7 +7719,7 @@ state 201
     BITWISE_OR      shift and go to state 137
 
 
-state 202
+state 203
 
     (72) inclusive_or_expression -> inclusive_or_expression BITWISE_OR exclusive_or_expression .
     (70) exclusive_or_expression -> exclusive_or_expression . BITWISE_XOR and_expression
@@ -7738,7 +7736,7 @@ state 202
     BITWISE_XOR     shift and go to state 138
 
 
-state 203
+state 204
 
     (70) exclusive_or_expression -> exclusive_or_expression BITWISE_XOR and_expression .
     (68) and_expression -> and_expression . BITWISE_AND equality_expression
@@ -7756,7 +7754,7 @@ state 203
     BITWISE_AND     shift and go to state 139
 
 
-state 204
+state 205
 
     (68) and_expression -> and_expression BITWISE_AND equality_expression .
     (65) equality_expression -> equality_expression . EQUALS relational_expression
@@ -7777,7 +7775,7 @@ state 204
     NOT_EQUALS      shift and go to state 141
 
 
-state 205
+state 206
 
     (65) equality_expression -> equality_expression EQUALS relational_expression .
     (60) relational_expression -> relational_expression . LESS shift_expression
@@ -7804,7 +7802,7 @@ state 205
     GREATER_EQUALS  shift and go to state 145
 
 
-state 206
+state 207
 
     (66) equality_expression -> equality_expression NOT_EQUALS relational_expression .
     (60) relational_expression -> relational_expression . LESS shift_expression
@@ -7831,7 +7829,7 @@ state 206
     GREATER_EQUALS  shift and go to state 145
 
 
-state 207
+state 208
 
     (60) relational_expression -> relational_expression LESS shift_expression .
     (57) shift_expression -> shift_expression . LEFT_SHIFT additive_expression
@@ -7858,7 +7856,7 @@ state 207
     RIGHT_SHIFT     shift and go to state 147
 
 
-state 208
+state 209
 
     (61) relational_expression -> relational_expression GREATER shift_expression .
     (57) shift_expression -> shift_expression . LEFT_SHIFT additive_expression
@@ -7885,7 +7883,7 @@ state 208
     RIGHT_SHIFT     shift and go to state 147
 
 
-state 209
+state 210
 
     (62) relational_expression -> relational_expression LESS_EQUALS shift_expression .
     (57) shift_expression -> shift_expression . LEFT_SHIFT additive_expression
@@ -7912,7 +7910,7 @@ state 209
     RIGHT_SHIFT     shift and go to state 147
 
 
-state 210
+state 211
 
     (63) relational_expression -> relational_expression GREATER_EQUALS shift_expression .
     (57) shift_expression -> shift_expression . LEFT_SHIFT additive_expression
@@ -7939,7 +7937,7 @@ state 210
     RIGHT_SHIFT     shift and go to state 147
 
 
-state 211
+state 212
 
     (57) shift_expression -> shift_expression LEFT_SHIFT additive_expression .
     (54) additive_expression -> additive_expression . ADD multiplicative_expression
@@ -7968,7 +7966,7 @@ state 211
     SUBSTRACT       shift and go to state 149
 
 
-state 212
+state 213
 
     (58) shift_expression -> shift_expression RIGHT_SHIFT additive_expression .
     (54) additive_expression -> additive_expression . ADD multiplicative_expression
@@ -7997,7 +7995,7 @@ state 212
     SUBSTRACT       shift and go to state 149
 
 
-state 213
+state 214
 
     (54) additive_expression -> additive_expression ADD multiplicative_expression .
     (50) multiplicative_expression -> multiplicative_expression . MULTIPLY cast_expression
@@ -8030,7 +8028,7 @@ state 213
     MODULUS         shift and go to state 152
 
 
-state 214
+state 215
 
     (55) additive_expression -> additive_expression SUBSTRACT multiplicative_expression .
     (50) multiplicative_expression -> multiplicative_expression . MULTIPLY cast_expression
@@ -8063,7 +8061,7 @@ state 214
     MODULUS         shift and go to state 152
 
 
-state 215
+state 216
 
     (50) multiplicative_expression -> multiplicative_expression MULTIPLY cast_expression .
 
@@ -8093,7 +8091,7 @@ state 215
     R_SQBR          reduce using rule 50 (multiplicative_expression -> multiplicative_expression MULTIPLY cast_expression .)
 
 
-state 216
+state 217
 
     (51) multiplicative_expression -> multiplicative_expression DIVIDE cast_expression .
 
@@ -8123,7 +8121,7 @@ state 216
     R_SQBR          reduce using rule 51 (multiplicative_expression -> multiplicative_expression DIVIDE cast_expression .)
 
 
-state 217
+state 218
 
     (52) multiplicative_expression -> multiplicative_expression MODULUS cast_expression .
 
@@ -8153,7 +8151,7 @@ state 217
     R_SQBR          reduce using rule 52 (multiplicative_expression -> multiplicative_expression MODULUS cast_expression .)
 
 
-state 218
+state 219
 
     (124) direct_declarator -> direct_declarator L_SQBR INT_CONSTANT R_SQBR .
 
@@ -8165,14 +8163,14 @@ state 218
     R_PAREN         reduce using rule 124 (direct_declarator -> direct_declarator L_SQBR INT_CONSTANT R_SQBR .)
 
 
-state 219
+state 220
 
     (113) struct_specifier -> STRUCT IDENTIFIER add_sym_struct struct_declaration_list pop_sym R_BRACES .
 
     SEMI_COLON      reduce using rule 113 (struct_specifier -> STRUCT IDENTIFIER add_sym_struct struct_declaration_list pop_sym R_BRACES .)
 
 
-state 220
+state 221
 
     (117) struct_declaration -> type_specifier struct_declarator_list SEMI_COLON .
 
@@ -8186,7 +8184,7 @@ state 220
     R_BRACES        reduce using rule 117 (struct_declaration -> type_specifier struct_declarator_list SEMI_COLON .)
 
 
-state 221
+state 222
 
     (119) struct_declarator_list -> struct_declarator_list COMMA . declarator
     (120) declarator -> . pointer direct_declarator
@@ -8199,11 +8197,11 @@ state 221
     IDENTIFIER      reduce using rule 127 (no_pointer -> .)
     L_PAREN         reduce using rule 127 (no_pointer -> .)
 
-    declarator                     shift and go to state 246
+    declarator                     shift and go to state 247
     pointer                        shift and go to state 19
     no_pointer                     shift and go to state 20
 
-state 222
+state 223
 
     (6) function_definition -> type_specifier declarator func_scope parameter_type_list func_rparen_1 function_body pop_sym .
 
@@ -8218,7 +8216,7 @@ state 222
     $end            reduce using rule 6 (function_definition -> type_specifier declarator func_scope parameter_type_list func_rparen_1 function_body pop_sym .)
 
 
-state 223
+state 224
 
     (8) function_definition -> type_specifier declarator func_scope parameter_type_list R_PAREN SEMI_COLON pop_sym .
 
@@ -8233,7 +8231,7 @@ state 223
     $end            reduce using rule 8 (function_definition -> type_specifier declarator func_scope parameter_type_list R_PAREN SEMI_COLON pop_sym .)
 
 
-state 224
+state 225
 
     (142) compound_statement -> L_BRACES R_BRACES .
 
@@ -8282,7 +8280,7 @@ state 224
     DEFAULT         reduce using rule 142 (compound_statement -> L_BRACES R_BRACES .)
 
 
-state 225
+state 226
 
     (143) compound_statement -> L_BRACES add_sym . block_item_list pop_sym R_BRACES
     (146) block_item_list -> . block_item
@@ -8337,7 +8335,7 @@ state 225
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -8429,7 +8427,7 @@ state 225
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    block_item_list                shift and go to state 247
+    block_item_list                shift and go to state 248
     block_item                     shift and go to state 166
     statement                      shift and go to state 167
     declaration                    shift and go to state 168
@@ -8459,7 +8457,7 @@ state 225
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 226
+state 227
 
     (145) function_body -> L_BRACES block_item_list R_BRACES .
 
@@ -8474,7 +8472,7 @@ state 226
     $end            reduce using rule 145 (function_body -> L_BRACES block_item_list R_BRACES .)
 
 
-state 227
+state 228
 
     (147) block_item_list -> block_item_list block_item .
 
@@ -8520,7 +8518,7 @@ state 227
     NULL            reduce using rule 147 (block_item_list -> block_item_list block_item .)
 
 
-state 228
+state 229
 
     (151) expression_statement -> expression SEMI_COLON .
 
@@ -8570,7 +8568,7 @@ state 228
     DEFAULT         reduce using rule 151 (expression_statement -> expression SEMI_COLON .)
 
 
-state 229
+state 230
 
     (152) selection_statement -> IF L_PAREN . expression R_PAREN statement
     (153) selection_statement -> IF L_PAREN . expression R_PAREN statement ELSE statement
@@ -8591,120 +8589,7 @@ state 229
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
-    (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
-    (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
-    (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
-    (32) postfix_expression -> . postfix_expression ARROW IDENTIFIER
-    (41) unary_operator -> . BITWISE_AND
-    (42) unary_operator -> . MULTIPLY
-    (43) unary_operator -> . ADD
-    (44) unary_operator -> . SUBSTRACT
-    (45) unary_operator -> . BITWISE_ONE_COMPLEMENT
-    (46) unary_operator -> . LOGICAL_NOT
-    (73) logical_and_expression -> . inclusive_or_expression
-    (74) logical_and_expression -> . logical_and_expression LOGICAL_AND inclusive_or_expression
-    (13) primary_expression -> . IDENTIFIER
-    (14) primary_expression -> . INT_CONSTANT
-    (15) primary_expression -> . HEX_CONSTANT
-    (16) primary_expression -> . OCTAL_CONSTANT
-    (17) primary_expression -> . EXPONENT_CONSTANT
-    (18) primary_expression -> . REAL_CONSTANT
-    (19) primary_expression -> . CHAR_CONSTANT
-    (20) primary_expression -> . STR_CONSTANT
-    (21) primary_expression -> . L_PAREN expression R_PAREN
-    (22) primary_expression -> . TRUE
-    (23) primary_expression -> . FALSE
-    (24) primary_expression -> . NULL
-    (71) inclusive_or_expression -> . exclusive_or_expression
-    (72) inclusive_or_expression -> . inclusive_or_expression BITWISE_OR exclusive_or_expression
-    (69) exclusive_or_expression -> . and_expression
-    (70) exclusive_or_expression -> . exclusive_or_expression BITWISE_XOR and_expression
-    (67) and_expression -> . equality_expression
-    (68) and_expression -> . and_expression BITWISE_AND equality_expression
-    (64) equality_expression -> . relational_expression
-    (65) equality_expression -> . equality_expression EQUALS relational_expression
-    (66) equality_expression -> . equality_expression NOT_EQUALS relational_expression
-    (59) relational_expression -> . shift_expression
-    (60) relational_expression -> . relational_expression LESS shift_expression
-    (61) relational_expression -> . relational_expression GREATER shift_expression
-    (62) relational_expression -> . relational_expression LESS_EQUALS shift_expression
-    (63) relational_expression -> . relational_expression GREATER_EQUALS shift_expression
-    (56) shift_expression -> . additive_expression
-    (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
-    (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
-    (53) additive_expression -> . multiplicative_expression
-    (54) additive_expression -> . additive_expression ADD multiplicative_expression
-    (55) additive_expression -> . additive_expression SUBSTRACT multiplicative_expression
-    (49) multiplicative_expression -> . cast_expression
-    (50) multiplicative_expression -> . multiplicative_expression MULTIPLY cast_expression
-    (51) multiplicative_expression -> . multiplicative_expression DIVIDE cast_expression
-    (52) multiplicative_expression -> . multiplicative_expression MODULUS cast_expression
-    (47) cast_expression -> . unary_expression
-    (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
-
-    INCREMENT       shift and go to state 54
-    DECREMENT       shift and go to state 55
-    SIZEOF          shift and go to state 58
-    BITWISE_AND     shift and go to state 63
-    MULTIPLY        shift and go to state 64
-    ADD             shift and go to state 65
-    SUBSTRACT       shift and go to state 66
-    BITWISE_ONE_COMPLEMENT shift and go to state 67
-    LOGICAL_NOT     shift and go to state 68
-    IDENTIFIER      shift and go to state 62
-    INT_CONSTANT    shift and go to state 70
-    HEX_CONSTANT    shift and go to state 71
-    OCTAL_CONSTANT  shift and go to state 72
-    EXPONENT_CONSTANT shift and go to state 73
-    REAL_CONSTANT   shift and go to state 74
-    CHAR_CONSTANT   shift and go to state 75
-    STR_CONSTANT    shift and go to state 76
-    L_PAREN         shift and go to state 59
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 78
-    NULL            shift and go to state 79
-
-    expression                     shift and go to state 248
-    assignment_expression          shift and go to state 134
-    conditional_expression         shift and go to state 50
-    unary_expression               shift and go to state 51
-    logical_or_expression          shift and go to state 52
-    postfix_expression             shift and go to state 53
-    unary_operator                 shift and go to state 56
-    cast_expression                shift and go to state 57
-    logical_and_expression         shift and go to state 60
-    primary_expression             shift and go to state 61
-    inclusive_or_expression        shift and go to state 69
-    exclusive_or_expression        shift and go to state 80
-    and_expression                 shift and go to state 81
-    equality_expression            shift and go to state 82
-    relational_expression          shift and go to state 83
-    shift_expression               shift and go to state 84
-    additive_expression            shift and go to state 85
-    multiplicative_expression      shift and go to state 86
-
-state 230
-
-    (154) selection_statement -> SWITCH L_PAREN . expression R_PAREN L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
-    (92) expression -> . assignment_expression
-    (93) expression -> . expression COMMA assignment_expression
-    (79) assignment_expression -> . conditional_expression
-    (80) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (77) conditional_expression -> . logical_or_expression
-    (78) conditional_expression -> . logical_or_expression QUES_MARK expression COLON conditional_expression
-    (35) unary_expression -> . postfix_expression
-    (36) unary_expression -> . INCREMENT unary_expression
-    (37) unary_expression -> . DECREMENT unary_expression
-    (38) unary_expression -> . unary_operator cast_expression
-    (39) unary_expression -> . SIZEOF unary_expression
-    (40) unary_expression -> . SIZEOF L_PAREN type_name R_PAREN
-    (75) logical_or_expression -> . logical_and_expression
-    (76) logical_or_expression -> . logical_or_expression LOGICAL_OR logical_and_expression
-    (25) postfix_expression -> . primary_expression
-    (26) postfix_expression -> . postfix_expression INCREMENT
-    (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -8799,7 +8684,7 @@ state 230
 
 state 231
 
-    (155) iteration_statement -> WHILE L_PAREN . expression R_PAREN statement
+    (154) selection_statement -> SWITCH L_PAREN . expression R_PAREN L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
     (92) expression -> . assignment_expression
     (93) expression -> . expression COMMA assignment_expression
     (79) assignment_expression -> . conditional_expression
@@ -8817,7 +8702,7 @@ state 231
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -8912,12 +8797,125 @@ state 231
 
 state 232
 
-    (156) iteration_statement -> DO statement . WHILE L_PAREN expression R_PAREN SEMI_COLON
+    (155) iteration_statement -> WHILE L_PAREN . expression R_PAREN statement
+    (92) expression -> . assignment_expression
+    (93) expression -> . expression COMMA assignment_expression
+    (79) assignment_expression -> . conditional_expression
+    (80) assignment_expression -> . unary_expression assignment_operator assignment_expression
+    (77) conditional_expression -> . logical_or_expression
+    (78) conditional_expression -> . logical_or_expression QUES_MARK expression COLON conditional_expression
+    (35) unary_expression -> . postfix_expression
+    (36) unary_expression -> . INCREMENT unary_expression
+    (37) unary_expression -> . DECREMENT unary_expression
+    (38) unary_expression -> . unary_operator cast_expression
+    (39) unary_expression -> . SIZEOF unary_expression
+    (40) unary_expression -> . SIZEOF L_PAREN type_name R_PAREN
+    (75) logical_or_expression -> . logical_and_expression
+    (76) logical_or_expression -> . logical_or_expression LOGICAL_OR logical_and_expression
+    (25) postfix_expression -> . primary_expression
+    (26) postfix_expression -> . postfix_expression INCREMENT
+    (27) postfix_expression -> . postfix_expression DECREMENT
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
+    (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
+    (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
+    (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
+    (32) postfix_expression -> . postfix_expression ARROW IDENTIFIER
+    (41) unary_operator -> . BITWISE_AND
+    (42) unary_operator -> . MULTIPLY
+    (43) unary_operator -> . ADD
+    (44) unary_operator -> . SUBSTRACT
+    (45) unary_operator -> . BITWISE_ONE_COMPLEMENT
+    (46) unary_operator -> . LOGICAL_NOT
+    (73) logical_and_expression -> . inclusive_or_expression
+    (74) logical_and_expression -> . logical_and_expression LOGICAL_AND inclusive_or_expression
+    (13) primary_expression -> . IDENTIFIER
+    (14) primary_expression -> . INT_CONSTANT
+    (15) primary_expression -> . HEX_CONSTANT
+    (16) primary_expression -> . OCTAL_CONSTANT
+    (17) primary_expression -> . EXPONENT_CONSTANT
+    (18) primary_expression -> . REAL_CONSTANT
+    (19) primary_expression -> . CHAR_CONSTANT
+    (20) primary_expression -> . STR_CONSTANT
+    (21) primary_expression -> . L_PAREN expression R_PAREN
+    (22) primary_expression -> . TRUE
+    (23) primary_expression -> . FALSE
+    (24) primary_expression -> . NULL
+    (71) inclusive_or_expression -> . exclusive_or_expression
+    (72) inclusive_or_expression -> . inclusive_or_expression BITWISE_OR exclusive_or_expression
+    (69) exclusive_or_expression -> . and_expression
+    (70) exclusive_or_expression -> . exclusive_or_expression BITWISE_XOR and_expression
+    (67) and_expression -> . equality_expression
+    (68) and_expression -> . and_expression BITWISE_AND equality_expression
+    (64) equality_expression -> . relational_expression
+    (65) equality_expression -> . equality_expression EQUALS relational_expression
+    (66) equality_expression -> . equality_expression NOT_EQUALS relational_expression
+    (59) relational_expression -> . shift_expression
+    (60) relational_expression -> . relational_expression LESS shift_expression
+    (61) relational_expression -> . relational_expression GREATER shift_expression
+    (62) relational_expression -> . relational_expression LESS_EQUALS shift_expression
+    (63) relational_expression -> . relational_expression GREATER_EQUALS shift_expression
+    (56) shift_expression -> . additive_expression
+    (57) shift_expression -> . shift_expression LEFT_SHIFT additive_expression
+    (58) shift_expression -> . shift_expression RIGHT_SHIFT additive_expression
+    (53) additive_expression -> . multiplicative_expression
+    (54) additive_expression -> . additive_expression ADD multiplicative_expression
+    (55) additive_expression -> . additive_expression SUBSTRACT multiplicative_expression
+    (49) multiplicative_expression -> . cast_expression
+    (50) multiplicative_expression -> . multiplicative_expression MULTIPLY cast_expression
+    (51) multiplicative_expression -> . multiplicative_expression DIVIDE cast_expression
+    (52) multiplicative_expression -> . multiplicative_expression MODULUS cast_expression
+    (47) cast_expression -> . unary_expression
+    (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
 
-    WHILE           shift and go to state 251
+    INCREMENT       shift and go to state 54
+    DECREMENT       shift and go to state 55
+    SIZEOF          shift and go to state 58
+    BITWISE_AND     shift and go to state 63
+    MULTIPLY        shift and go to state 64
+    ADD             shift and go to state 65
+    SUBSTRACT       shift and go to state 66
+    BITWISE_ONE_COMPLEMENT shift and go to state 67
+    LOGICAL_NOT     shift and go to state 68
+    IDENTIFIER      shift and go to state 62
+    INT_CONSTANT    shift and go to state 70
+    HEX_CONSTANT    shift and go to state 71
+    OCTAL_CONSTANT  shift and go to state 72
+    EXPONENT_CONSTANT shift and go to state 73
+    REAL_CONSTANT   shift and go to state 74
+    CHAR_CONSTANT   shift and go to state 75
+    STR_CONSTANT    shift and go to state 76
+    L_PAREN         shift and go to state 59
+    TRUE            shift and go to state 77
+    FALSE           shift and go to state 78
+    NULL            shift and go to state 79
 
+    expression                     shift and go to state 251
+    assignment_expression          shift and go to state 134
+    conditional_expression         shift and go to state 50
+    unary_expression               shift and go to state 51
+    logical_or_expression          shift and go to state 52
+    postfix_expression             shift and go to state 53
+    unary_operator                 shift and go to state 56
+    cast_expression                shift and go to state 57
+    logical_and_expression         shift and go to state 60
+    primary_expression             shift and go to state 61
+    inclusive_or_expression        shift and go to state 69
+    exclusive_or_expression        shift and go to state 80
+    and_expression                 shift and go to state 81
+    equality_expression            shift and go to state 82
+    relational_expression          shift and go to state 83
+    shift_expression               shift and go to state 84
+    additive_expression            shift and go to state 85
+    multiplicative_expression      shift and go to state 86
 
 state 233
+
+    (156) iteration_statement -> DO statement . WHILE L_PAREN expression R_PAREN SEMI_COLON
+
+    WHILE           shift and go to state 252
+
+
+state 234
 
     (157) iteration_statement -> FOR L_PAREN . expression_statement expression_statement R_PAREN statement
     (158) iteration_statement -> FOR L_PAREN . expression_statement expression_statement expression R_PAREN statement
@@ -8940,7 +8938,7 @@ state 233
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -9015,7 +9013,7 @@ state 233
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    expression_statement           shift and go to state 252
+    expression_statement           shift and go to state 253
     expression                     shift and go to state 176
     assignment_expression          shift and go to state 134
     conditional_expression         shift and go to state 50
@@ -9035,7 +9033,7 @@ state 233
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 234
+state 235
 
     (159) jump_statement -> CONTINUE SEMI_COLON .
 
@@ -9084,7 +9082,7 @@ state 234
     DEFAULT         reduce using rule 159 (jump_statement -> CONTINUE SEMI_COLON .)
 
 
-state 235
+state 236
 
     (160) jump_statement -> BREAK SEMI_COLON .
 
@@ -9133,7 +9131,7 @@ state 235
     DEFAULT         reduce using rule 160 (jump_statement -> BREAK SEMI_COLON .)
 
 
-state 236
+state 237
 
     (161) jump_statement -> RETURN SEMI_COLON .
 
@@ -9182,16 +9180,16 @@ state 236
     DEFAULT         reduce using rule 161 (jump_statement -> RETURN SEMI_COLON .)
 
 
-state 237
+state 238
 
     (162) jump_statement -> RETURN expression . SEMI_COLON
     (93) expression -> expression . COMMA assignment_expression
 
-    SEMI_COLON      shift and go to state 253
-    COMMA           shift and go to state 198
+    SEMI_COLON      shift and go to state 254
+    COMMA           shift and go to state 199
 
 
-state 238
+state 239
 
     (113) struct_specifier -> STRUCT IDENTIFIER . add_sym_struct struct_declaration_list pop_sym R_BRACES
     (111) type_specifier -> STRUCT IDENTIFIER .
@@ -9204,7 +9202,7 @@ state 238
 
     add_sym_struct                 shift and go to state 41
 
-state 239
+state 240
 
     (78) conditional_expression -> logical_or_expression QUES_MARK expression COLON . conditional_expression
     (77) conditional_expression -> . logical_or_expression
@@ -9248,7 +9246,7 @@ state 239
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -9295,7 +9293,7 @@ state 239
     NULL            shift and go to state 79
 
     logical_or_expression          shift and go to state 52
-    conditional_expression         shift and go to state 254
+    conditional_expression         shift and go to state 255
     logical_and_expression         shift and go to state 60
     inclusive_or_expression        shift and go to state 69
     exclusive_or_expression        shift and go to state 80
@@ -9311,54 +9309,54 @@ state 239
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 240
-
-    (28) postfix_expression -> postfix_expression L_SQBR expression R_SQBR .
-
-    INCREMENT       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    DECREMENT       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    L_SQBR          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    L_PAREN         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    DOT             reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    ARROW           reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    ASSIGNMENT      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    MULTIPLY_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    DIVIDE_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    MODULUS_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    ADD_ASSIGNMENT  reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    SUBSTRACT_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    LEFT_SHIFT_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    RIGHT_SHIFT_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    BITWISE_AND_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    BITWISE_XOR_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    BITWISE_OR_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    MULTIPLY        reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    DIVIDE          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    MODULUS         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    ADD             reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    SUBSTRACT       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    LEFT_SHIFT      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    RIGHT_SHIFT     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    LESS            reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    GREATER         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    LESS_EQUALS     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    GREATER_EQUALS  reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    EQUALS          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    NOT_EQUALS      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    BITWISE_AND     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    BITWISE_XOR     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    BITWISE_OR      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    LOGICAL_AND     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    QUES_MARK       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    LOGICAL_OR      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    SEMI_COLON      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    COMMA           reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    R_PAREN         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    COLON           reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-    R_SQBR          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR expression R_SQBR .)
-
-
 state 241
+
+    (28) postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .
+
+    INCREMENT       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    DECREMENT       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    L_SQBR          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    L_PAREN         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    DOT             reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    ARROW           reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    ASSIGNMENT      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    MULTIPLY_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    DIVIDE_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    MODULUS_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    ADD_ASSIGNMENT  reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    SUBSTRACT_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    LEFT_SHIFT_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    RIGHT_SHIFT_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    BITWISE_AND_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    BITWISE_XOR_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    BITWISE_OR_ASSIGNMENT reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    MULTIPLY        reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    DIVIDE          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    MODULUS         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    ADD             reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    SUBSTRACT       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    LEFT_SHIFT      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    RIGHT_SHIFT     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    LESS            reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    GREATER         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    LESS_EQUALS     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    GREATER_EQUALS  reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    EQUALS          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    NOT_EQUALS      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    BITWISE_AND     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    BITWISE_XOR     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    BITWISE_OR      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    LOGICAL_AND     reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    QUES_MARK       reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    LOGICAL_OR      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    SEMI_COLON      reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    COMMA           reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    R_PAREN         reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    COLON           reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+    R_SQBR          reduce using rule 28 (postfix_expression -> postfix_expression L_SQBR constant_expression R_SQBR .)
+
+
+state 242
 
     (30) postfix_expression -> postfix_expression L_PAREN argument_expression_list R_PAREN .
 
@@ -9405,7 +9403,7 @@ state 241
     R_SQBR          reduce using rule 30 (postfix_expression -> postfix_expression L_PAREN argument_expression_list R_PAREN .)
 
 
-state 242
+state 243
 
     (34) argument_expression_list -> argument_expression_list COMMA . assignment_expression
     (79) assignment_expression -> . conditional_expression
@@ -9423,7 +9421,7 @@ state 242
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -9497,7 +9495,7 @@ state 242
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    assignment_expression          shift and go to state 255
+    assignment_expression          shift and go to state 256
     conditional_expression         shift and go to state 50
     unary_expression               shift and go to state 51
     logical_or_expression          shift and go to state 52
@@ -9515,7 +9513,7 @@ state 242
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 243
+state 244
 
     (40) unary_expression -> SIZEOF L_PAREN type_name R_PAREN .
 
@@ -9556,7 +9554,7 @@ state 243
     R_SQBR          reduce using rule 40 (unary_expression -> SIZEOF L_PAREN type_name R_PAREN .)
 
 
-state 244
+state 245
 
     (93) expression -> expression COMMA assignment_expression .
 
@@ -9564,10 +9562,9 @@ state 244
     COMMA           reduce using rule 93 (expression -> expression COMMA assignment_expression .)
     SEMI_COLON      reduce using rule 93 (expression -> expression COMMA assignment_expression .)
     COLON           reduce using rule 93 (expression -> expression COMMA assignment_expression .)
-    R_SQBR          reduce using rule 93 (expression -> expression COMMA assignment_expression .)
 
 
-state 245
+state 246
 
     (48) cast_expression -> L_PAREN type_name R_PAREN cast_expression .
 
@@ -9608,7 +9605,7 @@ state 245
     R_SQBR          reduce using rule 48 (cast_expression -> L_PAREN type_name R_PAREN cast_expression .)
 
 
-state 246
+state 247
 
     (119) struct_declarator_list -> struct_declarator_list COMMA declarator .
 
@@ -9616,7 +9613,7 @@ state 246
     COMMA           reduce using rule 119 (struct_declarator_list -> struct_declarator_list COMMA declarator .)
 
 
-state 247
+state 248
 
     (143) compound_statement -> L_BRACES add_sym block_item_list . pop_sym R_BRACES
     (147) block_item_list -> block_item_list . block_item
@@ -9671,7 +9668,7 @@ state 247
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -9764,8 +9761,8 @@ state 247
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    pop_sym                        shift and go to state 256
-    block_item                     shift and go to state 227
+    pop_sym                        shift and go to state 257
+    block_item                     shift and go to state 228
     statement                      shift and go to state 167
     declaration                    shift and go to state 168
     compound_statement             shift and go to state 169
@@ -9794,42 +9791,42 @@ state 247
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 248
+state 249
 
     (152) selection_statement -> IF L_PAREN expression . R_PAREN statement
     (153) selection_statement -> IF L_PAREN expression . R_PAREN statement ELSE statement
     (93) expression -> expression . COMMA assignment_expression
 
-    R_PAREN         shift and go to state 257
-    COMMA           shift and go to state 198
-
-
-state 249
-
-    (154) selection_statement -> SWITCH L_PAREN expression . R_PAREN L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
-    (93) expression -> expression . COMMA assignment_expression
-
     R_PAREN         shift and go to state 258
-    COMMA           shift and go to state 198
+    COMMA           shift and go to state 199
 
 
 state 250
 
-    (155) iteration_statement -> WHILE L_PAREN expression . R_PAREN statement
+    (154) selection_statement -> SWITCH L_PAREN expression . R_PAREN L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
     (93) expression -> expression . COMMA assignment_expression
 
     R_PAREN         shift and go to state 259
-    COMMA           shift and go to state 198
+    COMMA           shift and go to state 199
 
 
 state 251
 
-    (156) iteration_statement -> DO statement WHILE . L_PAREN expression R_PAREN SEMI_COLON
+    (155) iteration_statement -> WHILE L_PAREN expression . R_PAREN statement
+    (93) expression -> expression . COMMA assignment_expression
 
-    L_PAREN         shift and go to state 260
+    R_PAREN         shift and go to state 260
+    COMMA           shift and go to state 199
 
 
 state 252
+
+    (156) iteration_statement -> DO statement WHILE . L_PAREN expression R_PAREN SEMI_COLON
+
+    L_PAREN         shift and go to state 261
+
+
+state 253
 
     (157) iteration_statement -> FOR L_PAREN expression_statement . expression_statement R_PAREN statement
     (158) iteration_statement -> FOR L_PAREN expression_statement . expression_statement expression R_PAREN statement
@@ -9852,7 +9849,7 @@ state 252
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -9927,7 +9924,7 @@ state 252
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    expression_statement           shift and go to state 261
+    expression_statement           shift and go to state 262
     expression                     shift and go to state 176
     assignment_expression          shift and go to state 134
     conditional_expression         shift and go to state 50
@@ -9947,7 +9944,7 @@ state 252
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 253
+state 254
 
     (162) jump_statement -> RETURN expression SEMI_COLON .
 
@@ -9996,7 +9993,7 @@ state 253
     DEFAULT         reduce using rule 162 (jump_statement -> RETURN expression SEMI_COLON .)
 
 
-state 254
+state 255
 
     (78) conditional_expression -> logical_or_expression QUES_MARK expression COLON conditional_expression .
 
@@ -10007,7 +10004,7 @@ state 254
     R_SQBR          reduce using rule 78 (conditional_expression -> logical_or_expression QUES_MARK expression COLON conditional_expression .)
 
 
-state 255
+state 256
 
     (34) argument_expression_list -> argument_expression_list COMMA assignment_expression .
 
@@ -10015,14 +10012,14 @@ state 255
     COMMA           reduce using rule 34 (argument_expression_list -> argument_expression_list COMMA assignment_expression .)
 
 
-state 256
+state 257
 
     (143) compound_statement -> L_BRACES add_sym block_item_list pop_sym . R_BRACES
 
-    R_BRACES        shift and go to state 262
+    R_BRACES        shift and go to state 263
 
 
-state 257
+state 258
 
     (152) selection_statement -> IF L_PAREN expression R_PAREN . statement
     (153) selection_statement -> IF L_PAREN expression R_PAREN . statement ELSE statement
@@ -10063,7 +10060,7 @@ state 257
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -10148,7 +10145,7 @@ state 257
     NULL            shift and go to state 79
 
     expression                     shift and go to state 176
-    statement                      shift and go to state 263
+    statement                      shift and go to state 264
     compound_statement             shift and go to state 169
     expression_statement           shift and go to state 170
     selection_statement            shift and go to state 171
@@ -10172,14 +10169,14 @@ state 257
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 258
+state 259
 
     (154) selection_statement -> SWITCH L_PAREN expression R_PAREN . L_BRACES add_sym labeled_statement_list pop_sym R_BRACES
 
-    L_BRACES        shift and go to state 264
+    L_BRACES        shift and go to state 265
 
 
-state 259
+state 260
 
     (155) iteration_statement -> WHILE L_PAREN expression R_PAREN . statement
     (133) statement -> . compound_statement
@@ -10219,7 +10216,7 @@ state 259
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -10304,7 +10301,7 @@ state 259
     NULL            shift and go to state 79
 
     expression                     shift and go to state 176
-    statement                      shift and go to state 265
+    statement                      shift and go to state 266
     compound_statement             shift and go to state 169
     expression_statement           shift and go to state 170
     selection_statement            shift and go to state 171
@@ -10328,7 +10325,7 @@ state 259
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 260
+state 261
 
     (156) iteration_statement -> DO statement WHILE L_PAREN . expression R_PAREN SEMI_COLON
     (92) expression -> . assignment_expression
@@ -10348,7 +10345,7 @@ state 260
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -10422,7 +10419,7 @@ state 260
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    expression                     shift and go to state 266
+    expression                     shift and go to state 267
     assignment_expression          shift and go to state 134
     conditional_expression         shift and go to state 50
     unary_expression               shift and go to state 51
@@ -10441,7 +10438,7 @@ state 260
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 261
+state 262
 
     (157) iteration_statement -> FOR L_PAREN expression_statement expression_statement . R_PAREN statement
     (158) iteration_statement -> FOR L_PAREN expression_statement expression_statement . expression R_PAREN statement
@@ -10462,7 +10459,7 @@ state 261
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -10514,7 +10511,7 @@ state 261
     (47) cast_expression -> . unary_expression
     (48) cast_expression -> . L_PAREN type_name R_PAREN cast_expression
 
-    R_PAREN         shift and go to state 267
+    R_PAREN         shift and go to state 268
     INCREMENT       shift and go to state 54
     DECREMENT       shift and go to state 55
     SIZEOF          shift and go to state 58
@@ -10537,7 +10534,7 @@ state 261
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    expression                     shift and go to state 268
+    expression                     shift and go to state 269
     assignment_expression          shift and go to state 134
     conditional_expression         shift and go to state 50
     unary_expression               shift and go to state 51
@@ -10556,7 +10553,7 @@ state 261
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 262
+state 263
 
     (143) compound_statement -> L_BRACES add_sym block_item_list pop_sym R_BRACES .
 
@@ -10605,7 +10602,7 @@ state 262
     DEFAULT         reduce using rule 143 (compound_statement -> L_BRACES add_sym block_item_list pop_sym R_BRACES .)
 
 
-state 263
+state 264
 
     (152) selection_statement -> IF L_PAREN expression R_PAREN statement .
     (153) selection_statement -> IF L_PAREN expression R_PAREN statement . ELSE statement
@@ -10653,12 +10650,12 @@ state 263
     NULL            reduce using rule 152 (selection_statement -> IF L_PAREN expression R_PAREN statement .)
     CASE            reduce using rule 152 (selection_statement -> IF L_PAREN expression R_PAREN statement .)
     DEFAULT         reduce using rule 152 (selection_statement -> IF L_PAREN expression R_PAREN statement .)
-    ELSE            shift and go to state 269
+    ELSE            shift and go to state 270
 
   ! ELSE            [ reduce using rule 152 (selection_statement -> IF L_PAREN expression R_PAREN statement .) ]
 
 
-state 264
+state 265
 
     (154) selection_statement -> SWITCH L_PAREN expression R_PAREN L_BRACES . add_sym labeled_statement_list pop_sym R_BRACES
     (163) add_sym -> .
@@ -10666,9 +10663,9 @@ state 264
     CASE            reduce using rule 163 (add_sym -> .)
     DEFAULT         reduce using rule 163 (add_sym -> .)
 
-    add_sym                        shift and go to state 270
+    add_sym                        shift and go to state 271
 
-state 265
+state 266
 
     (155) iteration_statement -> WHILE L_PAREN expression R_PAREN statement .
 
@@ -10717,16 +10714,16 @@ state 265
     DEFAULT         reduce using rule 155 (iteration_statement -> WHILE L_PAREN expression R_PAREN statement .)
 
 
-state 266
+state 267
 
     (156) iteration_statement -> DO statement WHILE L_PAREN expression . R_PAREN SEMI_COLON
     (93) expression -> expression . COMMA assignment_expression
 
-    R_PAREN         shift and go to state 271
-    COMMA           shift and go to state 198
+    R_PAREN         shift and go to state 272
+    COMMA           shift and go to state 199
 
 
-state 267
+state 268
 
     (157) iteration_statement -> FOR L_PAREN expression_statement expression_statement R_PAREN . statement
     (133) statement -> . compound_statement
@@ -10766,7 +10763,7 @@ state 267
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -10851,7 +10848,7 @@ state 267
     NULL            shift and go to state 79
 
     expression_statement           shift and go to state 170
-    statement                      shift and go to state 272
+    statement                      shift and go to state 273
     compound_statement             shift and go to state 169
     selection_statement            shift and go to state 171
     iteration_statement            shift and go to state 172
@@ -10875,16 +10872,16 @@ state 267
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 268
+state 269
 
     (158) iteration_statement -> FOR L_PAREN expression_statement expression_statement expression . R_PAREN statement
     (93) expression -> expression . COMMA assignment_expression
 
-    R_PAREN         shift and go to state 273
-    COMMA           shift and go to state 198
+    R_PAREN         shift and go to state 274
+    COMMA           shift and go to state 199
 
 
-state 269
+state 270
 
     (153) selection_statement -> IF L_PAREN expression R_PAREN statement ELSE . statement
     (133) statement -> . compound_statement
@@ -10924,7 +10921,7 @@ state 269
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -11009,7 +11006,7 @@ state 269
     NULL            shift and go to state 79
 
     expression                     shift and go to state 176
-    statement                      shift and go to state 274
+    statement                      shift and go to state 275
     compound_statement             shift and go to state 169
     expression_statement           shift and go to state 170
     selection_statement            shift and go to state 171
@@ -11033,7 +11030,7 @@ state 269
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 270
+state 271
 
     (154) selection_statement -> SWITCH L_PAREN expression R_PAREN L_BRACES add_sym . labeled_statement_list pop_sym R_BRACES
     (138) labeled_statement_list -> . labeled_statement_list labeled_statement
@@ -11041,20 +11038,20 @@ state 270
     (140) labeled_statement -> . CASE constant_expression COLON statement
     (141) labeled_statement -> . DEFAULT COLON statement
 
-    CASE            shift and go to state 277
-    DEFAULT         shift and go to state 278
+    CASE            shift and go to state 278
+    DEFAULT         shift and go to state 279
 
-    labeled_statement_list         shift and go to state 275
-    labeled_statement              shift and go to state 276
+    labeled_statement_list         shift and go to state 276
+    labeled_statement              shift and go to state 277
 
-state 271
+state 272
 
     (156) iteration_statement -> DO statement WHILE L_PAREN expression R_PAREN . SEMI_COLON
 
-    SEMI_COLON      shift and go to state 279
+    SEMI_COLON      shift and go to state 280
 
 
-state 272
+state 273
 
     (157) iteration_statement -> FOR L_PAREN expression_statement expression_statement R_PAREN statement .
 
@@ -11103,7 +11100,7 @@ state 272
     DEFAULT         reduce using rule 157 (iteration_statement -> FOR L_PAREN expression_statement expression_statement R_PAREN statement .)
 
 
-state 273
+state 274
 
     (158) iteration_statement -> FOR L_PAREN expression_statement expression_statement expression R_PAREN . statement
     (133) statement -> . compound_statement
@@ -11143,7 +11140,7 @@ state 273
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -11229,7 +11226,7 @@ state 273
 
     expression_statement           shift and go to state 170
     expression                     shift and go to state 176
-    statement                      shift and go to state 280
+    statement                      shift and go to state 281
     compound_statement             shift and go to state 169
     selection_statement            shift and go to state 171
     iteration_statement            shift and go to state 172
@@ -11252,7 +11249,7 @@ state 273
     additive_expression            shift and go to state 85
     multiplicative_expression      shift and go to state 86
 
-state 274
+state 275
 
     (153) selection_statement -> IF L_PAREN expression R_PAREN statement ELSE statement .
 
@@ -11301,7 +11298,7 @@ state 274
     DEFAULT         reduce using rule 153 (selection_statement -> IF L_PAREN expression R_PAREN statement ELSE statement .)
 
 
-state 275
+state 276
 
     (154) selection_statement -> SWITCH L_PAREN expression R_PAREN L_BRACES add_sym labeled_statement_list . pop_sym R_BRACES
     (138) labeled_statement_list -> labeled_statement_list . labeled_statement
@@ -11310,13 +11307,13 @@ state 275
     (141) labeled_statement -> . DEFAULT COLON statement
 
     R_BRACES        reduce using rule 164 (pop_sym -> .)
-    CASE            shift and go to state 277
-    DEFAULT         shift and go to state 278
+    CASE            shift and go to state 278
+    DEFAULT         shift and go to state 279
 
-    pop_sym                        shift and go to state 281
-    labeled_statement              shift and go to state 282
+    pop_sym                        shift and go to state 282
+    labeled_statement              shift and go to state 283
 
-state 276
+state 277
 
     (139) labeled_statement_list -> labeled_statement .
 
@@ -11325,7 +11322,7 @@ state 276
     R_BRACES        reduce using rule 139 (labeled_statement_list -> labeled_statement .)
 
 
-state 277
+state 278
 
     (140) labeled_statement -> CASE . constant_expression COLON statement
     (94) constant_expression -> . conditional_expression
@@ -11370,7 +11367,7 @@ state 277
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -11416,8 +11413,8 @@ state 277
     FALSE           shift and go to state 78
     NULL            shift and go to state 79
 
-    constant_expression            shift and go to state 283
-    conditional_expression         shift and go to state 284
+    constant_expression            shift and go to state 284
+    conditional_expression         shift and go to state 191
     logical_or_expression          shift and go to state 52
     logical_and_expression         shift and go to state 60
     inclusive_or_expression        shift and go to state 69
@@ -11434,14 +11431,14 @@ state 277
     unary_operator                 shift and go to state 56
     primary_expression             shift and go to state 61
 
-state 278
+state 279
 
     (141) labeled_statement -> DEFAULT . COLON statement
 
     COLON           shift and go to state 285
 
 
-state 279
+state 280
 
     (156) iteration_statement -> DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON .
 
@@ -11490,7 +11487,7 @@ state 279
     DEFAULT         reduce using rule 156 (iteration_statement -> DO statement WHILE L_PAREN expression R_PAREN SEMI_COLON .)
 
 
-state 280
+state 281
 
     (158) iteration_statement -> FOR L_PAREN expression_statement expression_statement expression R_PAREN statement .
 
@@ -11539,14 +11536,14 @@ state 280
     DEFAULT         reduce using rule 158 (iteration_statement -> FOR L_PAREN expression_statement expression_statement expression R_PAREN statement .)
 
 
-state 281
+state 282
 
     (154) selection_statement -> SWITCH L_PAREN expression R_PAREN L_BRACES add_sym labeled_statement_list pop_sym . R_BRACES
 
     R_BRACES        shift and go to state 286
 
 
-state 282
+state 283
 
     (138) labeled_statement_list -> labeled_statement_list labeled_statement .
 
@@ -11555,18 +11552,11 @@ state 282
     R_BRACES        reduce using rule 138 (labeled_statement_list -> labeled_statement_list labeled_statement .)
 
 
-state 283
+state 284
 
     (140) labeled_statement -> CASE constant_expression . COLON statement
 
     COLON           shift and go to state 287
-
-
-state 284
-
-    (94) constant_expression -> conditional_expression .
-
-    COLON           reduce using rule 94 (constant_expression -> conditional_expression .)
 
 
 state 285
@@ -11609,7 +11599,7 @@ state 285
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -11807,7 +11797,7 @@ state 287
     (25) postfix_expression -> . primary_expression
     (26) postfix_expression -> . postfix_expression INCREMENT
     (27) postfix_expression -> . postfix_expression DECREMENT
-    (28) postfix_expression -> . postfix_expression L_SQBR expression R_SQBR
+    (28) postfix_expression -> . postfix_expression L_SQBR constant_expression R_SQBR
     (29) postfix_expression -> . postfix_expression L_PAREN R_PAREN
     (30) postfix_expression -> . postfix_expression L_PAREN argument_expression_list R_PAREN
     (31) postfix_expression -> . postfix_expression DOT IDENTIFIER
@@ -11936,4 +11926,4 @@ state 289
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for ELSE in state 263 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 264 resolved as shift

@@ -11,7 +11,7 @@ class Node:
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
-        self.constan = constant
+        self.constant = constant
 
         self.place = ""
         self.code = []

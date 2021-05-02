@@ -1,62 +1,51 @@
-tmp@0 = 10000
-n|global = tmp@0
 sieve:
 BeginFunc
-tmp@1 = 2
-i|sieve = tmp@1
-tmp@2 = 2
-i|sieve = tmp@2
-label#4:
-tmp@3 = i|sieve int* i|sieve
-tmp@4 = tmp@3 int<= n|global
-ifz tmp@4 goto label#6
-tmp@6 = i|sieve long*_c 4
-tmp@7 = prime|global long+ tmp@6
-tmp@8 = 0
-tmp@9 = tmp@7 int== tmp@8
-ifz tmp@9 goto label#0
-goto label#5
+i|sieve = lconst@2
+i|sieve = lconst@2
 label#0:
-tmp@10 = i|sieve int* i|sieve
-j|scope@2 = tmp@10
-label#1:
-tmp@11 = j|scope@2 int* j|scope@2
-tmp@12 = tmp@11 int<= n|global
-ifz tmp@12 goto label#3
-tmp@14 = j|scope@2 long*_c 4
-tmp@15 = prime|global long+ tmp@14
-tmp@16 = 0
-tmp@15 = tmp@16
-label#2:
-tmp@13 = j|scope@2 int+ i|sieve
-j|scope@2 = tmp@13
-goto label#1
-label#3:
-label#5:
-tmp@5 = i|sieve
-i|sieve = i|sieve int+_c 1
+tmp@0 = i|sieve int* i|sieve
+tmp@1 = tmp@0 int<= n|global
+ifz tmp@1 goto label#5
+tmp@3 = i|sieve long* lconst@4
+tmp@4 = prime|global long+ tmp@3
+tmp@5 = tmp@4 int== lconst@0
+ifz tmp@5 goto label#1
 goto label#4
-label#6:
+label#1:
+tmp@6 = i|sieve int* i|sieve
+j|scope@2 = tmp@6
+label#2:
+tmp@7 = j|scope@2 int* j|scope@2
+tmp@8 = tmp@7 int<= n|global
+ifz tmp@8 goto label#4
+tmp@10 = j|scope@2 long* lconst@4
+tmp@11 = prime|global long+ tmp@10
+tmp@11 = lconst@0
+label#3:
+tmp@9 = j|scope@2 int+ i|sieve
+j|scope@2 = tmp@9
+goto label#2
+label#4:
+tmp@2 = i|sieve
+i|sieve = i|sieve int+ lconst@1
+goto label#0
+label#5:
 return
 EndFunc
 main:
 BeginFunc
-tmp@17 = 2
-i|main = tmp@17
+i|main = lconst@2
+label#6:
+tmp@12 = i|main int< lconst@10000
+ifz tmp@12 goto label#8
+tmp@14 = i|main long* lconst@4
+tmp@15 = prime|global long+ tmp@14
+tmp@15 = lconst@1
 label#7:
-tmp@18 = 10000
-tmp@19 = i|main int< tmp@18
-ifz tmp@19 goto label#9
-tmp@21 = i|main long*_c 4
-tmp@22 = prime|global long+ tmp@21
-tmp@23 = 1
-tmp@22 = tmp@23
+tmp@13 = i|main
+i|main = i|main int+ lconst@1
+goto label#6
 label#8:
-tmp@20 = i|main
-i|main = i|main int+_c 1
-goto label#7
-label#9:
-tmp@24 = func_call sieve
-tmp@25 = 0
-return tmp@25
+tmp@16 = func_call sieve
+return lconst@0
 EndFunc

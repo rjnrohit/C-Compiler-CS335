@@ -3,36 +3,59 @@ symbol table id,symbol table name
 0,global
 name,type,offset,width
 main,int function(None),0,4
+lconst@94,long,0,8
+lconst@1386,long,8,8
+lconst@1103,long,16,8
+lconst@124,long,24,8
+lconst@38,long,32,8
+lconst@126,long,40,8
+lconst@60,long,48,8
+lconst@62,long,56,8
 
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
-operator,char,5,1
-a,long,18,8
-b,long,38,8
-equal,bool,47,1
-x,long,48,8
+operator,char,4,1
+a,long,5,8
+b,long,13,8
+tmp@0,bool,21,1
+equal,bool,22,1
+x,long,23,8
+tmp@1,bool,31,1
+tmp@3,bool,32,1
+tmp@5,bool,33,1
+tmp@7,bool,34,1
+tmp@9,bool,35,1
+tmp@12,bool,36,1
 
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
+tmp@2,long,0,8
 
 symbol table id,symbol table name,parent id
 3,scope@3,1
 name,type,offset,width
+tmp@4,long,0,8
 
 symbol table id,symbol table name,parent id
 4,scope@4,1
 name,type,offset,width
+tmp@6,long,0,8
 
 symbol table id,symbol table name,parent id
 5,scope@5,1
 name,type,offset,width
+tmp@8,long,0,8
 
 symbol table id,symbol table name,parent id
 6,scope@6,1
 name,type,offset,width
+tmp@10,bool,0,1
+tmp@11,long,1,8
 
 symbol table id,symbol table name,parent id
 7,scope@7,1
 name,type,offset,width
+tmp@13,bool,0,1
+tmp@14,long,1,8

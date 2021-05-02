@@ -4,6 +4,15 @@ symbol table id,symbol table name
 name,type,offset,width
 b,int,0,4
 main,"int function([int, pointer of (char)])",4,12
+lconst@8,long,4,8
+fconst@3.2,float,12,4
+lconst@0,long,16,8
+lconst@1000,long,24,8
+lconst@1,long,32,8
+lconst@4,long,40,8
+lconst@2,long,48,8
+lconst@3,long,56,8
+fconst@9.2,float,64,4
 
 symbol table id,symbol table name,parent id
 1,A,0
@@ -17,25 +26,40 @@ name,type,offset,width
 argc,int,4,4
 argv,pointer of (char),8,4
 d,pointer of (struct A),12,8
-s,int,40,4
-str,pointer of (char),50,8
-w,int,62,4
-cd,float,66,4
-a,float,74,4
-ptr,pointer of (float),78,8
-c,float,86,4
-ptr3,pointer of (int),98,8
-ptr1,pointer of (pointer of (long)),114,8
-i,int,126,4
-n,int,134,4
+tmp@0,long,20,8
+s,int,28,4
+str,pointer of (char),32,8
+w,int,40,4
+cd,float,44,4
+a,float,48,4
+ptr,pointer of (float),52,8
+c,float,60,4
+tmp@1,long,64,8
+ptr3,pointer of (int),72,8
+tmp@2,long,80,8
+ptr1,pointer of (pointer of (long)),88,8
+i,int,96,4
+n,int,100,4
+tmp@3,int,104,4
+tmp@4,bool,108,1
 
 symbol table id,symbol table name,parent id
 3,scope@3,2
 name,type,offset,width
 sieve,pointer of (int),0,4000
 j,int,4000,4
-c,int,4025,4
+tmp@5,bool,4004,1
+tmp@6,int,4005,4
+tmp@12,int,4009,4
+tmp@13,int,4013,4
+tmp@14,int,4017,4
+c,int,4021,4
 
 symbol table id,symbol table name,parent id
 4,scope@4,3
 name,type,offset,width
+tmp@7,long,0,8
+tmp@8,long,8,8
+tmp@9,int,16,4
+tmp@10,int,20,4
+tmp@11,bool,24,1

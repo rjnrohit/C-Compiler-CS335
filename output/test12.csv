@@ -4,24 +4,28 @@ symbol table id,symbol table name
 name,type,offset,width
 a,pointer of (void) function([int]),0,12
 c,int,0,4
-d,pointer of (void),12,8
-g,void function([]),20,0
-func,int function([int]),20,8
-printf,"int function([pointer of (char), int])",20,16
-p,int,20,4
-ptr,pointer of (int),32,8
-ptr1,pointer of (pointer of (int)),48,8
-ptr2,pointer of (pointer of (pointer of (int))),64,8
-ptr3,pointer of (pointer of (pointer of (pointer of (int)))),80,8
-cc,pointer of (char),110,8
-b,char,118,1
-str,pointer of (pointer of (char)),119,48
-main,int function(None),167,4
+d,pointer of (void),4,8
+g,void function([]),12,0
+func,int function([int]),12,8
+printf,"int function([pointer of (char), int])",12,16
+p,int,12,4
+ptr3,pointer of (pointer of (pointer of (pointer of (int)))),16,8
+cc,pointer of (char),24,8
+b,char,32,1
+str,pointer of (pointer of (char)),33,48
+main,int function(None),81,4
+lconst@9,long,81,8
+lconst@4,long,89,8
+lconst@103,long,97,8
+lconst@1,long,105,8
+lconst@0,long,113,8
+lconst@5,long,121,8
 
 symbol table id,symbol table name,parent id
 1,a,0
 name,type,offset,width
 b,int,8,4
+tmp@0,long,12,8
 
 symbol table id,symbol table name,parent id
 3,g,0
@@ -42,6 +46,16 @@ symbol table id,symbol table name,parent id
 6,main,0
 name,type,offset,width
 vd,pointer of (pointer of (pointer of (pointer of (void)))),4,8
+tmp@1,long,12,8
 c,pointer of (int),20,8
-l,int,66,4
-b,bool,110,1
+tmp@2,int,28,4
+tmp@3,long,32,8
+tmp@4,char,40,1
+tmp@5,int,41,4
+l,int,45,4
+tmp@6,int,49,4
+tmp@7,pointer of (char),53,8
+tmp@8,int,61,4
+b,bool,65,1
+tmp@9,long,66,8
+tmp@10,int,74,4

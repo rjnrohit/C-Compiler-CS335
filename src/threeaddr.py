@@ -187,7 +187,7 @@ def op_on_const(op,place1,place2):
     value2 = get_const_value(place2)
     #length 2 op <= , => , == , >> , << , !=
     if op[-2:] == "<=": return int(value1<=value2)
-    if op[-2:] == ">=": return int(value>=value2)
+    if op[-2:] == ">=": return int(value1>=value2)
     if op[-2:] == "==": return int(value1==value2)
     if op[-2:] == "!=": return int(value1!=value2)
     if op[-2:] == ">>": return value1>>value2

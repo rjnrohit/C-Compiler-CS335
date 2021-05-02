@@ -3,18 +3,34 @@ symbol table id,symbol table name
 0,global
 name,type,offset,width
 a,pointer of (int),0,92
-n,int,96,4
-main,int function(None),100,4
+n,int,92,4
+main,int function(None),96,4
+lconst@0,long,96,8
+lconst@1,long,104,8
+lconst@4,long,112,8
 
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
 i,int,4,4
+tmp@0,bool,8,1
+tmp@1,int,9,4
+tmp@5,bool,13,1
+tmp@6,int,14,4
 
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
+tmp@2,long,0,8
+tmp@3,long,8,8
+tmp@4,int,16,4
 
 symbol table id,symbol table name,parent id
 3,scope@3,1
 name,type,offset,width
+tmp@7,long,0,8
+tmp@8,long,8,8
+tmp@9,int,16,4
+tmp@10,long,20,8
+tmp@11,long,28,8
+tmp@12,int,36,4

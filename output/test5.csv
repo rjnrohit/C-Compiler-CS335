@@ -3,16 +3,21 @@ symbol table id,symbol table name
 0,global
 name,type,offset,width
 main,int function(None),0,4
+lconst@10,long,0,8
+lconst@0,long,8,8
+lconst@1,long,16,8
 
 symbol table id,symbol table name,parent id
 1,main,0
 name,type,offset,width
 i,int,4,4
-n,int,12,4
-t1,int,20,4
-t2,int,28,4
-nextTerm,int,32,4
+n,int,8,4
+t1,int,12,4
+t2,int,16,4
+nextTerm,int,20,4
+tmp@0,bool,24,1
 
 symbol table id,symbol table name,parent id
 2,scope@2,1
 name,type,offset,width
+tmp@1,int,0,4
