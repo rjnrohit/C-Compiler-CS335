@@ -434,7 +434,7 @@ def p_postfix_expression_2(p):
             node = typecast(arg_list[i],param_list[i],p.slice[-1])
             if "sconst@" in node.place:
                 tmp = get_newtmp(type=node.type)
-                code += [gen(op="=",place1=node.place,place3=tmp)]
+                node.code += [gen(op="=",place1=node.place,place3=tmp)]
                 node.place = tmp
             arg_places.append(node.place)
             if "const@" in node.place:
