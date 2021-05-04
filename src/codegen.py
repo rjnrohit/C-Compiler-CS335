@@ -171,6 +171,28 @@ def add_text(gcode, func_codes):
     
     return code
 
+def get_var_addr(var_name):
+    if 'const@' in var_name:
+        addr =  const_dict[var_name]
+    elif 'tmp@' in var_name:
+        offset = temp_dict[var_name].table[var_name].offset + temp_dict[var_name].base
+        addr = 'rbp-'+ str(offset)
+    else:
+        assert '|' in var_name, "wrong var in 3ac code"
+        name = var_name.split('|')[0]
+        table = var_name.split('|')[1]
+        
+        symbol_table = SymbolTable.symbol_table_dict[table]
+        offset = symbol_table.table[name].offset + symbol_table.base
+        assert symbol_table, "there is no symbol table correspoding to" + table
+
+        if table == "global":
+            addr = name + '@global'
+        else:
+            addr = 'rbp-'+ str(offset)
+    return addr
+
+
 def add_args_copy_code(fname):
     code =[]
     float_args = 0
@@ -257,26 +279,17 @@ def add_func_call(gen_obj):
 
     assert len(args_type) == len(args_val), "argument mismatch"
 
-    float_args =[]
-    float_args_type = []
-    byte8_args = []
-    byte8_args_type = []
-    other_args= []
-    other_args_type = []
+    float_args = 0
+    byte8_args = 0
+    other_args = 0
 
     for i, typ in enumerate(args_type):
         if typ.stype == "float":
-            float_args += [args_val[i]]
-            float_args_type += [typ]
-        elif typ.class_type == "BasicType":
-            byte8_args += [args_val[i]]
-            byte8_args_type += [typ]
-        elif typ.class_type == "PointerType":
-            byte8_args += [args_val[i]]
-            byte8_args_type += [typ]
+            float_args += 1
+        elif typ.class_type == "PointerType" or typ.class_type == "BasicType":
+            byte8_args += 1
         else:
-            other_args += [args_val[i]]
-            other_args_type += [typ]
+            other_args += 1
     #print(float_args_type, byte8_args_type, other_args_type)
     #print(float_args, byte8_args, other_args)
 
@@ -286,35 +299,16 @@ def add_func_call(gen_obj):
     shift = 0
 
     for i, typ in enumerate(args_type):
-        if 'const@' in args_val[i]:
-            addr =  const_dict[args_val[i]]
-        elif 'tmp@' in args_val[i]:
-            offset = temp_dict[args_val[i]].table[args_val[i]].offset + temp_dict[args_val[i]].base
-            addr = 'rbp-'+ str(offset)
-        else:
-            assert '|' in args_val[i], "wrong var in 3ac code"
-            name = args_val[i].split('|')[0]
-            table = args_val[i].split('|')[1]
-            
-            symbol_table = SymbolTable.symbol_table_dict[table]
-            offset = symbol_table.table[name].offset + symbol_table.base
-            assert symbol_table, "there is no symbol table correspoding to" + table
-
-            if table == "global":
-                addr = name + '@global'
-            else:
-                addr = 'rbp-'+ str(offset)
-
+        addr = get_var_addr(args_val[i])
         if typ.stype == "float":
-            if len(float_args) > len(arg_regsf):
+            if float_args > len(arg_regsf):
                 code += ['sub rsp, 4']
                 code += ['movss xmm0, dword [' + addr+']']
                 code += ['movss dword [rsp], xmm0']
                 shift += typ.width
             else:
-                code += ['movss ' + arg_regsf[len(float_args)-1] +', dword [' + addr + ']']
-            float_args.pop()
-            float_args_type.pop()
+                code += ['movss ' + arg_regsf[float_args-1] +', dword [' + addr + ']']
+            float_args -= 1
         elif typ.class_type == "BasicType" or typ.class_type == "PointerType":
             if typ.class_type == "PointerType":
                 get_width = str(8)
@@ -324,7 +318,7 @@ def add_func_call(gen_obj):
                 width = typ.width
                 get_width = str(typ.width)
                 get_size = size_type[typ.width]
-            if len(byte8_args) > len(arg_regs):
+            if byte8_args > len(arg_regs):
                 code += ['sub rsp, ' + get_width]
                 if typ.class_type != "PointerType":
                     code += ['mov '+temp_regs[0][width]+', '+get_size+' [' + addr+']']
@@ -336,18 +330,16 @@ def add_func_call(gen_obj):
                 shift += width
             else:
                 if typ.class_type != "PointerType":
-                    code += ['mov ' + arg_regs[len(byte8_args)-1][width] +', '+get_size+' [' + addr + ']']
+                    code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
                 elif typ.array_type:
-                    code += ['lea ' + arg_regs[len(byte8_args)-1][8] +', [' + addr + ']']
+                    code += ['lea ' + arg_regs[byte8_args-1][8] +', [' + addr + ']']
                 else:
-                    code += ['mov ' + arg_regs[len(byte8_args)-1][width] +', '+get_size+' [' + addr + ']']
-            byte8_args.pop()
-            byte8_args_type.pop()
+                    code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
+            byte8_args -= 1
         else:
             shift += typ.width
             code += add_copy_data_code(typ.width, addr)
-            other_args.pop()
-            other_args_type.pop()
+            other_args -= 1
     code += ["call " + gen_obj.place1]
     code += ["add rsp," + str(shift)]
     return code
