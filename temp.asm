@@ -60,31 +60,31 @@ f:
 push   rbp
 mov    rbp,rsp
 sub rsp, 4
-mov dword [rsp],rdi
+mov dword [rsp],edi
 sub rsp, 4
-mov dword [rsp],rsi
+mov dword [rsp],esi
 sub rsp, 4
 movss dword [rsp],xmm0
 sub rsp, 8
 mov qword [rsp],rdx
 sub rsp, 4
-mov dword [rsp],rcx
+mov dword [rsp],ecx
 sub rsp, 4
 movss dword [rsp],xmm1
 sub rsp, 4
-mov dword [rsp],r8
+mov dword [rsp],r8d
 sub rsp, 4
 movss dword [rsp],xmm2
 sub rsp, 4
-mov dword [rsp],r9
+mov dword [rsp],r9d
 sub rsp, 4
 movss dword [rsp],xmm3
 sub rsp, 4
-mov rdi, dword [rbp+60]
-mov dword, rdi
+mov r10d, dword [rbp+60]
+mov dword[rsp], r10d
 sub rsp, 4
-mov rdi, dword [rbp+64]
-mov dword, rdi
+mov r10d, dword [rbp+64]
+mov dword[rsp], r10d
 sub rsp, 4
 movss dword [rsp],xmm4
 sub rsp, 4
@@ -94,67 +94,67 @@ movss dword [rsp],xmm6
 sub rsp, 4
 movss dword [rsp],xmm7
 sub rsp, 4
-movss xmm0, dowrd [rbp+84]
-movss dword, xmm0
+movss xmm0, dword [rbp+84]
+movss dword [rsp], xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp+88]
-movss dword, xmm0
+movss xmm0, dword [rbp+88]
+movss dword [rsp], xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp+92]
-movss dword, xmm0
+movss xmm0, dword [rbp+92]
+movss dword [rsp], xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp+96]
-movss dword, xmm0
+movss xmm0, dword [rbp+96]
+movss dword [rsp], xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp+100]
-movss dword, xmm0
+movss xmm0, dword [rbp+100]
+movss dword [rsp], xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp+104]
-movss dword, xmm0
+movss xmm0, dword [rbp+104]
+movss dword [rsp], xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp+108]
-movss dword, xmm0
-sub rsp, 4
-movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss xmm0, dword [rbp+108]
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [const11]
+movss dword [rsp], xmm0
 movss xmm7, dword [const11]
 movss xmm6, dword [const11]
 movss xmm5, dword [const11]
 movss xmm4, dword [const11]
 sub rsp, 4
-mov rdi, dword [const10]
-mov dword [rsp], rdi
+mov r10d, dword [const10]
+mov dword [rsp], r10d
 sub rsp, 4
-mov rdi, dword [const5]
-mov dword [rsp], rdi
+mov r10d, dword [const5]
+mov dword [rsp], r10d
 movss xmm3, dword [const9]
-mov r9, dword [const6]
+mov r9d, dword [const6]
 movss xmm2, dword [const8]
-mov r8, dword [const6]
+mov r8d, dword [const6]
 movss xmm1, dword [const7]
-mov rcx, dword [const6]
+mov ecx, dword [const6]
 mov rdx, qword [const5]
 movss xmm0, dword [const4]
-mov rsi, dword [const3]
-mov rdi, dword [const2]
+mov esi, dword [const3]
+mov edi, dword [const2]
 leave
 ret
 global foo
@@ -170,50 +170,50 @@ main:
 push   rbp
 mov    rbp,rsp
 sub rsp, 4
-mov dword [rsp],rdi
+mov dword [rsp],edi
 sub rsp, 8
 mov qword [rsp],rsi
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
-movss dowrd [rsp], xmm0
+movss dword [rsp], xmm0
 movss xmm7, dword [const11]
 movss xmm6, dword [const11]
 movss xmm5, dword [const11]
 movss xmm4, dword [const11]
 sub rsp, 4
-mov rdi, dword [const10]
-mov dword [rsp], rdi
+mov r10d, dword [const10]
+mov dword [rsp], r10d
 sub rsp, 4
-mov rdi, dword [const5]
-mov dword [rsp], rdi
+mov r10d, dword [const5]
+mov dword [rsp], r10d
 movss xmm3, dword [const9]
-mov r9, dword [const6]
+mov r9d, dword [const6]
 movss xmm2, dword [const8]
-mov r8, dword [const6]
+mov r8d, dword [const6]
 movss xmm1, dword [const7]
-mov rcx, dword [const6]
+mov ecx, dword [const6]
 mov rdx, qword [const5]
 movss xmm0, dword [const4]
-mov rsi, dword [const3]
-mov rdi, dword [const2]
+mov esi, dword [const3]
+mov edi, dword [const2]
 movss xmm0, dword [rbp-100]
 leave
 ret

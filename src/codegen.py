@@ -32,8 +32,18 @@ gp_regs8 = ['al', 'bl', 'cl', 'dl','sil','dil', 'bpl' + 'spl'] + ['r' + str(i) +
 
 gp_regsf = ['xmm' + str(i) for i in range(16)]
 
-arg_regs = ['rdi', 'rsi', 'rdx','rcx', 'r8','r9']
-temp_regs= ['r10','r11']
+arg_regs = [
+        {8:'rdi', 4:'edi',2:'di', 1:'dil'},
+        {8:'rsi', 4:'esi',2:'si', 2:'sil'},
+        {8:'rdx', 4:'edx',2:'dx', 2:'dl'},
+        {8:'rcx', 4:'ecx',2:'cx', 2:'cl'},
+        {8:'r8', 4:'r8d',2:'r8w', 2:'r8b'},
+        {8:'r9', 4:'r9d',2:'r9w', 2:'r9b'}
+    ]
+temp_regs= [
+        {8:'r10', 4:'r10d',2:'r10w', 2:'r10b'},
+        {8:'r11', 4:'r11d',2:'r11w', 2:'r11b'}
+    ]
 arg_regsf= ['xmm' + str(i) for i in range(8)]
 
 size_type = {1:'byte', 2:'word', 4:'dword', 8:'qword'}
@@ -181,19 +191,19 @@ def add_args_copy_code(fname):
                 code += ["movss dword [rsp]," + arg_regsf[float_args-1]]
             else:
                 code += ["sub rsp, 4"]
-                code += ["movss xmm0, dowrd [rbp+" +str(off)+ "]"]
-                code += ["movss dword, xmm0"]
+                code += ["movss xmm0, dword [rbp+" +str(off)+ "]"]
+                code += ["movss dword [rsp], xmm0"]
         elif typ.class_type == "BasicType" or (typ.class_type == "PointerType" and typ.array_type is None):
             byte8_args += 1
             get_width = str(typ.width)
             get_size = size_type[typ.width]
             if byte8_args <= len(arg_regs):
                 code += ["sub rsp, " + get_width]
-                code += ["mov "+get_size+" [rsp]," + arg_regs[byte8_args-1]]
+                code += ["mov "+get_size+" [rsp]," + arg_regs[byte8_args-1][typ.width]]
             else:
                 code += ["sub rsp, " + get_width]
-                code += ["mov rdi, "+get_size+" [rbp+" +str(off)+ "]"]
-                code += ["mov "+get_size+", rdi"]
+                code += ["mov "+temp_regs[0][typ.width]+", "+get_size+" [rbp+" +str(off)+ "]"]
+                code += ["mov "+get_size+"[rsp], "+ temp_regs[0][typ.width]]
 
         else:
             other_args += 1
@@ -288,7 +298,7 @@ def add_func_call(gen_obj):
             if len(float_args) > len(arg_regsf):
                 code += ['sub rsp, 4']
                 code += ['movss xmm0, dword [' + addr+']']
-                code += ['movss dowrd [rsp], xmm0']
+                code += ['movss dword [rsp], xmm0']
             else:
                 code += ['movss ' + arg_regsf[len(float_args)-1] +', dword [' + addr + ']']
             float_args.pop()
@@ -298,10 +308,10 @@ def add_func_call(gen_obj):
             get_width = str(typ.width)
             if len(byte8_args) > len(arg_regs):
                 code += ['sub rsp, ' + get_width]
-                code += ['mov rdi, '+get_size+' [' + addr+']']
-                code += ['mov '+get_size+' [rsp], rdi']
+                code += ['mov '+temp_regs[0][typ.width]+', '+get_size+' [' + addr+']']
+                code += ['mov '+get_size+' [rsp], '+temp_regs[0][typ.width]]
             else:
-                code += ['mov ' + arg_regs[len(byte8_args)-1] +', '+get_size+' [' + addr + ']']
+                code += ['mov ' + arg_regs[len(byte8_args)-1][typ.width] +', '+get_size+' [' + addr + ']']
             byte8_args.pop()
             byte8_args_type.pop()
         else:
