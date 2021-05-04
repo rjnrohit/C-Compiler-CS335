@@ -36,13 +36,16 @@ def type_check_unary(node1,op,token,is_typename=False):
     elif op == "+" or op == "-":
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            if op == "+":
+                node.place = node1.place
+                return node
             if "const@" in node1.place:
                 neg = -1 if op == "-" else 1
                 node.place = get_const(neg*get_const_value(node1.place),type=node1.type)
                 return node
             node.code = node1.code
             node.place = get_newtmp(type=node1.type)
-            node.code += [gen(op=node1.type.stype+op,place1=node1.place,place3=node.place)]
+            node.code += [gen(op="u"+node1.type.stype+op,place1=node1.place,place3=node.place)]
             return node
         error = True
     elif op == "&":

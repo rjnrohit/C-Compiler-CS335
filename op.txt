@@ -1,0 +1,61 @@
+BeginFunc
+label
+EndFunc
+=
+int+
+float+
+char+
+long+
+long*
+int*
+char*
+float*
+func_call
+push
+pop
+addr
+load
+ifz
+ifnz
+goto
+if_not_cmp_int (used in switch if value of place1 not equal to place2 goto place3)
+if_not_cmp_long
+if_not_cmp_float
+if_not_cmp_char
+if_not_cmp_bool
+return
+uint- (with only one place1 for unary)
+ufloat-
+ulong-
+uchar-
+int~
+float~
+long~
+char~
+not_bool (check if value 0 or 1 "!" op not taking care of type)
+int/
+long/
+float/
+char/
+int%
+char%
+long%
+int-
+long-
+float-
+char-
+bool-
+bool+
+int^
+long^
+char^
+bool^
+int& 
+long&
+char&
+bool&
+int/long/char/bool| (bit or)
+int/long/char/bool<< (shift)
+int/long/char/bool>>
+int/long/char/bool/float(>=,<=,<,>,==,!=) (relation op)
+
