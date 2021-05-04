@@ -29,6 +29,18 @@ int main(int argc, char argv[4]){
         i--;
         int c = i++ + 1;
     }
+    while(i++ < n){
+        int sieve[1000];
+        int j;
+        for(i;j<n;j++){
+            sieve[j] = 1;
+            if (j%2%3 == 4)break;
+            else continue;
+        }
+        i--;
+        int c = i++ + 1;
+    }
+    int gggg;
     return 9.2;
 }
 

@@ -1,70 +1,215 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-a,int,13,4
-b,long,37,8
-solve,int function([]),45,4
-main,"int function([int, pointer of (int)])",45,16
-min,"int function([int, int])",45,12
-printf,"int function([pointer of (char), int])",45,16
-scanf,"int function([pointer of (char), pointer of (int)])",45,20
+symbol table id,symbol table name,table off
+0,global,60
+name,type,offset,offset+base,width
+a,int,4,4,4
+b,long,12,12,8
+solve,int function([]),12,12,4
+main,"int function([int, pointer of (int)])",12,12,16
+lconst@25,long,20,20,8
+lconst@1,long,28,28,8
+lconst@0,long,36,36,8
+min,"int function([int, int])",36,36,12
+printf,"int function([pointer of (char), int])",36,36,16
+scanf,"int function([pointer of (char), pointer of (int)])",36,36,20
+lconst@4,long,44,44,8
+lconst@2,long,52,52,8
+lconst@-1,long,60,60,8
 
-symbol table id,symbol table name,parent id
-2,main,0
-name,type,offset,width
-argc,int,4,4
-argv,pointer of (int),8,8
-n,int,20,4
-power_of_2,long,36,8
-ans,long,56,8
+symbol table id,symbol table name,parent id,table off
+2,main,0,52
+name,type,offset,offset+base,width
+argc,int,8,8,4
+argv,pointer of (int),16,16,8
+n,int,20,20,4
+power_of_2,long,28,28,8
+ans,long,36,36,8
+tmp@0,int,40,40,4
+tmp@2,int,52,52,4
 
-symbol table id,symbol table name,parent id
-4,min,0
-name,type,offset,width
-a,int,4,4
-b,int,8,4
+symbol table id,symbol table name,parent id,table off
+4,min,0,21
+name,type,offset,offset+base,width
+a,int,8,8,4
+b,int,12,12,4
+tmp@3,bool,13,13,1
+tmp@4,long,21,21,8
 
-symbol table id,symbol table name,parent id
-5,printf,0
-name,type,offset,width
-stmt,pointer of (char),4,8
-d,int,12,4
+symbol table id,symbol table name,parent id,table off
+5,printf,0,16
+name,type,offset,offset+base,width
+stmt,pointer of (char),12,12,8
+d,int,16,16,4
 
-symbol table id,symbol table name,parent id
-6,scanf,0
-name,type,offset,width
-stmt,pointer of (char),4,8
-d,pointer of (int),12,8
+symbol table id,symbol table name,parent id,table off
+6,scanf,0,20
+name,type,offset,offset+base,width
+stmt,pointer of (char),12,12,8
+d,pointer of (int),20,20,8
 
-symbol table id,symbol table name,parent id
-7,solve,0
-name,type,offset,width
-n,long,4,8
-c,pointer of (int),29,4000
-os,pointer of (int),4029,4000
-es,pointer of (int),8029,4000
-mes,pointer of (int),12029,4000
-mos,pointer of (int),16029,4000
-i,int,20033,4
-ans,long,20290,8
+symbol table id,symbol table name,parent id,table off
+7,solve,0,20240
+name,type,offset,offset+base,width
+n,long,12,12,8
+tmp@5,long,20,20,8
+tmp@6,pointer of (char),26,26,6
+tmp@7,int,30,30,4
+c,pointer of (int),4030,4030,4000
+os,pointer of (int),8030,8030,4000
+es,pointer of (int),12030,12030,4000
+mes,pointer of (int),16030,16030,4000
+mos,pointer of (int),20030,20030,4000
+i,int,20034,20034,4
+tmp@8,long,20042,20042,8
+tmp@9,bool,20043,20043,1
+tmp@10,int,20047,20047,4
+tmp@16,long,20089,20089,8
+tmp@17,long,20097,20097,8
+tmp@18,long,20105,20105,8
+tmp@19,long,20113,20113,8
+tmp@20,long,20121,20121,8
+tmp@21,long,20129,20129,8
+tmp@22,long,20137,20137,8
+tmp@23,long,20145,20145,8
+tmp@24,long,20153,20153,8
+tmp@25,long,20161,20161,8
+tmp@26,long,20169,20169,8
+tmp@27,long,20177,20177,8
+tmp@28,long,20185,20185,8
+tmp@29,long,20193,20193,8
+tmp@30,long,20201,20201,8
+ans,long,20209,20209,8
+tmp@31,long,20217,20217,8
+tmp@32,bool,20218,20218,1
+tmp@33,int,20222,20222,4
+tmp@136,pointer of (char),20232,20232,6
+tmp@137,int,20236,20236,4
+tmp@138,int,20240,20240,4
 
-symbol table id,symbol table name,parent id
-3,scope@3,2
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+3,scope@3,2,8
+name,type,offset,offset+base,width
+tmp@1,long,8,48,8
 
-symbol table id,symbol table name,parent id
-8,scope@8,7
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+8,scope@8,7,34
+name,type,offset,offset+base,width
+tmp@11,long,8,20055,8
+tmp@12,long,16,20063,8
+tmp@13,long,24,20071,8
+tmp@14,pointer of (char),30,20077,6
+tmp@15,int,34,20081,4
 
-symbol table id,symbol table name,parent id
-9,scope@9,7
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+9,scope@9,7,696
+name,type,offset,offset+base,width
+tmp@34,int,4,20226,4
 
-symbol table id,symbol table name,parent id
-10,scope@10,9
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+10,scope@10,9,348
+name,type,offset,offset+base,width
+tmp@35,long,8,20234,8
+tmp@36,long,16,20242,8
+tmp@37,int,20,20246,4
+tmp@38,long,28,20254,8
+tmp@39,long,36,20262,8
+tmp@40,long,44,20270,8
+tmp@41,long,52,20278,8
+tmp@42,int,56,20282,4
+tmp@43,int,60,20286,4
+tmp@44,long,68,20294,8
+tmp@45,long,76,20302,8
+tmp@46,long,84,20310,8
+tmp@47,long,92,20318,8
+tmp@48,long,100,20326,8
+tmp@49,long,108,20334,8
+tmp@50,long,116,20342,8
+tmp@51,long,124,20350,8
+tmp@52,int,128,20354,4
+tmp@53,long,136,20362,8
+tmp@54,long,144,20370,8
+tmp@55,int,148,20374,4
+tmp@56,long,156,20382,8
+tmp@57,long,164,20390,8
+tmp@58,int,168,20394,4
+tmp@59,long,176,20402,8
+tmp@60,long,184,20410,8
+tmp@61,int,188,20414,4
+tmp@62,int,192,20418,4
+tmp@63,int,196,20422,4
+tmp@64,long,204,20430,8
+tmp@65,long,212,20438,8
+tmp@66,long,220,20446,8
+tmp@67,long,228,20454,8
+tmp@68,long,236,20462,8
+tmp@69,long,244,20470,8
+tmp@70,long,252,20478,8
+tmp@71,long,260,20486,8
+tmp@72,int,264,20490,4
+tmp@73,int,268,20494,4
+tmp@74,long,276,20502,8
+tmp@75,long,284,20510,8
+tmp@76,int,288,20514,4
+tmp@77,long,296,20522,8
+tmp@78,long,304,20530,8
+tmp@79,long,312,20538,8
+tmp@80,long,320,20546,8
+tmp@81,long,328,20554,8
+tmp@82,int,332,20558,4
+tmp@83,int,336,20562,4
+tmp@84,int,340,20566,4
+tmp@85,long,348,20574,8
 
-symbol table id,symbol table name,parent id
-11,scope@11,9
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+11,scope@11,9,344
+name,type,offset,offset+base,width
+tmp@86,long,8,20582,8
+tmp@87,long,16,20590,8
+tmp@88,int,20,20594,4
+tmp@89,long,28,20602,8
+tmp@90,long,36,20610,8
+tmp@91,long,44,20618,8
+tmp@92,long,52,20626,8
+tmp@93,int,56,20630,4
+tmp@94,int,60,20634,4
+tmp@95,long,68,20642,8
+tmp@96,long,76,20650,8
+tmp@97,long,84,20658,8
+tmp@98,long,92,20666,8
+tmp@99,long,100,20674,8
+tmp@100,long,108,20682,8
+tmp@101,long,116,20690,8
+tmp@102,long,124,20698,8
+tmp@103,int,128,20702,4
+tmp@104,long,136,20710,8
+tmp@105,long,144,20718,8
+tmp@106,int,148,20722,4
+tmp@107,long,156,20730,8
+tmp@108,long,164,20738,8
+tmp@109,int,168,20742,4
+tmp@110,long,176,20750,8
+tmp@111,long,184,20758,8
+tmp@112,int,188,20762,4
+tmp@113,int,192,20766,4
+tmp@114,int,196,20770,4
+tmp@115,long,204,20778,8
+tmp@116,long,212,20786,8
+tmp@117,long,220,20794,8
+tmp@118,long,228,20802,8
+tmp@119,long,236,20810,8
+tmp@120,long,244,20818,8
+tmp@121,long,252,20826,8
+tmp@122,long,260,20834,8
+tmp@123,int,264,20838,4
+tmp@124,long,272,20846,8
+tmp@125,long,280,20854,8
+tmp@126,int,284,20858,4
+tmp@127,long,292,20866,8
+tmp@128,long,300,20874,8
+tmp@129,long,308,20882,8
+tmp@130,long,316,20890,8
+tmp@131,long,324,20898,8
+tmp@132,int,328,20902,4
+tmp@133,int,332,20906,4
+tmp@134,int,336,20910,4
+tmp@135,long,344,20918,8

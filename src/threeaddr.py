@@ -9,7 +9,7 @@ temp_cnt = 0
 lable_cnt = 0
 label_list = list()
 alloc = dict()
-
+temp_dict = {}
 
 class gen:
 
@@ -54,7 +54,7 @@ class gen:
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3)
 
-        if not place2:
+        if not place2 or op == "func_call":
             return self.unary_opcode(op, place1, place3)
         
         return place3 + ' = ' + place1 + " " + op + " " + place2
@@ -95,6 +95,7 @@ def get_newtmp(type = BasicType("long")):
     name = "tmp@"+str(temp_cnt)
     temp_cnt += 1
     sym_table.add_entry(name  = name, type = type)
+    temp_dict[name] = sym_table.curr_symbol_table
     return name
 
 def get_newlabel():
@@ -187,7 +188,7 @@ def op_on_const(op,place1,place2):
     value2 = get_const_value(place2)
     #length 2 op <= , => , == , >> , << , !=
     if op[-2:] == "<=": return int(value1<=value2)
-    if op[-2:] == ">=": return int(value>=value2)
+    if op[-2:] == ">=": return int(value1>=value2)
     if op[-2:] == "==": return int(value1==value2)
     if op[-2:] == "!=": return int(value1!=value2)
     if op[-2:] == ">>": return value1>>value2

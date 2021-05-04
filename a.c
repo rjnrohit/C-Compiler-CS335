@@ -1,58 +1,55 @@
-// #include<stdio.h>
-// int b;
 
-// struct a{
-//     int c;
-//     struct a *p;
-// };
+int gg;
+int g =34;
+char str[6] = "string";
 
-// int main(){
-//     struct a d;
-//     struct a *g;
-//     // g->p->c = 5;
-//     d.p = &d;
-//     int s = 4<5;
-//     char a = &g;
-//     int *l = &d + 5;
-//     // if((int)l >= 5) b = 4;
-//     int x = &a;
-//     x += &a;
-//     x += 5;
-//     x = -x;
-//     x = !x;
-//     x  = *l;
-//     x = ++l;
-//     x = 'a' + 'b';
-//     // x = "abc"+'d';
-//     // char c[][2] = {{5.0,&x},{&x,&s}};
-//     char c[][2] = {{'a','b'}};
-//     // printf("%d\n",sizeof(5));
-//     b = sizeof(5);
-//     // printf("%c",*((char *)q+1));
-//     if(0,b,1){
-//         printf("true");
-//         b = 4;
-//     }
-//     // printf("%c",c[1][1]);
-
-// }
-#include<stdio.h>
-// void printf(char *s,int a);
-float b(int c){
-    return c*5;
+int wow(int a, int b, float c, long d, int e, float fll, int aa, float dd, int cc, float ddd, int ccc, int ccccc, float x, float xx, float xxx, float xxxx, float xxxxx, float xxxxxx, float xxxxxxxxx, float xxxxxxxxxxxxxxx, float xxxxxxxxxxxxxxxx, float xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, float xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx){
+	a += b;
+	return a;
 }
-struct z{
-    int a;
-    int b;
-    struct z *c;
-    int d[10][5][3];
+
+int f(int a, int b, float c, long d, int e, float fll, int aa, float dd, int cc, float ddd, int ccc, int ccccc, float x, float xx, float xxx, float xxxx, float xxxxx, float xxxxxx, float xxxxxxxxx, float xxxxxxxxxxxxxxx, float xxxxxxxxxxxxxxxx, float xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, float xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx){
+	int xd;
+	xd = 12;
+	xd += 1.0;
+	wow(1,2,3.2,45,4,3.1, 4,3.4,4,4.5,45,66, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1);
+	return 0;
+}
+
+struct A
+{
+	int a;
+	struct A*c;
 };
-int main(){
-    struct z c;
-    // bool d[4][3];
-    int a = sizeof(b);
-    float b = 3.1;
-    b++;
-    printf("%f",b);
-    
+
+
+struct A d;
+int a[20];
+
+int b=0, c=0;
+long def =1;
+struct AA
+{
+	int x,y;
+};
+
+// struct AA add = {3,4};
+
+int foo(float x){
+	return x;
+}
+
+int main(int argc, int*argv){
+	d.a = 5;
+	d.c = &d;
+	int a, b;
+	float c;
+	int ff = -1;
+	a = 3 + 5;
+	b = a + 1.0;
+	c = b - 1.1;
+	f(1,2,3.2,45,4,3.1, 4,3.4,4,4.5,45,66, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1);
+	float bcc = 2;
+	foo(bcc);
+	return 0;
 }

@@ -1,35 +1,26 @@
 main:
 BeginFunc
-tmp@0 = 20
-n|main = tmp@0
-tmp@1 = 5
-tmp@2 = int- tmp@1
-d|main = tmp@2
-label#3:
-tmp@3 = 10
-tmp@4 = d|main int<= tmp@3
-ifz tmp@4 goto label#5
-tmp@6 = 0
-tmp@7 = int_to_long tmp@6
-a|main = tmp@7
-tmp@10 = 2
-i|scope@2 = tmp@10
+n|main = lconst@20
+d|main = lconst@-5
 label#0:
-tmp@11 = i|scope@2 int<= d|main
-ifz tmp@11 goto label#2
-temp|main = b|main
-tmp@12 = a|main long+ b|main
-b|main = tmp@12
-a|main = temp|main
+tmp@0 = d|main int<= lconst@10
+ifz tmp@0 goto label#4
+a|main = lconst@0
+i|scope@2 = lconst@2
 label#1:
-i|scope@2 = i|scope@2 int+_c 1
-goto label#0
+tmp@2 = i|scope@2 int<= d|main
+ifz tmp@2 goto label#3
+temp|main = b|main
+tmp@3 = a|main long+ b|main
+b|main = tmp@3
+a|main = temp|main
 label#2:
+i|scope@2 = i|scope@2 int+ lconst@1
+goto label#1
+label#3:
+tmp@1 = d|main
+d|main = d|main int+ lconst@1
+goto label#0
 label#4:
-tmp@5 = d|main
-d|main = d|main int+_c 1
-goto label#3
-label#5:
-tmp@13 = 0
-return tmp@13
+return lconst@0
 EndFunc

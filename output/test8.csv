@@ -1,20 +1,36 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-a,pointer of (int),0,92
-n,int,96,4
-main,int function(None),100,4
+symbol table id,symbol table name,table off
+0,global,120
+name,type,offset,offset+base,width
+a,pointer of (int),92,92,92
+n,int,96,96,4
+main,int function(None),96,96,4
+lconst@0,long,104,104,8
+lconst@1,long,112,112,8
+lconst@4,long,120,120,8
 
-symbol table id,symbol table name,parent id
-1,main,0
-name,type,offset,width
-i,int,4,4
+symbol table id,symbol table name,parent id,table off
+1,main,0,78
+name,type,offset,offset+base,width
+i,int,8,8,4
+tmp@0,bool,9,9,1
+tmp@1,int,13,13,4
+tmp@5,bool,34,34,1
+tmp@6,int,38,38,4
 
-symbol table id,symbol table name,parent id
-2,scope@2,1
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+2,scope@2,1,20
+name,type,offset,offset+base,width
+tmp@2,long,8,21,8
+tmp@3,long,16,29,8
+tmp@4,int,20,33,4
 
-symbol table id,symbol table name,parent id
-3,scope@3,1
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+3,scope@3,1,40
+name,type,offset,offset+base,width
+tmp@7,long,8,46,8
+tmp@8,long,16,54,8
+tmp@9,int,20,58,4
+tmp@10,long,28,66,8
+tmp@11,long,36,74,8
+tmp@12,int,40,78,4

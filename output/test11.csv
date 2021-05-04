@@ -1,15 +1,25 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-f,int function([int]),0,8
-main,int function(None),0,4
+symbol table id,symbol table name,table off
+0,global,24
+name,type,offset,offset+base,width
+f,int function([int]),0,0,8
+lconst@1,long,8,8,8
+lconst@2,long,16,16,8
+main,int function(None),16,16,4
+lconst@4,long,24,24,8
 
-symbol table id,symbol table name,parent id
-1,f,0
-name,type,offset,width
-n,int,4,4
+symbol table id,symbol table name,parent id,table off
+1,f,0,29
+name,type,offset,offset+base,width
+n,int,8,8,4
+tmp@0,bool,9,9,1
+tmp@1,int,13,13,4
+tmp@2,int,17,17,4
+tmp@3,int,21,21,4
+tmp@4,int,25,25,4
+tmp@5,int,29,29,4
 
-symbol table id,symbol table name,parent id
-2,main,0
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+2,main,0,8
+name,type,offset,offset+base,width
+tmp@6,int,8,8,4

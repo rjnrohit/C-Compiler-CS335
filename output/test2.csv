@@ -1,18 +1,28 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-main,int function(None),0,4
+symbol table id,symbol table name,table off
+0,global,32
+name,type,offset,offset+base,width
+main,int function(None),0,0,4
+lconst@0,long,8,8,8
+lconst@123454321,long,16,16,8
+lconst@10,long,24,24,8
+lconst@1,long,32,32,8
 
-symbol table id,symbol table name,parent id
-1,main,0
-name,type,offset,width
-reversedN,long,16,8
-remainder,long,24,8
-originalN,long,32,8
-n,long,52,8
-is_palindrome,int,73,4
+symbol table id,symbol table name,parent id,table off
+1,main,0,74
+name,type,offset,offset+base,width
+reversedN,long,12,12,8
+remainder,long,20,20,8
+originalN,long,28,28,8
+n,long,36,36,8
+tmp@0,bool,37,37,1
+is_palindrome,int,73,73,4
+tmp@5,bool,74,74,1
 
-symbol table id,symbol table name,parent id
-2,scope@2,1
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+2,scope@2,1,32
+name,type,offset,offset+base,width
+tmp@1,long,8,45,8
+tmp@2,long,16,53,8
+tmp@3,long,24,61,8
+tmp@4,long,32,69,8

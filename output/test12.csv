@@ -1,47 +1,61 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-a,pointer of (void) function([int]),0,12
-c,int,0,4
-d,pointer of (void),12,8
-g,void function([]),20,0
-func,int function([int]),20,8
-printf,"int function([pointer of (char), int])",20,16
-p,int,20,4
-ptr,pointer of (int),32,8
-ptr1,pointer of (pointer of (int)),48,8
-ptr2,pointer of (pointer of (pointer of (int))),64,8
-ptr3,pointer of (pointer of (pointer of (pointer of (int)))),80,8
-cc,pointer of (char),110,8
-b,char,118,1
-str,pointer of (pointer of (char)),119,48
-main,int function(None),167,4
+symbol table id,symbol table name,table off
+0,global,129
+name,type,offset,offset+base,width
+a,pointer of (void) function([int]),0,0,12
+c,int,4,4,4
+d,pointer of (void),12,12,8
+g,void function([]),12,12,0
+func,int function([int]),12,12,8
+printf,"int function([pointer of (char), int])",12,12,16
+p,int,16,16,4
+ptr3,pointer of (pointer of (pointer of (pointer of (int)))),24,24,8
+cc,pointer of (char),32,32,8
+b,char,33,33,1
+str,pointer of (pointer of (char)),81,81,48
+main,int function(None),81,81,4
+lconst@9,long,89,89,8
+lconst@4,long,97,97,8
+lconst@103,long,105,105,8
+lconst@1,long,113,113,8
+lconst@0,long,121,121,8
+lconst@5,long,129,129,8
 
-symbol table id,symbol table name,parent id
-1,a,0
-name,type,offset,width
-b,int,8,4
+symbol table id,symbol table name,parent id,table off
+1,a,0,20
+name,type,offset,offset+base,width
+b,int,12,12,4
+tmp@0,long,20,20,8
 
-symbol table id,symbol table name,parent id
-3,g,0
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+3,g,0,0
+name,type,offset,offset+base,width
 
-symbol table id,symbol table name,parent id
-4,func,0
-name,type,offset,width
-a,int,4,4
+symbol table id,symbol table name,parent id,table off
+4,func,0,8
+name,type,offset,offset+base,width
+a,int,8,8,4
 
-symbol table id,symbol table name,parent id
-5,printf,0
-name,type,offset,width
-s,pointer of (char),4,8
-d,int,12,4
+symbol table id,symbol table name,parent id,table off
+5,printf,0,16
+name,type,offset,offset+base,width
+s,pointer of (char),12,12,8
+d,int,16,16,4
 
-symbol table id,symbol table name,parent id
-6,main,0
-name,type,offset,width
-vd,pointer of (pointer of (pointer of (pointer of (void)))),4,8
-c,pointer of (int),20,8
-l,int,66,4
-b,bool,110,1
+symbol table id,symbol table name,parent id,table off
+6,main,0,78
+name,type,offset,offset+base,width
+vd,pointer of (pointer of (pointer of (pointer of (void)))),12,12,8
+tmp@1,long,20,20,8
+c,pointer of (int),28,28,8
+tmp@2,int,32,32,4
+tmp@3,long,40,40,8
+tmp@4,char,41,41,1
+tmp@5,int,45,45,4
+l,int,49,49,4
+tmp@6,int,53,53,4
+tmp@7,pointer of (char),61,61,8
+tmp@8,int,65,65,4
+b,bool,66,66,1
+tmp@9,long,74,74,8
+tmp@10,int,78,78,4

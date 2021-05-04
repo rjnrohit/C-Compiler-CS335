@@ -11,7 +11,7 @@ class Node:
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
-        self.constan = constant
+        self.constant = constant
 
         self.place = ""
         self.code = []
@@ -405,7 +405,7 @@ class SymbolTable:
 
         if type.class_type != "FunctionType":
             #update offset
-            self._update_offset(self.table[name])
+            self.table[name].offset = self._update_offset(self.table[name])
             
             #update width
             self._update_width(self.table[name])
@@ -519,10 +519,13 @@ class SymbolTable:
             name = name,
             scope_type = scope_type,
             parent = SymbolTable.curr_symbol_table, 
-            base = SymbolTable.curr_symbol_table.offset,
+            base = SymbolTable.curr_symbol_table.offset + SymbolTable.curr_symbol_table.base,
             unused = unused
             )
-        #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
+        
+        if name:
+            new_symbol_table.base = 0
+
         if not unused:
             self.add_scope(symbol_table = new_symbol_table)
 
@@ -533,6 +536,9 @@ class SymbolTable:
     def close_scope(self):
         SymbolTable.next_symbol_table = SymbolTable.curr_symbol_table
         SymbolTable.curr_symbol_table = SymbolTable.curr_symbol_table.parent
+
+        if 'scope@' in SymbolTable.next_symbol_table.name:
+            SymbolTable.curr_symbol_table.offset += SymbolTable.next_symbol_table.width
 
         return SymbolTable.curr_symbol_table
     
