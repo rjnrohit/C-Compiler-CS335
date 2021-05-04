@@ -55,6 +55,67 @@ end:
 mov rax, SYS_exit ; Call code for exit
 mov rdi, EXIT_SUCCESS ; Exit program with success
 syscall
+global wow
+wow:
+push   rbp
+mov    rbp,rsp
+sub rsp, 4
+mov dword [rsp],edi
+sub rsp, 4
+mov dword [rsp],esi
+sub rsp, 4
+movss dword [rsp],xmm0
+sub rsp, 8
+mov qword [rsp],rdx
+sub rsp, 4
+mov dword [rsp],ecx
+sub rsp, 4
+movss dword [rsp],xmm1
+sub rsp, 4
+mov dword [rsp],r8d
+sub rsp, 4
+movss dword [rsp],xmm2
+sub rsp, 4
+mov dword [rsp],r9d
+sub rsp, 4
+movss dword [rsp],xmm3
+sub rsp, 4
+mov r10d, dword [rbp+60]
+mov dword[rsp], r10d
+sub rsp, 4
+mov r10d, dword [rbp+64]
+mov dword[rsp], r10d
+sub rsp, 4
+movss dword [rsp],xmm4
+sub rsp, 4
+movss dword [rsp],xmm5
+sub rsp, 4
+movss dword [rsp],xmm6
+sub rsp, 4
+movss dword [rsp],xmm7
+sub rsp, 4
+movss xmm0, dword [rbp+84]
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [rbp+88]
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [rbp+92]
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [rbp+96]
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [rbp+100]
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [rbp+104]
+movss dword [rsp], xmm0
+sub rsp, 4
+movss xmm0, dword [rbp+108]
+movss dword [rsp], xmm0
+leave
+ret
 global f
 f:
 push   rbp
@@ -155,6 +216,8 @@ mov rdx, qword [const5]
 movss xmm0, dword [const4]
 mov esi, dword [const3]
 mov edi, dword [const2]
+call wow
+add rsp,36
 leave
 ret
 global foo
@@ -214,6 +277,10 @@ mov rdx, qword [const5]
 movss xmm0, dword [const4]
 mov esi, dword [const3]
 mov edi, dword [const2]
+call f
+add rsp,36
 movss xmm0, dword [rbp-100]
+call foo
+add rsp,0
 leave
 ret

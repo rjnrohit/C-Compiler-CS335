@@ -274,6 +274,8 @@ def add_func_call(gen_obj):
     args_val = args_val[::-1]
     args_type = args_type[::-1]
 
+    shift = 0
+
     for i, typ in enumerate(args_type):
         if 'const@' in args_val[i]:
             addr =  const_dict[args_val[i]]
@@ -299,6 +301,7 @@ def add_func_call(gen_obj):
                 code += ['sub rsp, 4']
                 code += ['movss xmm0, dword [' + addr+']']
                 code += ['movss dword [rsp], xmm0']
+                shift += typ.width
             else:
                 code += ['movss ' + arg_regsf[len(float_args)-1] +', dword [' + addr + ']']
             float_args.pop()
@@ -310,14 +313,18 @@ def add_func_call(gen_obj):
                 code += ['sub rsp, ' + get_width]
                 code += ['mov '+temp_regs[0][typ.width]+', '+get_size+' [' + addr+']']
                 code += ['mov '+get_size+' [rsp], '+temp_regs[0][typ.width]]
+                shift += typ.width
             else:
                 code += ['mov ' + arg_regs[len(byte8_args)-1][typ.width] +', '+get_size+' [' + addr + ']']
             byte8_args.pop()
             byte8_args_type.pop()
         else:
+            shift += typ.width
             code += add_copy_data_code(typ.width, addr)
             other_args.pop()
             other_args_type.pop()
+    code += ["call " + gen_obj.place1]
+    code += ["add rsp," + str(shift)]
     return code
 
 def add_copy_data_code(count, addr):

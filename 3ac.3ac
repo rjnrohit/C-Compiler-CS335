@@ -1,11 +1,17 @@
+wow:
+BeginFunc
+tmp@0 = a|wow int+ b|wow
+a|wow = tmp@0
+return a|wow
+EndFunc
 f:
 BeginFunc
 xd|f = lconst@12
-tmp@0 = int_to_float xd|f
-tmp@0 = int_to_float xd|f
-tmp@1 = tmp@0 float+ fconst@1.0
-tmp@2 = float_to_int tmp@1
-xd|f = tmp@2
+tmp@1 = int_to_float xd|f
+tmp@1 = int_to_float xd|f
+tmp@2 = tmp@1 float+ fconst@1.0
+tmp@3 = float_to_int tmp@2
+xd|f = tmp@3
 push lconst@1
 push lconst@2
 push fconst@3.2
@@ -29,7 +35,7 @@ push fconst@2.1
 push fconst@2.1
 push fconst@2.1
 push fconst@2.1
-tmp@3 = func_call f
+tmp@4 = func_call wow
 pop fconst@2.1
 pop fconst@2.1
 pop fconst@2.1
@@ -57,29 +63,29 @@ return lconst@0
 EndFunc
 foo:
 BeginFunc
-tmp@4 = float_to_int x|foo
-return tmp@4
+tmp@5 = float_to_int x|foo
+return tmp@5
 EndFunc
 main:
 BeginFunc
-tmp@5 = addr(d|global)
-tmp@6 = tmp@5 long+ lconst@4
-tmp@6 = load(tmp@6)
-tmp@6 = lconst@5
-tmp@7 = addr(d|global)
-tmp@8 = tmp@7 long+ lconst@12
-tmp@8 = load(tmp@8)
-tmp@9 = addr(d|global)
-tmp@8 = tmp@9
+tmp@6 = addr(d|global)
+tmp@7 = tmp@6 long+ lconst@4
+tmp@7 = load(tmp@7)
+tmp@7 = lconst@5
+tmp@8 = addr(d|global)
+tmp@9 = tmp@8 long+ lconst@12
+tmp@9 = load(tmp@9)
+tmp@10 = addr(d|global)
+tmp@9 = tmp@10
 ff|main = lconst@-1
 a|main = lconst@8
-tmp@10 = int_to_float a|main
-tmp@11 = tmp@10 float+ fconst@1.0
-tmp@12 = float_to_int tmp@11
-b|main = tmp@12
-tmp@13 = int_to_float b|main
-tmp@14 = tmp@13 float- fconst@1.1
-c|main = tmp@14
+tmp@11 = int_to_float a|main
+tmp@12 = tmp@11 float+ fconst@1.0
+tmp@13 = float_to_int tmp@12
+b|main = tmp@13
+tmp@14 = int_to_float b|main
+tmp@15 = tmp@14 float- fconst@1.1
+c|main = tmp@15
 push lconst@1
 push lconst@2
 push fconst@3.2
@@ -103,7 +109,7 @@ push fconst@2.1
 push fconst@2.1
 push fconst@2.1
 push fconst@2.1
-tmp@15 = func_call f
+tmp@16 = func_call f
 pop fconst@2.1
 pop fconst@2.1
 pop fconst@2.1
@@ -129,7 +135,7 @@ pop lconst@2
 pop lconst@1
 bcc|main = fconst@2
 push bcc|main
-tmp@16 = func_call foo
+tmp@17 = func_call foo
 pop bcc|main
 return lconst@0
 EndFunc
