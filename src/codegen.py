@@ -181,7 +181,7 @@ def add_args_copy_code(fname):
                 code += ["movss dword [rsp]," + arg_regsf[float_args-1]]
             else:
                 code += ["sub rsp, 4"]
-                code += ["movss xmm0, dowrd [rbp" +str(off)+ "]"]
+                code += ["movss xmm0, dowrd [rbp+" +str(off)+ "]"]
                 code += ["movss dword, xmm0"]
         elif typ.class_type == "BasicType" or (typ.class_type == "PointerType" and typ.array_type is None):
             byte8_args += 1
@@ -192,12 +192,12 @@ def add_args_copy_code(fname):
                 code += ["mov "+get_size+" [rsp]," + arg_regs[byte8_args-1]]
             else:
                 code += ["sub rsp, " + get_width]
-                code += ["mov rdi, "+get_size+" [rbp" +str(off)+ "]"]
+                code += ["mov rdi, "+get_size+" [rbp+" +str(off)+ "]"]
                 code += ["mov "+get_size+", rdi"]
 
         else:
             other_args += 1
-            code += add_copy_data_code(typ.width, "rbp" +str(off))
+            code += add_copy_data_code(typ.width, "rbp+" +str(off))
         off += typ.width
     #print(code)
     return code

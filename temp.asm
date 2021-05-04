@@ -80,10 +80,10 @@ mov dword [rsp],r9
 sub rsp, 4
 movss dword [rsp],xmm3
 sub rsp, 4
-mov rdi, dword [rbp60]
+mov rdi, dword [rbp+60]
 mov dword, rdi
 sub rsp, 4
-mov rdi, dword [rbp64]
+mov rdi, dword [rbp+64]
 mov dword, rdi
 sub rsp, 4
 movss dword [rsp],xmm4
@@ -94,25 +94,25 @@ movss dword [rsp],xmm6
 sub rsp, 4
 movss dword [rsp],xmm7
 sub rsp, 4
-movss xmm0, dowrd [rbp84]
+movss xmm0, dowrd [rbp+84]
 movss dword, xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp88]
+movss xmm0, dowrd [rbp+88]
 movss dword, xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp92]
+movss xmm0, dowrd [rbp+92]
 movss dword, xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp96]
+movss xmm0, dowrd [rbp+96]
 movss dword, xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp100]
+movss xmm0, dowrd [rbp+100]
 movss dword, xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp104]
+movss xmm0, dowrd [rbp+104]
 movss dword, xmm0
 sub rsp, 4
-movss xmm0, dowrd [rbp108]
+movss xmm0, dowrd [rbp+108]
 movss dword, xmm0
 sub rsp, 4
 movss xmm0, dword [const11]
