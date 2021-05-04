@@ -1591,10 +1591,10 @@ def p_add_sym(p):
         add_sym :
     '''
     # print("start_scope", p, p.stack, p.slice)
-    name = None
-    if p.stack[-2].type == 'IDENTIFIER':
-        name = p.stack[-2].value
-    sym_table.start_scope(name)
+    # name = None
+    # if p.stack[-2].type == 'IDENTIFIER':
+    #     name = p.stack[-2].value
+    sym_table.start_scope()
     p[0] = None
 
 def p_pop_sym(p):
@@ -1671,7 +1671,7 @@ def main():
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
     print_asm(tac_code)
-    print(alloc)
+    #print(alloc)
 if __name__ == "__main__":
     main()
 

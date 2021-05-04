@@ -1,206 +1,207 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-a,int,0,4
-b,int,4,4
-c,int,8,4
-main,int function([]),12,4
-insert,void function(None),12,0
-lconst@0,long,12,8
-lconst@45,long,20,8
-lconst@8,long,28,8
-foo,"pointer of (int) function([int, int, pointer of (char)])",36,40
-lconst@1,long,36,8
-lconst@24,long,44,8
-lconst@97,long,52,8
-zoo,"int function([float, float])",60,12
-ter,int function([int]),60,8
-lconst@4,long,60,8
-lconst@2400,long,68,8
-lconst@52,long,76,8
-lconst@1800,long,84,8
-lconst@60,long,92,8
-fconst@1001.0,float,100,4
-fconst@46.4,float,104,4
-lconst@100,long,108,8
-lconst@1000312,long,116,8
-lconst@2,long,124,8
-fconst@3.45,float,132,4
-lconst@22,long,136,8
-lconst@34,long,144,8
-lconst@23,long,152,8
-lconst@46,long,160,8
-lconst@3,long,168,8
-lconst@5,long,176,8
+symbol table id,symbol table name,table off
+0,global,192
+name,type,offset,offset+base,width
+a,int,4,4,4
+b,int,8,8,4
+c,int,12,12,4
+main,int function([]),12,12,4
+insert,void function(None),12,12,0
+lconst@4,long,20,20,8
+lconst@45,long,28,28,8
+lconst@16,long,36,36,8
+lconst@0,long,44,44,8
+foo,"pointer of (int) function([int, int, pointer of (char)])",44,44,40
+lconst@1,long,52,52,8
+lconst@24,long,60,60,8
+lconst@97,long,68,68,8
+zoo,"int function([float, float])",68,68,12
+ter,int function([int]),68,68,8
+lconst@12,long,76,76,8
+lconst@2400,long,84,84,8
+lconst@52,long,92,92,8
+lconst@1800,long,100,100,8
+lconst@60,long,108,108,8
+fconst@1001.0,float,112,112,4
+fconst@46.4,float,116,116,4
+lconst@100,long,124,124,8
+lconst@1000312,long,132,132,8
+lconst@2,long,140,140,8
+fconst@3.45,float,144,144,4
+lconst@22,long,152,152,8
+lconst@34,long,160,160,8
+lconst@23,long,168,168,8
+lconst@46,long,176,176,8
+lconst@3,long,184,184,8
+lconst@5,long,192,192,8
 
-symbol table id,symbol table name,parent id
-2,main,0
-name,type,offset,width
-f,int,0,4
-main,pointer of (struct main),4,8
+symbol table id,symbol table name,parent id,table off
+2,main,0,12
+name,type,offset,offset+base,width
+f,int,4,4,4
+main,pointer of (struct main),12,12,8
 
-symbol table id,symbol table name,parent id
-3,Node,0
-name,type,offset,width
-a,int,0,4
-b,int,4,4
-next,pointer of (struct Node),8,8
-ptr,pointer of (struct Node),16,8
-left,pointer of (struct Node),24,8
+symbol table id,symbol table name,parent id,table off
+3,Node,0,32
+name,type,offset,offset+base,width
+a,int,4,4,4
+b,int,8,8,4
+next,pointer of (struct Node),16,16,8
+ptr,pointer of (struct Node),24,24,8
+left,pointer of (struct Node),32,32,8
 
-symbol table id,symbol table name,parent id
-4,insert,0
-name,type,offset,width
-a,struct Node,0,32
-tmp@0,long,32,8
-ptr,pointer of (struct Node),40,8
-tmp@1,long,48,8
-tmp@2,long,56,8
+symbol table id,symbol table name,parent id,table off
+4,insert,0,64
+name,type,offset,offset+base,width
+a,struct Node,32,32,32
+tmp@0,long,40,40,8
+ptr,pointer of (struct Node),48,48,8
+tmp@1,long,56,56,8
+tmp@2,long,64,64,8
 
-symbol table id,symbol table name,parent id
-5,foo,0
-name,type,offset,width
-t,int,8,4
-u,int,12,4
-str,pointer of (char),16,24
-tmp@3,int,40,4
-tmp@10,long,44,8
-tmp@11,long,52,8
-tmp@12,long,60,8
+symbol table id,symbol table name,parent id,table off
+5,foo,0,98
+name,type,offset,offset+base,width
+t,int,12,12,4
+u,int,16,16,4
+str,pointer of (char),40,40,24
+tmp@3,int,44,44,4
+tmp@10,long,82,82,8
+tmp@11,long,90,90,8
+tmp@12,long,98,98,8
 
-symbol table id,symbol table name,parent id
-7,zoo,0
-name,type,offset,width
-a,float,4,4
-d,float,8,4
-tmp@13,int,12,4
-tmp@14,long,16,8
-tmp@15,long,24,8
-tmp@16,long,32,8
-tmp@17,int,40,4
+symbol table id,symbol table name,parent id,table off
+7,zoo,0,44
+name,type,offset,offset+base,width
+a,float,8,8,4
+d,float,12,12,4
+tmp@13,int,16,16,4
+tmp@14,long,24,24,8
+tmp@15,long,32,32,8
+tmp@16,long,40,40,8
+tmp@17,int,44,44,4
 
-symbol table id,symbol table name,parent id
-8,ter,0
-name,type,offset,width
-c,int,4,4
-tmp@18,bool,8,1
-tmp@19,int,9,4
-tmp@20,long,13,8
-tmp@21,long,21,8
+symbol table id,symbol table name,parent id,table off
+8,ter,0,29
+name,type,offset,offset+base,width
+c,int,8,8,4
+tmp@18,bool,9,9,1
+tmp@19,int,13,13,4
+tmp@20,long,21,21,8
+tmp@21,long,29,29,8
 
-symbol table id,symbol table name,parent id
-9,main,0
-name,type,offset,width
-main1,struct inside,4,12
-tmp@22,long,16,8
-tmp@23,long,24,8
-tmp@24,long,32,8
-tmp@25,long,40,8
-tmp@26,long,48,8
-a,pointer of (pointer of (int)),56,9000
-tmp@27,long,9056,8
-tmp@28,int,9064,4
-z,int,9068,4
-tmp@39,bool,9072,1
-cc,int,9073,4
-tmp@40,int,9077,4
-tmp@41,float,9081,4
-tmp@42,float,9085,4
-tmp@43,float,9089,4
-tmp@44,float,9093,4
-tmp@45,int,9097,4
-tmp@68,pointer of (char),9101,8
-tmp@69,pointer of (int),9109,8
-tmp@70,long,9117,8
-tmp@71,long,9125,8
-tmp@72,long,9133,8
-tmp@73,int,9141,4
+symbol table id,symbol table name,parent id,table off
+9,main,0,9209
+name,type,offset,offset+base,width
+main1,struct inside,16,16,12
+tmp@22,long,24,24,8
+tmp@23,long,32,32,8
+tmp@24,long,40,40,8
+tmp@25,long,48,48,8
+tmp@26,long,56,56,8
+a,pointer of (pointer of (int)),9056,9056,9000
+tmp@27,long,9064,9064,8
+tmp@28,int,9068,9068,4
+z,int,9072,9072,4
+tmp@39,bool,9127,9127,1
+cc,int,9131,9131,4
+tmp@40,int,9135,9135,4
+tmp@41,float,9139,9139,4
+tmp@42,float,9143,9143,4
+tmp@43,float,9147,9147,4
+tmp@44,float,9151,9151,4
+tmp@45,int,9155,9155,4
+tmp@68,pointer of (char),9173,9173,8
+tmp@69,pointer of (int),9181,9181,8
+tmp@70,long,9189,9189,8
+tmp@71,long,9197,9197,8
+tmp@72,long,9205,9205,8
+tmp@73,int,9209,9209,4
 
-symbol table id,symbol table name,parent id
-6,scope@6,5
-name,type,offset,width
-i,int,0,4
-tmp@4,bool,4,1
-tmp@5,int,5,4
-tmp@6,long,9,8
-tmp@7,long,17,8
-tmp@8,int,25,4
-tmp@9,char,29,1
+symbol table id,symbol table name,parent id,table off
+6,scope@6,5,30
+name,type,offset,offset+base,width
+i,int,4,48,4
+tmp@4,bool,5,49,1
+tmp@5,int,9,53,4
+tmp@6,long,17,61,8
+tmp@7,long,25,69,8
+tmp@8,int,29,73,4
+tmp@9,char,30,74,1
 
-symbol table id,symbol table name,parent id
-10,inside,9
-name,type,offset,width
-x,int,0,4
-s,pointer of (struct inside),4,8
+symbol table id,symbol table name,parent id,table off
+10,inside,9,12
+name,type,offset,offset+base,width
+x,int,4,4,4
+s,pointer of (struct inside),12,12,8
 
-symbol table id,symbol table name,parent id
-11,scope@11,9
-name,type,offset,width
-tmp@29,int,0,4
-j,int,4,4
-tmp@30,long,8,8
-tmp@31,long,16,8
-tmp@32,int,24,4
-tmp@33,long,28,8
-tmp@34,long,36,8
-tmp@35,float,44,4
-tmp@36,bool,48,1
-tmp@37,float,49,4
-tmp@38,bool,53,1
+symbol table id,symbol table name,parent id,table off
+11,scope@11,9,54
+name,type,offset,offset+base,width
+tmp@29,int,4,9076,4
+j,int,8,9080,4
+tmp@30,long,16,9088,8
+tmp@31,long,24,9096,8
+tmp@32,int,28,9100,4
+tmp@33,long,36,9108,8
+tmp@34,long,44,9116,8
+tmp@35,float,48,9120,4
+tmp@36,bool,49,9121,1
+tmp@37,float,53,9125,4
+tmp@38,bool,54,9126,1
 
-symbol table id,symbol table name,parent id
-13,scope@13,9
-name,type,offset,width
-flag,bool,0,1
-tmp@46,int,1,4
-tmp@47,int,5,4
-tmp@58,bool,9,1
+symbol table id,symbol table name,parent id,table off
+13,scope@13,9,28
+name,type,offset,offset+base,width
+flag,bool,1,9156,1
+tmp@46,int,5,9160,4
+tmp@47,int,9,9164,4
+tmp@58,bool,28,9183,1
 
-symbol table id,symbol table name,parent id
-17,scope@17,9
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+17,scope@17,9,425
+name,type,offset,offset+base,width
 
-symbol table id,symbol table name,parent id
-12,scope@12,11
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+12,scope@12,11,0
+name,type,offset,offset+base,width
 
-symbol table id,symbol table name,parent id
-14,scope@14,13
-name,type,offset,width
-k,int,0,4
-tmp@48,bool,4,1
-tmp@52,int,5,4
-tmp@53,int,9,4
-tmp@54,int,13,4
-tmp@55,bool,17,1
+symbol table id,symbol table name,parent id,table off
+14,scope@14,13,29
+name,type,offset,offset+base,width
+k,int,4,9168,4
+tmp@48,bool,5,9169,1
+tmp@52,int,12,9176,4
+tmp@53,int,16,9180,4
+tmp@54,int,20,9184,4
+tmp@55,bool,21,9185,1
 
-symbol table id,symbol table name,parent id
-18,scope@18,17
-name,type,offset,width
-tmp@59,pointer of (int),0,200
-tmp@60,int,200,4
-tmp@61,int,204,4
+symbol table id,symbol table name,parent id,table off
+18,scope@18,17,208
+name,type,offset,offset+base,width
+tmp@59,pointer of (int),200,9365,200
+tmp@60,int,204,9369,4
+tmp@61,int,208,9373,4
 
-symbol table id,symbol table name,parent id
-19,scope@19,17
-name,type,offset,width
-tmp@62,pointer of (int),0,200
-tmp@63,int,200,4
-tmp@64,int,204,4
-tmp@65,bool,208,1
-tmp@66,int,209,4
-tmp@67,int,213,4
+symbol table id,symbol table name,parent id,table off
+19,scope@19,17,217
+name,type,offset,offset+base,width
+tmp@62,pointer of (int),200,9573,200
+tmp@63,int,204,9577,4
+tmp@64,int,208,9581,4
+tmp@65,bool,209,9582,1
+tmp@66,int,213,9586,4
+tmp@67,int,217,9590,4
 
-symbol table id,symbol table name,parent id
-15,scope@15,14
-name,type,offset,width
-tmp@49,bool,0,1
-tmp@50,bool,1,1
-tmp@51,bool,2,1
+symbol table id,symbol table name,parent id,table off
+15,scope@15,14,3
+name,type,offset,offset+base,width
+tmp@49,bool,1,9170,1
+tmp@50,bool,2,9171,1
+tmp@51,bool,3,9172,1
 
-symbol table id,symbol table name,parent id
-16,scope@16,14
-name,type,offset,width
-tmp@56,int,0,4
-tmp@57,int,4,4
+symbol table id,symbol table name,parent id,table off
+16,scope@16,14,8
+name,type,offset,offset+base,width
+tmp@56,int,4,9189,4
+tmp@57,int,8,9193,4

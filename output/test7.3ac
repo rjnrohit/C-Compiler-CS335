@@ -1,6 +1,6 @@
 main:
 BeginFunc
-tmp@0 = d|main long+ lconst@8
+tmp@0 = d|main long+ lconst@12
 tmp@0 = load(tmp@0)
 s|main = lconst@8
 str|main = sconst@aman
@@ -45,5 +45,36 @@ tmp@14 = tmp@13 int+ lconst@1
 c|scope@3 = tmp@14
 goto label#0
 label#5:
+tmp@15 = i|main
+i|main = i|main int+ lconst@1
+tmp@16 = tmp@15 int< n|main
+ifz tmp@16 goto label#10
+label#6:
+tmp@17 = j|scope@5 int< n|main
+ifz tmp@17 goto label#9
+tmp@19 = j|scope@5 long* lconst@4
+tmp@20 = sieve|scope@5 long+ tmp@19
+tmp@20 = lconst@1
+tmp@21 = j|scope@5 int% lconst@2
+tmp@22 = tmp@21 int% lconst@3
+tmp@23 = tmp@22 int== lconst@4
+ifz tmp@23 goto label#7
+goto label#9
+goto label#8
+label#7:
+goto label#8
+label#8:
+tmp@18 = j|scope@5
+j|scope@5 = j|scope@5 int+ lconst@1
+goto label#6
+label#9:
+tmp@24 = i|main
+i|main = i|main int- lconst@1
+tmp@25 = i|main
+i|main = i|main int+ lconst@1
+tmp@26 = tmp@25 int+ lconst@1
+c|scope@5 = tmp@26
+goto label#5
+label#10:
 return lconst@9
 EndFunc

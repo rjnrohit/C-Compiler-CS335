@@ -9,7 +9,7 @@ temp_cnt = 0
 lable_cnt = 0
 label_list = list()
 alloc = dict()
-
+temp_dict = {}
 
 class gen:
 
@@ -95,6 +95,7 @@ def get_newtmp(type = BasicType("long")):
     name = "tmp@"+str(temp_cnt)
     temp_cnt += 1
     sym_table.add_entry(name  = name, type = type)
+    temp_dict[name] = sym_table.curr_symbol_table
     return name
 
 def get_newlabel():

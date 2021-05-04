@@ -30,9 +30,11 @@ struct AA
 
 // struct AA add = {3,4};
 
+int foo(float x){
+	return x;
+}
 
-
-int main(){
+int main(int argc, int*argv){
 	d.a = 5;
 	d.c = &d;
 	int a, b;
@@ -42,5 +44,7 @@ int main(){
 	b = a + 1.0;
 	c = b - 1.1;
 	f(1,2,3.2,45,4,3.1, 4,3.4,4,4.5,45,66, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1);
+	float bcc = 2;
+	foo(bcc);
 	return 0;
 }

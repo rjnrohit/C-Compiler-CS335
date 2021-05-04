@@ -1,136 +1,136 @@
 
-symbol table id,symbol table name
-0,global
-name,type,offset,width
-take_and,"int function([int, float])",0,12
-take_or,"int function([float, int])",0,12
-array,pointer of (pointer of (pointer of (int))),0,8736
-main,"int function([int, pointer of (int)])",8736,28
-lconst@1,long,8736,8
-lconst@4,long,8744,8
-lconst@20,long,8752,8
-lconst@0,long,8760,8
-lconst@12,long,8768,8
-lconst@13,long,8776,8
-lconst@14,long,8784,8
-lconst@728,long,8792,8
-lconst@56,long,8800,8
-lconst@8,long,8808,8
-fconst@0.1,float,8816,4
-jj,int,8820,4
-foo,void function(None),8824,0
-lconst@50,long,8824,8
-lconst@15,long,8832,8
-lconst@45,long,8840,8
-lconst@3,long,8848,8
+symbol table id,symbol table name,table off
+0,global,8856
+name,type,offset,offset+base,width
+take_and,"int function([int, float])",0,0,12
+take_or,"int function([float, int])",0,0,12
+array,pointer of (pointer of (pointer of (int))),8736,8736,8736
+main,"int function([int, pointer of (int)])",8736,8736,28
+lconst@1,long,8744,8744,8
+lconst@4,long,8752,8752,8
+lconst@20,long,8760,8760,8
+lconst@0,long,8768,8768,8
+lconst@12,long,8776,8776,8
+lconst@13,long,8784,8784,8
+lconst@14,long,8792,8792,8
+lconst@728,long,8800,8800,8
+lconst@56,long,8808,8808,8
+lconst@8,long,8816,8816,8
+fconst@0.1,float,8820,8820,4
+jj,int,8824,8824,4
+foo,void function(None),8824,8824,0
+lconst@50,long,8832,8832,8
+lconst@15,long,8840,8840,8
+lconst@45,long,8848,8848,8
+lconst@3,long,8856,8856,8
 
-symbol table id,symbol table name,parent id
-1,take_and,0
-name,type,offset,width
-a,int,4,4
-b,float,8,4
-tmp@0,int,12,4
-tmp@1,int,16,4
+symbol table id,symbol table name,parent id,table off
+1,take_and,0,20
+name,type,offset,offset+base,width
+a,int,8,8,4
+b,float,12,12,4
+tmp@0,int,16,16,4
+tmp@1,int,20,20,4
 
-symbol table id,symbol table name,parent id
-2,take_or,0
-name,type,offset,width
-a,float,4,4
-b,int,8,4
-tmp@2,long,12,8
-tmp@3,long,20,8
-tmp@4,long,28,8
-tmp@5,int,36,4
+symbol table id,symbol table name,parent id,table off
+2,take_or,0,40
+name,type,offset,offset+base,width
+a,float,8,8,4
+b,int,12,12,4
+tmp@2,long,20,20,8
+tmp@3,long,28,28,8
+tmp@4,long,36,36,8
+tmp@5,int,40,40,4
 
-symbol table id,symbol table name,parent id
-3,main,0
-name,type,offset,width
-argc,int,4,4
-argv,pointer of (int),8,20
-a,int,28,4
-b,int,32,4
-ptr,pointer of (int),36,8
-i,int,44,4
-j,int,48,4
-k,int,52,4
-tmp@6,int,56,4
-tmp@7,long,60,8
-tmp@8,long,68,8
-l,bool,76,1
-tmp@9,long,77,8
-tmp@10,long,85,8
-tmp@11,long,93,8
-tmp@12,bool,101,1
-tmp@13,int,102,4
-tmp@35,pointer of (pointer of (int)),106,728
-tmp@36,pointer of (int),834,56
-tmp@37,float,890,4
-tmp@38,int,894,4
-tmp@39,pointer of (pointer of (int)),898,728
-tmp@40,pointer of (int),1626,56
-tmp@41,int,1682,4
-d,int,1686,4
+symbol table id,symbol table name,parent id,table off
+3,main,0,1755
+name,type,offset,offset+base,width
+argc,int,8,8,4
+argv,pointer of (int),28,28,20
+a,int,32,32,4
+b,int,36,36,4
+ptr,pointer of (int),44,44,8
+i,int,48,48,4
+j,int,52,52,4
+k,int,56,56,4
+tmp@6,int,60,60,4
+tmp@7,long,68,68,8
+tmp@8,long,76,76,8
+l,bool,77,77,1
+tmp@9,long,85,85,8
+tmp@10,long,93,93,8
+tmp@11,long,101,101,8
+tmp@12,bool,102,102,1
+tmp@13,int,106,106,4
+tmp@35,pointer of (pointer of (int)),899,899,728
+tmp@36,pointer of (int),955,955,56
+tmp@37,float,959,959,4
+tmp@38,int,963,963,4
+tmp@39,pointer of (pointer of (int)),1691,1691,728
+tmp@40,pointer of (int),1747,1747,56
+tmp@41,int,1751,1751,4
+d,int,1755,1755,4
 
-symbol table id,symbol table name,parent id
-6,foo,0
-name,type,offset,width
-tmp@42,bool,0,1
-tmp@43,int,1,4
-tmp@48,int,5,4
-c,int,9,4
-tmp@49,bool,13,1
+symbol table id,symbol table name,parent id,table off
+6,foo,0,28
+name,type,offset,offset+base,width
+tmp@42,bool,1,1,1
+tmp@43,int,5,5,4
+tmp@48,int,23,23,4
+c,int,27,27,4
+tmp@49,bool,28,28,1
 
-symbol table id,symbol table name,parent id
-4,scope@4,3
-name,type,offset,width
-tmp@14,bool,0,1
-tmp@15,int,1,4
-tmp@27,long,5,8
-tmp@28,long,13,8
-tmp@29,long,21,8
-tmp@30,long,29,8
-tmp@31,int,37,4
-tmp@32,long,41,8
-tmp@33,long,49,8
-tmp@34,int,57,4
-b,int,61,4
+symbol table id,symbol table name,parent id,table off
+4,scope@4,3,130
+name,type,offset,offset+base,width
+tmp@14,bool,1,107,1
+tmp@15,int,5,111,4
+tmp@27,long,78,184,8
+tmp@28,long,86,192,8
+tmp@29,long,94,200,8
+tmp@30,long,102,208,8
+tmp@31,int,106,212,4
+tmp@32,long,114,220,8
+tmp@33,long,122,228,8
+tmp@34,int,126,232,4
+b,int,130,236,4
 
-symbol table id,symbol table name,parent id
-7,scope@7,6
-name,type,offset,width
-tmp@44,int,0,4
-tmp@45,bool,4,1
-tmp@46,bool,5,1
+symbol table id,symbol table name,parent id,table off
+7,scope@7,6,6
+name,type,offset,offset+base,width
+tmp@44,int,4,9,4
+tmp@45,bool,5,10,1
+tmp@46,bool,6,11,1
 
-symbol table id,symbol table name,parent id
-8,scope@8,6
-name,type,offset,width
-tmp@47,int,0,4
-c,int,4,4
+symbol table id,symbol table name,parent id,table off
+8,scope@8,6,8
+name,type,offset,offset+base,width
+tmp@47,int,4,15,4
+c,int,8,19,4
 
-symbol table id,symbol table name,parent id
-9,scope@9,6
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+9,scope@9,6,0
+name,type,offset,offset+base,width
 
-symbol table id,symbol table name,parent id
-10,scope@10,6
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+10,scope@10,6,0
+name,type,offset,offset+base,width
 
-symbol table id,symbol table name,parent id
-11,scope@11,6
-name,type,offset,width
+symbol table id,symbol table name,parent id,table off
+11,scope@11,6,0
+name,type,offset,offset+base,width
 
-symbol table id,symbol table name,parent id
-5,scope@5,4
-name,type,offset,width
-tmp@16,bool,0,1
-tmp@17,int,1,4
-tmp@18,long,5,8
-tmp@19,long,13,8
-tmp@20,long,21,8
-tmp@21,long,29,8
-tmp@22,long,37,8
-tmp@23,long,45,8
-tmp@24,int,53,4
-tmp@25,int,57,4
-tmp@26,int,61,4
+symbol table id,symbol table name,parent id,table off
+5,scope@5,4,65
+name,type,offset,offset+base,width
+tmp@16,bool,1,112,1
+tmp@17,int,5,116,4
+tmp@18,long,13,124,8
+tmp@19,long,21,132,8
+tmp@20,long,29,140,8
+tmp@21,long,37,148,8
+tmp@22,long,45,156,8
+tmp@23,long,53,164,8
+tmp@24,int,57,168,4
+tmp@25,int,61,172,4
+tmp@26,int,65,176,4

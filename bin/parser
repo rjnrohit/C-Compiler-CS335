@@ -18,7 +18,7 @@ from structure import getMutliPointerType
 from typecheck import *
 from utils import print_csv, print_code
 from threeaddr import *
-# from codegen import generate
+# from codegen import print_asm
 #####################Grammar section #################
 # print(temp_cnt)
 
@@ -944,7 +944,7 @@ def p_init_declarator(p):
                     return 
                 else:
                     if "sconst@" in  node.place:
-                        alloc[p[0].place] = node.place.split("@")[-1]+"\0" 
+                        alloc[p[0].place] = node.place.split("@")[-1]
                     else:
                         alloc[p[0].place] = get_const_value(node.place)   
                     p[0] = [p[0]]
@@ -997,7 +997,7 @@ def p_auto_declarator(p):
                 return 
             else:
                 if "sconst@" in  node.place:
-                    alloc[p[0].place] = node.place.split("@")[-1]+"\0"  
+                    alloc[p[0].place] = node.place.split("@")[-1]
                 else:
                     alloc[p[0].place] = get_const_value(node.place)   
                 p[0] = [p[0]]
@@ -1591,10 +1591,10 @@ def p_add_sym(p):
         add_sym :
     '''
     # print("start_scope", p, p.stack, p.slice)
-    name = None
-    if p.stack[-2].type == 'IDENTIFIER':
-        name = p.stack[-2].value
-    sym_table.start_scope(name)
+    # name = None
+    # if p.stack[-2].type == 'IDENTIFIER':
+    #     name = p.stack[-2].value
+    sym_table.start_scope()
     p[0] = None
 
 def p_pop_sym(p):
@@ -1670,7 +1670,7 @@ def main():
     #can also add as args for optimization
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
-    # print(generate(tac_code))
+    #print_asm(tac_code)
     print(alloc)
 if __name__ == "__main__":
     main()

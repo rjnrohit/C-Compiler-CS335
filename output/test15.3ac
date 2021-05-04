@@ -2,10 +2,10 @@ insert:
 BeginFunc
 tmp@0 = addr(a|insert)
 ptr|insert = tmp@0
-tmp@1 = ptr|insert long+ lconst@0
+tmp@1 = ptr|insert long+ lconst@4
 tmp@1 = load(tmp@1)
 tmp@1 = lconst@45
-tmp@2 = ptr|insert long+ lconst@8
+tmp@2 = ptr|insert long+ lconst@16
 tmp@2 = load(tmp@2)
 tmp@2 = lconst@0
 EndFunc
@@ -67,12 +67,12 @@ EndFunc
 main:
 BeginFunc
 tmp@22 = addr(main1|main)
-tmp@23 = tmp@22 long+ lconst@0
+tmp@23 = tmp@22 long+ lconst@4
 tmp@23 = load(tmp@23)
 tmp@24 = addr(main1|main)
-tmp@25 = tmp@24 long+ lconst@4
+tmp@25 = tmp@24 long+ lconst@12
 tmp@25 = load(tmp@25)
-tmp@26 = tmp@25 long+ lconst@0
+tmp@26 = tmp@25 long+ lconst@4
 tmp@26 = load(tmp@26)
 tmp@23 = tmp@26
 tmp@27 = addr(a|main)
