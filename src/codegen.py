@@ -193,22 +193,31 @@ def add_args_copy_code(fname):
                 code += ["sub rsp, 4"]
                 code += ["movss xmm0, dword [rbp+" +str(off)+ "]"]
                 code += ["movss dword [rsp], xmm0"]
-        elif typ.class_type == "BasicType" or (typ.class_type == "PointerType" and typ.array_type is None):
+        elif typ.class_type == "BasicType" or typ.class_type == "PointerType":
             byte8_args += 1
-            get_width = str(typ.width)
-            get_size = size_type[typ.width]
+            if typ.class_type == "PointerType":
+                get_width = str(8)
+                get_size = size_type[8]
+                width = 8
+            else:
+                width = typ.width
+                get_width = str(typ.width)
+                get_size = size_type[typ.width]
             if byte8_args <= len(arg_regs):
                 code += ["sub rsp, " + get_width]
-                code += ["mov "+get_size+" [rsp]," + arg_regs[byte8_args-1][typ.width]]
+                code += ["mov "+get_size+" [rsp]," + arg_regs[byte8_args-1][width]]
             else:
                 code += ["sub rsp, " + get_width]
-                code += ["mov "+temp_regs[0][typ.width]+", "+get_size+" [rbp+" +str(off)+ "]"]
-                code += ["mov "+get_size+"[rsp], "+ temp_regs[0][typ.width]]
+                code += ["mov "+temp_regs[0][width]+", "+get_size+" [rbp+" +str(off)+ "]"]
+                code += ["mov "+get_size+"[rsp], "+ temp_regs[0][width]]
 
         else:
             other_args += 1
             code += add_copy_data_code(typ.width, "rbp+" +str(off))
-        off += typ.width
+        if typ.class_type == "PointerType":
+            off += 8
+        else:
+            off += typ.width
     #print(code)
     return code
 
@@ -262,7 +271,7 @@ def add_func_call(gen_obj):
         elif typ.class_type == "BasicType":
             byte8_args += [args_val[i]]
             byte8_args_type += [typ]
-        elif typ.class_type == "PointerType" and typ.array_type is None:
+        elif typ.class_type == "PointerType":
             byte8_args += [args_val[i]]
             byte8_args_type += [typ]
         else:
@@ -306,16 +315,32 @@ def add_func_call(gen_obj):
                 code += ['movss ' + arg_regsf[len(float_args)-1] +', dword [' + addr + ']']
             float_args.pop()
             float_args_type.pop()
-        elif typ.class_type == "BasicType" or (typ.class_type == "PointerType" and typ.array_type is None):
-            get_size = size_type[typ.width]
-            get_width = str(typ.width)
+        elif typ.class_type == "BasicType" or typ.class_type == "PointerType":
+            if typ.class_type == "PointerType":
+                get_width = str(8)
+                get_size = size_type[8]
+                width = 8
+            else:
+                width = typ.width
+                get_width = str(typ.width)
+                get_size = size_type[typ.width]
             if len(byte8_args) > len(arg_regs):
                 code += ['sub rsp, ' + get_width]
-                code += ['mov '+temp_regs[0][typ.width]+', '+get_size+' [' + addr+']']
-                code += ['mov '+get_size+' [rsp], '+temp_regs[0][typ.width]]
-                shift += typ.width
+                if typ.class_type != "PointerType":
+                    code += ['mov '+temp_regs[0][width]+', '+get_size+' [' + addr+']']
+                elif typ.array_type:
+                    code += ['lea '+temp_regs[0][8]+', [' + addr+']']
+                else:
+                    code += ['mov '+temp_regs[0][8]+', '+size_type[8]+' [' + addr+']']
+                code += ['mov '+get_size+' [rsp], '+temp_regs[0][width]]
+                shift += width
             else:
-                code += ['mov ' + arg_regs[len(byte8_args)-1][typ.width] +', '+get_size+' [' + addr + ']']
+                if typ.class_type != "PointerType":
+                    code += ['mov ' + arg_regs[len(byte8_args)-1][width] +', '+get_size+' [' + addr + ']']
+                elif typ.array_type:
+                    code += ['lea ' + arg_regs[len(byte8_args)-1][8] +', [' + addr + ']']
+                else:
+                    code += ['mov ' + arg_regs[len(byte8_args)-1][width] +', '+get_size+' [' + addr + ']']
             byte8_args.pop()
             byte8_args_type.pop()
         else:

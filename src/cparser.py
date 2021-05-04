@@ -429,7 +429,7 @@ def p_postfix_expression_2(p):
                 p[0] = Node(type="error")
                 Errors(
                     errorType='TypeError',
-                    errorText="cannot convert "+arg_list[i].types.stype+" to "+param_list[i].stype,
+                    errorText="cannot convert "+arg_list[i].type.stype+" to "+param_list[i].stype,
                     token_object= p.slice[-1]
                 )
                 return

@@ -33,10 +33,10 @@ const12 dq 0
 b@global dd 0
 c@global dd 0
 def@global dq 1
-const13 dq 5
-const14 dq -1
-const15 dq 8
-const16 dd 1.1
+const13 dd 1.1
+const14 dq 5
+const15 dq -1
+const16 dq 8
 const17 dd 2.0
 section .bss
 gg@global resd 1
@@ -226,6 +226,8 @@ push   rbp
 mov    rbp,rsp
 sub rsp, 4
 movss dword [rsp],xmm0
+sub rsp, 8
+mov qword [rsp],rdi
 leave
 ret
 global main
@@ -279,6 +281,7 @@ mov esi, dword [const3]
 mov edi, dword [const2]
 call f
 add rsp,36
+lea rdi, [rbp-152]
 movss xmm0, dword [rbp-100]
 call foo
 add rsp,0

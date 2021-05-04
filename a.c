@@ -35,7 +35,8 @@ struct AA
 
 // struct AA add = {3,4};
 
-int foo(float x){
+int foo(float x, float bx[5]){
+	bx[0] = 1.1;
 	return x;
 }
 
@@ -50,6 +51,7 @@ int main(int argc, int*argv){
 	c = b - 1.1;
 	f(1,2,3.2,45,4,3.1, 4,3.4,4,4.5,45,66, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1, 2.1);
 	float bcc = 2;
-	foo(bcc);
+	float bx[13];
+	foo(bcc, bx);
 	return 0;
 }
