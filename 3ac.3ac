@@ -71,11 +71,15 @@ EndFunc
 main:
 BeginFunc
 tmp@7 = addr(d|global)
-tmp@8 = tmp@7 long+ lconst@4
+tmp@8 = tmp@7 long+ lconst@8
 tmp@8 = load(tmp@8)
 tmp@8 = lconst@5
+adx|main = lconst@1
+ifz adx|main goto label#0
+adx|main = lconst@0
+label#0:
 tmp@9 = addr(d|global)
-tmp@10 = tmp@9 long+ lconst@12
+tmp@10 = tmp@9 long+ lconst@16
 tmp@10 = load(tmp@10)
 tmp@11 = addr(d|global)
 tmp@10 = tmp@11

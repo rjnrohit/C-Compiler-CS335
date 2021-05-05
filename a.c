@@ -42,6 +42,8 @@ int foo(float x, float bx[5]){
 
 int main(int argc, int*argv){
 	d.a = 5;
+	// bool adx = true;
+	// if(adx)adx = false;
 	d.c = &d;
 	int a, b;
 	float c;

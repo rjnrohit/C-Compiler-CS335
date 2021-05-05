@@ -25,10 +25,12 @@ ii.)addresses are not aligned in add_args_copy_code
 """
 ##
 
-gp_regs64 = ['rax', 'rbx', 'rcx', 'rdx','rsi','rdi', 'rbp' + 'rsp'] + ['r' + str(i) for i in range(8,16)]
-gp_regs32 = ['eax', 'ebx', 'ecx', 'edx','esi','edi', 'ebp' + 'esp'] + ['r' + str(i) + 'd' for i in range(8,16)]
-gp_regs16 = ['ax', 'bx', 'cx', 'dx','si','di', 'bp' + 'sp'] + ['r' + str(i) + 'w' for i in range(8,16)]
-gp_regs8 = ['al', 'bl', 'cl', 'dl','sil','dil', 'bpl' + 'spl'] + ['r' + str(i) + 'b' for i in range(8,16)]
+gp_regs ={}
+
+gp_regs[8] = ['rax', 'rbx', 'rcx', 'rdx','rsi','rdi', 'rbp' + 'rsp'] + ['r' + str(i) for i in range(8,16)]
+gp_regs[4] = ['eax', 'ebx', 'ecx', 'edx','esi','edi', 'ebp' + 'esp'] + ['r' + str(i) + 'd' for i in range(8,16)]
+gp_regs[2] = ['ax', 'bx', 'cx', 'dx','si','di', 'bp' + 'sp'] + ['r' + str(i) + 'w' for i in range(8,16)]
+gp_regs[1] = ['al', 'bl', 'cl', 'dl','sil','dil', 'bpl' + 'spl'] + ['r' + str(i) + 'b' for i in range(8,16)]
 
 gp_regsf = ['xmm' + str(i) for i in range(16)]
 
@@ -248,6 +250,18 @@ def add_func_body_code(name, func_code):
     for gen_obj in func_code:
         if gen_obj.op == 'func_call':
             code += add_func_call(gen_obj)
+        elif gen_obj.op == 'return':
+            if gen_obj.place1:
+                place1 = gen_obj.place1
+                typ = SymbolTable.symbol_table_dict[name].table['return']
+                if typ == 'StructType' or typ.width > 8:
+                    code += add_copy_data_code(typ.width, get_var_addr(place1), 'rax')
+                else:
+                    code += ["mov " + gp_regs[typ.width][0] + " , " +size_type[typ.width] +"[" +get_var_addr(place1) +"]"]
+            else:
+                code += ["xor rax rax"]
+            code += ['leave']
+            code += ['ret']
     return code
 
 def add_func_code(func):
@@ -257,8 +271,9 @@ def add_func_code(func):
     code += ['mov    rbp,rsp']
     code += add_args_copy_code(func['name'])
     code += add_func_body_code(func['name'], func['code'])
-    code += ['leave']
-    code += ['ret']
+    if code[-1] != 'ret':
+        code += ['leave']
+        code += ['ret']
     return code
 
 def add_func_call(gen_obj):
@@ -271,7 +286,7 @@ def add_func_call(gen_obj):
     code = []
 
     args_val = gen_obj.place2
-    ret_type = gen_obj.place3
+    ret_type = SymbolTable.symbol_table_dict[gen_obj.place1].table['return']
     args_type = sym_table.table[gen_obj.place1].type.param_list
 
     #print(args_val)
@@ -282,6 +297,10 @@ def add_func_call(gen_obj):
     float_args = 0
     byte8_args = 0
     other_args = 0
+
+    if ret_type.width > 8:
+        code += ["lea rsp, [rsp+"+str(ret_type.width)+"]"]
+        code += ["lea rax, [rsp]"]
 
     for i, typ in enumerate(args_type):
         if typ.stype == "float":
@@ -344,7 +363,7 @@ def add_func_call(gen_obj):
     code += ["add rsp," + str(shift)]
     return code
 
-def add_copy_data_code(count, addr):
+def add_copy_data_code(count, addr, rax = None):
     """
     array
        addr :+
@@ -371,7 +390,11 @@ def add_copy_data_code(count, addr):
         get_size = size_type[dec]
         count -= dec
         off += dec
-        code += ["push " + get_size+ " [" + new_addr + "]"]
+        if not rax:
+            code += ["push " + get_size+ " [" + new_addr + "]"]
+        else:
+            code += ["mov " + temp_regs[0][dec] + ", " + get_size + "[" + addr+"]"]
+            code += ["mov " + get_size + "[" + rax + str(off)+"], " + temp_regs[0][dec]]
 
     return code
    

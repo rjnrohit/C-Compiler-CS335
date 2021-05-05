@@ -1,0 +1,382 @@
+
+temp:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000401000 <_start>:
+  401000:	4c 8b 24 24          	mov    (%rsp),%r12
+  401004:	4c 8d 6c 24 08       	lea    0x8(%rsp),%r13
+  401009:	4c 89 e7             	mov    %r12,%rdi
+  40100c:	4c 89 ee             	mov    %r13,%rsi
+  40100f:	e8 58 03 00 00       	callq  40136c <main>
+  401014:	48 c7 c0 3c 00 00 00 	mov    $0x3c,%rax
+  40101b:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+  401022:	0f 05                	syscall 
+
+0000000000401024 <wow>:
+  401024:	55                   	push   %rbp
+  401025:	48 89 e5             	mov    %rsp,%rbp
+  401028:	48 83 ec 08          	sub    $0x8,%rsp
+  40102c:	48 89 3c 24          	mov    %rdi,(%rsp)
+  401030:	48 83 ec 08          	sub    $0x8,%rsp
+  401034:	48 89 34 24          	mov    %rsi,(%rsp)
+  401038:	48 83 ec 04          	sub    $0x4,%rsp
+  40103c:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401041:	48 83 ec 08          	sub    $0x8,%rsp
+  401045:	48 89 14 24          	mov    %rdx,(%rsp)
+  401049:	48 83 ec 08          	sub    $0x8,%rsp
+  40104d:	48 89 0c 24          	mov    %rcx,(%rsp)
+  401051:	48 83 ec 04          	sub    $0x4,%rsp
+  401055:	f3 0f 11 0c 24       	movss  %xmm1,(%rsp)
+  40105a:	48 83 ec 08          	sub    $0x8,%rsp
+  40105e:	4c 89 04 24          	mov    %r8,(%rsp)
+  401062:	48 83 ec 04          	sub    $0x4,%rsp
+  401066:	f3 0f 11 14 24       	movss  %xmm2,(%rsp)
+  40106b:	48 83 ec 08          	sub    $0x8,%rsp
+  40106f:	4c 89 0c 24          	mov    %r9,(%rsp)
+  401073:	48 83 ec 04          	sub    $0x4,%rsp
+  401077:	f3 0f 11 1c 24       	movss  %xmm3,(%rsp)
+  40107c:	48 83 ec 08          	sub    $0x8,%rsp
+  401080:	4c 8b 55 50          	mov    0x50(%rbp),%r10
+  401084:	4c 89 14 24          	mov    %r10,(%rsp)
+  401088:	48 83 ec 08          	sub    $0x8,%rsp
+  40108c:	4c 8b 55 58          	mov    0x58(%rbp),%r10
+  401090:	4c 89 14 24          	mov    %r10,(%rsp)
+  401094:	48 83 ec 04          	sub    $0x4,%rsp
+  401098:	f3 0f 11 24 24       	movss  %xmm4,(%rsp)
+  40109d:	48 83 ec 04          	sub    $0x4,%rsp
+  4010a1:	f3 0f 11 2c 24       	movss  %xmm5,(%rsp)
+  4010a6:	48 83 ec 04          	sub    $0x4,%rsp
+  4010aa:	f3 0f 11 34 24       	movss  %xmm6,(%rsp)
+  4010af:	48 83 ec 04          	sub    $0x4,%rsp
+  4010b3:	f3 0f 11 3c 24       	movss  %xmm7,(%rsp)
+  4010b8:	48 83 ec 04          	sub    $0x4,%rsp
+  4010bc:	f3 0f 10 45 70       	movss  0x70(%rbp),%xmm0
+  4010c1:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4010c6:	48 83 ec 04          	sub    $0x4,%rsp
+  4010ca:	f3 0f 10 45 74       	movss  0x74(%rbp),%xmm0
+  4010cf:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4010d4:	48 83 ec 04          	sub    $0x4,%rsp
+  4010d8:	f3 0f 10 45 78       	movss  0x78(%rbp),%xmm0
+  4010dd:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4010e2:	48 83 ec 04          	sub    $0x4,%rsp
+  4010e6:	f3 0f 10 45 7c       	movss  0x7c(%rbp),%xmm0
+  4010eb:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4010f0:	48 83 ec 04          	sub    $0x4,%rsp
+  4010f4:	f3 0f 10 85 80 00 00 	movss  0x80(%rbp),%xmm0
+  4010fb:	00 
+  4010fc:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401101:	48 83 ec 04          	sub    $0x4,%rsp
+  401105:	f3 0f 10 85 84 00 00 	movss  0x84(%rbp),%xmm0
+  40110c:	00 
+  40110d:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401112:	48 83 ec 04          	sub    $0x4,%rsp
+  401116:	f3 0f 10 85 88 00 00 	movss  0x88(%rbp),%xmm0
+  40111d:	00 
+  40111e:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401123:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+  401127:	c9                   	leaveq 
+  401128:	c3                   	retq   
+
+0000000000401129 <f>:
+  401129:	55                   	push   %rbp
+  40112a:	48 89 e5             	mov    %rsp,%rbp
+  40112d:	48 83 ec 08          	sub    $0x8,%rsp
+  401131:	48 89 3c 24          	mov    %rdi,(%rsp)
+  401135:	48 83 ec 08          	sub    $0x8,%rsp
+  401139:	48 89 34 24          	mov    %rsi,(%rsp)
+  40113d:	48 83 ec 04          	sub    $0x4,%rsp
+  401141:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401146:	48 83 ec 08          	sub    $0x8,%rsp
+  40114a:	48 89 14 24          	mov    %rdx,(%rsp)
+  40114e:	48 83 ec 08          	sub    $0x8,%rsp
+  401152:	48 89 0c 24          	mov    %rcx,(%rsp)
+  401156:	48 83 ec 04          	sub    $0x4,%rsp
+  40115a:	f3 0f 11 0c 24       	movss  %xmm1,(%rsp)
+  40115f:	48 83 ec 08          	sub    $0x8,%rsp
+  401163:	4c 89 04 24          	mov    %r8,(%rsp)
+  401167:	48 83 ec 04          	sub    $0x4,%rsp
+  40116b:	f3 0f 11 14 24       	movss  %xmm2,(%rsp)
+  401170:	48 83 ec 08          	sub    $0x8,%rsp
+  401174:	4c 89 0c 24          	mov    %r9,(%rsp)
+  401178:	48 83 ec 04          	sub    $0x4,%rsp
+  40117c:	f3 0f 11 1c 24       	movss  %xmm3,(%rsp)
+  401181:	48 83 ec 08          	sub    $0x8,%rsp
+  401185:	4c 8b 55 50          	mov    0x50(%rbp),%r10
+  401189:	4c 89 14 24          	mov    %r10,(%rsp)
+  40118d:	48 83 ec 08          	sub    $0x8,%rsp
+  401191:	4c 8b 55 58          	mov    0x58(%rbp),%r10
+  401195:	4c 89 14 24          	mov    %r10,(%rsp)
+  401199:	48 83 ec 04          	sub    $0x4,%rsp
+  40119d:	f3 0f 11 24 24       	movss  %xmm4,(%rsp)
+  4011a2:	48 83 ec 04          	sub    $0x4,%rsp
+  4011a6:	f3 0f 11 2c 24       	movss  %xmm5,(%rsp)
+  4011ab:	48 83 ec 04          	sub    $0x4,%rsp
+  4011af:	f3 0f 11 34 24       	movss  %xmm6,(%rsp)
+  4011b4:	48 83 ec 04          	sub    $0x4,%rsp
+  4011b8:	f3 0f 11 3c 24       	movss  %xmm7,(%rsp)
+  4011bd:	48 83 ec 04          	sub    $0x4,%rsp
+  4011c1:	f3 0f 10 45 70       	movss  0x70(%rbp),%xmm0
+  4011c6:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4011cb:	48 83 ec 04          	sub    $0x4,%rsp
+  4011cf:	f3 0f 10 45 74       	movss  0x74(%rbp),%xmm0
+  4011d4:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4011d9:	48 83 ec 04          	sub    $0x4,%rsp
+  4011dd:	f3 0f 10 45 78       	movss  0x78(%rbp),%xmm0
+  4011e2:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4011e7:	48 83 ec 04          	sub    $0x4,%rsp
+  4011eb:	f3 0f 10 45 7c       	movss  0x7c(%rbp),%xmm0
+  4011f0:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4011f5:	48 83 ec 04          	sub    $0x4,%rsp
+  4011f9:	f3 0f 10 85 80 00 00 	movss  0x80(%rbp),%xmm0
+  401200:	00 
+  401201:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401206:	48 83 ec 04          	sub    $0x4,%rsp
+  40120a:	f3 0f 10 85 84 00 00 	movss  0x84(%rbp),%xmm0
+  401211:	00 
+  401212:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401217:	48 83 ec 04          	sub    $0x4,%rsp
+  40121b:	f3 0f 10 85 88 00 00 	movss  0x88(%rbp),%xmm0
+  401222:	00 
+  401223:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401228:	48 83 ec 04          	sub    $0x4,%rsp
+  40122c:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  401233:	40 00 
+  401235:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  40123a:	48 83 ec 04          	sub    $0x4,%rsp
+  40123e:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  401245:	40 00 
+  401247:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  40124c:	48 83 ec 04          	sub    $0x4,%rsp
+  401250:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  401257:	40 00 
+  401259:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  40125e:	48 83 ec 04          	sub    $0x4,%rsp
+  401262:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  401269:	40 00 
+  40126b:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401270:	48 83 ec 04          	sub    $0x4,%rsp
+  401274:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  40127b:	40 00 
+  40127d:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401282:	48 83 ec 04          	sub    $0x4,%rsp
+  401286:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  40128d:	40 00 
+  40128f:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401294:	48 83 ec 04          	sub    $0x4,%rsp
+  401298:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  40129f:	40 00 
+  4012a1:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4012a6:	f3 0f 10 3c 25 53 20 	movss  0x402053,%xmm7
+  4012ad:	40 00 
+  4012af:	f3 0f 10 34 25 53 20 	movss  0x402053,%xmm6
+  4012b6:	40 00 
+  4012b8:	f3 0f 10 2c 25 53 20 	movss  0x402053,%xmm5
+  4012bf:	40 00 
+  4012c1:	f3 0f 10 24 25 53 20 	movss  0x402053,%xmm4
+  4012c8:	40 00 
+  4012ca:	48 83 ec 08          	sub    $0x8,%rsp
+  4012ce:	4c 8b 14 25 4b 20 40 	mov    0x40204b,%r10
+  4012d5:	00 
+  4012d6:	4c 89 14 24          	mov    %r10,(%rsp)
+  4012da:	48 83 ec 08          	sub    $0x8,%rsp
+  4012de:	4c 8b 14 25 2f 20 40 	mov    0x40202f,%r10
+  4012e5:	00 
+  4012e6:	4c 89 14 24          	mov    %r10,(%rsp)
+  4012ea:	f3 0f 10 1c 25 47 20 	movss  0x402047,%xmm3
+  4012f1:	40 00 
+  4012f3:	4c 8b 0c 25 37 20 40 	mov    0x402037,%r9
+  4012fa:	00 
+  4012fb:	f3 0f 10 14 25 43 20 	movss  0x402043,%xmm2
+  401302:	40 00 
+  401304:	4c 8b 04 25 37 20 40 	mov    0x402037,%r8
+  40130b:	00 
+  40130c:	f3 0f 10 0c 25 3f 20 	movss  0x40203f,%xmm1
+  401313:	40 00 
+  401315:	48 8b 0c 25 37 20 40 	mov    0x402037,%rcx
+  40131c:	00 
+  40131d:	48 8b 14 25 2f 20 40 	mov    0x40202f,%rdx
+  401324:	00 
+  401325:	f3 0f 10 04 25 2b 20 	movss  0x40202b,%xmm0
+  40132c:	40 00 
+  40132e:	48 8b 34 25 23 20 40 	mov    0x402023,%rsi
+  401335:	00 
+  401336:	48 8b 3c 25 1b 20 40 	mov    0x40201b,%rdi
+  40133d:	00 
+  40133e:	e8 e1 fc ff ff       	callq  401024 <wow>
+  401343:	48 83 c4 2c          	add    $0x2c,%rsp
+  401347:	48 8b 04 25 57 20 40 	mov    0x402057,%rax
+  40134e:	00 
+  40134f:	c9                   	leaveq 
+  401350:	c3                   	retq   
+
+0000000000401351 <foo>:
+  401351:	55                   	push   %rbp
+  401352:	48 89 e5             	mov    %rsp,%rbp
+  401355:	48 83 ec 04          	sub    $0x4,%rsp
+  401359:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  40135e:	48 83 ec 08          	sub    $0x8,%rsp
+  401362:	48 89 3c 24          	mov    %rdi,(%rsp)
+  401366:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+  40136a:	c9                   	leaveq 
+  40136b:	c3                   	retq   
+
+000000000040136c <main>:
+  40136c:	55                   	push   %rbp
+  40136d:	48 89 e5             	mov    %rsp,%rbp
+  401370:	48 83 ec 08          	sub    $0x8,%rsp
+  401374:	48 89 3c 24          	mov    %rdi,(%rsp)
+  401378:	48 83 ec 08          	sub    $0x8,%rsp
+  40137c:	48 89 34 24          	mov    %rsi,(%rsp)
+  401380:	48 83 ec 04          	sub    $0x4,%rsp
+  401384:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  40138b:	40 00 
+  40138d:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  401392:	48 83 ec 04          	sub    $0x4,%rsp
+  401396:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  40139d:	40 00 
+  40139f:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4013a4:	48 83 ec 04          	sub    $0x4,%rsp
+  4013a8:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  4013af:	40 00 
+  4013b1:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4013b6:	48 83 ec 04          	sub    $0x4,%rsp
+  4013ba:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  4013c1:	40 00 
+  4013c3:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4013c8:	48 83 ec 04          	sub    $0x4,%rsp
+  4013cc:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  4013d3:	40 00 
+  4013d5:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4013da:	48 83 ec 04          	sub    $0x4,%rsp
+  4013de:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  4013e5:	40 00 
+  4013e7:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4013ec:	48 83 ec 04          	sub    $0x4,%rsp
+  4013f0:	f3 0f 10 04 25 53 20 	movss  0x402053,%xmm0
+  4013f7:	40 00 
+  4013f9:	f3 0f 11 04 24       	movss  %xmm0,(%rsp)
+  4013fe:	f3 0f 10 3c 25 53 20 	movss  0x402053,%xmm7
+  401405:	40 00 
+  401407:	f3 0f 10 34 25 53 20 	movss  0x402053,%xmm6
+  40140e:	40 00 
+  401410:	f3 0f 10 2c 25 53 20 	movss  0x402053,%xmm5
+  401417:	40 00 
+  401419:	f3 0f 10 24 25 53 20 	movss  0x402053,%xmm4
+  401420:	40 00 
+  401422:	48 83 ec 08          	sub    $0x8,%rsp
+  401426:	4c 8b 14 25 4b 20 40 	mov    0x40204b,%r10
+  40142d:	00 
+  40142e:	4c 89 14 24          	mov    %r10,(%rsp)
+  401432:	48 83 ec 08          	sub    $0x8,%rsp
+  401436:	4c 8b 14 25 2f 20 40 	mov    0x40202f,%r10
+  40143d:	00 
+  40143e:	4c 89 14 24          	mov    %r10,(%rsp)
+  401442:	f3 0f 10 1c 25 47 20 	movss  0x402047,%xmm3
+  401449:	40 00 
+  40144b:	4c 8b 0c 25 37 20 40 	mov    0x402037,%r9
+  401452:	00 
+  401453:	f3 0f 10 14 25 43 20 	movss  0x402043,%xmm2
+  40145a:	40 00 
+  40145c:	4c 8b 04 25 37 20 40 	mov    0x402037,%r8
+  401463:	00 
+  401464:	f3 0f 10 0c 25 3f 20 	movss  0x40203f,%xmm1
+  40146b:	40 00 
+  40146d:	48 8b 0c 25 37 20 40 	mov    0x402037,%rcx
+  401474:	00 
+  401475:	48 8b 14 25 2f 20 40 	mov    0x40202f,%rdx
+  40147c:	00 
+  40147d:	f3 0f 10 04 25 2b 20 	movss  0x40202b,%xmm0
+  401484:	40 00 
+  401486:	48 8b 34 25 23 20 40 	mov    0x402023,%rsi
+  40148d:	00 
+  40148e:	48 8b 3c 25 1b 20 40 	mov    0x40201b,%rdi
+  401495:	00 
+  401496:	e8 8e fc ff ff       	callq  401129 <f>
+  40149b:	48 83 c4 2c          	add    $0x2c,%rsp
+  40149f:	48 8d bd 4b ff ff ff 	lea    -0xb5(%rbp),%rdi
+  4014a6:	f3 0f 10 85 7f ff ff 	movss  -0x81(%rbp),%xmm0
+  4014ad:	ff 
+  4014ae:	e8 9e fe ff ff       	callq  401351 <foo>
+  4014b3:	48 83 c4 00          	add    $0x0,%rsp
+  4014b7:	48 8b 04 25 57 20 40 	mov    0x402057,%rax
+  4014be:	00 
+  4014bf:	c9                   	leaveq 
+  4014c0:	c3                   	retq   
+
+Disassembly of section .data:
+
+0000000000402000 <_edata-0x9f>:
+  402000:	22 00                	and    (%rax),%al
+  402002:	00 00                	add    %al,(%rax)
+  402004:	00 00                	add    %al,(%rax)
+  402006:	00 00                	add    %al,(%rax)
+  402008:	73 74                	jae    40207e <main+0xd12>
+  40200a:	72 69                	jb     402075 <main+0xd09>
+  40200c:	6e                   	outsb  %ds:(%rsi),(%dx)
+  40200d:	67 00 0c 00          	add    %cl,(%eax,%eax,1)
+	...
+  402019:	80 3f 01             	cmpb   $0x1,(%rdi)
+  40201c:	00 00                	add    %al,(%rax)
+  40201e:	00 00                	add    %al,(%rax)
+  402020:	00 00                	add    %al,(%rax)
+  402022:	00 02                	add    %al,(%rdx)
+  402024:	00 00                	add    %al,(%rax)
+  402026:	00 00                	add    %al,(%rax)
+  402028:	00 00                	add    %al,(%rax)
+  40202a:	00 cd                	add    %cl,%ch
+  40202c:	cc                   	int3   
+  40202d:	4c                   	rex.WR
+  40202e:	40 2d 00 00 00 00    	rex sub $0x0,%eax
+  402034:	00 00                	add    %al,(%rax)
+  402036:	00 04 00             	add    %al,(%rax,%rax,1)
+  402039:	00 00                	add    %al,(%rax)
+  40203b:	00 00                	add    %al,(%rax)
+  40203d:	00 00                	add    %al,(%rax)
+  40203f:	66 66 46             	data16 data16 rex.RX
+  402042:	40 9a                	rex (bad) 
+  402044:	99                   	cltd   
+  402045:	59                   	pop    %rcx
+  402046:	40 00 00             	add    %al,(%rax)
+  402049:	90                   	nop
+  40204a:	40                   	rex
+  40204b:	42 00 00             	rex.X add %al,(%rax)
+  40204e:	00 00                	add    %al,(%rax)
+  402050:	00 00                	add    %al,(%rax)
+  402052:	00 66 66             	add    %ah,0x66(%rsi)
+  402055:	06                   	(bad)  
+  402056:	40 00 00             	add    %al,(%rax)
+	...
+  40206d:	00 00                	add    %al,(%rax)
+  40206f:	01 00                	add    %eax,(%rax)
+  402071:	00 00                	add    %al,(%rax)
+  402073:	00 00                	add    %al,(%rax)
+  402075:	00 00                	add    %al,(%rax)
+  402077:	cd cc                	int    $0xcc
+  402079:	8c 3f                	mov    %?,(%rdi)
+  40207b:	08 00                	or     %al,(%rax)
+  40207d:	00 00                	add    %al,(%rax)
+  40207f:	00 00                	add    %al,(%rax)
+  402081:	00 00                	add    %al,(%rax)
+  402083:	05 00 00 00 00       	add    $0x0,%eax
+  402088:	00 00                	add    %al,(%rax)
+  40208a:	00 10                	add    %dl,(%rax)
+  40208c:	00 00                	add    %al,(%rax)
+  40208e:	00 00                	add    %al,(%rax)
+  402090:	00 00                	add    %al,(%rax)
+  402092:	00 ff                	add    %bh,%bh
+  402094:	ff                   	(bad)  
+  402095:	ff                   	(bad)  
+  402096:	ff                   	(bad)  
+  402097:	ff                   	(bad)  
+  402098:	ff                   	(bad)  
+  402099:	ff                   	(bad)  
+  40209a:	ff 00                	incl   (%rax)
+  40209c:	00 00                	add    %al,(%rax)
+  40209e:	40                   	rex
+
+Disassembly of section .bss:
+
+00000000004020a0 <__bss_start+0x1>:
+	...

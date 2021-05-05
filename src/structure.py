@@ -63,7 +63,7 @@ class Node:
 
 class Type:
     size_dict = {
-        'int':4,
+        'int':8,
         'long':8,
         'char':1,
         'float':4,
