@@ -436,7 +436,7 @@ def p_postfix_expression_2(p):
             node = typecast(arg_list[i],param_list[i],p.slice[-1])
             if "sconst@" in node.place:
                 tmp = get_newtmp(type=node.type)
-                node.code += [gen(op="=",place1=node.place,place3=tmp)]
+                node.code += [gen(op="str=",place1=node.place,place3=tmp)]
                 node.place = tmp
             arg_places.append(node.place)
             if "const@" in node.place:
@@ -926,6 +926,22 @@ def p_init_declarator(p):
                 token_object= p.slice[2]
             )
             return
+        if p[1].type.class_type == "PointerType" and len(p[1].type.array_size) != 0:
+            if len(p[1].type.array_size) > 1:
+                Errors(
+                    errorType='TypeError',
+                    errorText="cannot initialize array with multiple dimension", 
+                    token_object= p.slice[2]
+                )
+                return
+            if p[1].type.array_type.stype != "char":
+                Errors(
+                    errorType='TypeError',
+                    errorText="cannot initialize array of type "+p[1].type.array_type.stype, 
+                    token_object= p.slice[2]
+                )
+                return
+
         node = typecast(node1=p[3],type=p[1].type,token=p.slice[2])
         if node.type == "error":
             return
@@ -950,7 +966,7 @@ def p_init_declarator(p):
                         alloc[p[0].place] = get_const_value(node.place)   
                     p[0] = [p[0]]
                     return
-            p[0].code += [gen(op="=",place1=node.place,place3=p[0].place)]
+            p[0].code += [gen(op=get_type(node)+"=",place1=node.place,place3=p[0].place)]
             if "const@" in node.place:
                 const_use(node.place)
             p[0] = [p[0]]
@@ -1003,7 +1019,9 @@ def p_auto_declarator(p):
                     alloc[p[0].place] = get_const_value(node.place)   
                 p[0] = [p[0]]
                 return
-        p[0].code += [gen(op="=",place1=p[3].place,place3=p[0].place)]
+        p[0].code += [gen(op=get_type(p[3])+"=",place1=p[3].place,place3=p[0].place)]
+        if "const@" in p[3].place:
+                const_use(p[3].place)
         p[0] = [p[0]]
 
 # Node

@@ -50,9 +50,9 @@ class gen:
 
         assert place3, "please provide variable to assign final value"
 
-        if op == 'assign' or op == '=' or op[:2] == "eq":
+        if op == 'assign' or '=' in op or op[:2] == "eq":
             assert place2 is None, "extra operand given for assignment"
-            return self.assign(place1, place3)
+            return self.assign(place1, place3,op)
 
         if not place2 or op == "func_call":
             return self.unary_opcode(op, place1, place3)
@@ -72,11 +72,11 @@ class gen:
         code = "ifnz " + place + " goto " + label1
         return code
 
-    def assign(self,place1, place3):
+    def assign(self,place1, place3,op):
         assert place1, "cannot assign with single operand"
         assert place3, "cannot assign with single operand"
 
-        code = place3 +' = ' + place1
+        code = place3 +' = ' + place1 #+ "({})".format(op.replace("=",""))
 
         return code
     

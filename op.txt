@@ -1,7 +1,7 @@
 BeginFunc
 label
 EndFunc
-=
+(long/int/float/char/bool/str/struct_{name of struct})= (equal to copy operator)
 int+
 float+
 char+

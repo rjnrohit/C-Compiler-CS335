@@ -428,7 +428,7 @@ def type_check_assign(node1,node2,token):
         node2 = typecast(node2,type=node1.type)
         node = Node("binary_op",node1.type.stype+"=",children = [node1,node2],type=node1.type)
         node.code = node1.code + node2.code
-        node.code += [gen(op="=",place1=node2.place,place3=node1.place)]
+        node.code += [gen(op=get_type(node2)+"=",place1=node2.place,place3=node1.place)]
         if "const@" in node2.place:
             const_use(node2.place)
         node.place = node1.place
@@ -467,7 +467,7 @@ def type_check_assign_op(node1,node2,op,token):
 
 def typecast(node1,type,token=None):
     assert isinstance(type,Type), "not of class Type"
-    assert type.class_type in {"BasicType","PointerType"}, "not valid type"
+    assert type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
     # assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
     # assert "sconst@" not in node1.place, "string in typecast"
     if str(node1.type) == str(type):
@@ -523,3 +523,13 @@ def implicit_casting(node1,node2):
         else:
             new_node = typecast(node1,node2.type)
             return new_node,node2,node2.type
+
+def get_type(node):
+    assert node.type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
+    if "sconst@" in node.place:
+        return "str"
+    if node.type.class_type == "StructType":
+        return node.type.stype
+    if node.type.class_type == "PointerType":
+        return "long"
+    return node.type.type

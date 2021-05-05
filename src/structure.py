@@ -239,15 +239,13 @@ class StructType(Type):
 
     def is_same(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        if t.class_type == 'StructType':
-            if t.name == self.name and self.symbol_table == t.symbol_table:
-                return True
+        if t.class_type == 'StructType' and t.name == self.name:
+            return True
         return False
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        # return self.is_same(t)
-        return False
+        return self.is_same(t)
 
 class FunctionType(Type):
 
