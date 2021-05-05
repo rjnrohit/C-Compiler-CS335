@@ -58,4 +58,5 @@ int/long/char/bool| (bit or)
 int/long/char/bool<< (shift)
 int/long/char/bool>>
 int/long/char/bool/float(>=,<=,<,>,==,!=) (relation op)
+(int/long/char/bool/float)2(int/long/char/bool/float) (typecasting)
 
