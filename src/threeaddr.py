@@ -135,8 +135,10 @@ def get_str_const(string):
     #     alloc[place] = string+"\0"
     return place
 
-def const_use(place):
+def const_use(place,sconst=False):
     if "sconst@" in place:
+        if sconst and place not in alloc.keys():
+            alloc[place] = place.split("@")[-1]
         return
     if place not in alloc.keys():
         type = BasicType("long") if place[0] == "l" else BasicType("float") 

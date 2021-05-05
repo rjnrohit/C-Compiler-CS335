@@ -8,29 +8,29 @@ BeginFunc
 EndFunc
 main:
 BeginFunc
-vd|main = ptr3|global  (long)
+vd|main = ptr3|global
 tmp@1 = addr(main|global)
-c|main = tmp@1  (long)
-s|main = sconst@char  (str)
-n1|main = n2|main  (struct_node)
+c|main = tmp@1
+s|main = sconst@char
+n1|main = n2|main
 tmp@2 = load(c|main)
-tmp@2 = lconst@9  (int)
+tmp@2 = lconst@9
 tmp@3 = str|global long+ lconst@4
 tmp@4 = load(tmp@3)
-tmp@4 = lconst@103  (char)
+tmp@4 = lconst@103
 push lconst@1
 tmp@5 = func_call func
 pop lconst@1
-l|main = tmp@5  (int)
+l|main = tmp@5
 tmp@6 = load(c|main)
-tmp@6 = lconst@0  (int)
-tmp@7 = sconst@hello  (str)
+tmp@6 = lconst@0
+tmp@7 = sconst@hello
 push tmp@7
 push lconst@5
 tmp@8 = func_call printf
 pop lconst@5
 pop tmp@7
-b|main = lconst@1  (bool)
+b|main = lconst@1
 ifz lconst@1 goto label#0
 label#0:
 tmp@9 = addr(p|global)

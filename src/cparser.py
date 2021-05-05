@@ -437,6 +437,7 @@ def p_postfix_expression_2(p):
             if "sconst@" in node.place:
                 tmp = get_newtmp(type=node.type)
                 node.code += [gen(op="str=",place1=node.place,place3=tmp)]
+                const_use(node.place,sconst=True)
                 node.place = tmp
             arg_places.append(node.place)
             if "const@" in node.place:
@@ -968,7 +969,7 @@ def p_init_declarator(p):
                     return
             p[0].code += [gen(op=get_type(node)+"=",place1=node.place,place3=p[0].place)]
             if "const@" in node.place:
-                const_use(node.place)
+                const_use(node.place,sconst=True)
             p[0] = [p[0]]
         else:
             p[0] = [None]
@@ -1689,8 +1690,8 @@ def main():
     #can also add as args for optimization
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
+    print(alloc)
     print_asm(tac_code)
-    #print(alloc)
 if __name__ == "__main__":
     main()
 
