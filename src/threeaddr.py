@@ -49,8 +49,8 @@ class gen:
             return self.ifncode(self.place1, self.place2)
 
         assert place3, "please provide variable to assign final value"
-
-        if op == 'assign' or '=' in op or op[:2] == "eq":
+        assign_op = ["long=","int=","char=","float=","str=","bool="]
+        if op == 'assign' or op in assign_op or ("struct" in op and "=" in op) or op[:2] == "eq":
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3,op)
 

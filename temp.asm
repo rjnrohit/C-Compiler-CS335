@@ -16,25 +16,21 @@ SYS_fork equ 57 ; fork
 SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
-g@global dq 34
-str@global db "string", NULL
-b@global dq 0
-c@global dq 0
-def@global dq 1
 const0 dq 0
-const1 dd 1.1
-const2 dq 8
-const3 dq 5
-const4 dq 16
-const5 dq -1
-const6 dd 1.0
-const7 dd 2.0
+const1 dq 8
+const2 dq 24
+const3 dq 16
+const4 dq 6
+const5 dq 12
+const6 dq 11
+const7 dq 13
+const8 dq 5
+const9 dq 32
+const10 dq 40
+const11 dq 7
+const12 dq 1
 ;add bss section for unintialized variables
 section .bss
-gg@global resq 1
-d@global resq 1
-resq 1
-a@global resq 20
 ;add extern symbols
 extern printf
 extern scanf
@@ -51,87 +47,105 @@ end:
 mov rax, SYS_exit ; Call code for exit
 mov rdi, EXIT_SUCCESS ; Exit program with success
 syscall
-global wow
-wow:
+global insert
+insert:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 8
+sub rsp, 0
 sub rsp, 8
 mov qword [rsp],rdi
 sub rsp, 8
 mov qword [rsp],rsi
-sub rsp, 4
-movss dword [rsp],xmm0
-sub rsp, 8
-mov qword [rsp],rdx
-sub rsp, 8
-mov qword [rsp],rcx
-sub rsp, 4
-movss dword [rsp],xmm1
-sub rsp, 8
-mov qword [rsp],r8
-sub rsp, 4
-movss dword [rsp],xmm2
-sub rsp, 8
-mov qword [rsp],r9
-sub rsp, 4
-movss dword [rsp],xmm3
-sub rsp, 8
-mov r10, qword [rbp+80]
-mov qword[rsp], r10
-sub rsp, 8
-mov r10, qword [rbp+88]
-mov qword[rsp], r10
-sub rsp, 4
-movss dword [rsp],xmm4
-sub rsp, 4
-movss dword [rsp],xmm5
-sub rsp, 4
-movss dword [rsp],xmm6
-sub rsp, 4
-movss dword [rsp],xmm7
-sub rsp, 4
-movss xmm0, dword [rbp+112]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+116]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+120]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+124]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+128]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+132]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+136]
-movss dword [rsp], xmm0
 ;add space for symbols
-sub rsp, 8
-;copy return value in rax
-mov rax , qword[rbp-16]
+sub rsp, 155
+xor rax rax
 leave
 ret
-global foo
-foo:
+label#0:
+xor rax rax
+leave
+ret
+label#1:
+; saving arguments for call
+mov rsi, qword [rbp-16]
+mov rdi, qword [rbp-147]
+call insert
+add rsp,0
+label#2:
+; saving arguments for call
+mov rsi, qword [rbp-16]
+mov rdi, qword [rbp-171]
+call insert
+add rsp,0
+label#3:
+xor rax rax
+leave
+ret
+global inorder
+inorder:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 8
-sub rsp, 4
-movss dword [rsp],xmm0
+sub rsp, 0
 sub rsp, 8
 mov qword [rsp],rdi
 ;add space for symbols
-sub rsp, 16
-;copy return value in rax
-mov rax , qword[rbp-36]
+sub rsp, 17
+; saving arguments for call
+mov rdi, qword [rbp-17]
+call inorder
+add rsp,0
+; saving arguments for call
+mov rdi, qword [rbp-25]
+call inorder
+add rsp,0
+label#4:
+xor rax rax
+leave
+ret
+global preorder
+preorder:
+push   rbp
+mov    rbp,rsp
+; saving the arguments values in the stack
+sub rsp, 0
+sub rsp, 8
+mov qword [rsp],rdi
+;add space for symbols
+sub rsp, 17
+; saving arguments for call
+mov rdi, qword [rbp-17]
+call preorder
+add rsp,0
+; saving arguments for call
+mov rdi, qword [rbp-25]
+call preorder
+add rsp,0
+label#5:
+xor rax rax
+leave
+ret
+global postorder
+postorder:
+push   rbp
+mov    rbp,rsp
+; saving the arguments values in the stack
+sub rsp, 0
+sub rsp, 8
+mov qword [rsp],rdi
+;add space for symbols
+sub rsp, 17
+; saving arguments for call
+mov rdi, qword [rbp-17]
+call postorder
+add rsp,0
+; saving arguments for call
+mov rdi, qword [rbp-25]
+call postorder
+add rsp,0
+label#6:
+xor rax rax
 leave
 ret
 global main
@@ -139,19 +153,28 @@ main:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 8
-sub rsp, 8
-mov qword [rsp],rdi
-sub rsp, 8
-mov qword [rsp],rsi
+sub rsp, 0
 ;add space for symbols
-sub rsp, 156
+sub rsp, 153
+label#7:
 ; saving arguments for call
-lea rdi, [rbp-172]
-movss xmm0, dword [rbp-120]
-call foo
+mov rsi, qword [rbp-153]
+mov rdi, qword [rbp-137]
+call insert
 add rsp,0
-;copy return value in rax
-mov rax , qword[const0]
+label#8:
+label#9:
+; saving arguments for call
+mov rdi, qword [rbp-8]
+call inorder
+add rsp,0
+; saving arguments for call
+mov rdi, qword [rbp-8]
+call preorder
+add rsp,0
+; saving arguments for call
+mov rdi, qword [rbp-8]
+call postorder
+add rsp,0
 leave
 ret
