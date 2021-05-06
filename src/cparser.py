@@ -1702,7 +1702,7 @@ def main():
     #can also add as args for optimization
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
-    print(alloc)
+    #print(alloc)
     print_asm(tac_code)
 if __name__ == "__main__":
     main()

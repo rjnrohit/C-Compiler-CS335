@@ -69,7 +69,14 @@ void main()
     struct node *ptr;
     int no=6,i;
 
-    int arr[] = { 12, 11, 13, 5, 6, 7 };
+    int arr[5];
+    arr[0] = 12;
+    arr[1] = 11;
+    arr[2] = 13;
+    arr[3] = 5;
+    arr[4] = 6;
+    arr[5] = 7;
+
  
     ptr = 0;
     ptr->data=0;

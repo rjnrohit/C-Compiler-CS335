@@ -178,6 +178,8 @@ class PointerType(Type):
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
+        if self.is_array:
+            res += ", array of:" + str(self.array_type)
         return res
     
     def __repr__(self) -> str:

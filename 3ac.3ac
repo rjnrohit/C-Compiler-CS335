@@ -4,141 +4,37 @@ tmp@0 = a|wow int+ b|wow
 a|wow = tmp@0
 return a|wow
 EndFunc
-f:
-BeginFunc
-xd|f = lconst@12
-tmp@1 = int_to_float xd|f
-tmp@1 = int_to_float xd|f
-tmp@2 = tmp@1 float+ fconst@1.0
-tmp@3 = float_to_int tmp@2
-xd|f = tmp@3
-push lconst@1
-push lconst@2
-push fconst@3.2
-push lconst@45
-push lconst@4
-push fconst@3.1
-push lconst@4
-push fconst@3.4
-push lconst@4
-push fconst@4.5
-push lconst@45
-push lconst@66
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-tmp@4 = func_call wow
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop lconst@66
-pop lconst@45
-pop fconst@4.5
-pop lconst@4
-pop fconst@3.4
-pop lconst@4
-pop fconst@3.1
-pop lconst@4
-pop lconst@45
-pop fconst@3.2
-pop lconst@2
-pop lconst@1
-return lconst@0
-EndFunc
 foo:
 BeginFunc
-tmp@5 = bx|foo long+ lconst@0
-tmp@5 = fconst@1.1
-tmp@6 = float_to_int x|foo
-return tmp@6
+tmp@1 = bx|foo long+ lconst@0
+tmp@1 = fconst@1.1
+tmp@2 = float_to_int x|foo
+return tmp@2
 EndFunc
 main:
 BeginFunc
+tmp@3 = addr(d|global)
+tmp@4 = tmp@3 long+ lconst@8
+tmp@4 = load(tmp@4)
+tmp@4 = lconst@5
+tmp@5 = addr(d|global)
+tmp@6 = tmp@5 long+ lconst@16
+tmp@6 = load(tmp@6)
 tmp@7 = addr(d|global)
-tmp@8 = tmp@7 long+ lconst@8
-tmp@8 = load(tmp@8)
-tmp@8 = lconst@5
-tmp@9 = addr(d|global)
-tmp@10 = tmp@9 long+ lconst@16
-tmp@10 = load(tmp@10)
-tmp@11 = addr(d|global)
-tmp@10 = tmp@11
+tmp@6 = tmp@7
 ff|main = lconst@-1
 a|main = lconst@8
-tmp@12 = int_to_float a|main
-tmp@13 = tmp@12 float+ fconst@1.0
-tmp@14 = float_to_int tmp@13
-b|main = tmp@14
-tmp@15 = int_to_float b|main
-tmp@16 = tmp@15 float- fconst@1.1
-c|main = tmp@16
-push lconst@1
-push lconst@2
-push fconst@3.2
-push lconst@45
-push lconst@4
-push fconst@3.1
-push lconst@4
-push fconst@3.4
-push lconst@4
-push fconst@4.5
-push lconst@45
-push lconst@66
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-push fconst@2.1
-tmp@17 = func_call f
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop fconst@2.1
-pop lconst@66
-pop lconst@45
-pop fconst@4.5
-pop lconst@4
-pop fconst@3.4
-pop lconst@4
-pop fconst@3.1
-pop lconst@4
-pop lconst@45
-pop fconst@3.2
-pop lconst@2
-pop lconst@1
+tmp@8 = int_to_float a|main
+tmp@9 = tmp@8 float+ fconst@1.0
+tmp@10 = float_to_int tmp@9
+b|main = tmp@10
+tmp@11 = int_to_float b|main
+tmp@12 = tmp@11 float- fconst@1.1
+c|main = tmp@12
 bcc|main = fconst@2
 push bcc|main
 push bx|main
-tmp@18 = func_call foo
+tmp@13 = func_call foo
 pop bx|main
 pop bcc|main
 return lconst@0

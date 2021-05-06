@@ -25,6 +25,17 @@ ii.)addresses are not aligned in add_args_copy_code
 """
 ##
 
+#### Task:
+"""
+add code for global, bss
+    func_call
+    saving argument values at stack
+    reserve space for symbols
+    add code for labels
+"""
+
+####
+
 gp_regs ={}
 
 gp_regs[8] = ['rax', 'rbx', 'rcx', 'rdx','rsi','rdi', 'rbp' + 'rsp'] + ['r' + str(i) for i in range(8,16)]
@@ -149,13 +160,14 @@ def add_init_global_variables():
 def add_data():
     code = ['section .data']
     code += add_standard_constant()
+    code += [';add global variables and constants']
     code += add_init_global_variables()
     return code
 
 def add_start(gcode):
     code = ['global _start']
     code += ['_start:']
-    code += ['mov r12,  [rsp]'] #argc
+    code += ['mov r12,  [rsp]']     #argc
     code += ['lea r13, [rsp+8]']    #starting address of argv
 
     assert not gcode, "Not supported exp outside functions"
@@ -191,8 +203,9 @@ def get_var_addr(var_name):
         table = var_name.split('|')[1]
         
         symbol_table = SymbolTable.symbol_table_dict[table]
-        offset = symbol_table.table[name].offset + symbol_table.base
         assert symbol_table, "there is no symbol table correspoding to" + table
+        offset = symbol_table.table[name].offset + symbol_table.base
+        
 
         if table == "global":
             addr = name + '@global'
@@ -200,6 +213,21 @@ def get_var_addr(var_name):
             addr = 'rbp-'+ str(offset)
     return addr
 
+def get_var_type(var_name):
+    if 'const@' in var_name:
+        typ = sym_table.table[var_name].type
+    elif 'tmp@' in var_name:
+        typ = temp_dict[var_name].table[var_name].type
+    else:
+        assert '|' in var_name, "wrong var in 3ac code"
+        name = var_name.split('|')[0]
+        table = var_name.split('|')[1]
+        
+        symbol_table = SymbolTable.symbol_table_dict[table]
+        assert symbol_table, "there is no symbol table correspoding to" + table
+
+        typ = symbol_table.table[name].type
+    return typ
 
 def add_args_copy_code(fname):
     code =[]
@@ -212,7 +240,7 @@ def add_args_copy_code(fname):
     assert symbol_table == SymbolTable.symbol_table_dict[fname], "possibly wrong implementation"
 
     off = 16
-
+    code += ['; saving the arguments values in the stack']
     reserved = symbol_table.table['return'].type.width
     code += ["sub rsp, " +str(reserved)]
     required = symbol_table.offset
@@ -247,6 +275,7 @@ def add_args_copy_code(fname):
 
         else:
             other_args += 1
+            code += ['; copying data in stack of ' + typ.stype]
             code += add_copy_data_code(typ.width, "rbp+" +str(off))
         if typ.class_type == "PointerType":
             off += 8
@@ -256,8 +285,26 @@ def add_args_copy_code(fname):
             reserved += typ.width
     
     required -= reserved
-    code += ["sub rsp", str(required)]
+    code += [';add space for symbols']
+    code += ["sub rsp, "+ str(required)]
 
+    return code
+
+def add_return_code(name, gen_obj):
+    code = []
+    if gen_obj.place1:
+        place1 = gen_obj.place1
+        typ = SymbolTable.symbol_table_dict[name].table['return']
+        if typ == 'StructType' or typ.width > 8:
+            code += [';copy return value at addr in rax']
+            code += add_copy_data_code(typ.width, get_var_addr(place1), 'rax')
+        else:
+            code += [';copy return value in rax']
+            code += ["mov " + gp_regs[typ.width][0] + " , " +size_type[typ.width] +"[" +get_var_addr(place1) +"]"]
+    else:
+        code += ["xor rax rax"]
+    code += ['leave']
+    code += ['ret']
     return code
 
 def add_func_body_code(name, func_code):
@@ -266,17 +313,9 @@ def add_func_body_code(name, func_code):
         if gen_obj.op == 'func_call':
             code += add_func_call(gen_obj)
         elif gen_obj.op == 'return':
-            if gen_obj.place1:
-                place1 = gen_obj.place1
-                typ = SymbolTable.symbol_table_dict[name].table['return']
-                if typ == 'StructType' or typ.width > 8:
-                    code += add_copy_data_code(typ.width, get_var_addr(place1), 'rax')
-                else:
-                    code += ["mov " + gp_regs[typ.width][0] + " , " +size_type[typ.width] +"[" +get_var_addr(place1) +"]"]
-            else:
-                code += ["xor rax rax"]
-            code += ['leave']
-            code += ['ret']
+            code += add_return_code(name, gen_obj)
+        elif gen_obj.op == 'label':
+            code += [gen_obj.code]
     return code
 
 def add_func_code(func):
@@ -330,10 +369,13 @@ def add_func_call(gen_obj):
     args_val = args_val[::-1]
     args_type = args_type[::-1]
 
-    shift = 0
+    assert len(args_val) == len(args_type), "Mismatch in No. of args has not detected"
 
-    for i, typ in enumerate(args_type):
-        addr = get_var_addr(args_val[i])
+    shift = 0
+    code += ['; saving arguments for call']
+    for arg in args_val:
+        addr = get_var_addr(arg)
+        typ = get_var_type(arg)
         if typ.stype == "float":
             if float_args > len(arg_regsf):
                 code += ['sub rsp, 4']
@@ -363,6 +405,7 @@ def add_func_call(gen_obj):
                 code += ['mov '+get_size+' [rsp], '+temp_regs[0][width]]
                 shift += width
             else:
+                #print(typ)
                 if typ.class_type != "PointerType":
                     code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
                 elif typ.is_array:
@@ -372,6 +415,7 @@ def add_func_call(gen_obj):
             byte8_args -= 1
         else:
             shift += typ.width
+            code += ['; copying data in stack of ' + typ.stype]
             code += add_copy_data_code(typ.width, addr)
             other_args -= 1
     code += ["call " + gen_obj.place1]
@@ -426,6 +470,7 @@ def generate(tac_code):
     func_name =""
     gcode = []
     funcs =[]
+    code =[]
     for i, obj in enumerate(tac_code):
         if obj.op == 'BeginFunc':
             if func_name:
@@ -448,9 +493,10 @@ def generate(tac_code):
         else:
             if obj.op!= 'label':
                 gcode += [obj]
-    
-    code = add_data()
+    code += add_data()
+    code += [';add bss section for unintialized variables']
     code += add_bss()
+    code += [';add extern symbols']
     code += add_extern()
     code += add_text(gcode, funcs)
 
