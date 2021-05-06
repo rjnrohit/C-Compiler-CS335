@@ -38,117 +38,117 @@ tmp@16 = load(tmp@16)
 tmp@17 = addr(tmp@16)
 push tmp@17
 push num|insert
-tmp@18 = func_call insert
+None = func_call insert
 pop num|insert
 pop tmp@17
 goto label#3
 label#2:
-tmp@19 = load(p|insert)
-tmp@20 = tmp@19 long+ lconst@24
-tmp@20 = load(tmp@20)
-tmp@21 = addr(tmp@20)
-push tmp@21
+tmp@18 = load(p|insert)
+tmp@19 = tmp@18 long+ lconst@24
+tmp@19 = load(tmp@19)
+tmp@20 = addr(tmp@19)
+push tmp@20
 push num|insert
-tmp@22 = func_call insert
+None = func_call insert
 pop num|insert
-pop tmp@21
+pop tmp@20
 label#3:
 return
 EndFunc
 inorder:
 BeginFunc
-tmp@23 = p|inorder long!= lconst@0
-ifz tmp@23 goto label#4
-tmp@24 = p|inorder long+ lconst@8
-tmp@24 = load(tmp@24)
-push tmp@24
-tmp@25 = func_call inorder
-pop tmp@24
-tmp@26 = p|inorder long+ lconst@24
-tmp@26 = load(tmp@26)
-push tmp@26
-tmp@27 = func_call inorder
-pop tmp@26
+tmp@21 = p|inorder long!= lconst@0
+ifz tmp@21 goto label#4
+tmp@22 = p|inorder long+ lconst@8
+tmp@22 = load(tmp@22)
+push tmp@22
+None = func_call inorder
+pop tmp@22
+tmp@23 = p|inorder long+ lconst@24
+tmp@23 = load(tmp@23)
+push tmp@23
+None = func_call inorder
+pop tmp@23
 label#4:
 return
 EndFunc
 preorder:
 BeginFunc
-tmp@28 = p|preorder long!= lconst@0
-ifz tmp@28 goto label#5
-tmp@29 = p|preorder long+ lconst@8
-tmp@29 = load(tmp@29)
-push tmp@29
-tmp@30 = func_call preorder
-pop tmp@29
-tmp@31 = p|preorder long+ lconst@24
-tmp@31 = load(tmp@31)
-push tmp@31
-tmp@32 = func_call preorder
-pop tmp@31
+tmp@24 = p|preorder long!= lconst@0
+ifz tmp@24 goto label#5
+tmp@25 = p|preorder long+ lconst@8
+tmp@25 = load(tmp@25)
+push tmp@25
+None = func_call preorder
+pop tmp@25
+tmp@26 = p|preorder long+ lconst@24
+tmp@26 = load(tmp@26)
+push tmp@26
+None = func_call preorder
+pop tmp@26
 label#5:
 return
 EndFunc
 postorder:
 BeginFunc
-tmp@33 = p|postorder long!= lconst@0
-ifz tmp@33 goto label#6
-tmp@34 = p|postorder long+ lconst@8
-tmp@34 = load(tmp@34)
-push tmp@34
-tmp@35 = func_call postorder
-pop tmp@34
-tmp@36 = p|postorder long+ lconst@24
-tmp@36 = load(tmp@36)
-push tmp@36
-tmp@37 = func_call postorder
-pop tmp@36
+tmp@27 = p|postorder long!= lconst@0
+ifz tmp@27 goto label#6
+tmp@28 = p|postorder long+ lconst@8
+tmp@28 = load(tmp@28)
+push tmp@28
+None = func_call postorder
+pop tmp@28
+tmp@29 = p|postorder long+ lconst@24
+tmp@29 = load(tmp@29)
+push tmp@29
+None = func_call postorder
+pop tmp@29
 label#6:
 return
 EndFunc
 main:
 BeginFunc
 no|main = lconst@6
-tmp@38 = arr|main long+ lconst@0
-tmp@38 = lconst@12
-tmp@39 = arr|main long+ lconst@8
-tmp@39 = lconst@11
-tmp@40 = arr|main long+ lconst@16
-tmp@40 = lconst@13
-tmp@41 = arr|main long+ lconst@24
-tmp@41 = lconst@5
-tmp@42 = arr|main long+ lconst@32
-tmp@42 = lconst@6
-tmp@43 = arr|main long+ lconst@40
-tmp@43 = lconst@7
+tmp@30 = arr|main long+ lconst@0
+tmp@30 = lconst@12
+tmp@31 = arr|main long+ lconst@8
+tmp@31 = lconst@11
+tmp@32 = arr|main long+ lconst@16
+tmp@32 = lconst@13
+tmp@33 = arr|main long+ lconst@24
+tmp@33 = lconst@5
+tmp@34 = arr|main long+ lconst@32
+tmp@34 = lconst@6
+tmp@35 = arr|main long+ lconst@40
+tmp@35 = lconst@7
 ptr|main = lconst@0
-tmp@44 = ptr|main long+ lconst@16
-tmp@44 = load(tmp@44)
-tmp@44 = lconst@0
+tmp@36 = ptr|main long+ lconst@16
+tmp@36 = load(tmp@36)
+tmp@36 = lconst@0
 i|main = lconst@0
 label#7:
-tmp@45 = i|main int< no|main
-ifz tmp@45 goto label#9
-tmp@47 = addr(ptr|main)
-tmp@48 = i|main long* lconst@8
-tmp@49 = arr|main long+ tmp@48
-push tmp@47
-push tmp@49
-tmp@50 = func_call insert
-pop tmp@49
-pop tmp@47
+tmp@37 = i|main int< no|main
+ifz tmp@37 goto label#9
+tmp@39 = addr(ptr|main)
+tmp@40 = i|main long* lconst@8
+tmp@41 = arr|main long+ tmp@40
+push tmp@39
+push tmp@41
+None = func_call insert
+pop tmp@41
+pop tmp@39
 label#8:
-tmp@46 = = i|main
+tmp@38 = = i|main
 i|main = i|main int+ lconst@1
 goto label#7
 label#9:
 push ptr|main
-tmp@51 = func_call inorder
+None = func_call inorder
 pop ptr|main
 push ptr|main
-tmp@52 = func_call preorder
+None = func_call preorder
 pop ptr|main
 push ptr|main
-tmp@53 = func_call postorder
+None = func_call postorder
 pop ptr|main
 EndFunc

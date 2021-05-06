@@ -447,7 +447,7 @@ def p_postfix_expression_2(p):
             pop_code += [gen(op = "pop",place1=node.place,code="pop "+node.place)]
         
         p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
-        p[0].place = get_newtmp(type=return_type)
+        p[0].place = get_newtmp(type=return_type) if return_type.stype != "void" else "None"
         p[0].code = p[1].code+code+push_code + [gen(op="func_call",place1=p[1].value,place2=arg_places,place3=p[0].place)] + pop_code[::-1]
 
         
