@@ -138,11 +138,14 @@ def get_str_const(string):
 def const_use(place,sconst=False):
     if "sconst@" in place:
         if sconst and place not in alloc.keys():
-            alloc[place] = place.split("@")[-1]
+            string = place.split("@")[-1]
+            node_type = PointerType(type=BasicType("char"),array_size=[len(string)+1],array_type=BasicType("char"))
+            sym_table.add_entry(name=place,type=node_type)
+            alloc[place] = string
         return
     if place not in alloc.keys():
-        type = BasicType("long") if place[0] == "l" else BasicType("float") 
-        sym_table._add_entry(name=place,type=type)
+        node_type = BasicType("long") if place[0] == "l" else BasicType("float") 
+        sym_table._add_entry(name=place,type=node_type)
         alloc[place] = get_const_value(place)
 
 def get_const_value(place):

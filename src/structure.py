@@ -174,6 +174,7 @@ class PointerType(Type):
         self.array_type = array_type
         self._width = self.update_width()
         self.type_size = 8 if self.type.class_type =="PointerType" else type.width
+        self.is_array = True if array_type else False
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"

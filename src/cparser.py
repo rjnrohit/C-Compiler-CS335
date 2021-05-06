@@ -930,15 +930,22 @@ def p_init_declarator(p):
         if p[1].type.class_type == "PointerType" and len(p[1].type.array_size) != 0:
             if len(p[1].type.array_size) > 1:
                 Errors(
-                    errorType='TypeError',
+                    errorType='DeclarationError',
                     errorText="cannot initialize array with multiple dimension", 
                     token_object= p.slice[2]
                 )
                 return
             if p[1].type.array_type.stype != "char":
                 Errors(
-                    errorType='TypeError',
+                    errorType='DeclarationError',
                     errorText="cannot initialize array of type "+p[1].type.array_type.stype, 
+                    token_object= p.slice[2]
+                )
+                return
+            if "sconst@" not in p[3].place:
+                Errors(
+                    errorType='DeclarationError',
+                    errorText="cannot initialize array of type char with non-string value", 
                     token_object= p.slice[2]
                 )
                 return
@@ -946,6 +953,9 @@ def p_init_declarator(p):
         node = typecast(node1=p[3],type=p[1].type,token=p.slice[2])
         if node.type == "error":
             return
+        if "sconst@" in node.place and len(p[1].type.array_size) == 0:
+            string = node.place.split("@")[-1]
+            p[1].type = PointerType(type=BasicType("char"),array_type=BasicType("char"),array_size=[len(string)+1])
         success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
             p[0] = Node(name="binary_op",value=p[1].type.stype+"=",children = [p[1],node],type="ok")
@@ -1243,7 +1253,9 @@ def p_parameter_declaration(p):
     '''
     parameter_declaration : type_specifier declarator
     '''
-
+    if p[2].type.class_type == "PointerType" and len(p[2].type.array_size) !=0 :
+        p[2].type.is_array = False
+        p[2].type._width = 8
     success = sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
     if success:
         p[0] = [p[2].type]

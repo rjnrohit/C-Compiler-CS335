@@ -18,7 +18,7 @@ void g();
 void g(){}
 
 int func(int a);
-int printf(char *s,int d);
+int printf(char s[10],int d);
 int p;
 
 // int *ptr = &p;
