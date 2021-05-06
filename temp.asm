@@ -31,6 +31,9 @@ p@global resq 1
 ptr3@global resq 1
 b@global resb 1
 str@global resb 48
+extern printf
+extern scanf
+extern malloc
 section .text
 global _start
 _start:
@@ -66,7 +69,7 @@ mov rdi, qword [const4]
 call func
 add rsp,0
 mov rsi, qword [const7]
-lea rdi, [rbp-142]
+mov rdi, qword [rbp-142]
 call printf
 add rsp,0
 mov rax , qword[rbp-167]

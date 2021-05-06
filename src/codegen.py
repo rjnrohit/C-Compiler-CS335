@@ -55,6 +55,12 @@ decl_type_bss = {1:'resb', 2:'resw', 4:'resd', 8:'resq',16:'resdq'}
 
 const_dict = {}
 
+extern_functions = [
+    'printf',
+    'scanf',
+    'malloc'
+]
+
 def add_standard_constant():
     code = ['; this section for standard constants']
     code += [
@@ -89,7 +95,7 @@ def add_bss():
                 if typ.class_type == 'BasicType':
                     code += [name + ' ' + decl_type_bss[typ.width] + ' 1']
                 elif typ.class_type == 'PointerType':
-                    if typ.array_type:
+                    if typ.is_array:
                         assert isinstance(typ.array_size, list), "array size must be list"
                         code += [name + ' ' + decl_type_bss[typ.array_type.width] + ' ' + str(math.prod(typ.array_size))]
                     else:
@@ -100,7 +106,7 @@ def add_bss():
                     
                     for key in typ.symbol_table.table:
                         typ2 = typ.symbol_table.table[key].type
-                        if typ2.class_type == 'PointerType' and typ2.array_type:
+                        if typ2.class_type == 'PointerType' and typ2.is_array:
                             tmp_code += [decl_type_bss[typ2.array_type.width] + ' ' + str(math.prod(typ2.array_size))]
                         else:
                             tmp_code += [decl_type_bss[typ2.width] + ' 1' ]
@@ -131,7 +137,7 @@ def add_init_global_variables():
         if typ.class_type == 'BasicType':
             code += [e_name + ' ' + decl_type[typ.width] + ' ' + str(alloc[key])]
         else:
-            if typ.array_type:
+            if typ.is_array:
                 assert typ.array_type.stype == 'char', "not char string"
                 code += [e_name + ' ' + decl_type[typ.array_type.width]  + ' "' + str(alloc[key]) +'", NULL']
             else:
@@ -280,7 +286,7 @@ def add_func_call(gen_obj):
     assert isinstance(gen_obj, gen), "object type error"
     assert isinstance(sym_table.table[gen_obj.place1].type, FunctionType), "not a function"
 
-    if not sym_table.table[gen_obj.place1].type.defined:
+    if not sym_table.table[gen_obj.place1].type.defined and (gen_obj.place1 not in extern_functions):
         print( "\033[93m {}\033[00m" .format("Warning:")+ "Undefined refrence to" + "\033[91m {}\033[00m" .format(gen_obj.place1))
     
     code = []
@@ -341,7 +347,7 @@ def add_func_call(gen_obj):
                 code += ['sub rsp, ' + get_width]
                 if typ.class_type != "PointerType":
                     code += ['mov '+temp_regs[0][width]+', '+get_size+' [' + addr+']']
-                elif typ.array_type:
+                elif typ.is_array:
                     code += ['lea '+temp_regs[0][8]+', [' + addr+']']
                 else:
                     code += ['mov '+temp_regs[0][8]+', '+size_type[8]+' [' + addr+']']
@@ -350,7 +356,7 @@ def add_func_call(gen_obj):
             else:
                 if typ.class_type != "PointerType":
                     code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
-                elif typ.array_type:
+                elif typ.is_array:
                     code += ['lea ' + arg_regs[byte8_args-1][8] +', [' + addr + ']']
                 else:
                     code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
@@ -398,7 +404,11 @@ def add_copy_data_code(count, addr, rax = None):
 
     return code
    
-
+def add_extern():
+    code =[]
+    for func in extern_functions:
+        code += ['extern ' + func]
+    return code
     
 
     
@@ -432,6 +442,7 @@ def generate(tac_code):
     
     code = add_data()
     code += add_bss()
+    code += add_extern()
     code += add_text(gcode, funcs)
 
     return code
