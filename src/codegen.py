@@ -205,13 +205,17 @@ def add_args_copy_code(fname):
     code =[]
     float_args = 0
     byte8_args = 0
-    other_args =0
+    other_args = 0
     args_type = sym_table.table[fname].type.param_list
     symbol_table = sym_table.table[fname].type.symbol_table
 
     assert symbol_table == SymbolTable.symbol_table_dict[fname], "possibly wrong implementation"
 
     off = 16
+
+    reserved = symbol_table.table['return'].type.width
+    code += ["sub rsp, " +str(reserved)]
+    required = symbol_table.offset
 
     for typ in args_type:
         if typ.stype == "float":
@@ -246,9 +250,14 @@ def add_args_copy_code(fname):
             code += add_copy_data_code(typ.width, "rbp+" +str(off))
         if typ.class_type == "PointerType":
             off += 8
+            reserved += 8
         else:
             off += typ.width
-    #print(code)
+            reserved += typ.width
+    
+    required -= reserved
+    code += ["sub rsp", str(required)]
+
     return code
 
 def add_func_body_code(name, func_code):
@@ -399,7 +408,7 @@ def add_copy_data_code(count, addr, rax = None):
         if not rax:
             code += ["push " + get_size+ " [" + new_addr + "]"]
         else:
-            code += ["mov " + temp_regs[0][dec] + ", " + get_size + "[" + addr+"]"]
+            code += ["mov " + temp_regs[0][dec] + ", " + get_size + "[" + new_addr+"]"]
             code += ["mov " + get_size + "[" + rax + str(off)+"], " + temp_regs[0][dec]]
 
     return code
