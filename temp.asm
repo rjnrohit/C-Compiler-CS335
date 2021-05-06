@@ -59,27 +59,23 @@ sub rsp, 8
 mov qword [rsp],rsi
 ;add space for symbols
 sub rsp, 155
-xor rax rax
+xor rax, rax
 leave
 ret
-label#0:
-xor rax rax
+xor rax, rax
 leave
 ret
-label#1:
 ; saving arguments for call
 mov rsi, qword [rbp-16]
 mov rdi, qword [rbp-147]
 call insert
 add rsp,0
-label#2:
 ; saving arguments for call
 mov rsi, qword [rbp-16]
 mov rdi, qword [rbp-171]
 call insert
 add rsp,0
-label#3:
-xor rax rax
+xor rax, rax
 leave
 ret
 global inorder
@@ -100,8 +96,7 @@ add rsp,0
 mov rdi, qword [rbp-25]
 call inorder
 add rsp,0
-label#4:
-xor rax rax
+xor rax, rax
 leave
 ret
 global preorder
@@ -122,8 +117,7 @@ add rsp,0
 mov rdi, qword [rbp-25]
 call preorder
 add rsp,0
-label#5:
-xor rax rax
+xor rax, rax
 leave
 ret
 global postorder
@@ -144,8 +138,7 @@ add rsp,0
 mov rdi, qword [rbp-25]
 call postorder
 add rsp,0
-label#6:
-xor rax rax
+xor rax, rax
 leave
 ret
 global main
@@ -156,14 +149,11 @@ mov    rbp,rsp
 sub rsp, 0
 ;add space for symbols
 sub rsp, 153
-label#7:
 ; saving arguments for call
 mov rsi, qword [rbp-153]
 mov rdi, qword [rbp-137]
 call insert
 add rsp,0
-label#8:
-label#9:
 ; saving arguments for call
 mov rdi, qword [rbp-8]
 call inorder

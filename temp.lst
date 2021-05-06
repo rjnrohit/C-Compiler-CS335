@@ -1,0 +1,171 @@
+     1                                 %line 1+1 temp.asm
+     2                                 [section .data]
+     3                                 
+     4                                 LF equ 10
+     5                                 NULL equ 0
+     6                                 TRUE equ 1
+     7                                 FALSE equ 0
+     8                                 EXIT_SUCCESS equ 0
+     9                                 STDIN equ 0
+    10                                 STDOUT equ 1
+    11                                 STDERR equ 2
+    12                                 SYS_read equ 0
+    13                                 SYS_write equ 1
+    14                                 SYS_open equ 2
+    15                                 SYS_close equ 3
+    16                                 SYS_fork equ 57
+    17                                 SYS_exit equ 60
+    18                                 SYS_creat equ 85
+    19                                 
+    20 00000000 0000000000000000       const0 dq 0
+    21 00000008 0800000000000000       const1 dq 8
+    22 00000010 1800000000000000       const2 dq 24
+    23 00000018 1000000000000000       const3 dq 16
+    24 00000020 0600000000000000       const4 dq 6
+    25 00000028 0C00000000000000       const5 dq 12
+    26 00000030 0B00000000000000       const6 dq 11
+    27 00000038 0D00000000000000       const7 dq 13
+    28 00000040 0500000000000000       const8 dq 5
+    29 00000048 2000000000000000       const9 dq 32
+    30 00000050 2800000000000000       const10 dq 40
+    31 00000058 0700000000000000       const11 dq 7
+    32 00000060 0100000000000000       const12 dq 1
+    33                                 
+    34                                 [section .bss]
+    35                                 
+    36                                 [extern printf]
+    37                                 [extern scanf]
+    38                                 [extern malloc]
+    39                                 [section .text]
+    40                                 [global _start]
+    41                                 _start:
+    42 00000000 4C8B2424               mov r12, [rsp]
+    43 00000004 4C8D6C2408             lea r13, [rsp+8]
+    44 00000009 4C89E7                 mov rdi, r12
+    45 0000000C 4C89EE                 mov rsi, r13
+    46 0000000F E8FA000000             call main
+    47                                 end:
+    48 00000014 48C7C03C000000         mov rax, SYS_exit
+    49 0000001B 48C7C700000000         mov rdi, EXIT_SUCCESS
+    50 00000022 0F05                   syscall
+    51                                 [global insert]
+    52                                 insert:
+    53 00000024 55                     push rbp
+    54 00000025 4889E5                 mov rbp,rsp
+    55                                 
+    56 00000028 4883EC00               sub rsp, 0
+    57 0000002C 4883EC08               sub rsp, 8
+    58 00000030 48893C24               mov qword [rsp],rdi
+    59 00000034 4883EC08               sub rsp, 8
+    60 00000038 48893424               mov qword [rsp],rsi
+    61                                 
+    62 0000003C 4881EC9B000000         sub rsp, 155
+    63 00000043 4831C0                 xor rax, rax
+    64 00000046 C9                     leave
+    65 00000047 C3                     ret
+    66 00000048 4831C0                 xor rax, rax
+    67 0000004B C9                     leave
+    68 0000004C C3                     ret
+    69                                 
+    70 0000004D 488B75F0               mov rsi, qword [rbp-16]
+    71 00000051 488BBD6DFFFFFF         mov rdi, qword [rbp-147]
+    72 00000058 E8C2FFFFFF             call insert
+    73 0000005D 4883C400               add rsp,0
+    74                                 
+    75 00000061 488B75F0               mov rsi, qword [rbp-16]
+    76 00000065 488BBD55FFFFFF         mov rdi, qword [rbp-171]
+    77 0000006C E8AEFFFFFF             call insert
+    78 00000071 4883C400               add rsp,0
+    79 00000075 4831C0                 xor rax, rax
+    80 00000078 C9                     leave
+    81 00000079 C3                     ret
+    82                                 [global inorder]
+    83                                 inorder:
+    84 0000007A 55                     push rbp
+    85 0000007B 4889E5                 mov rbp,rsp
+    86                                 
+    87 0000007E 4883EC00               sub rsp, 0
+    88 00000082 4883EC08               sub rsp, 8
+    89 00000086 48893C24               mov qword [rsp],rdi
+    90                                 
+    91 0000008A 4883EC11               sub rsp, 17
+    92                                 
+    93 0000008E 488B7DEF               mov rdi, qword [rbp-17]
+    94 00000092 E8DEFFFFFF             call inorder
+    95 00000097 4883C400               add rsp,0
+    96                                 
+    97 0000009B 488B7DE7               mov rdi, qword [rbp-25]
+    98 0000009F E8D1FFFFFF             call inorder
+    99 000000A4 4883C400               add rsp,0
+   100 000000A8 4831C0                 xor rax, rax
+   101 000000AB C9                     leave
+   102 000000AC C3                     ret
+   103                                 [global preorder]
+   104                                 preorder:
+   105 000000AD 55                     push rbp
+   106 000000AE 4889E5                 mov rbp,rsp
+   107                                 
+   108 000000B1 4883EC00               sub rsp, 0
+   109 000000B5 4883EC08               sub rsp, 8
+   110 000000B9 48893C24               mov qword [rsp],rdi
+   111                                 
+   112 000000BD 4883EC11               sub rsp, 17
+   113                                 
+   114 000000C1 488B7DEF               mov rdi, qword [rbp-17]
+   115 000000C5 E8DEFFFFFF             call preorder
+   116 000000CA 4883C400               add rsp,0
+   117                                 
+   118 000000CE 488B7DE7               mov rdi, qword [rbp-25]
+   119 000000D2 E8D1FFFFFF             call preorder
+   120 000000D7 4883C400               add rsp,0
+   121 000000DB 4831C0                 xor rax, rax
+   122 000000DE C9                     leave
+   123 000000DF C3                     ret
+   124                                 [global postorder]
+   125                                 postorder:
+   126 000000E0 55                     push rbp
+   127 000000E1 4889E5                 mov rbp,rsp
+   128                                 
+   129 000000E4 4883EC00               sub rsp, 0
+   130 000000E8 4883EC08               sub rsp, 8
+   131 000000EC 48893C24               mov qword [rsp],rdi
+   132                                 
+   133 000000F0 4883EC11               sub rsp, 17
+   134                                 
+   135 000000F4 488B7DEF               mov rdi, qword [rbp-17]
+   136 000000F8 E8DEFFFFFF             call postorder
+   137 000000FD 4883C400               add rsp,0
+   138                                 
+   139 00000101 488B7DE7               mov rdi, qword [rbp-25]
+   140 00000105 E8D1FFFFFF             call postorder
+   141 0000010A 4883C400               add rsp,0
+   142 0000010E 4831C0                 xor rax, rax
+   143 00000111 C9                     leave
+   144 00000112 C3                     ret
+   145                                 [global main]
+   146                                 main:
+   147 00000113 55                     push rbp
+   148 00000114 4889E5                 mov rbp,rsp
+   149                                 
+   150 00000117 4883EC00               sub rsp, 0
+   151                                 
+   152 0000011B 4881EC99000000         sub rsp, 153
+   153                                 
+   154 00000122 488BB567FFFFFF         mov rsi, qword [rbp-153]
+   155 00000129 488BBD77FFFFFF         mov rdi, qword [rbp-137]
+   156 00000130 E8EAFEFFFF             call insert
+   157 00000135 4883C400               add rsp,0
+   158                                 
+   159 00000139 488B7DF8               mov rdi, qword [rbp-8]
+   160 0000013D E833FFFFFF             call inorder
+   161 00000142 4883C400               add rsp,0
+   162                                 
+   163 00000146 488B7DF8               mov rdi, qword [rbp-8]
+   164 0000014A E859FFFFFF             call preorder
+   165 0000014F 4883C400               add rsp,0
+   166                                 
+   167 00000153 488B7DF8               mov rdi, qword [rbp-8]
+   168 00000157 E87FFFFFFF             call postorder
+   169 0000015C 4883C400               add rsp,0
+   170 00000160 C9                     leave
+   171 00000161 C3                     ret

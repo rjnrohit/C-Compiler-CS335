@@ -302,7 +302,7 @@ def add_return_code(name, gen_obj):
             code += [';copy return value in rax']
             code += ["mov " + gp_regs[typ.width][0] + " , " +size_type[typ.width] +"[" +get_var_addr(place1) +"]"]
     else:
-        code += ["xor rax rax"]
+        code += ["xor rax, rax"]
     code += ['leave']
     code += ['ret']
     return code
@@ -314,8 +314,8 @@ def add_func_body_code(name, func_code):
             code += add_func_call(gen_obj)
         elif gen_obj.op == 'return':
             code += add_return_code(name, gen_obj)
-        elif gen_obj.op == 'label':
-            code += [gen_obj.code]
+        # elif gen_obj.op == 'label':
+        #     code += [gen_obj.code]
     return code
 
 def add_func_code(func):

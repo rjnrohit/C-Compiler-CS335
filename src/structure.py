@@ -101,6 +101,9 @@ class Type:
     def update_width(self):
         return self._width
     
+    def is_convertible_to(self, t):
+        return False
+
     @property
     def width(self):
         return self.update_width()
@@ -150,7 +153,7 @@ class BasicType(Type):
             return False
         
         if t.type == 'void':
-            return True
+            return False
         
         if self.type == 'void':
             return False
