@@ -54,8 +54,8 @@ arg_regs = [
         {8:'r9', 4:'r9d',2:'r9w', 2:'r9b'}
     ]
 temp_regs= [
-        {8:'r10', 4:'r10d',2:'r10w', 2:'r10b'},
-        {8:'r11', 4:'r11d',2:'r11w', 2:'r11b'}
+        {8:'r10', 4:'r10d',2:'r10w', 1:'r10b'},
+        {8:'r11', 4:'r11d',2:'r11w', 1:'r11b'}
     ]
 arg_regsf= ['xmm' + str(i) for i in range(8)]
 
@@ -307,15 +307,100 @@ def add_return_code(name, gen_obj):
     code += ['ret']
     return code
 
+def load_var(var1, var2 = None):
+    code =[]
+    addr = get_var_addr(var1)
+    typ = get_var_type(var1)
+    width = typ.width
+    #print(typ, var1)
+    get_size = size_type[typ.width]
+    if typ.stype == 'float':
+        code += ["movss "+arg_regsf[0]+", "+get_size+" ["+addr+"]"]
+    else:
+        code += ["mov "+temp_regs[0][width]+", "+get_size+" ["+addr+"]"]
+
+    if not var2:
+        return code
+
+    addr = get_var_addr(var2)
+    typ = get_var_type(var2)
+    width = typ.width
+    get_size = size_type[typ.width]
+
+    if typ.stype == 'float':
+        code += ["movss "+arg_regsf[1]+", "+get_size+" ["+addr+"]"]
+    else:
+        code += ["mov "+temp_regs[1][width]+", "+get_size+" ["+addr+"]"]
+    return code
+
+def add_assign_code(gen_obj):
+    code =[]
+    if gen_obj.op in ["long=","int=","char=","bool="]:
+        code += load_var(gen_obj.place1)
+        addr = get_var_addr(gen_obj.place3)
+        typ = get_var_type(gen_obj.place3)
+        width = typ.width
+        get_size = size_type[width]
+        if gen_obj.op != 'float=':
+            code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+        else:
+            code += ["movss " + get_size + "[" + addr+"]" + arg_regsf[0]]
+    elif gen_obj.op == 'str=':
+        addr1 = get_var_addr(gen_obj.place1)
+        addr3 = get_var_addr(gen_obj.place3)
+        typ1 = get_var_type(gen_obj.place1)
+        typ3 = get_var_type(gen_obj.place3)
+        code += add_copy_data_code(min(typ1.width, typ3.width), addr1, addr3)
+    elif 'struct' in gen_obj.op and '=' in gen_obj.op:
+        addr1 = get_var_addr(gen_obj.place1)
+        addr3 = get_var_addr(gen_obj.place3)
+        typ1 = get_var_type(gen_obj.place1)
+        typ3 = get_var_type(gen_obj.place3)
+        assert typ1 == typ3, "missing semantic type checking assign struct"
+        code += add_copy_data_code(min(typ1.width, typ3.width), addr1, addr3)
+    return code
+
+
+def add_other_opcode(gen_obj):
+    code =[]
+    assign_op = ["long=","int=","char=","float=","str=","bool="]
+    if gen_obj.op == 'ifz' or gen_obj.op == 'ifnz':
+        opd = {'ifz':'je','ifz':'jne'}
+        code += load_var(gen_obj.place1)
+        if 'xmm' in code[-1]:
+            code += ["ucomiss xmm0, 0"]
+        else:
+            code += ["cmp r10, 0"]
+        code += [opd[gen_obj.op]+" " + gen_obj.place2]
+    elif 'if_not_cmp' in gen_obj.op:
+        code += load_var(gen_obj.place1, gen_obj.place2)
+        if 'xmm' in code[-1]:
+            code += ["ucomiss xmm0, xmm1"]
+        else:    
+            code += ["cmp r10, r11"]
+        code += ["jne " + gen_obj.place3]
+    elif gen_obj.op in assign_op or ("struct" in gen_obj.op and "=" in gen_obj.op):
+        code += add_assign_code(gen_obj)
+    else:
+        pass
+    return code
+
+
+
 def add_func_body_code(name, func_code):
     code =[]
     for gen_obj in func_code:
         if gen_obj.op == 'func_call':
+            #TODO equating return value
             code += add_func_call(gen_obj)
         elif gen_obj.op == 'return':
             code += add_return_code(name, gen_obj)
-        # elif gen_obj.op == 'label':
-        #     code += [gen_obj.code]
+        elif gen_obj.op == 'label':
+            code += [gen_obj.code]
+        elif gen_obj.op == 'goto':
+            code += ['jmp ' + gen_obj.place1]
+        else:
+            code += add_other_opcode(gen_obj)
     return code
 
 def add_func_code(func):

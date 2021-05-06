@@ -1,7 +1,7 @@
-BeginFunc
-label
-EndFunc
-(long/int/float/char/bool/str/struct_{name of struct})= (equal to copy operator)
+BeginFunc  #done
+label       #done
+EndFunc     #done
+(long/int/float/char/bool/str/struct_{name of struct})= (equal to copy operator) #done
 int+
 float+
 char+
@@ -10,20 +10,20 @@ long*
 int*
 char*
 float*
-func_call
-push
-pop
+func_call   #done
+push        #done
+pop         #done
 addr
 load
-ifz
-ifnz
-goto
-if_not_cmp_int (used in switch if value of place1 not equal to place2 goto place3)
-if_not_cmp_long
-if_not_cmp_float
-if_not_cmp_char
-if_not_cmp_bool
-return
+ifz         #done
+ifnz        #done
+goto        #done
+if_not_cmp_int (used in switch if value of place1 not equal to place2 goto place3) #done
+if_not_cmp_long #done
+if_not_cmp_float #done
+if_not_cmp_char #done
+if_not_cmp_bool #done
+return      #done
 uint- (with only one place1 for unary)
 ufloat-
 ulong-

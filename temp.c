@@ -77,6 +77,7 @@ void main()
     arr[4] = 6;
     arr[5] = 7;
 
+    char a[20] = "stringconst";
  
     ptr = 0;
     ptr->data=0;

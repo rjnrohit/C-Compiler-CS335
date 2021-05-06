@@ -121,6 +121,7 @@ tmp@34 = arr|main long+ lconst@32
 tmp@34 = lconst@6
 tmp@35 = arr|main long+ lconst@40
 tmp@35 = lconst@7
+a|main = sconst@stringconst
 ptr|main = lconst@0
 tmp@36 = ptr|main long+ lconst@16
 tmp@36 = load(tmp@36)
