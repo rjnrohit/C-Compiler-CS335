@@ -140,7 +140,7 @@ def const_use(place,sconst=False):
         if sconst and place not in alloc.keys():
             string = place.split("@")[-1]
             node_type = PointerType(type=BasicType("char"),array_size=[len(string)+1],array_type=BasicType("char"))
-            sym_table.add_entry(name=place,type=node_type)
+            sym_table._add_entry(name=place,type=node_type)
             alloc[place] = string
         return
     if place not in alloc.keys():

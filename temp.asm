@@ -16,13 +16,15 @@ SYS_fork equ 57 ; fork
 SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 d@global dq 99
-cc@global dq this is pointer test
-const0 dq 9
-const1 dq 4
-const2 dq 103
-const3 dq 1
-const4 dq 0
-const5 dq 5
+cc@global db "this is pointer test", NULL
+const0 db "char", NULL
+const1 dq 9
+const2 dq 4
+const3 dq 103
+const4 dq 1
+const5 dq 0
+const6 db "hello", NULL
+const7 dq 5
 section .bss
 c@global resq 1
 p@global resq 1
@@ -60,13 +62,13 @@ global main
 main:
 push   rbp
 mov    rbp,rsp
-mov rdi, qword [const3]
+mov rdi, qword [const4]
 call func
 add rsp,0
-mov rsi, qword [const5]
-mov rdi, qword [rbp-145]
+mov rsi, qword [const7]
+lea rdi, [rbp-142]
 call printf
 add rsp,0
-mov rax , qword[rbp-170]
+mov rax , qword[rbp-167]
 leave
 ret

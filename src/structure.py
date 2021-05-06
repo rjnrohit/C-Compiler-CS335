@@ -172,9 +172,9 @@ class PointerType(Type):
         assert not isinstance(array_size,str), "array_size can't be string, provided: " + str(array_size)
         self.array_size = array_size
         self.array_type = array_type
+        self.is_array = True if array_type else False
         self._width = self.update_width()
         self.type_size = 8 if self.type.class_type =="PointerType" else type.width
-        self.is_array = True if array_type else False
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
@@ -184,7 +184,8 @@ class PointerType(Type):
         return self.__str__()
     
     def update_width(self):
-        if len(self.array_size) == 0:
+        # if len(self.array_size) == 0:
+        if self.is_array == False or len(self.array_size) == 0:
             return 8
         matrix_size = 1
         # print(self.array_size)
