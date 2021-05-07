@@ -24,14 +24,14 @@ if_not_cmp_float                                                                
 if_not_cmp_char                                                                             #done
 if_not_cmp_bool                                                                             #done
 return                                                                                      #done
-uint- (with only one place1 for unary)
-ufloat-
-ulong-
-uchar-
-int~
-float~
-long~
-char~
+uint- (with only one place1 for unary)                                                      #done
+ufloat-                                                                                     #done
+ulong-                                                                                      #done
+uchar-                                                                                      #done
+int~                                                                                        #done
+float~                                                                                      #not possible
+long~                                                                                       #done
+char~                                                                                       #done
 not_bool (check if value 0 or 1 "!" op not taking care of type)
 int/                                                                                        #done
 long/                                                                                       #done
@@ -46,17 +46,17 @@ float-                                                                          
 char-                                                                                       #done
 bool-                                                                                       #done
 bool+                                                                                       #done
-int^
-long^
-char^
-bool^
-int& 
-long&
-char&
-bool&
-int/long/char/bool| (bit or)
-int/long/char/bool<< (shift)
-int/long/char/bool>>
+int^                                                                                        #done
+long^                                                                                       #done
+char^                                                                                       #done
+bool^                                                                                       #done
+int&                                                                                        #done
+long&                                                                                       #done
+char&                                                                                       #done
+bool&                                                                                       #done
+int/long/char/bool| (bit or)                                                                #done
+int/long/char/bool<< (shift)                                                                #done
+int/long/char/bool>>                                                                        #done
 int/long/char/bool/float(>=,<=,<,>,==,!=) (relation op)
 (int/long/char/bool/float)2(int/long/char/bool/float) (typecasting)
 

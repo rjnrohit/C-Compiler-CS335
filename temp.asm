@@ -22,7 +22,8 @@ const0 dq 3
 const1 dq 4
 const2 dq 46
 const3 dq 1
-const4 dq 0
+const4 dd 3.1
+const5 dq 0
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
@@ -68,7 +69,7 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
-sub rsp, 56
+sub rsp, 108
 mov r10, qword [const0]
 mov qword[rbp-16], r10
 mov r10, qword [const1]
@@ -83,25 +84,46 @@ mov r10, qword [rbp-32]
 mov qword[rbp-40], r10
 mov r10, qword [const2]
 mov qword[rbp-48], r10
+mov r10, qword [rbp-48]
+not r11
+mov qword[rbp-56], r11
+mov r10, qword [rbp-56]
+mov qword[rbp-64], r10
+mov r10, qword [rbp-64]
+mov r11, qword [const3]
+mov cl,r11b
+shl r10, cl
+mov qword[rbp-72], r10
+mov r10, qword [rbp-72]
+mov qword[rbp-80], r10
 label#0:
 mov r10, qword [rbp-48]
-mov qword[rbp-56], r10
+mov qword[rbp-88], r10
 mov r10, qword [rbp-48]
 mov r11, qword [const3]
 sub r10, r11
 mov qword[rbp-48], r10
-mov r10, qword [rbp-56]
+mov r10, qword [rbp-88]
 cmp r10, 0
-jne label#1
+je label#1
 mov r10, qword [rbp-16]
 mov r11, qword [rbp-40]
 add r10, r11
-mov qword[rbp-64], r10
-mov r10, qword [rbp-64]
+mov qword[rbp-96], r10
+mov r10, qword [rbp-96]
 mov qword[rbp-16], r10
 jmp label#0
 label#1:
+; saving arguments for call
+movss xmm0, dword [const4]
+mov rdi, qword [rbp-16]
+call foo
+;copy return value from xmm0
+movss dword[rbp-100], xmm0
+add rsp,0
+mov r10, qword [rbp-108]
+mov qword[rbp-116], r10
 ;copy return value in rax
-mov rax , qword[const4]
+mov rax , qword[const5]
 leave
 ret

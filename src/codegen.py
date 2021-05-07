@@ -386,14 +386,14 @@ def add_assign_code(gen_obj):
 
 def add_plus_code(gen_obj):
     code =[]
-    print(gen_obj, get_var_type(gen_obj.place1))
+    #print(gen_obj, get_var_type(gen_obj.place1))
     code += load_var(gen_obj.place1, gen_obj.place2)
     addr = get_var_addr(gen_obj.place3)
     typ = get_var_type(gen_obj.place3)
     width = typ.width
     get_size = size_type[width]
     if gen_obj.op != 'float+':
-        code += ["add r10, r11"]
+        code += ["add {}, {}".format(temp_regs[0][width], temp_regs[1][width])]
         code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
     else:
         code += ["addss xmm0, xmm1"]
@@ -408,11 +408,42 @@ def add_sub_code(gen_obj):
     width = typ.width
     get_size = size_type[width]
     if gen_obj.op != 'float-':
-        code += ["sub r10, r11"]
+        code += ["sub {}, {}".format(temp_regs[0][width], temp_regs[1][width])]
         code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
     else:
         code += ["subss xmm0, xmm1"]
         code += ["movss " + get_size + "[" +addr+"], xmm0"]
+    return code
+
+def add_unm_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if gen_obj.op != 'ufloat-':
+        code += ["xor {},{}".format(temp_regs[1][width],temp_regs[1][width])]
+        code += ["sub {}, {}".format(temp_regs[1][width], temp_regs[0][width])]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[1][width]]
+    else:
+        code += ["subss xmm1, xmm1"]
+        code += ["subss xmm1, xmm0"]
+        code += ["movss " + get_size + "[" +addr+"], xmm1"]
+    return code
+
+def add_tilde_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if gen_obj.op != 'float~':
+        code += ["not {}".format(temp_regs[1][width])]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[1][width]]
+    else:
+        assert False, "can't invert(~) float pointing "
     return code
 
 def add_mul_code(gen_obj):
@@ -423,11 +454,41 @@ def add_mul_code(gen_obj):
     width = typ.width
     get_size = size_type[width]
     if gen_obj.op != 'float*':
-        code += ["imul r10, r11"]
+        code += ["imul {}, {}".format(temp_regs[0][width], temp_regs[1][width])]
         code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
     else:
         code += ["mulss xmm0, xmm1"]
         code += ["movss " + get_size + "[" +addr+"], xmm0"]
+    return code
+
+def add_shift_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1, gen_obj.place2)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    opd = {'>>':'shr', '<<':'shl'}
+    if gen_obj.op != 'float*':
+        #! might do restrict for cl register
+        code += ["mov {},{}".format(gp_regs[1][2],temp_regs[1][1])]
+        code += ["{} {}, {}".format(opd[gen_obj.op[-2:]],temp_regs[0][width], 'cl')]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+    else:
+       assert False, "shift bit not operable on float"
+    return code
+
+def add_bitwise_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1, gen_obj.place2)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    assert 'float' not in gen_obj.op, "float not supported for bitwise"
+    opd = {'^':'xor', '|':'or','&':'and'}
+    code += ["{} {}, {}".format(opd[gen_obj.op[-1]], temp_regs[0][width], temp_regs[1][width])]
+    code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
     return code
 
 def add_div_code(gen_obj):
@@ -437,7 +498,7 @@ def add_div_code(gen_obj):
     typ = [get_var_type(_) for _ in place]
     width = [_.width for _ in typ]
     get_size = [size_type[_] for _ in width]
-    print(place, addr, typ, width, get_size)
+    #print(place, addr, typ, width, get_size)
     if gen_obj.op != 'float/' and gen_obj.op != 'char/':
         assert width[0] == width[1],"type mismatch for division"
         assert width[0] == width[2],"type mismatch for division"
@@ -511,10 +572,11 @@ def add_other_opcode(gen_obj):
     code =[]
     assign_op = ["long=","int=","char=","float=","str=","bool="]
     if gen_obj.op == 'ifz' or gen_obj.op == 'ifnz':
-        opd = {'ifz':'je','ifz':'jne'}
+        opd = {'ifz':'je','ifnz':'jne'}
         code += load_var(gen_obj.place1)
         if 'xmm' in code[-1]:
-            code += ["ucomiss xmm0, 0"]
+            code += ["subss xmm1, xmm1"]
+            code += ["ucomiss xmm0, xmm1"]
         else:
             code += ["cmp r10, 0"]
         code += [opd[gen_obj.op]+" " + gen_obj.place2]
@@ -539,10 +601,15 @@ def add_other_opcode(gen_obj):
         code += add_div_code(gen_obj)
     elif gen_obj.op in ['int%', 'long%', 'char%']:
         code += add_rem_code(gen_obj)
+    elif gen_obj.op in ['uint-', 'ufloat-', 'ulong-','uchar-']:
+        code += add_unm_code(gen_obj)
+    elif gen_obj.op in ['int~', 'float~', 'long~','char~']:
+        code += add_tilde_code(gen_obj)
+    elif gen_obj.op in ['int>>', 'bool>>', 'long>>','char>>', 'int<<', 'bool<<', 'long<<','char<<']:
+        code += add_shift_code(gen_obj)
     else:
         pass
     return code
-
 
 
 def add_func_body_code(name, func_code):
