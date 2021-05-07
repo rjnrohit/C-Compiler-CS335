@@ -287,7 +287,7 @@ def p_postfix_expression(p):
             const_place = get_const(const=1,type=p[1].type,use=True)
             #add type conversion
             p[0].code += [gen(op=str(p[1].type)+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
-        elif p[1].type.class_type in allowed_class:
+        elif p[1].type.class_type in allowed_class and p[1].is_array == False:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
@@ -355,6 +355,10 @@ def p_postfix_expression_1(p):
         if len(p[1].type.array_size) == 0:
             const_place = get_const(p[1].type.type_size,type="long")
             tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
+            p[0].code += [code]
+            tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
+            p[0].place = tmp
+            p[0].code += [code]
         else:
             p[0].type.array_size = p[1].type.array_size[1:]
             width = 1
@@ -363,10 +367,12 @@ def p_postfix_expression_1(p):
             width = width*p[1].type.array_type.width
             const_place = get_const(width,type="long")
             tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
-        p[0].code += [code]
-        tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
-        p[0].place = tmp
-        p[0].code += [code]
+            p[0].code += [code]
+            tmp1 = get_newtmp(BasicType("long"))
+            p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp1)]
+            tmp,code = get_opcode(op="long+",place1=tmp1,place2=tmp,type="long")
+            p[0].place = tmp
+            p[0].code += [code]
 
 
 

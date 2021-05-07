@@ -109,37 +109,44 @@ EndFunc
 main:
 BeginFunc
 no|main = lconst@6
-tmp@30 = arr|main long+ lconst@0
-tmp@30 = lconst@12
-tmp@31 = arr|main long+ lconst@8
-tmp@31 = lconst@11
-tmp@32 = arr|main long+ lconst@16
-tmp@32 = lconst@13
-tmp@33 = arr|main long+ lconst@24
-tmp@33 = lconst@5
-tmp@34 = arr|main long+ lconst@32
-tmp@34 = lconst@6
-tmp@35 = arr|main long+ lconst@40
-tmp@35 = lconst@7
+tmp@30 = addr(arr|main)
+tmp@31 = tmp@30 long+ lconst@0
+tmp@31 = lconst@12
+tmp@32 = addr(arr|main)
+tmp@33 = tmp@32 long+ lconst@8
+tmp@33 = lconst@11
+tmp@34 = addr(arr|main)
+tmp@35 = tmp@34 long+ lconst@16
+tmp@35 = lconst@13
+tmp@36 = addr(arr|main)
+tmp@37 = tmp@36 long+ lconst@24
+tmp@37 = lconst@5
+tmp@38 = addr(arr|main)
+tmp@39 = tmp@38 long+ lconst@32
+tmp@39 = lconst@6
+tmp@40 = addr(arr|main)
+tmp@41 = tmp@40 long+ lconst@40
+tmp@41 = lconst@7
 a|main = sconst@stringconst
 ptr|main = lconst@0
-tmp@36 = ptr|main long+ lconst@16
-tmp@36 = load(tmp@36)
-tmp@36 = lconst@0
+tmp@42 = ptr|main long+ lconst@16
+tmp@42 = load(tmp@42)
+tmp@42 = lconst@0
 i|main = lconst@0
 label#7:
-tmp@37 = i|main int< no|main
-ifz tmp@37 goto label#9
-tmp@39 = addr(ptr|main)
-tmp@40 = i|main long* lconst@8
-tmp@41 = arr|main long+ tmp@40
-push tmp@39
-push tmp@41
+tmp@43 = i|main int< no|main
+ifz tmp@43 goto label#9
+tmp@45 = addr(ptr|main)
+tmp@46 = i|main long* lconst@8
+tmp@47 = addr(arr|main)
+tmp@48 = tmp@47 long+ tmp@46
+push tmp@45
+push tmp@48
 None = func_call insert
-pop tmp@41
-pop tmp@39
+pop tmp@48
+pop tmp@45
 label#8:
-tmp@38 = = i|main
+tmp@44 = = i|main
 i|main = i|main int+ lconst@1
 goto label#7
 label#9:

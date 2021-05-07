@@ -41,7 +41,9 @@ class gen:
         
         if op == "goto":
             return "goto "+place1
-        
+        if op == "addr":
+            return self.place3+" = "+"addr("+self.place1+")"
+            
         if op == 'if' or op == 'ifz':
             return self.ifcode(self.place1, self.place2)
 
