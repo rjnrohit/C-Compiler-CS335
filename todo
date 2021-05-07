@@ -1,3 +1,8 @@
 add CONST
 add Signed Unsigned
 
+To run the assembly
+yasm -g dwarf2 -f elf64 temp.asm
+ld -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o temp temp.o -lc
+./temp
+

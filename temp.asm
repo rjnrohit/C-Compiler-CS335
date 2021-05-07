@@ -24,12 +24,16 @@ const2 dq 46
 const3 dq 1
 const4 dd 3.1
 const5 dq 0
+fmt     db "%u  %s",10,0
+msg1    db "Hello",0
+msg2    db "Goodbye",0
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
 extern printf
 extern scanf
 extern malloc
+extern puts
 section .text
 global _start
 _start:
@@ -132,5 +136,10 @@ mov r10, qword [rbp-108]
 mov qword[rbp-116], r10
 ;copy return value in rax
 mov rax , qword[const5]
+mov  edx, msg1
+mov  esi, 1
+mov  edi, fmt
+mov  eax, 0     ; no f.p. args
+call printf
 leave
 ret
