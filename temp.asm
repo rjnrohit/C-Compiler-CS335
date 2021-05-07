@@ -54,6 +54,9 @@ sub rsp, 4
 movss dword [rsp],xmm0
 ;add space for symbols
 sub rsp, 8
+mov r10, qword [rbp-12]
+cvtsi2ss xmm0,r10d
+movss dword[rbp-20], xmm0
 movss xmm0, dword [rbp-20]
 movss xmm1, dword [rbp-16]
 addss xmm0, xmm1
@@ -121,6 +124,10 @@ call foo
 ;copy return value from xmm0
 movss dword[rbp-100], xmm0
 add rsp,0
+movss xmm0, dword [rbp-100]
+cvtss2si r10d,xmm0
+movsxd r10,r10d
+mov qword[rbp-108], r10
 mov r10, qword [rbp-108]
 mov qword[rbp-116], r10
 ;copy return value in rax

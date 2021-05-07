@@ -32,7 +32,7 @@ int~                                                                            
 float~                                                                                      #not possible
 long~                                                                                       #done
 char~                                                                                       #done
-not_bool (check if value 0 or 1 "!" op not taking care of type)
+not_bool (check if value 0 or 1 "!" op not taking care of type)                             #done
 int/                                                                                        #done
 long/                                                                                       #done
 float/                                                                                      #done
@@ -57,6 +57,6 @@ bool&                                                                           
 int/long/char/bool| (bit or)                                                                #done
 int/long/char/bool<< (shift)                                                                #done
 int/long/char/bool>>                                                                        #done
-int/long/char/bool/float(>=,<=,<,>,==,!=) (relation op)
-(int/long/char/bool/float)2(int/long/char/bool/float) (typecasting)
+int/long/char/bool/float(>=,<=,<,>,==,!=) (relation op)                                     #done
+(int/long/char/bool/float)2(int/long/char/bool/float) (typecasting)                         #done
 

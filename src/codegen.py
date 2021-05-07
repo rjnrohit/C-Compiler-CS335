@@ -1,5 +1,5 @@
 from structure import FunctionType, StructType, SymbolTable, sym_table, PointerType, BasicType
-from threeaddr import gen
+from threeaddr import gen, get_newlabel
 from threeaddr import alloc, temp_dict
 import math
 
@@ -567,6 +567,76 @@ def add_load_addr(gen_obj):
         code += ["mov qword [" + addr+"], r10"]
     return code
 
+def add_typecast_code(gen_obj, not_bool = False):
+    code =[]
+    code += load_var(gen_obj.place1)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if 'to_float' in gen_obj.op:
+        code += ["cvtsi2ss {},{}".format('xmm0', temp_regs[0][4])]
+        code += ["movss " + get_size + "[" + addr+"], xmm0"]
+    elif 'float_to' in gen_obj.op:
+        code += ["cvtss2si {},{}".format(temp_regs[0][4], 'xmm0')]
+        code += ["movsxd {},{}".format(temp_regs[0][8], temp_regs[0][4])]
+        code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
+    elif 'to_bool' in gen_obj.op or not_bool:
+        if 'xmm' in code[-1]:
+            code += ["subss xmm1, xmm1"]
+            code += ["ucomiss xmm0, xmm1"]
+        else:
+            code += ["cmp r10, 0"]
+        label = get_newlabel()
+        code += ['je ' + label]
+        code += ["mov r10,1"]
+        code += [label+":"]
+        code += ["mov r10,0"]
+        code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
+    else:
+        code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
+    return code
+
+def add_not_bool_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if 'xmm' in code[-1]:
+        code += ["subss xmm1, xmm1"]
+        code += ["ucomiss xmm0, xmm1"]
+    else:
+        code += ["cmp r10, 0"]
+    label = get_newlabel()
+    code += ['je ' + label]
+    code += ["mov r10,0"]
+    code += [label+":"]
+    code += ["mov r10,1"]
+    code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
+    return code
+
+def add_relational_code(gen_obj):
+    code = []
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    code += load_var(gen_obj.place1, gen_obj.place2)
+    if 'float' in code[-1]:
+        code += ["cmp xmm0, xmm1"]
+    else:
+        code += ["cmp r10, r11"]
+    label = get_newlabel()
+    opd= {'==':'je', '!=':'jne','<':'jl','<=':'jle','>':'jg','>=':'jge'}
+    code += [opd[gen_obj.op[-2:] if (gen_obj[-1] != '>' or gen_obj[-1] != '<') else gen_obj.op[-1]] + label]
+    code += ["mov r10,0"]
+    code += [label+":"]
+    code += ["mov r10,1"]
+    code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
+    return code
+
 
 def add_other_opcode(gen_obj):
     code =[]
@@ -607,8 +677,12 @@ def add_other_opcode(gen_obj):
         code += add_tilde_code(gen_obj)
     elif gen_obj.op in ['int>>', 'bool>>', 'long>>','char>>', 'int<<', 'bool<<', 'long<<','char<<']:
         code += add_shift_code(gen_obj)
-    else:
-        pass
+    elif '_to_' in gen_obj.op:
+        code += add_typecast_code(gen_obj)
+    elif gen_obj.op in [t+s for t in ['int', 'bool', 'char', 'float','long'] for s in [">=","<=","<",">","==","!="]]:
+        code += add_relational_code(gen_obj)
+    elif gen_obj.op == 'not_bool':
+        code += add_not_bool_code(gen_obj)
     return code
 
 
