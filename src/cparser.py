@@ -283,19 +283,21 @@ def p_postfix_expression(p):
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
-            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
+            p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
+            #print(p[0].code)
             const_place = get_const(const=1,type=p[1].type,use=True)
             #add type conversion
             p[0].code += [gen(op=str(p[1].type)+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
+            #print(p[0].code)
         elif p[1].type.class_type in allowed_class and p[1].is_array == False:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
             p[0].code = p[1].code
-            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
+            p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
             width = p[1].type.type_size
             const_place = get_const(const=width,type="long",use=True)
             p[0].code += [gen(op="long"+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
-
+            #print(p[0].code)
         else:
             p[0] = p[1]
             p[0].type = 'error'

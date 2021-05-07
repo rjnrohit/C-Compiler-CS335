@@ -152,7 +152,8 @@ def add_init_global_variables():
         else:
             if typ.is_array:
                 assert typ.array_type.stype == 'char', "not char string"
-                code += [e_name + ' ' + decl_type[typ.array_type.width]  + ' "' + str(alloc[key]) +'", NULL']
+                extra_null = typ.width - len(str(alloc[key]))-1
+                code += [e_name + ' ' + decl_type[typ.array_type.width]  + ' "' + str(alloc[key]) +'", NULL' + ',NULL'*extra_null]
             else:
                 code += [e_name + ' ' + decl_type[8] + ' ' + str(alloc[key])]
     
@@ -296,7 +297,7 @@ def add_return_code(name, gen_obj):
     code = []
     if gen_obj.place1:
         place1 = gen_obj.place1
-        typ = SymbolTable.symbol_table_dict[name].table['return']
+        typ = SymbolTable.symbol_table_dict[name].table['return'].type
         if typ == 'StructType' or typ.width > 8:
             code += [';copy return value at addr in rax']
             code += add_copy_data_code(typ.width, get_var_addr(place1), 'rax')
@@ -436,24 +437,24 @@ def add_div_code(gen_obj):
     typ = [get_var_type(_) for _ in place]
     width = [_.width for _ in typ]
     get_size = [size_type[_] for _ in width]
-
+    print(place, addr, typ, width, get_size)
     if gen_obj.op != 'float/' and gen_obj.op != 'char/':
         assert width[0] == width[1],"type mismatch for division"
         assert width[0] == width[2],"type mismatch for division"
         code += ["push rax"]
-        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
-        code += [convis[gp_regs[3][width[0]] +':'+gp_regs[0][width[0]]]]
+        code += ["mov " + gp_regs[width[0]][0] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += [convis[gp_regs[width[0]][3] +':'+gp_regs[width[0]][0]]]
         code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
-        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[0][width[2]]]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[width[2]][0]]
         code += ["pop rax"]
     elif gen_obj.op == 'char/':
         assert width[0] == width[1],"type mismatch for division"
         assert width[0] == width[2],"type mismatch for division"
         code += ["push rax"]
-        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += ["mov " + gp_regs[width[0]][0] + ", " + get_size[0] + "[" +addr[0] +"]"]
         code += [convis['ah:al']]
         code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
-        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[0][width[2]]]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[width[2]][0]]
         code += ["pop rax"]
     else:
         code += ["divss xmm0, xmm1"]
@@ -471,16 +472,16 @@ def add_rem_code(gen_obj):
         assert width[0] == width[1],"type mismatch for division"
         assert width[0] == width[2],"type mismatch for division"
         code += ["push rax"]
-        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
-        code += [convis[gp_regs[3][width[0]] +':'+gp_regs[0][width[0]]]]
+        code += ["mov " + gp_regs[width[0]][0] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += [convis[gp_regs[width[0]][3] +':'+gp_regs[width[0]][0]]]
         code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
-        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[3][width[2]]]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[width[2]][3]]
         code += ["pop rax"]
     else:
         assert width[0] == width[1],"type mismatch for division"
         assert width[0] == width[2],"type mismatch for division"
         code += ["push rax"]
-        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += ["mov " + gp_regs[width[0]][0] + ", " + get_size[0] + "[" +addr[0] +"]"]
         code += [convis['ah:al']]
         code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
         code += ["mov " + get_size[2] +"["+addr[2]+"], ah"]

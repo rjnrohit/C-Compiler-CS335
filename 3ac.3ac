@@ -1,162 +1,23 @@
-insert:
+foo:
 BeginFunc
-tmp@0 = load(p|insert)
-tmp@1 = tmp@0 long== lconst@0
-ifz tmp@1 goto label#0
-tmp@2 = load(p|insert)
-tmp@2 = y|scope@3
-tmp@3 = load(p|insert)
-tmp@4 = tmp@3 long+ lconst@8
-tmp@4 = load(tmp@4)
-tmp@4 = lconst@0
-tmp@5 = load(p|insert)
-tmp@6 = tmp@5 long+ lconst@24
-tmp@6 = load(tmp@6)
-tmp@6 = lconst@0
-tmp@7 = load(p|insert)
-tmp@8 = tmp@7 long+ lconst@16
-tmp@8 = load(tmp@8)
-tmp@8 = num|insert
-return
-goto label#3
-label#0:
-tmp@9 = load(p|insert)
-tmp@10 = tmp@9 long+ lconst@16
-tmp@10 = load(tmp@10)
-tmp@11 = num|insert int== tmp@10
-ifz tmp@11 goto label#1
-return
-label#1:
-tmp@12 = load(p|insert)
-tmp@13 = tmp@12 long+ lconst@16
-tmp@13 = load(tmp@13)
-tmp@14 = num|insert int< tmp@13
-ifz tmp@14 goto label#2
-tmp@15 = load(p|insert)
-tmp@16 = tmp@15 long+ lconst@8
-tmp@16 = load(tmp@16)
-tmp@17 = addr(tmp@16)
-push tmp@17
-push num|insert
-None = func_call insert
-pop num|insert
-pop tmp@17
-goto label#3
-label#2:
-tmp@18 = load(p|insert)
-tmp@19 = tmp@18 long+ lconst@24
-tmp@19 = load(tmp@19)
-tmp@20 = addr(tmp@19)
-push tmp@20
-push num|insert
-None = func_call insert
-pop num|insert
-pop tmp@20
-label#3:
-return
-EndFunc
-inorder:
-BeginFunc
-tmp@21 = p|inorder long!= lconst@0
-ifz tmp@21 goto label#4
-tmp@22 = p|inorder long+ lconst@8
-tmp@22 = load(tmp@22)
-push tmp@22
-None = func_call inorder
-pop tmp@22
-tmp@23 = p|inorder long+ lconst@24
-tmp@23 = load(tmp@23)
-push tmp@23
-None = func_call inorder
-pop tmp@23
-label#4:
-return
-EndFunc
-preorder:
-BeginFunc
-tmp@24 = p|preorder long!= lconst@0
-ifz tmp@24 goto label#5
-tmp@25 = p|preorder long+ lconst@8
-tmp@25 = load(tmp@25)
-push tmp@25
-None = func_call preorder
-pop tmp@25
-tmp@26 = p|preorder long+ lconst@24
-tmp@26 = load(tmp@26)
-push tmp@26
-None = func_call preorder
-pop tmp@26
-label#5:
-return
-EndFunc
-postorder:
-BeginFunc
-tmp@27 = p|postorder long!= lconst@0
-ifz tmp@27 goto label#6
-tmp@28 = p|postorder long+ lconst@8
-tmp@28 = load(tmp@28)
-push tmp@28
-None = func_call postorder
-pop tmp@28
-tmp@29 = p|postorder long+ lconst@24
-tmp@29 = load(tmp@29)
-push tmp@29
-None = func_call postorder
-pop tmp@29
-label#6:
-return
+tmp@0 = int_to_float c|foo
+tmp@1 = tmp@0 float+ d|foo
+return tmp@1
 EndFunc
 main:
 BeginFunc
-no|main = lconst@6
-tmp@30 = addr(arr|main)
-tmp@31 = tmp@30 long+ lconst@0
-tmp@31 = lconst@12
-tmp@32 = addr(arr|main)
-tmp@33 = tmp@32 long+ lconst@8
-tmp@33 = lconst@11
-tmp@34 = addr(arr|main)
-tmp@35 = tmp@34 long+ lconst@16
-tmp@35 = lconst@13
-tmp@36 = addr(arr|main)
-tmp@37 = tmp@36 long+ lconst@24
-tmp@37 = lconst@5
-tmp@38 = addr(arr|main)
-tmp@39 = tmp@38 long+ lconst@32
-tmp@39 = lconst@6
-tmp@40 = addr(arr|main)
-tmp@41 = tmp@40 long+ lconst@40
-tmp@41 = lconst@7
-a|main = sconst@stringconst
-ptr|main = lconst@0
-tmp@42 = ptr|main long+ lconst@16
-tmp@42 = load(tmp@42)
-tmp@42 = lconst@0
-i|main = lconst@0
-label#7:
-tmp@43 = i|main int< no|main
-ifz tmp@43 goto label#9
-tmp@45 = addr(ptr|main)
-tmp@46 = i|main long* lconst@8
-tmp@47 = addr(arr|main)
-tmp@48 = tmp@47 long+ tmp@46
-push tmp@45
-push tmp@48
-None = func_call insert
-pop tmp@48
-pop tmp@45
-label#8:
-tmp@44 = = i|main
-i|main = i|main int+ lconst@1
-goto label#7
-label#9:
-push ptr|main
-None = func_call inorder
-pop ptr|main
-push ptr|main
-None = func_call preorder
-pop ptr|main
-push ptr|main
-None = func_call postorder
-pop ptr|main
+a|main = lconst@3
+b|main = lconst@4
+tmp@2 = b|main int/ a|main
+c|main = tmp@2
+n|main = lconst@46
+label#0:
+tmp@3 = n|main
+n|main = n|main int- lconst@1
+ifz tmp@3 goto label#1
+tmp@4 = a|main int+ c|main
+a|main = tmp@4
+goto label#0
+label#1:
+return lconst@0
 EndFunc
