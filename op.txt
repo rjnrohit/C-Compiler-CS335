@@ -1,29 +1,29 @@
-BeginFunc  #done
-label       #done
-EndFunc     #done
-(long/int/float/char/bool/str/struct_{name of struct})= (equal to copy operator) #done
-int+
-float+
-char+
-long+
-long*
-int*
-char*
-float*
-func_call   #done
-push        #done
-pop         #done
-addr
-load
-ifz         #done
-ifnz        #done
-goto        #done
-if_not_cmp_int (used in switch if value of place1 not equal to place2 goto place3) #done
-if_not_cmp_long #done
-if_not_cmp_float #done
-if_not_cmp_char #done
-if_not_cmp_bool #done
-return      #done
+BeginFunc                                                                                   #done
+label                                                                                       #done
+EndFunc                                                                                     #done
+(long/int/float/char/bool/str/struct_{name of struct})= (equal to copy operator)            #done
+int+                                                                                        #done
+float+                                                                                      #done
+char+                                                                                       #done
+long+                                                                                       #done
+long*                                                                                       #done
+int*                                                                                        #done
+char*                                                                                       #done
+float*                                                                                      #done
+func_call                                                                                   #done
+push                                                                                        #done
+pop                                                                                         #done
+addr                                                                                        #done
+load                                                                                        #done
+ifz                                                                                         #done
+ifnz                                                                                        #done
+goto                                                                                        #done
+if_not_cmp_int (used in switch if value of place1 not equal to place2 goto place3)          #done
+if_not_cmp_long                                                                             #done
+if_not_cmp_float                                                                            #done
+if_not_cmp_char                                                                             #done
+if_not_cmp_bool                                                                             #done
+return                                                                                      #done
 uint- (with only one place1 for unary)
 ufloat-
 ulong-
@@ -33,19 +33,19 @@ float~
 long~
 char~
 not_bool (check if value 0 or 1 "!" op not taking care of type)
-int/
-long/
-float/
-char/
-int%
-char%
-long%
-int-
-long-
-float-
-char-
-bool-
-bool+
+int/                                                                                        #done
+long/                                                                                       #done
+float/                                                                                      #done
+char/                                                                                       #done
+int%                                                                                        #done
+char%                                                                                       #done
+long%                                                                                       #done
+int-                                                                                        #done
+long-                                                                                       #done
+float-                                                                                      #done
+char-                                                                                       #done
+bool-                                                                                       #done
+bool+                                                                                       #done
 int^
 long^
 char^

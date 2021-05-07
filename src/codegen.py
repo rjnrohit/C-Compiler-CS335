@@ -64,6 +64,8 @@ size_type = {1:'byte', 2:'word', 4:'dword', 8:'qword'}
 decl_type= {1:'db', 2:'dw', 4:'dd', 8:'dq',16:'ddq'}
 decl_type_bss = {1:'resb', 2:'resw', 4:'resd', 8:'resq',16:'resdq'}
 
+convis ={'ah:al':'cbw','dx:ax':'cwd', 'edx:eax':'cdq', 'rdx:rax':'cqo'}
+
 const_dict = {}
 
 extern_functions = [
@@ -370,6 +372,7 @@ def add_assign_code(gen_obj):
         addr3 = get_var_addr(gen_obj.place3)
         typ1 = get_var_type(gen_obj.place1)
         typ3 = get_var_type(gen_obj.place3)
+        #print(typ1, typ3, typ1.width, typ3.width)
         code += add_copy_data_code(min(typ1.width, typ3.width), addr1, addr3)
     elif 'struct' in gen_obj.op and '=' in gen_obj.op:
         addr1 = get_var_addr(gen_obj.place1)
@@ -378,6 +381,128 @@ def add_assign_code(gen_obj):
         typ3 = get_var_type(gen_obj.place3)
         assert typ1 == typ3, "missing semantic type checking assign struct"
         code += add_copy_data_code(min(typ1.width, typ3.width), addr1, addr3)
+    return code
+
+def add_plus_code(gen_obj):
+    code =[]
+    print(gen_obj, get_var_type(gen_obj.place1))
+    code += load_var(gen_obj.place1, gen_obj.place2)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if gen_obj.op != 'float+':
+        code += ["add r10, r11"]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+    else:
+        code += ["addss xmm0, xmm1"]
+        code += ["movss " + get_size + "[" +addr+"], xmm0"]
+    return code
+
+def add_sub_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1, gen_obj.place2)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if gen_obj.op != 'float-':
+        code += ["sub r10, r11"]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+    else:
+        code += ["subss xmm0, xmm1"]
+        code += ["movss " + get_size + "[" +addr+"], xmm0"]
+    return code
+
+def add_mul_code(gen_obj):
+    code =[]
+    code += load_var(gen_obj.place1, gen_obj.place2)
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if gen_obj.op != 'float*':
+        code += ["imul r10, r11"]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+    else:
+        code += ["mulss xmm0, xmm1"]
+        code += ["movss " + get_size + "[" +addr+"], xmm0"]
+    return code
+
+def add_div_code(gen_obj):
+    code =[]
+    place = [gen_obj.place1, gen_obj.place2, gen_obj.place3]
+    addr = [get_var_addr(_) for _ in place]
+    typ = [get_var_type(_) for _ in place]
+    width = [_.width for _ in typ]
+    get_size = [size_type[_] for _ in width]
+
+    if gen_obj.op != 'float/' and gen_obj.op != 'char/':
+        assert width[0] == width[1],"type mismatch for division"
+        assert width[0] == width[2],"type mismatch for division"
+        code += ["push rax"]
+        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += [convis[gp_regs[3][width[0]] +':'+gp_regs[0][width[0]]]]
+        code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[0][width[2]]]
+        code += ["pop rax"]
+    elif gen_obj.op == 'char/':
+        assert width[0] == width[1],"type mismatch for division"
+        assert width[0] == width[2],"type mismatch for division"
+        code += ["push rax"]
+        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += [convis['ah:al']]
+        code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[0][width[2]]]
+        code += ["pop rax"]
+    else:
+        code += ["divss xmm0, xmm1"]
+        code += ["movss " + get_size + "[" +addr+"], xmm0"]
+    return code
+
+def add_rem_code(gen_obj):
+    code =[]
+    place = [gen_obj.place1, gen_obj.place2, gen_obj.place3]
+    addr = [get_var_addr(_) for _ in place]
+    typ = [get_var_type(_) for _ in place]
+    width = [_.width for _ in typ]
+    get_size = [size_type[_] for _ in width]
+    if gen_obj.op != 'char%':
+        assert width[0] == width[1],"type mismatch for division"
+        assert width[0] == width[2],"type mismatch for division"
+        code += ["push rax"]
+        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += [convis[gp_regs[3][width[0]] +':'+gp_regs[0][width[0]]]]
+        code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[3][width[2]]]
+        code += ["pop rax"]
+    else:
+        assert width[0] == width[1],"type mismatch for division"
+        assert width[0] == width[2],"type mismatch for division"
+        code += ["push rax"]
+        code += ["mov " + gp_regs[0][width[0]] + ", " + get_size[0] + "[" +addr[0] +"]"]
+        code += [convis['ah:al']]
+        code += ["idiv " + get_size[1] + "[" + addr[1]+"]"]
+        code += ["mov " + get_size[2] +"["+addr[2]+"], ah"]
+        code += ["pop rax"]
+    return code
+
+def add_load_addr(gen_obj):
+    code = []
+    addr = get_var_addr(gen_obj.place3)
+    typ = get_var_type(gen_obj.place3)
+    width = typ.width
+    get_size = size_type[width]
+    if gen_obj.op == 'load':
+        code += load_var(gen_obj.place1)
+        if 'xmm' in code[-1]:
+            code += ["movss " + get_size + "[" +addr+"], xmm0"]
+        else:
+            code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+    else:
+        addr1 = get_var_addr(gen_obj.place1)
+        code += ["lea r10, [" + addr1+"]"]
+        code += ["mov qword [" + addr+"], r10"]
     return code
 
 
@@ -399,8 +524,20 @@ def add_other_opcode(gen_obj):
         else:    
             code += ["cmp r10, r11"]
         code += ["jne " + gen_obj.place3]
+    elif gen_obj.op in ["load", "addr"]:
+        code += add_load_addr(gen_obj)
     elif gen_obj.op in assign_op or ("struct" in gen_obj.op and "=" in gen_obj.op):
         code += add_assign_code(gen_obj)
+    elif gen_obj.op in ['int+','long+', 'char+', 'float+', 'bool+']:
+        code += add_plus_code(gen_obj)
+    elif gen_obj.op in ['int*','long*', 'char*', 'float*', 'bool*']:
+        code += add_mul_code(gen_obj)
+    elif gen_obj.op in ['int-','long-', 'char-', 'float-', 'bool-']:
+        code += add_sub_code(gen_obj)
+    elif gen_obj.op in ['int/','long/', 'char/', 'float/']:
+        code += add_div_code(gen_obj)
+    elif gen_obj.op in ['int%', 'long%', 'char%']:
+        code += add_rem_code(gen_obj)
     else:
         pass
     return code
@@ -411,7 +548,7 @@ def add_func_body_code(name, func_code):
     code =[]
     for gen_obj in func_code:
         if gen_obj.op == 'func_call':
-            #TODO equating return value
+            #add_func_call handles value assignment to place3
             code += add_func_call(gen_obj)
         elif gen_obj.op == 'return':
             code += add_return_code(name, gen_obj)
@@ -548,6 +685,7 @@ def add_copy_data_code(count, addr, rax = None):
     """
     code =[]
     off = 0
+    noff = 0
     while count:
         new_addr = addr + '+' + str(off)
         if count >= 8:
@@ -565,7 +703,8 @@ def add_copy_data_code(count, addr, rax = None):
             code += ["push " + get_size+ " [" + new_addr + "]"]
         else:
             code += ["mov " + temp_regs[0][dec] + ", " + get_size + "[" + new_addr+"]"]
-            code += ["mov " + get_size + "[" + rax + str(off)+"], " + temp_regs[0][dec]]
+            code += ["mov " + get_size + "[" + rax +"+" + str(noff)+"], " + temp_regs[0][dec]]
+        noff += dec
 
     return code
    

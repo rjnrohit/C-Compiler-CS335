@@ -200,9 +200,9 @@ mov qword[rbp-104], r10
 mov r10, qword [const11]
 mov qword[rbp-112], r10
 mov r10, qword[const12+0]
-mov qword[rbp-1328], r10
+mov qword[rbp-132+0], r10
 mov r10d, dword[const12+8]
-mov dword[rbp-13212], r10d
+mov dword[rbp-132+8], r10d
 mov r10, qword [const0]
 mov qword[rbp-8], r10
 mov r10, qword [const0]

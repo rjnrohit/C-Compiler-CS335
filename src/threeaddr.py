@@ -86,6 +86,11 @@ class gen:
     # def goto(self, label):
     #     assert label , "goto None not possible"
     #     return "goto " + label
+    def __str__(self) -> str:
+        return self.code
+    
+    def __repr__(self) -> str:
+        return self.code
 
 
 
