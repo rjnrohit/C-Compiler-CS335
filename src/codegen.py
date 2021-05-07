@@ -244,7 +244,7 @@ def add_args_copy_code(fname):
     off = 16
     code += ['; saving the arguments values in the stack']
     reserved = symbol_table.table['return'].type.width
-    code += ["sub rsp, " +str(reserved)]
+    code += ["sub rsp, " +str(reserved) + "; adjust rsp for return entry"]
     required = symbol_table.offset
 
     for typ in args_type:

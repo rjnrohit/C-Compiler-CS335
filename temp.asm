@@ -53,7 +53,7 @@ insert:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 0
+sub rsp, 0; adjust rsp for return entry
 sub rsp, 8
 mov qword [rsp],rdi
 sub rsp, 8
@@ -171,7 +171,7 @@ inorder:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 0
+sub rsp, 0; adjust rsp for return entry
 sub rsp, 8
 mov qword [rsp],rdi
 ;add space for symbols
@@ -208,7 +208,7 @@ preorder:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 0
+sub rsp, 0; adjust rsp for return entry
 sub rsp, 8
 mov qword [rsp],rdi
 ;add space for symbols
@@ -245,7 +245,7 @@ postorder:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 0
+sub rsp, 0; adjust rsp for return entry
 sub rsp, 8
 mov qword [rsp],rdi
 ;add space for symbols
@@ -282,7 +282,7 @@ main:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 0
+sub rsp, 0; adjust rsp for return entry
 ;add space for symbols
 sub rsp, 229
 mov r10, qword [const4]
