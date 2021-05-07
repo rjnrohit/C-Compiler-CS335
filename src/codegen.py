@@ -298,6 +298,9 @@ def add_return_code(name, gen_obj):
         if typ == 'StructType' or typ.width > 8:
             code += [';copy return value at addr in rax']
             code += add_copy_data_code(typ.width, get_var_addr(place1), 'rax')
+        elif typ.stype == 'float':
+            code += [';copy return value in xmm0']
+            code += ["movss xmm0, " +size_type[typ.width] +"[" +get_var_addr(place1) +"]"]
         else:
             code += [';copy return value in rax']
             code += ["mov " + gp_regs[typ.width][0] + " , " +size_type[typ.width] +"[" +get_var_addr(place1) +"]"]
@@ -305,6 +308,23 @@ def add_return_code(name, gen_obj):
         code += ["xor rax, rax"]
     code += ['leave']
     code += ['ret']
+    return code
+
+def add_post_call(place3):
+    code =[]
+    if not place3:
+        return code
+    typ = get_var_type(place3)
+    addr = get_var_addr(place3)
+    if typ == 'StructType' or typ.width > 8:
+        code += [';copy return value from addr in rax']
+        code += add_copy_data_code(typ.width, 'rax', addr)
+    elif typ.stype == 'float':
+        code += [';copy return value from xmm0']
+        code += ["movss " +size_type[typ.width] +"[" +addr+"], xmm0"]
+    else:
+        code += [';copy return value from rax']
+        code += ["mov " + size_type[typ.width] +"[" +addr+"]" +", " +gp_regs[typ.width][0]]
     return code
 
 def load_var(var1, var2 = None):
@@ -425,6 +445,7 @@ def add_func_call(gen_obj):
     code = []
 
     args_val = gen_obj.place2
+    place3 = gen_obj.place3 if gen_obj.place3 != "None" else None
     ret_type = SymbolTable.symbol_table_dict[gen_obj.place1].table['return']
     args_type = sym_table.table[gen_obj.place1].type.param_list
 
@@ -436,12 +457,15 @@ def add_func_call(gen_obj):
     float_args = 0
     byte8_args = 0
     other_args = 0
+    shift = 0
 
     if ret_type.width > 8:
+        shift += ret_type.width
         code += ["lea rsp, [rsp+"+str(ret_type.width)+"]"]
         code += ["lea rax, [rsp]"]
 
-    for i, typ in enumerate(args_type):
+    for arg in args_val:
+        typ = get_var_type(arg)
         if typ.stype == "float":
             float_args += 1
         elif typ.class_type == "PointerType" or typ.class_type == "BasicType":
@@ -456,7 +480,6 @@ def add_func_call(gen_obj):
 
     assert len(args_val) == len(args_type), "Mismatch in No. of args has not detected"
 
-    shift = 0
     code += ['; saving arguments for call']
     for arg in args_val:
         addr = get_var_addr(arg)
@@ -504,10 +527,14 @@ def add_func_call(gen_obj):
             code += add_copy_data_code(typ.width, addr)
             other_args -= 1
     code += ["call " + gen_obj.place1]
+    code += add_post_call(place3)
     code += ["add rsp," + str(shift)]
     return code
 
 def add_copy_data_code(count, addr, rax = None):
+    """
+    copy data from addr and put in rax specified addr
+    """
     """
     array
        addr :+
