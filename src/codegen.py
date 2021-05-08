@@ -587,11 +587,14 @@ def add_typecast_code(gen_obj, not_bool = False):
             code += ["ucomiss xmm0, xmm1"]
         else:
             code += ["cmp r10, 0"]
-        label = get_newlabel()
-        code += ['je ' + label]
+        label1 = get_newlabel()
+        code += ['je ' + label1]
         code += ["mov r10,1"]
-        code += [label+":"]
+        label2 = get_newlabel()
+        code += ["jmp "+label2]
+        code += [label1+":"]
         code += ["mov r10,0"]
+        code += [label2 + ':']
         code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
     else:
         code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
@@ -609,11 +612,14 @@ def add_not_bool_code(gen_obj):
         code += ["ucomiss xmm0, xmm1"]
     else:
         code += ["cmp r10, 0"]
-    label = get_newlabel()
-    code += ['je ' + label]
+    label1 = get_newlabel()
+    code += ['je ' + label1]
     code += ["mov r10,0"]
-    code += [label+":"]
+    label2 = get_newlabel()
+    code += ["jmp "+label2]
+    code += [label1+":"]
     code += ["mov r10,1"]
+    code += [label2+':']
     code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
     return code
 
@@ -628,12 +634,15 @@ def add_relational_code(gen_obj):
         code += ["cmp xmm0, xmm1"]
     else:
         code += ["cmp r10, r11"]
-    label = get_newlabel()
+    label1 = get_newlabel()
     opd= {'==':'je', '!=':'jne','<':'jl','<=':'jle','>':'jg','>=':'jge'}
-    code += [opd[gen_obj.op[-2:] if (gen_obj[-1] != '>' or gen_obj[-1] != '<') else gen_obj.op[-1]] + label]
+    code += [opd[gen_obj.op[-2:] if (gen_obj[-1] != '>' or gen_obj[-1] != '<') else gen_obj.op[-1]] + label1]
     code += ["mov r10,0"]
-    code += [label+":"]
+    label2 = get_newlabel()
+    code += ["jmp "+ label2]
+    code += [label1+":"]
     code += ["mov r10,1"]
+    code += [label2 +':']
     code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
     return code
 
