@@ -71,7 +71,8 @@ const_dict = {}
 extern_functions = [
     'printf',
     'scanf',
-    'malloc'
+    'malloc',
+    'exit'
 ]
 
 def add_standard_constant():
@@ -179,15 +180,16 @@ def add_start(gcode):
     code += ['mov rsi, r13']
     code += ['call main']
     code += ['end:']
-    code += ['mov rax, SYS_exit ; Call code for exit']
-    code += ['mov rdi, EXIT_SUCCESS ; Exit program with success']
-    code += ['syscall']
+    code += ['call exit']
+    code += [';mov rax, SYS_exit ; Call code for exit']
+    code += [';mov rdi, EXIT_SUCCESS ; Exit program with success']
+    code += [';syscall']
 
     return code
 
 def add_text(gcode, func_codes):
     code = ['section .text']
-    code += add_start(gcode)
+    #code += add_start(gcode)
     
     for func in func_codes:
         code += add_func_code(func)
@@ -358,16 +360,17 @@ def load_var(var1, var2 = None):
 
 def add_assign_code(gen_obj):
     code =[]
-    if gen_obj.op in ["long=","int=","char=","bool="]:
+    if gen_obj.op in ["long=","int=","char=","bool=", 'float=']:
         code += load_var(gen_obj.place1)
         addr = get_var_addr(gen_obj.place3)
         typ = get_var_type(gen_obj.place3)
         width = typ.width
         get_size = size_type[width]
+        # print(gen_obj.code)
         if gen_obj.op != 'float=':
             code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
         else:
-            code += ["movss " + get_size + "[" + addr+"]" + arg_regsf[0]]
+            code += ["movss " + get_size + "[" + addr+"], " + arg_regsf[0]]
     elif gen_obj.op == 'str=':
         addr1 = get_var_addr(gen_obj.place1)
         addr3 = get_var_addr(gen_obj.place3)
@@ -700,7 +703,10 @@ def add_func_body_code(name, func_code):
     for gen_obj in func_code:
         if gen_obj.op == 'func_call':
             #add_func_call handles value assignment to place3
-            code += add_func_call(gen_obj)
+            if gen_obj.place1 in extern_functions:
+                code += add_extern_code(gen_obj)
+            else:
+                code += add_func_call(gen_obj)
         elif gen_obj.op == 'return':
             code += add_return_code(name, gen_obj)
         elif gen_obj.op == 'label':
@@ -817,6 +823,126 @@ def add_func_call(gen_obj):
     code += ["call " + gen_obj.place1]
     code += add_post_call(place3)
     code += ["add rsp," + str(shift)]
+    return code
+
+def add_extern_code(gen_obj):
+    assert isinstance(gen_obj, gen), "object type error"
+    assert isinstance(sym_table.table[gen_obj.place1].type, FunctionType), "not a function"
+    
+    code = []
+
+    args_val = gen_obj.place2
+    place3 = gen_obj.place3 if gen_obj.place3 != "None" else None
+    ret_type = SymbolTable.symbol_table_dict[gen_obj.place1].table['return']
+    args_type = sym_table.table[gen_obj.place1].type.param_list
+
+    #print(args_val)
+    #print(args_type, args_type[0])
+
+    assert len(args_type) == len(args_val), "argument mismatch"
+    code += [';preparing extern function '+ gen_obj.place1]
+    float_args = 0
+    byte8_args = 0
+    shift = 0
+
+    if ret_type.width > 8:
+        shift += ret_type.width
+        code += ["lea rsp, [rsp+"+str(ret_type.width)+"]"]
+        code += ["lea rax, [rsp]"]
+
+    for arg in args_val:
+        typ = get_var_type(arg)
+        if typ.stype == "float":
+            float_args += 1
+        elif typ.class_type == "PointerType" or typ.class_type == "BasicType":
+            byte8_args += 1
+        else:
+            assert False, "variable size is not constant"
+    
+    #print(float_args_type, byte8_args_type, other_args_type)
+    #print(float_args, byte8_args, other_args)
+
+    args_val = args_val[::-1]
+    args_type = args_type[::-1]
+
+    assert len(args_val) == len(args_type), "Mismatch in No. of args has not detected"
+
+    code += ['; saving arguments for call']
+    code += ["push r12"]
+    code += ["push rax"]
+    code += ["mov r12, rsp"]
+    code += ["and spl, 0xf0"]
+
+    if (max(0,byte8_args - len(arg_regs)) + max(0, float_args-len(arg_regsf))) %2:
+        code += ["sub rsp, 8"]
+        shift += 8
+
+    float_used = 0
+
+    for arg in args_val:
+        addr = get_var_addr(arg)
+        typ = get_var_type(arg)
+        if typ.stype == "float":
+            if float_args > len(arg_regsf):
+                code += ['sub rsp, 8']
+                code += ['movss xmm0, dword [' + addr+']']
+                code += ['cvtss2sd xmm0, xmm0']
+                code += ['movsd qword [rsp], xmm0']
+                shift += 8
+            else:
+                float_used += 1
+                code += ['movss ' + arg_regsf[float_args-1] +', dword [' + addr + ']']
+                code += ['cvtss2sd {},{}'.format(arg_regsf[float_args-1], arg_regsf[float_args-1])]
+            float_args -= 1
+        elif typ.class_type == "BasicType" or typ.class_type == "PointerType":
+            if typ.class_type == "PointerType":
+                get_size = size_type[8]
+                width = 8
+            else:
+                width = typ.width
+                get_size = size_type[typ.width]
+            if byte8_args > len(arg_regs):
+                code += ['sub rsp, 8']
+                if typ.class_type != "PointerType":
+                    code += ['mov '+temp_regs[0][width]+', '+get_size+' [' + addr+']']
+                elif typ.is_array:
+                    code += ['lea '+temp_regs[0][8]+', [' + addr+']']
+                else:
+                    code += ['mov '+temp_regs[0][8]+', '+size_type[8]+' [' + addr+']']
+                if width != 8:
+                    if width != 4:
+                        code += ["movsx {},{}".format(temp_regs[0][8],temp_regs[0][width])]
+                    else:
+                        code += ["movsxd {},{}".format(temp_regs[0][8],temp_regs[0][width])]
+                code += ['mov '+size_type[8]+' [rsp], '+temp_regs[0][8]]
+                shift += 8
+            else:
+                #print(typ)
+                if typ.class_type != "PointerType":
+                    code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
+                elif typ.is_array:
+                    code += ['lea ' + arg_regs[byte8_args-1][8] +', [' + addr + ']']
+                else:
+                    code += ['mov ' + arg_regs[byte8_args-1][width] +', '+get_size+' [' + addr + ']']
+                if width != 8:
+                    if width != 4:
+                        code += ["movsx {},{}".format(arg_regs[byte8_args-1][8],arg_regs[byte8_args-1][width])]
+                    else:
+                        code += ["movsxd {},{}".format(arg_regs[byte8_args-1][8],arg_regs[byte8_args-1][width])]
+            byte8_args -= 1
+        else:
+            assert False, "variable size is not constant"
+    if float_used:
+        code += ["mov rax, " + str(float_used)]
+    else:
+        code += ["xor rax, rax"]
+
+    code += ["call " + gen_obj.place1]
+    code += add_post_call(place3)
+    code += ["add rsp," + str(shift)]
+    code += ["mov rsp , r12"]
+    code += ["pop rax"]
+    code += ["pop r12"]
     return code
 
 def add_copy_data_code(count, addr, rax = None):

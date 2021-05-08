@@ -6,29 +6,31 @@ return tmp@1
 EndFunc
 main:
 BeginFunc
-a|main = lconst@3
-b|main = lconst@4
-tmp@2 = b|main int/ a|main
-c|main = tmp@2
-n|main = lconst@46
-tmp@3 = int~ n|main
-n1|main = tmp@3
-tmp@4 = n1|main int<< lconst@1
-n3|main = tmp@4
-label#0:
-tmp@5 = n|main
-n|main = n|main int- lconst@1
-ifz tmp@5 goto label#1
-tmp@6 = a|main int+ c|main
-a|main = tmp@6
-goto label#0
-label#1:
+d|main = lconst@45
+c|main = lconst@567
+x|main = lconst@56
+df|main = lconst@345435
+a|main = lconst@97
+f|main = fconst@3.456
+s|main = sconst@%ld %ld  %ld %ld %ld  %c %f %d
+push s|main
+push d|main
+push c|main
+push lconst@67
+push x|main
+push df|main
 push a|main
-push fconst@3.1
-tmp@7 = func_call foo
-pop fconst@3.1
+push f|main
+push lconst@72
+tmp@2 = func_call printf
+pop lconst@72
+pop f|main
 pop a|main
-tmp@8 = float_to_int tmp@7
-d|main = tmp@8
+pop df|main
+pop x|main
+pop lconst@67
+pop c|main
+pop d|main
+pop s|main
 return lconst@0
 EndFunc

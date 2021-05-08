@@ -17,381 +17,110 @@
     17                                 SYS_exit equ 60
     18                                 SYS_creat equ 85
     19                                 
-    20 00000000 0000000000000000       const0 dq 0
-    21 00000008 0800000000000000       const1 dq 8
-    22 00000010 1800000000000000       const2 dq 24
-    23 00000018 1000000000000000       const3 dq 16
-    24 00000020 0600000000000000       const4 dq 6
-    25 00000028 0C00000000000000       const5 dq 12
-    26 00000030 0B00000000000000       const6 dq 11
-    27 00000038 0D00000000000000       const7 dq 13
-    28 00000040 0500000000000000       const8 dq 5
-    29 00000048 2000000000000000       const9 dq 32
-    30 00000050 2800000000000000       const10 dq 40
-    31 00000058 0700000000000000       const11 dq 7
-    32 00000060 737472696E67636F6E-    const12 db "stringconst", NULL
-    33 00000060 737400             
-    34 0000006C 0100000000000000       const13 dq 1
-    35                                 
-    36                                 [section .bss]
+    20 00000000 4000000000000000       b@global dq 64
+    21 00000008 616263000000000000-    a@global db "abc", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+    22 00000008 000000000000000000-
+    23 00000008 0000               
+    24 0000001C 2D00000000000000       const0 dq 45
+    25 00000024 3702000000000000       const1 dq 567
+    26 0000002C 3800000000000000       const2 dq 56
+    27 00000034 5B45050000000000       const3 dq 345435
+    28 0000003C 6100000000000000       const4 dq 97
+    29 00000044 1B2F5D40               const5 dd 3.456
+    30 00000048 256461626325646465-    const6 db "%dabc%ddef%dghi%d %ld char %c %f%s%dle", NULL
+    31 00000048 662564676869256420-
+    32 00000048 256C64206368617220-
+    33 00000048 256320256625732564-
+    34 00000048 6C6500             
+    35 0000006F 4300000000000000       const7 dq 67
+    36 00000077 0000000000000000       const8 dq 0
     37                                 
-    38                                 [extern printf]
-    39                                 [extern scanf]
-    40                                 [extern malloc]
-    41                                 [section .text]
-    42                                 [global _start]
-    43                                 _start:
-    44 00000000 4C8B2424               mov r12, [rsp]
-    45 00000004 4C8D6C2408             lea r13, [rsp+8]
-    46 00000009 4C89E7                 mov rdi, r12
-    47 0000000C 4C89EE                 mov rsi, r13
-    48 0000000F E84A030000             call main
-    49                                 end:
-    50 00000014 48C7C03C000000         mov rax, SYS_exit
-    51 0000001B 48C7C700000000         mov rdi, EXIT_SUCCESS
-    52 00000022 0F05                   syscall
-    53                                 [global insert]
-    54                                 insert:
-    55 00000024 55                     push rbp
-    56 00000025 4889E5                 mov rbp,rsp
-    57                                 
-    58 00000028 4883EC00               sub rsp, 0
-    59 0000002C 4883EC08               sub rsp, 8
-    60 00000030 48893C24               mov qword [rsp],rdi
-    61 00000034 4883EC08               sub rsp, 8
-    62 00000038 48893424               mov qword [rsp],rsi
-    63                                 
-    64 0000003C 4881EC9B000000         sub rsp, 155
-    65 00000043 4C8B55F8               mov r10, qword [rbp-8]
-    66 00000047 4C8955E8               mov qword[rbp-24], r10
-    67 0000004B 448A55E7               mov r10b, byte [rbp-25]
-    68 0000004F 4983FA00               cmp r10, 0
-    69 00000053 0F859D000000           jne label#0
-    70 00000059 4C8B55F8               mov r10, qword [rbp-8]
-    71 0000005D 4C8955D7               mov qword[rbp-41], r10
-    72 00000061 4C8B55DF               mov r10, qword [rbp-33]
-    73 00000065 4C8955D7               mov qword[rbp-41], r10
-    74 00000069 4C8B55F8               mov r10, qword [rbp-8]
-    75 0000006D 4C8955CF               mov qword[rbp-49], r10
-    76 00000071 4C8B55CF               mov r10, qword [rbp-49]
-    77 00000075 4C8B1C25[00000000]     mov r11, qword [const1]
-    78 0000007D 4D01DA                 add r10, r11
-    79 00000080 4C8955C7               mov qword[rbp-57], r10
-    80 00000084 4C8B55C7               mov r10, qword [rbp-57]
-    81 00000088 4C8955C7               mov qword[rbp-57], r10
-    82 0000008C 4C8B1425[00000000]     mov r10, qword [const0]
-    83 00000094 4C8955C7               mov qword[rbp-57], r10
-    84 00000098 4C8B55F8               mov r10, qword [rbp-8]
-    85 0000009C 4C8955BF               mov qword[rbp-65], r10
-    86 000000A0 4C8B55BF               mov r10, qword [rbp-65]
-    87 000000A4 4C8B1C25[00000000]     mov r11, qword [const2]
-    88 000000AC 4D01DA                 add r10, r11
-    89 000000AF 4C8955B7               mov qword[rbp-73], r10
-    90 000000B3 4C8B55B7               mov r10, qword [rbp-73]
-    91 000000B7 4C8955B7               mov qword[rbp-73], r10
-    92 000000BB 4C8B1425[00000000]     mov r10, qword [const0]
-    93 000000C3 4C8955B7               mov qword[rbp-73], r10
-    94 000000C7 4C8B55F8               mov r10, qword [rbp-8]
-    95 000000CB 4C8955AF               mov qword[rbp-81], r10
-    96 000000CF 4C8B55AF               mov r10, qword [rbp-81]
-    97 000000D3 4C8B1C25[00000000]     mov r11, qword [const3]
-    98 000000DB 4D01DA                 add r10, r11
-    99 000000DE 4C8955A7               mov qword[rbp-89], r10
-   100 000000E2 4C8B55A7               mov r10, qword [rbp-89]
-   101 000000E6 4C8955A7               mov qword[rbp-89], r10
-   102 000000EA 4C8B55F0               mov r10, qword [rbp-16]
-   103 000000EE 4C8955A7               mov qword[rbp-89], r10
-   104 000000F2 4831C0                 xor rax, rax
-   105 000000F5 C9                     leave
-   106 000000F6 C3                     ret
-   107 000000F7 E904010000             jmp label#3
-   108                                 label#0:
-   109 000000FC 4C8B55F8               mov r10, qword [rbp-8]
-   110 00000100 4C89559F               mov qword[rbp-97], r10
-   111 00000104 4C8B559F               mov r10, qword [rbp-97]
-   112 00000108 4C8B1C25[00000000]     mov r11, qword [const3]
-   113 00000110 4D01DA                 add r10, r11
-   114 00000113 4C895597               mov qword[rbp-105], r10
-   115 00000117 4C8B5597               mov r10, qword [rbp-105]
-   116 0000011B 4C895597               mov qword[rbp-105], r10
-   117 0000011F 448A5596               mov r10b, byte [rbp-106]
-   118 00000123 4983FA00               cmp r10, 0
-   119 00000127 7503                   jne label#1
-   120 00000129 4831C0                 xor rax, rax
-   121 0000012C C9                     leave
-   122 0000012D C3                     ret
-   123                                 label#1:
-   124 0000012E 4C8B55F8               mov r10, qword [rbp-8]
-   125 00000132 4C89558E               mov qword[rbp-114], r10
-   126 00000136 4C8B558E               mov r10, qword [rbp-114]
-   127 0000013A 4C8B1C25[00000000]     mov r11, qword [const3]
-   128 00000142 4D01DA                 add r10, r11
-   129 00000145 4C895586               mov qword[rbp-122], r10
-   130 00000149 4C8B5586               mov r10, qword [rbp-122]
-   131 0000014D 4C895586               mov qword[rbp-122], r10
-   132 00000151 448A5585               mov r10b, byte [rbp-123]
-   133 00000155 4983FA00               cmp r10, 0
-   134 00000159 7554                   jne label#2
-   135 0000015B 4C8B55F8               mov r10, qword [rbp-8]
-   136 0000015F 4C89957DFFFFFF         mov qword[rbp-131], r10
-   137 00000166 4C8B957DFFFFFF         mov r10, qword [rbp-131]
-   138 0000016D 4C8B1C25[00000000]     mov r11, qword [const1]
-   139 00000175 4D01DA                 add r10, r11
-   140 00000178 4C899575FFFFFF         mov qword[rbp-139], r10
-   141 0000017F 4C8B9575FFFFFF         mov r10, qword [rbp-139]
-   142 00000186 4C899575FFFFFF         mov qword[rbp-139], r10
-   143 0000018D 4C8D9575FFFFFF         lea r10, [rbp-139]
-   144 00000194 4C89956DFFFFFF         mov qword [rbp-147], r10
-   145                                 
-   146 0000019B 488B75F0               mov rsi, qword [rbp-16]
-   147 0000019F 488BBD6DFFFFFF         mov rdi, qword [rbp-147]
-   148 000001A6 E874FEFFFF             call insert
-   149 000001AB 4883C400               add rsp,0
-   150 000001AF EB52                   jmp label#3
-   151                                 label#2:
-   152 000001B1 4C8B55F8               mov r10, qword [rbp-8]
-   153 000001B5 4C899565FFFFFF         mov qword[rbp-155], r10
-   154 000001BC 4C8B9565FFFFFF         mov r10, qword [rbp-155]
-   155 000001C3 4C8B1C25[00000000]     mov r11, qword [const2]
-   156 000001CB 4D01DA                 add r10, r11
-   157 000001CE 4C89955DFFFFFF         mov qword[rbp-163], r10
-   158 000001D5 4C8B955DFFFFFF         mov r10, qword [rbp-163]
-   159 000001DC 4C89955DFFFFFF         mov qword[rbp-163], r10
-   160 000001E3 4C8D955DFFFFFF         lea r10, [rbp-163]
-   161 000001EA 4C899555FFFFFF         mov qword [rbp-171], r10
-   162                                 
-   163 000001F1 488B75F0               mov rsi, qword [rbp-16]
-   164 000001F5 488BBD55FFFFFF         mov rdi, qword [rbp-171]
-   165 000001FC E81EFEFFFF             call insert
-   166 00000201 4883C400               add rsp,0
-   167                                 label#3:
-   168 00000205 4831C0                 xor rax, rax
-   169 00000208 C9                     leave
-   170 00000209 C3                     ret
-   171                                 [global inorder]
-   172                                 inorder:
-   173 0000020A 55                     push rbp
-   174 0000020B 4889E5                 mov rbp,rsp
-   175                                 
-   176 0000020E 4883EC00               sub rsp, 0
-   177 00000212 4883EC08               sub rsp, 8
-   178 00000216 48893C24               mov qword [rsp],rdi
-   179                                 
-   180 0000021A 4883EC11               sub rsp, 17
-   181 0000021E 448A55F7               mov r10b, byte [rbp-9]
-   182 00000222 4983FA00               cmp r10, 0
-   183 00000226 754E                   jne label#4
-   184 00000228 4C8B55F8               mov r10, qword [rbp-8]
-   185 0000022C 4C8B1C25[00000000]     mov r11, qword [const1]
-   186 00000234 4D01DA                 add r10, r11
-   187 00000237 4C8955EF               mov qword[rbp-17], r10
-   188 0000023B 4C8B55EF               mov r10, qword [rbp-17]
-   189 0000023F 4C8955EF               mov qword[rbp-17], r10
-   190                                 
-   191 00000243 488B7DEF               mov rdi, qword [rbp-17]
-   192 00000247 E8B9FFFFFF             call inorder
-   193 0000024C 4883C400               add rsp,0
-   194 00000250 4C8B55F8               mov r10, qword [rbp-8]
-   195 00000254 4C8B1C25[00000000]     mov r11, qword [const2]
-   196 0000025C 4D01DA                 add r10, r11
-   197 0000025F 4C8955E7               mov qword[rbp-25], r10
-   198 00000263 4C8B55E7               mov r10, qword [rbp-25]
-   199 00000267 4C8955E7               mov qword[rbp-25], r10
-   200                                 
-   201 0000026B 488B7DE7               mov rdi, qword [rbp-25]
-   202 0000026F E891FFFFFF             call inorder
-   203 00000274 4883C400               add rsp,0
-   204                                 label#4:
-   205 00000278 4831C0                 xor rax, rax
-   206 0000027B C9                     leave
-   207 0000027C C3                     ret
-   208                                 [global preorder]
-   209                                 preorder:
-   210 0000027D 55                     push rbp
-   211 0000027E 4889E5                 mov rbp,rsp
-   212                                 
-   213 00000281 4883EC00               sub rsp, 0
-   214 00000285 4883EC08               sub rsp, 8
-   215 00000289 48893C24               mov qword [rsp],rdi
-   216                                 
-   217 0000028D 4883EC11               sub rsp, 17
-   218 00000291 448A55F7               mov r10b, byte [rbp-9]
-   219 00000295 4983FA00               cmp r10, 0
-   220 00000299 754E                   jne label#5
-   221 0000029B 4C8B55F8               mov r10, qword [rbp-8]
-   222 0000029F 4C8B1C25[00000000]     mov r11, qword [const1]
-   223 000002A7 4D01DA                 add r10, r11
-   224 000002AA 4C8955EF               mov qword[rbp-17], r10
-   225 000002AE 4C8B55EF               mov r10, qword [rbp-17]
-   226 000002B2 4C8955EF               mov qword[rbp-17], r10
-   227                                 
-   228 000002B6 488B7DEF               mov rdi, qword [rbp-17]
-   229 000002BA E8B9FFFFFF             call preorder
-   230 000002BF 4883C400               add rsp,0
-   231 000002C3 4C8B55F8               mov r10, qword [rbp-8]
-   232 000002C7 4C8B1C25[00000000]     mov r11, qword [const2]
-   233 000002CF 4D01DA                 add r10, r11
-   234 000002D2 4C8955E7               mov qword[rbp-25], r10
-   235 000002D6 4C8B55E7               mov r10, qword [rbp-25]
-   236 000002DA 4C8955E7               mov qword[rbp-25], r10
-   237                                 
-   238 000002DE 488B7DE7               mov rdi, qword [rbp-25]
-   239 000002E2 E891FFFFFF             call preorder
-   240 000002E7 4883C400               add rsp,0
-   241                                 label#5:
-   242 000002EB 4831C0                 xor rax, rax
-   243 000002EE C9                     leave
-   244 000002EF C3                     ret
-   245                                 [global postorder]
-   246                                 postorder:
-   247 000002F0 55                     push rbp
-   248 000002F1 4889E5                 mov rbp,rsp
-   249                                 
-   250 000002F4 4883EC00               sub rsp, 0
-   251 000002F8 4883EC08               sub rsp, 8
-   252 000002FC 48893C24               mov qword [rsp],rdi
-   253                                 
-   254 00000300 4883EC11               sub rsp, 17
-   255 00000304 448A55F7               mov r10b, byte [rbp-9]
-   256 00000308 4983FA00               cmp r10, 0
-   257 0000030C 754E                   jne label#6
-   258 0000030E 4C8B55F8               mov r10, qword [rbp-8]
-   259 00000312 4C8B1C25[00000000]     mov r11, qword [const1]
-   260 0000031A 4D01DA                 add r10, r11
-   261 0000031D 4C8955EF               mov qword[rbp-17], r10
-   262 00000321 4C8B55EF               mov r10, qword [rbp-17]
-   263 00000325 4C8955EF               mov qword[rbp-17], r10
-   264                                 
-   265 00000329 488B7DEF               mov rdi, qword [rbp-17]
-   266 0000032D E8B9FFFFFF             call postorder
-   267 00000332 4883C400               add rsp,0
-   268 00000336 4C8B55F8               mov r10, qword [rbp-8]
-   269 0000033A 4C8B1C25[00000000]     mov r11, qword [const2]
-   270 00000342 4D01DA                 add r10, r11
-   271 00000345 4C8955E7               mov qword[rbp-25], r10
-   272 00000349 4C8B55E7               mov r10, qword [rbp-25]
-   273 0000034D 4C8955E7               mov qword[rbp-25], r10
-   274                                 
-   275 00000351 488B7DE7               mov rdi, qword [rbp-25]
-   276 00000355 E891FFFFFF             call postorder
-   277 0000035A 4883C400               add rsp,0
-   278                                 label#6:
-   279 0000035E 4831C0                 xor rax, rax
-   280 00000361 C9                     leave
-   281 00000362 C3                     ret
-   282                                 [global main]
-   283                                 main:
-   284 00000363 55                     push rbp
-   285 00000364 4889E5                 mov rbp,rsp
-   286                                 
-   287 00000367 4883EC00               sub rsp, 0
-   288                                 
-   289 0000036B 4881ECE5000000         sub rsp, 229
-   290 00000372 4C8B1425[00000000]     mov r10, qword [const4]
-   291 0000037A 4C8955F0               mov qword[rbp-16], r10
-   292 0000037E 4C8D55C0               lea r10, [rbp-64]
-   293 00000382 4C8955B8               mov qword [rbp-72], r10
-   294 00000386 4C8B55B8               mov r10, qword [rbp-72]
-   295 0000038A 4C8B1C25[00000000]     mov r11, qword [const0]
-   296 00000392 4D01DA                 add r10, r11
-   297 00000395 4C8955B0               mov qword[rbp-80], r10
-   298 00000399 4C8B1425[00000000]     mov r10, qword [const5]
-   299 000003A1 4C8955B0               mov qword[rbp-80], r10
-   300 000003A5 4C8D55C0               lea r10, [rbp-64]
-   301 000003A9 4C8955A8               mov qword [rbp-88], r10
-   302 000003AD 4C8B55A8               mov r10, qword [rbp-88]
-   303 000003B1 4C8B1C25[00000000]     mov r11, qword [const1]
-   304 000003B9 4D01DA                 add r10, r11
-   305 000003BC 4C8955A0               mov qword[rbp-96], r10
-   306 000003C0 4C8B1425[00000000]     mov r10, qword [const6]
-   307 000003C8 4C8955A0               mov qword[rbp-96], r10
-   308 000003CC 4C8D55C0               lea r10, [rbp-64]
-   309 000003D0 4C895598               mov qword [rbp-104], r10
-   310 000003D4 4C8B5598               mov r10, qword [rbp-104]
-   311 000003D8 4C8B1C25[00000000]     mov r11, qword [const3]
-   312 000003E0 4D01DA                 add r10, r11
-   313 000003E3 4C895590               mov qword[rbp-112], r10
-   314 000003E7 4C8B1425[00000000]     mov r10, qword [const7]
-   315 000003EF 4C895590               mov qword[rbp-112], r10
-   316 000003F3 4C8D55C0               lea r10, [rbp-64]
-   317 000003F7 4C895588               mov qword [rbp-120], r10
-   318 000003FB 4C8B5588               mov r10, qword [rbp-120]
-   319 000003FF 4C8B1C25[00000000]     mov r11, qword [const2]
-   320 00000407 4D01DA                 add r10, r11
-   321 0000040A 4C895580               mov qword[rbp-128], r10
-   322 0000040E 4C8B1425[00000000]     mov r10, qword [const8]
-   323 00000416 4C895580               mov qword[rbp-128], r10
-   324 0000041A 4C8D55C0               lea r10, [rbp-64]
-   325 0000041E 4C899578FFFFFF         mov qword [rbp-136], r10
-   326 00000425 4C8B9578FFFFFF         mov r10, qword [rbp-136]
-   327 0000042C 4C8B1C25[00000000]     mov r11, qword [const9]
-   328 00000434 4D01DA                 add r10, r11
-   329 00000437 4C899570FFFFFF         mov qword[rbp-144], r10
-   330 0000043E 4C8B1425[00000000]     mov r10, qword [const4]
-   331 00000446 4C899570FFFFFF         mov qword[rbp-144], r10
-   332 0000044D 4C8D55C0               lea r10, [rbp-64]
-   333 00000451 4C899568FFFFFF         mov qword [rbp-152], r10
-   334 00000458 4C8B9568FFFFFF         mov r10, qword [rbp-152]
-   335 0000045F 4C8B1C25[00000000]     mov r11, qword [const10]
-   336 00000467 4D01DA                 add r10, r11
-   337 0000046A 4C899560FFFFFF         mov qword[rbp-160], r10
-   338 00000471 4C8B1425[00000000]     mov r10, qword [const11]
-   339 00000479 4C899560FFFFFF         mov qword[rbp-160], r10
-   340 00000480 4C8B1425[00000000]     mov r10, qword[const12+0]
-   341 00000488 4C89954CFFFFFF         mov qword[rbp-180+0], r10
-   342 0000048F 448B1425[08000000]     mov r10d, dword[const12+8]
-   343 00000497 44899554FFFFFF         mov dword[rbp-180+8], r10d
-   344 0000049E 4C8B1425[00000000]     mov r10, qword [const0]
-   345 000004A6 4C8955F8               mov qword[rbp-8], r10
-   346 000004AA 4C8B55F8               mov r10, qword [rbp-8]
-   347 000004AE 4C8B1C25[00000000]     mov r11, qword [const3]
-   348 000004B6 4D01DA                 add r10, r11
-   349 000004B9 4C899544FFFFFF         mov qword[rbp-188], r10
-   350 000004C0 4C8B9544FFFFFF         mov r10, qword [rbp-188]
-   351 000004C7 4C899544FFFFFF         mov qword[rbp-188], r10
-   352 000004CE 4C8B1425[00000000]     mov r10, qword [const0]
-   353 000004D6 4C899544FFFFFF         mov qword[rbp-188], r10
-   354 000004DD 4C8B1425[00000000]     mov r10, qword [const0]
-   355 000004E5 4C8955E8               mov qword[rbp-24], r10
-   356                                 label#7:
-   357 000004E9 448A9543FFFFFF         mov r10b, byte [rbp-189]
-   358 000004F0 4983FA00               cmp r10, 0
-   359 000004F4 756F                   jne label#9
-   360 000004F6 4C8D55F8               lea r10, [rbp-8]
-   361 000004FA 4C899533FFFFFF         mov qword [rbp-205], r10
-   362 00000501 4C8B55E8               mov r10, qword [rbp-24]
-   363 00000505 4C8B1C25[00000000]     mov r11, qword [const1]
-   364 0000050D 4D0FAFD3               imul r10, r11
-   365 00000511 4C89952BFFFFFF         mov qword[rbp-213], r10
-   366 00000518 4C8D55C0               lea r10, [rbp-64]
-   367 0000051C 4C899523FFFFFF         mov qword [rbp-221], r10
-   368 00000523 4C8B9523FFFFFF         mov r10, qword [rbp-221]
-   369 0000052A 4C8B9D2BFFFFFF         mov r11, qword [rbp-213]
-   370 00000531 4D01DA                 add r10, r11
-   371 00000534 4C89951BFFFFFF         mov qword[rbp-229], r10
-   372                                 
-   373 0000053B 488BB51BFFFFFF         mov rsi, qword [rbp-229]
-   374 00000542 488BBD33FFFFFF         mov rdi, qword [rbp-205]
-   375 00000549 E8D1FAFFFF             call insert
-   376 0000054E 4883C400               add rsp,0
-   377                                 label#8:
-   378 00000552 4C8B55E8               mov r10, qword [rbp-24]
-   379 00000556 4C8B1C25[00000000]     mov r11, qword [const13]
-   380 0000055E 4D01DA                 add r10, r11
-   381 00000561 4C8955E8               mov qword[rbp-24], r10
-   382 00000565 EB80                   jmp label#7
-   383                                 label#9:
-   384                                 
-   385 00000567 488B7DF8               mov rdi, qword [rbp-8]
-   386 0000056B E895FCFFFF             call inorder
-   387 00000570 4883C400               add rsp,0
-   388                                 
-   389 00000574 488B7DF8               mov rdi, qword [rbp-8]
-   390 00000578 E8FBFCFFFF             call preorder
-   391 0000057D 4883C400               add rsp,0
-   392                                 
-   393 00000581 488B7DF8               mov rdi, qword [rbp-8]
-   394 00000585 E861FDFFFF             call postorder
-   395 0000058A 4883C400               add rsp,0
-   396 0000058E C9                     leave
-   397 0000058F C3                     ret
+    38                                 [section .bss]
+    39                                 
+    40                                 [extern printf]
+    41                                 [extern scanf]
+    42                                 [extern malloc]
+    43                                 [extern puts]
+    44                                 [section .text]
+    45                                 [global foo]
+    46                                 foo:
+    47 00000000 55                     push rbp
+    48 00000001 4889E5                 mov rbp,rsp
+    49                                 
+    50 00000004 4883EC04               sub rsp, 4
+    51 00000008 4883EC08               sub rsp, 8
+    52 0000000C 48893C24               mov qword [rsp],rdi
+    53 00000010 4883EC04               sub rsp, 4
+    54 00000014 F30F110424             movss dword [rsp],xmm0
+    55                                 
+    56 00000019 4883EC08               sub rsp, 8
+    57 0000001D 4C8B55F4               mov r10, qword [rbp-12]
+    58 00000021 F3410F2AC2             cvtsi2ss xmm0,r10d
+    59 00000026 F30F1145EC             movss dword[rbp-20], xmm0
+    60 0000002B F30F1045EC             movss xmm0, dword [rbp-20]
+    61 00000030 F30F104DF0             movss xmm1, dword [rbp-16]
+    62 00000035 F30F58C1               addss xmm0, xmm1
+    63 00000039 F30F1145E8             movss dword[rbp-24], xmm0
+    64                                 
+    65 0000003E F30F1045E8             movss xmm0, dword[rbp-24]
+    66 00000043 C9                     leave
+    67 00000044 C3                     ret
+    68                                 [global main]
+    69                                 main:
+    70 00000045 55                     push rbp
+    71 00000046 4889E5                 mov rbp,rsp
+    72                                 
+    73 00000049 4883EC08               sub rsp, 8
+    74                                 
+    75 0000004D 4881EC91000000         sub rsp, 145
+    76 00000054 4C8B1425[00000000]     mov r10, qword [const0]
+    77 0000005C 4C8955F0               mov qword[rbp-16], r10
+    78 00000060 4C8B1425[00000000]     mov r10, qword [const1]
+    79 00000068 4C8955E8               mov qword[rbp-24], r10
+    80 0000006C 4C8B1425[00000000]     mov r10, qword [const2]
+    81 00000074 4C8955E0               mov qword[rbp-32], r10
+    82 00000078 4C8B1425[00000000]     mov r10, qword [const3]
+    83 00000080 4C8955D8               mov qword[rbp-40], r10
+    84 00000084 4C8B1425[00000000]     mov r10, qword [const4]
+    85 0000008C 448855D7               mov byte[rbp-41], r10b
+    86 00000090 4C8B1425[00000000]     mov r10, qword[const6+0]
+    87 00000098 4C89956FFFFFFF         mov qword[rbp-145+0], r10
+    88 0000009F 4C8B1425[08000000]     mov r10, qword[const6+8]
+    89 000000A7 4C899577FFFFFF         mov qword[rbp-145+8], r10
+    90 000000AE 4C8B1425[10000000]     mov r10, qword[const6+16]
+    91 000000B6 4C89957FFFFFFF         mov qword[rbp-145+16], r10
+    92 000000BD 4C8B1425[18000000]     mov r10, qword[const6+24]
+    93 000000C5 4C895587               mov qword[rbp-145+24], r10
+    94 000000C9 448B1425[20000000]     mov r10d, dword[const6+32]
+    95 000000D1 4489558F               mov dword[rbp-145+32], r10d
+    96 000000D5 66448B1425[24000000]     mov r10w, word[const6+36]
+    97 000000DE 6644895593             mov word[rbp-145+36], r10w
+    98 000000E3 448A1425[26000000]     mov r10b, byte[const6+38]
+    99 000000EB 44885595               mov byte[rbp-145+38], r10b
+   100                                 
+   101                                 
+   102 000000EF 4883EC01               sub rsp, 1
+   103 000000F3 448A55D7               mov r10b, byte [rbp-41]
+   104 000000F7 44881424               mov byte [rsp], r10b
+   105 000000FB 4154                   push r12
+   106 000000FD 4989E4                 mov r12, rsp
+   107 00000100 50                     push rax
+   108 00000101 4080E400               and spl, 0x0
+   109                                 
+   110                                 
+   111                                 
+   112                                 
+   113                                 
+   114 00000105 488D3C25[00000000]     lea rdi, [const6]
+   115 0000010D 48C7C000000000         mov rax ,0
+   116 00000114 E8(F6FFFFFF)           call printf
+   117 00000119 4C89E4                 mov rsp, r12
+   118 0000011C 58                     pop rax
+   119 0000011D 415C                   pop r12
+   120                                 
+   121 0000011F 48898567FFFFFF         mov qword[rbp-153], rax
+   122 00000126 4883C401               add rsp,1
+   123                                 
+   124 0000012A 488B0425[00000000]     mov rax , qword[const8]
+   125 00000132 C9                     leave
+   126 00000133 C3                     ret
