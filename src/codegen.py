@@ -72,6 +72,8 @@ extern_functions = [
     'printf',
     'scanf',
     'malloc',
+    'sqrt',
+    'strlen',
     'exit'
 ]
 
@@ -154,7 +156,9 @@ def add_init_global_variables():
             if typ.is_array:
                 assert typ.array_type.stype == 'char', "not char string"
                 extra_null = typ.width - len(str(alloc[key]))-1
-                code += [e_name + ' ' + decl_type[typ.array_type.width]  + ' "' + str(alloc[key]) +'", NULL' + ',NULL'*extra_null]
+                string = str(alloc[key]).replace('\\n','",LF,"')+'", NULL' + ',NULL'*extra_null
+                string  = string.replace(',""','')
+                code += [e_name + ' ' + decl_type[typ.array_type.width]  + ' "' + string]
             else:
                 code += [e_name + ' ' + decl_type[8] + ' ' + str(alloc[key])]
     
@@ -639,7 +643,11 @@ def add_relational_code(gen_obj):
         code += ["cmp r10, r11"]
     label1 = get_newlabel()
     opd= {'==':'je', '!=':'jne','<':'jl','<=':'jle','>':'jg','>=':'jge'}
-    code += [opd[gen_obj.op[-2:] if (gen_obj[-1] != '>' or gen_obj[-1] != '<') else gen_obj.op[-1]] + label1]
+    if (gen_obj.op[-1] != '>' and gen_obj.op[-1] != '<'):
+        op = opd[gen_obj.op[-2:]]
+    else:
+        op = opd[gen_obj.op[-1]]
+    code += [op + " " + label1]
     code += ["mov r10,0"]
     label2 = get_newlabel()
     code += ["jmp "+ label2]

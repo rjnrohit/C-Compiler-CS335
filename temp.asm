@@ -17,23 +17,27 @@ SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
 b@global dq 64
-a@global db "abc", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+a@global db "%ld ",LF, NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 const0 dq 45
 const1 dq 567
 const2 dq 56
 const3 dq 345435
 const4 dq 97
 const5 dd 3.456
-const6 db "%ld %ld  %ld %ld %ld  %c %f %d", NULL
-const7 dq 67
-const8 dq 72
-const9 dq 0
+const6 db "%ld ",LF, NULL
+const7 dq 0
+const8 dq 20
+const9 dq 2
+const10 dd 3.4
+const11 dq 1
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
 extern printf
 extern scanf
 extern malloc
+extern sqrt
+extern strlen
 extern exit
 section .text
 global foo
@@ -41,22 +45,39 @@ foo:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 4; adjust rsp for return entry
+sub rsp, 8; adjust rsp for return entry
 sub rsp, 8
 mov qword [rsp],rdi
-sub rsp, 4
-movss dword [rsp],xmm0
-;add space for symbols
 sub rsp, 8
-mov r10, qword [rbp-12]
-cvtsi2ss xmm0,r10d
-movss dword[rbp-20], xmm0
-movss xmm0, dword [rbp-20]
-movss xmm1, dword [rbp-16]
-addss xmm0, xmm1
-movss dword[rbp-24], xmm0
-;copy return value in xmm0
-movss xmm0, dword[rbp-24]
+mov qword [rsp],rsi
+;add space for symbols
+sub rsp, 24
+mov r10, qword [rbp-16]
+mov r11, qword [rbp-24]
+add r10, r11
+mov qword[rbp-32], r10
+;preparing extern function printf
+; saving arguments for call
+push r12
+push rax
+mov r12, rsp
+and spl, 0xf0
+mov rsi, qword [rbp-32]
+lea rdi, [a@global]
+xor rax, rax
+call printf
+;copy return value from rax
+mov qword[rbp-40], rax
+add rsp,0
+mov rsp , r12
+pop rax
+pop r12
+mov r10, qword [rbp-16]
+mov r11, qword [rbp-24]
+add r10, r11
+mov qword[rbp-48], r10
+;copy return value in rax
+mov rax , qword[rbp-48]
 leave
 ret
 global main
@@ -66,7 +87,7 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
-sub rsp, 145
+sub rsp, 73
 mov r10, qword [const0]
 mov qword[rbp-16], r10
 mov r10, qword [const1]
@@ -79,48 +100,77 @@ mov r10, qword [const4]
 mov byte[rbp-41], r10b
 movss xmm0, dword [const5]
 movss dword[rbp-45], xmm0
-mov r10, qword[const6+0]
-mov qword[rbp-145+0], r10
-mov r10, qword[const6+8]
-mov qword[rbp-145+8], r10
-mov r10, qword[const6+16]
-mov qword[rbp-145+16], r10
-mov r10d, dword[const6+24]
-mov dword[rbp-145+24], r10d
-mov r10w, word[const6+28]
-mov word[rbp-145+28], r10w
-mov r10b, byte[const6+30]
-mov byte[rbp-145+30], r10b
+mov r10d, dword[const6+0]
+mov dword[rbp-55+0], r10d
+mov r10w, word[const6+4]
+mov word[rbp-55+4], r10w
+mov r10b, byte[const6+6]
+mov byte[rbp-55+6], r10b
+mov r10, qword [const7]
+mov qword[rbp-63], r10
+label#0:
+mov r10, qword [rbp-63]
+mov r11, qword [const8]
+cmp r10, r11
+jl label#3
+mov r10,0
+jmp label#4
+label#3:
+mov r10,1
+label#4:
+mov byte[rbp-64], r10b
+mov r10b, byte [rbp-64]
+cmp r10, 0
+je label#2
+push rax
+mov rax, qword[rbp-63]
+cqo
+idiv qword[const9]
+mov qword[rbp-72], rdx
+pop rax
+mov r10, qword [rbp-72]
+mov r11, qword [const7]
+cmp r10, r11
+je label#5
+mov r10,0
+jmp label#6
+label#5:
+mov r10,1
+label#6:
+mov byte[rbp-73], r10b
+mov r10b, byte [rbp-73]
+cmp r10, 0
+je label#1
+movss xmm0, dword [const10]
+movss dword[rbp-77], xmm0
+mov r10, qword [const11]
+mov qword[rbp-85], r10
 ;preparing extern function printf
 ; saving arguments for call
 push r12
 push rax
 mov r12, rsp
 and spl, 0xf0
-sub rsp, 8
-mov r10, qword [const8]
-mov qword [rsp], r10
-movss xmm0, dword [rbp-45]
-cvtss2sd xmm0,xmm0
-sub rsp, 8
-mov r10b, byte [rbp-41]
-movsx r10,r10b
-mov qword [rsp], r10
-mov r9, qword [rbp-40]
-mov r8, qword [rbp-32]
-mov rcx, qword [const7]
-mov rdx, qword [rbp-24]
-mov rsi, qword [rbp-16]
-lea rdi, [rbp-145]
-mov rax, 1
+mov rsi, qword [rbp-85]
+lea rdi, [rbp-55]
+xor rax, rax
 call printf
 ;copy return value from rax
-mov qword[rbp-153], rax
-add rsp,16
+mov qword[rbp-93], rax
+add rsp,0
 mov rsp , r12
 pop rax
 pop r12
+label#1:
+mov r10, qword [rbp-63]
+mov qword[rbp-101], r10
+mov r10, qword [rbp-63]
+mov r11, qword [const11]
+add r10, r11
+mov qword[rbp-63], r10
+jmp label#0
+label#2:
 ;copy return value in rax
-mov rax , qword[const9]
+mov rax , qword[const7]
 leave
 ret

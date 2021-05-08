@@ -1,8 +1,13 @@
 foo:
 BeginFunc
-tmp@0 = int_to_float c|foo
-tmp@1 = tmp@0 float+ d|foo
-return tmp@1
+tmp@0 = c|foo int+ d|foo
+push a|global
+push tmp@0
+tmp@1 = func_call printf
+pop tmp@0
+pop a|global
+tmp@2 = c|foo int+ d|foo
+return tmp@2
 EndFunc
 main:
 BeginFunc
@@ -12,25 +17,25 @@ x|main = lconst@56
 df|main = lconst@345435
 a|main = lconst@97
 f|main = fconst@3.456
-s|main = sconst@%ld %ld  %ld %ld %ld  %c %f %d
+s|main = sconst@%ld \n
+i|main = lconst@0
+label#0:
+tmp@3 = i|main int< lconst@20
+ifz tmp@3 goto label#2
+tmp@4 = i|main int% lconst@2
+tmp@5 = tmp@4 int== lconst@0
+ifz tmp@5 goto label#1
+q|scope@6 = fconst@3.4
+a|scope@6 = lconst@1
 push s|main
-push d|main
-push c|main
-push lconst@67
-push x|main
-push df|main
-push a|main
-push f|main
-push lconst@72
-tmp@2 = func_call printf
-pop lconst@72
-pop f|main
-pop a|main
-pop df|main
-pop x|main
-pop lconst@67
-pop c|main
-pop d|main
+push a|scope@6
+tmp@6 = func_call printf
+pop a|scope@6
 pop s|main
+label#1:
+tmp@7 = i|main
+i|main = i|main int+ lconst@1
+goto label#0
+label#2:
 return lconst@0
 EndFunc

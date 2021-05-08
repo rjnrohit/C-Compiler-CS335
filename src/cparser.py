@@ -398,7 +398,7 @@ def p_postfix_expression_2(p):
             token_object= p.slice[-1]
         )
         return
-    
+
     param_list = p[1].type.param_list
     return_type = p[1].type.return_type
 

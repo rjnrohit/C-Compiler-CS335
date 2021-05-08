@@ -470,9 +470,10 @@ def typecast(node1,type,token=None):
     assert type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
     # assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
     # assert "sconst@" not in node1.place, "string in typecast"
-    if str(node1.type) == str(type):
+    if node1.type.stype == type.stype:
         return node1
     elif "sconst@" in node1.place:
+        # print(str(node1.type.stype),str(type.stype))
         if token:
             Errors(
                 errorType='TypeError',
