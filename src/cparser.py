@@ -196,6 +196,18 @@ def p_func_rparen_2(p):
 
     # sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
+def remove_backslash(string):
+    s = string[1:-1]
+    print(len(s))
+    s.replace('\\0','\0')
+    s.replace('\\b','\b')
+    s.replace('\\t','\t')
+    s.replace('\\n','\n')
+    s.replace('\\v','\v')
+    s.replace('\\r','\r')
+    print(len(s))
+    return s
+
 
 def p_primary_expression(p):
     '''
@@ -240,10 +252,13 @@ def p_primary_expression(p):
             p[0].constant = ord(p[1][1])
 
         elif p.slice[-1].type == "STR_CONSTANT":
-            str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])+1],array_type=BasicType('char'))
+            string = remove_backslash(p[1])
+            # string.replace("\n","n")
+            print(p[1],string,len(string))
+            str_type = PointerType(type=BasicType('char'),array_size=[len(string)+1],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
             #string is assigned as tmp not const
-            p[0].place = get_str_const(p[1][1:-1])
+            p[0].place = get_str_const(string)
             return
         elif p.slice[-1].type == "NULL":
             p[0] = Node(name="constant",value=p[1],type=PointerType(type=Type()))
@@ -1710,7 +1725,7 @@ def main():
     #can also add as args for optimization
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
-    #print(alloc)
+    print(alloc)
     print_asm(tac_code)
 if __name__ == "__main__":
     main()

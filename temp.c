@@ -20,7 +20,7 @@ int main(){
     char a = 97;
     float f = 3.456;
     // char s[100] = "%ld %ld  %ld %ld %ld  %c %f %d";
-    char s[10] = "%ld \n";
+    char s[10] = "%ld \\n";
     // char s1[10] = "abcd";
     // printf(s, d,c, 67, x, df, a, f, 72);
     int i = 0;
