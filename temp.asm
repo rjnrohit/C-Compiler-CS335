@@ -17,14 +17,16 @@ SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
 b@global dq 64
-a@global db "%ld ",LF, NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+a@global db "%ld 
+", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 const0 dq 45
 const1 dq 567
 const2 dq 56
 const3 dq 345435
 const4 dq 97
 const5 dd 3.456
-const6 db "%ld \",LF, NULL
+const6 db "%ld \
+", NULL
 const7 dq 0
 const8 dq 20
 const9 dq 2
@@ -84,8 +86,12 @@ mov r10, qword [const4]
 mov byte[rbp-41], r10b
 movss xmm0, dword [const5]
 movss dword[rbp-45], xmm0
-mov r10, qword[const6+0]
-mov qword[rbp-55+0], r10
+mov r10d, dword[const6+0]
+mov dword[rbp-55+0], r10d
+mov r10w, word[const6+4]
+mov word[rbp-55+4], r10w
+mov r10b, byte[const6+6]
+mov byte[rbp-55+6], r10b
 mov r10, qword [const7]
 mov qword[rbp-63], r10
 label#0:

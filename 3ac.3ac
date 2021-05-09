@@ -12,7 +12,8 @@ x|main = lconst@56
 df|main = lconst@345435
 a|main = lconst@97
 f|main = fconst@3.456
-s|main = sconst@%ld \\n
+s|main = sconst@%ld \
+
 i|main = lconst@0
 label#0:
 tmp@2 = i|main int< lconst@20

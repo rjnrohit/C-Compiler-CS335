@@ -196,17 +196,7 @@ def p_func_rparen_2(p):
 
     # sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
-def remove_backslash(string):
-    s = string[1:-1]
-    print(len(s))
-    s.replace('\\0','\0')
-    s.replace('\\b','\b')
-    s.replace('\\t','\t')
-    s.replace('\\n','\n')
-    s.replace('\\v','\v')
-    s.replace('\\r','\r')
-    print(len(s))
-    return s
+
 
 
 def p_primary_expression(p):
@@ -252,9 +242,7 @@ def p_primary_expression(p):
             p[0].constant = ord(p[1][1])
 
         elif p.slice[-1].type == "STR_CONSTANT":
-            string = remove_backslash(p[1])
-            # string.replace("\n","n")
-            print(p[1],string,len(string))
+            string = remove_backslash(p[1][1:-1])
             str_type = PointerType(type=BasicType('char'),array_size=[len(string)+1],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
             #string is assigned as tmp not const

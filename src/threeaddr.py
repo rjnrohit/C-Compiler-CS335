@@ -5,6 +5,7 @@ from structure import sym_table, BasicType, FunctionType, PointerType, Type, Ent
 from structure import getMutliPointerType
 from typecheck import *
 
+
 temp_cnt = 0
 lable_cnt = 0
 label_list = list()
@@ -133,6 +134,17 @@ def get_const(const,type,use=False):
     if use: const_use(name)
     return name
 
+def remove_backslash(string):
+    s = string
+    s = "\0".join(s.split("\\0"))
+    s = "\b".join(s.split("\\b"))
+    s = "\t".join(s.split("\\t"))
+    s = "\n".join(s.split("\\n"))
+    s = "\r".join(s.split("\\r"))
+    s = "\v".join(s.split("\\v"))
+    # print(len(s),str(s))
+    return s
+
 def get_str_const(string):
     assert isinstance(string,str)
     place = "sconst@"+string
@@ -145,7 +157,8 @@ def get_str_const(string):
 def const_use(place,sconst=False):
     if "sconst@" in place:
         if sconst and place not in alloc.keys():
-            string = place.split("@")[-1]
+            string = remove_backslash(place.split("@")[-1])
+            # print(string,len(string))
             node_type = PointerType(type=BasicType("char"),array_size=[len(string)+1],array_type=BasicType("char"))
             sym_table._add_entry(name=place,type=node_type)
             alloc[place] = string
