@@ -159,6 +159,7 @@ def p_func_rparen_1(p):
             #removing sym table of decl
             success.type.symbol_table.unused = True
             success.type.symbol_table = sym_table.curr_symbol_table
+            success.type.defined = True
     else:
         sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
