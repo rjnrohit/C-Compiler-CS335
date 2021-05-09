@@ -302,6 +302,9 @@ def remove_label(code_list):
         elif code.op == "ifz" or code.op == "ifnz":
             label = new_label.get(code.place2,code.place2)
             new_code_list.append(gen(op=code.op,place1=code.place1,place2=label))
+        elif "if_not_cmp_" in code.op:
+            label = new_label.get(code.place3,code.place3)
+            new_code_list.append(gen(op=code.op,place1=code.place1,place2=code.place2,place3=label,code="if "+code.place1+" <> "+code.place2+" goto "+label))
         else:
             new_code_list.append(code)
     return new_code_list

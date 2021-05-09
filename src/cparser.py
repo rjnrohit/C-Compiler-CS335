@@ -1612,6 +1612,8 @@ def p_jump_statement_1(p):
                 node = typecast(p[2],success.type)    
                 p[0] = Node(name="return",type="ok",children=[node])
                 p[0].code = node.code
+                if "const@" in node.place:
+                    const_use(node.place)
                 p[0].code += [gen(op = 'return', place1 = node.place, code = 'return ' + node.place)]
                 return
 

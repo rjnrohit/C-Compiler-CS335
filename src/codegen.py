@@ -73,8 +73,47 @@ extern_functions = [
     'scanf',
     'malloc',
     'sqrt',
+    'exit',
+    'puts',
+    'atoi',
+    'atol',
     'strlen',
-    'exit'
+    'strcpy',
+    'strcat',
+    'strcmp',
+    'strlwr',
+    'memchr',
+    'memcmp',
+    'memcpy',
+    'memmove',
+    'memset',
+    'strcat',
+    'strncat',
+    'strchr',
+    'strcmp',
+    'strncmp',
+    'strcoll',
+    'strcpy',
+    'strncpy',
+    'strstr',
+    'strupr',
+    'free',
+    'acos',
+    'asin',
+    'atan',
+    'atan2',
+    'cos',
+    'cosh',
+    'sin',
+    'sinh',
+    'tanh',
+    'exp',
+    'log',
+    'log10',
+    'pow',
+    'ceil',
+    'fabs',
+    'floor'
 ]
 
 def add_standard_constant():
@@ -319,7 +358,7 @@ def add_return_code(name, gen_obj):
     code += ['ret']
     return code
 
-def add_post_call(place3):
+def add_post_call(place3, in_extern = False):
     code =[]
     if not place3:
         return code
@@ -330,6 +369,8 @@ def add_post_call(place3):
         code += add_copy_data_code(typ.width, 'rax', addr)
     elif typ.stype == 'float':
         code += [';copy return value from xmm0']
+        if in_extern:
+            code += ["cvtsd2ss xmm0, xmm0"]
         code += ["movss " +size_type[typ.width] +"[" +addr+"], xmm0"]
     else:
         code += [';copy return value from rax']
@@ -945,7 +986,7 @@ def add_extern_code(gen_obj):
         code += ["xor rax, rax"]
 
     code += ["call " + gen_obj.place1]
-    code += add_post_call(place3)
+    code += add_post_call(place3, in_extern=True)
     code += ["add rsp," + str(shift)]
     code += ["pop rax"]
     return code
