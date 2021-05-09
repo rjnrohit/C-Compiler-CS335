@@ -2,10 +2,11 @@ int b = 64;
 
 char a[20] = "%ld \n";
 int printf(char s[100],int b);
+// int printf(char s[50], int c);
 int scanf(char s[100],int a);
 
-int foo(int c, float d){
-    printf(a,c+d);
+float foo(int c, float d){
+    //printf(a,c+d);
     return c+d;
 }
 
@@ -29,11 +30,11 @@ int main(){
         if(i % 2 == 0){
         // printf("%ld ",i);
         float q = 3.4;
-        int a = foo(2,3);
-        a = true;
+        //int a = foo(2,3);
+        //a = true;
         //int a = 1;
         //a=3;
-        printf(s,a);
+        printf(s,foo(2,3));
         }
         i++;
     }

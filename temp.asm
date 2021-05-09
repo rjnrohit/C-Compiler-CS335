@@ -46,49 +46,22 @@ foo:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 8; adjust rsp for return entry
+sub rsp, 4; adjust rsp for return entry
 sub rsp, 8
 mov qword [rsp],rdi
 sub rsp, 4
 movss dword [rsp],xmm0
 ;add space for symbols
-sub rsp, 40
-mov r10, qword [rbp-16]
+sub rsp, 8
+mov r10, qword [rbp-12]
 cvtsi2ss xmm0,r10d
+movss dword[rbp-20], xmm0
+movss xmm0, dword [rbp-20]
+movss xmm1, dword [rbp-16]
+addss xmm0, xmm1
 movss dword[rbp-24], xmm0
-movss xmm0, dword [rbp-24]
-movss xmm1, dword [rbp-20]
-addss xmm0, xmm1
-movss dword[rbp-28], xmm0
-movss xmm0, dword [rbp-28]
-cvtss2si r10d,xmm0
-movsxd r10,r10d
-mov qword[rbp-36], r10
-;preparing extern function printf
-; saving arguments for call
-and spl, 0xf0
-push rax
-mov rsi, qword [rbp-36]
-lea rdi, [a@global]
-xor rax, rax
-call printf
-;copy return value from rax
-mov qword[rbp-44], rax
-add rsp,0
-pop rax
-mov r10, qword [rbp-16]
-cvtsi2ss xmm0,r10d
-movss dword[rbp-48], xmm0
-movss xmm0, dword [rbp-48]
-movss xmm1, dword [rbp-20]
-addss xmm0, xmm1
-movss dword[rbp-52], xmm0
-movss xmm0, dword [rbp-52]
-cvtss2si r10d,xmm0
-movsxd r10,r10d
-mov qword[rbp-60], r10
-;copy return value in rax
-mov rax , qword[rbp-60]
+;copy return value in xmm0
+movss xmm0, dword[rbp-24]
 leave
 ret
 global main
@@ -158,28 +131,29 @@ movss dword[rbp-77], xmm0
 movss xmm0, dword [const11]
 mov rdi, qword [const9]
 call foo
-;copy return value from rax
-mov qword[rbp-85], rax
+;copy return value from xmm0
+movss dword[rbp-81], xmm0
 add rsp,0
-mov r10, qword [rbp-85]
-mov qword[rbp-93], r10
-mov r10, qword [const12]
-mov qword[rbp-93], r10
+movss xmm0, dword [rbp-81]
+cvtss2si r10d,xmm0
+movsxd r10,r10d
+mov qword[rbp-89], r10
 ;preparing extern function printf
 ; saving arguments for call
 and spl, 0xf0
 push rax
-mov rsi, qword [rbp-93]
+sub rsp, 8
+mov rsi, qword [rbp-89]
 lea rdi, [rbp-55]
 xor rax, rax
 call printf
 ;copy return value from rax
-mov qword[rbp-101], rax
-add rsp,0
+mov qword[rbp-97], rax
+add rsp,8
 pop rax
 label#1:
 mov r10, qword [rbp-63]
-mov qword[rbp-109], r10
+mov qword[rbp-105], r10
 mov r10, qword [rbp-63]
 mov r11, qword [const12]
 add r10, r11

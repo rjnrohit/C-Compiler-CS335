@@ -880,7 +880,7 @@ def add_extern_code(gen_obj):
     code += ["push rax"]
     
 
-    if (max(0,byte8_args - len(arg_regs)) + max(0, float_args-len(arg_regsf))) %2:
+    if (max(0,byte8_args - len(arg_regs)) + max(0, float_args-len(arg_regsf))) %2 == 0:
         code += ["sub rsp, 8"]
         shift += 8
 
