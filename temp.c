@@ -31,7 +31,7 @@ int main(){
     printf(s,(int)&i);
     printf(s,(int)&i);
     printf(s,(int)&i);
-    printf(s,(int)&i);
+    printf("bhosdiwala dimag kaharb kar diya printf ne\n",3);
     while(i<10*2){
         if(i % 2 == 0){
         printf("%ld \n",i);
