@@ -4,7 +4,7 @@ char a[20] = "%ld \n";
 int printf(char s[100],int b);
 int scanf(char s[100],int a);
 
-int foo(int c, int d){
+int foo(int c, float d){
     printf(a,c+d);
     return c+d;
 }
@@ -29,9 +29,10 @@ int main(){
         if(i % 2 == 0){
         // printf("%ld ",i);
         float q = 3.4;
-        // int a = foo(2,3);
-        // a = true;
-        int a = 1;
+        int a = foo(2,3);
+        a = true;
+        //int a = 1;
+        //a=3;
         printf(s,a);
         }
         i++;

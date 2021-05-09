@@ -876,10 +876,9 @@ def add_extern_code(gen_obj):
     assert len(args_val) == len(args_type), "Mismatch in No. of args has not detected"
 
     code += ['; saving arguments for call']
-    code += ["push r12"]
-    code += ["push rax"]
-    code += ["mov r12, rsp"]
     code += ["and spl, 0xf0"]
+    code += ["push rax"]
+    
 
     if (max(0,byte8_args - len(arg_regs)) + max(0, float_args-len(arg_regsf))) %2:
         code += ["sub rsp, 8"]
@@ -948,9 +947,7 @@ def add_extern_code(gen_obj):
     code += ["call " + gen_obj.place1]
     code += add_post_call(place3)
     code += ["add rsp," + str(shift)]
-    code += ["mov rsp , r12"]
     code += ["pop rax"]
-    code += ["pop r12"]
     return code
 
 def add_copy_data_code(count, addr, rax = None):
