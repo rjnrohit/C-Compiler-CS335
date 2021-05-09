@@ -2,7 +2,22 @@ foo:
 BeginFunc
 tmp@0 = int_to_float c|foo
 tmp@1 = tmp@0 float+ d|foo
-return tmp@1
+tmp@2 = float_to_int tmp@1
+push a|global
+push tmp@2
+tmp@3 = func_call printf
+pop tmp@2
+pop a|global
+tmp@4 = float_to_int d|foo
+tmp@5 = int_to_float c|foo
+push tmp@4
+push tmp@5
+tmp@6 = func_call foo
+pop tmp@5
+pop tmp@4
+tmp@7 = int_to_float c|foo
+tmp@8 = tmp@7 float+ d|foo
+return tmp@8
 EndFunc
 main:
 BeginFunc
@@ -12,29 +27,81 @@ x|main = lconst@56
 df|main = lconst@345435
 a|main = lconst@97
 f|main = fconst@3.456
-s|main = sconst@%ld \
+s|main = sconst@%ld 
 
 i|main = lconst@0
+tmp@9 = addr(i|main)
+tmp@10 = long_to_int tmp@9
+push s|main
+push tmp@10
+tmp@11 = func_call printf
+pop tmp@10
+pop s|main
+tmp@12 = addr(i|main)
+tmp@13 = long_to_int tmp@12
+push s|main
+push tmp@13
+tmp@14 = func_call printf
+pop tmp@13
+pop s|main
+tmp@15 = addr(i|main)
+tmp@16 = long_to_int tmp@15
+push s|main
+push tmp@16
+tmp@17 = func_call printf
+pop tmp@16
+pop s|main
+tmp@18 = addr(i|main)
+tmp@19 = long_to_int tmp@18
+push s|main
+push tmp@19
+tmp@20 = func_call printf
+pop tmp@19
+pop s|main
+tmp@21 = addr(i|main)
+tmp@22 = long_to_int tmp@21
+push s|main
+push tmp@22
+tmp@23 = func_call printf
+pop tmp@22
+pop s|main
 label#0:
-tmp@2 = i|main int< lconst@20
-ifz tmp@2 goto label#2
-tmp@3 = i|main int% lconst@2
-tmp@4 = tmp@3 int== lconst@0
-ifz tmp@4 goto label#1
+tmp@24 = i|main int< lconst@20
+ifz tmp@24 goto label#2
+tmp@25 = i|main int% lconst@2
+tmp@26 = tmp@25 int== lconst@0
+ifz tmp@26 goto label#1
+tmp@27 = sconst@%ld 
+
+push tmp@27
+push i|main
+tmp@28 = func_call printf
+pop i|main
+pop tmp@27
 q|scope@6 = fconst@3.4
 push lconst@2
 push fconst@3
-tmp@5 = func_call foo
+tmp@29 = func_call foo
 pop fconst@3
 pop lconst@2
-tmp@6 = float_to_int tmp@5
+tmp@30 = float_to_int tmp@29
+a|scope@6 = tmp@30
+a|scope@6 = lconst@1
+a|scope@6 = lconst@3
+b|scope@6 = lconst@3
+push lconst@2
+push q|scope@6
+tmp@31 = func_call foo
+pop q|scope@6
+pop lconst@2
+tmp@32 = float_to_int tmp@31
 push s|main
-push tmp@6
-tmp@7 = func_call printf
-pop tmp@6
+push tmp@32
+tmp@33 = func_call printf
+pop tmp@32
 pop s|main
 label#1:
-tmp@8 = i|main
+tmp@34 = i|main
 i|main = i|main int+ lconst@1
 goto label#0
 label#2:

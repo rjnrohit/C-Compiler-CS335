@@ -156,7 +156,7 @@ def add_init_global_variables():
             if typ.is_array:
                 assert typ.array_type.stype == 'char', "not char string"
                 extra_null = typ.width - len(str(alloc[key]))-1
-                string = str(alloc[key]).replace('\\n','",LF,"')+'", NULL' + ',NULL'*extra_null
+                string = str(alloc[key]).replace('\n','",LF,"')+'", NULL' + ',NULL'*extra_null
                 string  = string.replace(',""','')
                 code += [e_name + ' ' + decl_type[typ.array_type.width]  + ' "' + string]
             else:
@@ -876,11 +876,11 @@ def add_extern_code(gen_obj):
     assert len(args_val) == len(args_type), "Mismatch in No. of args has not detected"
 
     code += ['; saving arguments for call']
-    code += ["and spl, 0xf0"]
+    code += ["and spl, 0x0"]
     code += ["push rax"]
     
 
-    if (max(0,byte8_args - len(arg_regs)) + max(0, float_args-len(arg_regsf))) %2 == 0:
+    if (max(0,byte8_args - len(arg_regs)) + max(0, float_args-len(arg_regsf))) %2 ==0:
         code += ["sub rsp, 8"]
         shift += 8
 
