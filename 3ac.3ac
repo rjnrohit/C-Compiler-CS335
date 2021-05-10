@@ -67,5 +67,80 @@ pop str1|main
 push str2|main
 tmp@17 = func_call puts
 pop str2|main
+tmp@18 = sconst@temp1.txt
+tmp@19 = sconst@w
+push tmp@18
+push tmp@19
+tmp@20 = func_call fopen
+pop tmp@19
+pop tmp@18
+ptr1|main = tmp@20
+tmp@21 = sconst@temp2.txt
+tmp@22 = sconst@r
+push tmp@21
+push tmp@22
+tmp@23 = func_call fopen
+pop tmp@22
+pop tmp@21
+ptr2|main = tmp@23
+tmp@24 = long_to_int ptr1|main
+tmp@25 = not_bool tmp@24
+ifz tmp@25 goto label#3
+tmp@26 = sconst@error
+
+push tmp@26
+push lconst@1
+None = func_call printf
+pop lconst@1
+pop tmp@26
+push lconst@-1
+None = func_call exit
+pop lconst@-1
+label#3:
+tmp@27 = long_to_int ptr2|main
+tmp@28 = not_bool tmp@27
+ifz tmp@28 goto label#4
+tmp@29 = sconst@error
+
+push tmp@29
+push lconst@1
+None = func_call printf
+pop lconst@1
+pop tmp@29
+push lconst@-1
+None = func_call exit
+pop lconst@-1
+label#4:
+tmp@31 = sconst@%ld
+tmp@30 = addr(sc|main)
+push ptr2|main
+push tmp@31
+push tmp@30
+tmp@32 = func_call fscanf
+pop tmp@30
+pop tmp@31
+pop ptr2|main
+tmp@33 = sconst@sc: %ld
+
+push tmp@33
+push sc|main
+None = func_call printf
+pop sc|main
+pop tmp@33
+tmp@34 = sconst@%s
+
+push ptr1|main
+push tmp@34
+push str1|main
+tmp@35 = func_call fprintf
+pop str1|main
+pop tmp@34
+pop ptr1|main
+push ptr1|main
+tmp@36 = func_call fclose
+pop ptr1|main
+push ptr2|main
+tmp@37 = func_call fclose
+pop ptr2|main
 return lconst@0
 EndFunc

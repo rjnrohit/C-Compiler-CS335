@@ -18,6 +18,10 @@ int atoi(char a[20]);
 char *strcat(char a[100], char b[100]);
 char *strcpy(char a[100], char b[100]);
 int strcmp (char str1[50], char str2[50]);
+int* fopen(char a[200], char c[10]);
+int fprintf(int *ptr,char a[100], char b[100]);
+int fscanf(int *ptr,char a[100], int*d);
+int fclose(int*c);
 int main() {
    char str1[100] = "This is ", str2[456] = "programiz.com";
 
@@ -38,6 +42,23 @@ int main() {
    puts(str1);
    puts(str2);
 
+   int*ptr1 = fopen("temp1.txt", "w");
+   int*ptr2 = fopen("temp2.txt", "r");
+   if (!(int)ptr1){
+       printf("error\n",1);
+       exit(-1);
+   }
+   if (!(int)ptr2){
+       printf("error\n",1);
+       exit(-1);
+   }
+   int sc;
+   fscanf(ptr2,"%ld", &sc);
+   printf("sc: %ld\n", sc);
+   fprintf(ptr1, "%s\n",str1);
+   fclose(ptr1);
+   fclose(ptr2);
+   
    return 0;
 }
 

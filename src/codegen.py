@@ -113,7 +113,14 @@ extern_functions = [
     'pow',
     'ceil',
     'fabs',
-    'floor'
+    'floor',
+    'fopen',
+    'fclose',
+    'fprintf',
+    'fscanf',
+    'fread',
+    'fwrite',
+    'fseek'
 ]
 
 def add_standard_constant():
