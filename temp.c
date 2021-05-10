@@ -2,10 +2,8 @@ int fib(int n){
     if(n<=1)return n;
     return fib(n-1) + fib(n-2);
 }
-
 void printf(char s[20], int c);
 void scanf(char s[20],int *c);
-//ptr = (int*)malloc(n * sizeof(int));
 void free(int *ptr);
 void exit(int a);
 int *malloc(int size);
@@ -22,7 +20,8 @@ int* fopen(char a[200], char c[10]);
 int fprintf(int *ptr,char a[100], char b[100]);
 int fscanf(int *ptr,char a[100], int*d);
 int fclose(int*c);
-int main() {
+int main(int argc) {
+    printf("%ld\n", argc);
    char str1[100] = "This is ", str2[456] = "programiz.com";
 
    // concatenates str1 and str2
@@ -62,29 +61,4 @@ int main() {
    return 0;
 }
 
-// bool is_odd(int n);
-// bool is_even(int n);
-
-// void printf(char s[100],int a);
-// void scanf(char s[100],int *a);
-
-// int main(){
-//     int n = 0;
-//     scanf("%ld",&n);
-//     if(n < 0){
-//         printf("Enter a positive number\n",0);
-//         return 0;
-//     }
-//     printf("%ld\n",is_odd(n));
-// }
-
-// bool is_odd(int n){
-//     if( n == 0) return false;
-//     return is_even(n-1);
-// }
-
-// bool is_even(int n){
-//     if( n == 0) return true;
-//     return is_odd(n-1);
-// }
 

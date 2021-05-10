@@ -17,130 +17,137 @@ return tmp@5
 EndFunc
 main:
 BeginFunc
+tmp@6 = sconst@%ld
+
+push tmp@6
+push argc|main
+None = func_call printf
+pop argc|main
+pop tmp@6
 str1|main = sconst@This is 
 str2|main = sconst@programiz.com
 push str1|main
 push str2|main
-tmp@6 = func_call strcat
+tmp@7 = func_call strcat
 pop str2|main
 pop str1|main
-tmp@7 = sconst@rohit
 tmp@8 = sconst@rohit
-push tmp@7
+tmp@9 = sconst@rohit
 push tmp@8
-tmp@9 = func_call strcmp
+push tmp@9
+tmp@10 = func_call strcmp
+pop tmp@9
 pop tmp@8
-pop tmp@7
-tmp@10 = not_bool tmp@9
-ifz tmp@10 goto label#1
-tmp@11 = sconst@strings are same
-
-push tmp@11
-push lconst@3
-None = func_call printf
-pop lconst@3
-pop tmp@11
-goto label#2
-label#1:
-tmp@12 = sconst@they are not same
+tmp@11 = not_bool tmp@10
+ifz tmp@11 goto label#1
+tmp@12 = sconst@strings are same
 
 push tmp@12
 push lconst@3
 None = func_call printf
 pop lconst@3
 pop tmp@12
+goto label#2
+label#1:
+tmp@13 = sconst@they are not same
+
+push tmp@13
+push lconst@3
+None = func_call printf
+pop lconst@3
+pop tmp@13
 label#2:
 push str1|main
-tmp@13 = func_call puts
-pop str1|main
-push str2|main
 tmp@14 = func_call puts
+pop str1|main
+push str2|main
+tmp@15 = func_call puts
 pop str2|main
 push str2|main
 push str1|main
-tmp@15 = func_call strcpy
+tmp@16 = func_call strcpy
 pop str1|main
 pop str2|main
 push str1|main
-tmp@16 = func_call puts
-pop str1|main
-push str2|main
 tmp@17 = func_call puts
+pop str1|main
+push str2|main
+tmp@18 = func_call puts
 pop str2|main
-tmp@18 = sconst@temp1.txt
-tmp@19 = sconst@w
-push tmp@18
+tmp@19 = sconst@temp1.txt
+tmp@20 = sconst@w
 push tmp@19
-tmp@20 = func_call fopen
+push tmp@20
+tmp@21 = func_call fopen
+pop tmp@20
 pop tmp@19
-pop tmp@18
-ptr1|main = tmp@20
-tmp@21 = sconst@temp2.txt
-tmp@22 = sconst@r
-push tmp@21
+ptr1|main = tmp@21
+tmp@22 = sconst@temp2.txt
+tmp@23 = sconst@r
 push tmp@22
-tmp@23 = func_call fopen
+push tmp@23
+tmp@24 = func_call fopen
+pop tmp@23
 pop tmp@22
-pop tmp@21
-ptr2|main = tmp@23
-tmp@24 = long_to_int ptr1|main
-tmp@25 = not_bool tmp@24
-ifz tmp@25 goto label#3
-tmp@26 = sconst@error
+ptr2|main = tmp@24
+tmp@25 = long_to_int ptr1|main
+tmp@26 = not_bool tmp@25
+ifz tmp@26 goto label#3
+tmp@27 = sconst@error
 
-push tmp@26
+push tmp@27
 push lconst@1
 None = func_call printf
 pop lconst@1
-pop tmp@26
+pop tmp@27
 push lconst@-1
 None = func_call exit
 pop lconst@-1
 label#3:
-tmp@27 = long_to_int ptr2|main
-tmp@28 = not_bool tmp@27
-ifz tmp@28 goto label#4
-tmp@29 = sconst@error
+tmp@28 = long_to_int ptr2|main
+tmp@29 = not_bool tmp@28
+ifz tmp@29 goto label#4
+tmp@30 = sconst@error
 
-push tmp@29
+push tmp@30
 push lconst@1
 None = func_call printf
 pop lconst@1
-pop tmp@29
+pop tmp@30
 push lconst@-1
 None = func_call exit
 pop lconst@-1
 label#4:
-tmp@31 = sconst@%ld
-tmp@30 = addr(sc|main)
+tmp@32 = sconst@%ld
+tmp@31 = addr(sc|main)
 push ptr2|main
+push tmp@32
 push tmp@31
-push tmp@30
-tmp@32 = func_call fscanf
-pop tmp@30
+tmp@33 = func_call fscanf
 pop tmp@31
+pop tmp@32
 pop ptr2|main
-tmp@33 = sconst@sc: %ld
+tmp@34 = sconst@sc: %ld
 
-push tmp@33
+push tmp@34
 push sc|main
 None = func_call printf
 pop sc|main
-pop tmp@33
-tmp@34 = sconst@%s
+pop tmp@34
+tmp@35 = sconst@%s
 
 push ptr1|main
-push tmp@34
+push tmp@35
 push str1|main
-tmp@35 = func_call fprintf
+tmp@36 = func_call fprintf
 pop str1|main
-pop tmp@34
+pop tmp@35
 pop ptr1|main
 push ptr1|main
-tmp@36 = func_call fclose
+tmp@37 = func_call fclose
 pop ptr1|main
 push ptr2|main
-tmp@37 = func_call fclose
+tmp@38 = func_call fclose
 pop ptr2|main
 return lconst@0
 EndFunc
