@@ -633,19 +633,22 @@ def add_rem_code(gen_obj):
     return code
 
 def add_load_addr(gen_obj):
+    # print(gen_obj, gen_obj.code)
     code = []
     addr = get_var_addr(gen_obj.place3)
     typ = get_var_type(gen_obj.place3)
-    width = typ.width
-    get_size = size_type[width]
+    
     if gen_obj.op == 'load':
         code += load_var(gen_obj.place1)
         if 'xmm' in code[-1]:
             # code += ["movss " + get_size + "[" +addr+"], xmm0"]
             assert False, "load can't have float address"
-        else:
+        if typ.class_type == "BasicType" or typ.class_type == "PointerType":
+            width = typ.width
+            get_size = size_type[width]
             code += ["mov {},{} [r10]".format(temp_regs[1][width],get_size)]
             code += ["mov " + get_size + "[" +addr+"], " + temp_regs[1][width]]
+            
     else:
         addr1 = get_var_addr(gen_obj.place1)
         code += ["lea r10, [" + addr1+"]"]

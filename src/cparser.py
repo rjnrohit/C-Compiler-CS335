@@ -629,8 +629,8 @@ def p_unary_expression_3(p):
     unary_expression : SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
-    p[2] = load_place(p[2])
     if len(p) == 3:
+        p[2] = load_place(p[2])
         p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
     else:
         p[0] = type_check_unary(node1=p[3],op=p[1],token=p.slice[1],is_typename=True)

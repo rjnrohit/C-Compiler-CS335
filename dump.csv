@@ -1,144 +1,117 @@
 
 symbol table id,symbol table name,table off
-0,global,43
+0,global,94
 name,type,offset,offset+base,width
-printf,"int function([pointer of (char), int])",0,0,24
-scanf,"int function([pointer of (char), pointer of (int)])",0,0,24
-input_matrix,"void function([pointer of (pointer of (int), array of:int), int])",0,0,16
+malloc,pointer of (void) function([int]),0,0,16
+printf,"int function([pointer of (char), int, int, int])",0,0,40
+insert,"pointer of (struct Node) function([pointer of (struct Node), int, int])",0,0,32
 lconst@0,long,8,8,8
-lconst@1,long,16,16,8
-lconst@80,long,24,24,8
-lconst@8,long,32,32,8
-sconst@%ld,"pointer of (char), array of:char",36,36,4
-main,int function(None),36,36,8
-sconst@%ld ,"pointer of (char), array of:char",41,41,5
-"sconst@
-","pointer of (char), array of:char",43,43,2
+lconst@24,long,16,16,8
+lconst@8,long,24,24,8
+lconst@16,long,32,32,8
+s,struct Node function([struct Node]),32,32,48
+lconst@3,long,40,40,8
+lconst@4,long,48,48,8
+main,int function(None),48,48,8
+lconst@5,long,56,56,8
+lconst@2,long,64,64,8
+lconst@69,long,72,72,8
+"sconst@%ld %ld %ld
+","pointer of (char), array of:char",85,85,13
+"sconst@%ld %ld
+","pointer of (char), array of:char",94,94,9
 
 symbol table id,symbol table name,parent id,table off
-1,A,0,88
+1,Node,0,24
 name,type,offset,offset+base,width
-x,int,8,8,8
-arr,"pointer of (int), array of:int",88,88,80
+a,int,8,8,8
+b,int,16,16,8
+next,pointer of (struct Node),24,24,8
 
 symbol table id,symbol table name,parent id,table off
-2,printf,0,24
+2,malloc,0,16
+name,type,offset,offset+base,width
+d,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+3,printf,0,40
 name,type,offset,offset+base,width
 s,pointer of (char),16,16,8
+ab,int,24,24,8
+db,int,32,32,8
+bd,int,40,40,8
+
+symbol table id,symbol table name,parent id,table off
+4,insert,0,145
+name,type,offset,offset+base,width
+head,pointer of (struct Node),16,16,8
 a,int,24,24,8
-
-symbol table id,symbol table name,parent id,table off
-3,scanf,0,24
-name,type,offset,offset+base,width
-s,pointer of (char),16,16,8
-a,pointer of (int),24,24,8
-
-symbol table id,symbol table name,parent id,table off
-4,input_matrix,0,50
-name,type,offset,offset+base,width
-a,"pointer of (pointer of (int), array of:int)",8,8,8
-n,int,16,16,8
-i,int,24,24,8
-j,int,32,32,8
+b,int,32,32,8
 tmp@0,bool,33,33,1
-tmp@1,int,41,41,8
+tmp@6,long,81,81,8
+tmp@7,pointer of (void),89,89,8
+tmp@8,pointer of (struct Node),97,97,8
+tmp@9,long,105,105,8
+tmp@10,pointer of (struct Node),113,113,8
+tmp@11,long,121,121,8
+tmp@12,int,129,129,8
+tmp@13,long,137,137,8
+tmp@14,int,145,145,8
 
 symbol table id,symbol table name,parent id,table off
-7,main,0,2522
+6,s,0,184
 name,type,offset,offset+base,width
-a,"pointer of (pointer of (int), array of:int), array of:int",808,808,800
-b,"pointer of (pointer of (int), array of:int), array of:int",1608,1608,800
-c,"pointer of (pointer of (int), array of:int), array of:int",2408,2408,800
-n,int,2416,2416,8
-tmp@10,long,2424,2424,8
-tmp@11,"pointer of (char), array of:char",2428,2428,4
-tmp@12,int,2436,2436,8
-tmp@13,long,2444,2444,8
-tmp@14,long,2452,2452,8
-i,int,2460,2460,8
-j,int,2468,2468,8
-k,int,2476,2476,8
-tmp@15,bool,2477,2477,1
-tmp@16,int,2485,2485,8
-tmp@48,bool,2495,2495,1
-tmp@49,int,2503,2503,8
+m,struct Node,48,48,24
+n,struct Node,72,72,24
+tmp@15,long,80,80,8
+tmp@16,long,88,88,8
+tmp@17,long,96,96,8
+tmp@18,long,104,104,8
+tmp@19,int,112,112,8
+tmp@20,int,120,120,8
+tmp@21,int,128,128,8
+tmp@22,long,136,136,8
+tmp@23,long,144,144,8
+tmp@24,long,152,152,8
+tmp@25,long,160,160,8
+tmp@26,int,168,168,8
+tmp@27,int,176,176,8
+tmp@28,int,184,184,8
 
 symbol table id,symbol table name,parent id,table off
-5,scope@5,4,61
+7,main,0,246
 name,type,offset,offset+base,width
-tmp@2,bool,1,42,1
-tmp@3,int,9,50,8
+a,pointer of (struct Node),16,16,8
+tmp@29,pointer of (struct Node),24,24,8
+tmp@30,pointer of (struct Node),32,32,8
+n,struct Node,56,56,24
+tmp@31,long,64,64,8
+tmp@32,long,72,72,8
+tmp@33,int,80,80,8
+tmp@34,long,88,88,8
+tmp@35,long,96,96,8
+tmp@36,int,104,104,8
+tmp@37,struct Node,128,128,24
+tmp@38,long,136,136,8
+tmp@39,int,144,144,8
+tmp@40,long,152,152,8
+tmp@41,int,160,160,8
+tmp@42,"pointer of (char), array of:char",173,173,13
+tmp@43,int,181,181,8
+tmp@44,long,189,189,8
+tmp@45,long,197,197,8
+tmp@46,int,205,205,8
+tmp@47,long,213,213,8
+tmp@48,long,221,221,8
+tmp@49,int,229,229,8
+tmp@50,"pointer of (char), array of:char",238,238,9
+tmp@51,int,246,246,8
 
 symbol table id,symbol table name,parent id,table off
-8,scope@8,7,66
+5,scope@5,4,40
 name,type,offset,offset+base,width
-tmp@17,bool,1,2486,1
-tmp@18,int,9,2494,8
-
-symbol table id,symbol table name,parent id,table off
-11,scope@11,7,80
-name,type,offset,offset+base,width
-tmp@50,bool,1,2504,1
-tmp@51,int,9,2512,8
-tmp@60,"pointer of (char), array of:char",72,2575,2
-tmp@61,int,80,2583,8
-
-symbol table id,symbol table name,parent id,table off
-6,scope@6,5,52
-name,type,offset,offset+base,width
-b,int,8,58,8
-tmp@4,long,16,66,8
-tmp@5,long,24,74,8
-tmp@6,long,32,82,8
-tmp@7,long,40,90,8
-tmp@8,"pointer of (char), array of:char",44,94,4
-tmp@9,int,52,102,8
-
-symbol table id,symbol table name,parent id,table off
-9,scope@9,8,225
-name,type,offset,offset+base,width
-tmp@19,long,8,2502,8
-tmp@20,long,16,2510,8
-tmp@21,long,24,2518,8
-tmp@22,long,32,2526,8
-tmp@23,long,40,2534,8
-tmp@24,int,48,2542,8
-tmp@25,bool,49,2543,1
-tmp@26,int,57,2551,8
-
-symbol table id,symbol table name,parent id,table off
-12,scope@12,11,61
-name,type,offset,offset+base,width
-tmp@52,long,8,2520,8
-tmp@53,long,16,2528,8
-tmp@54,long,24,2536,8
-tmp@55,long,32,2544,8
-tmp@56,long,40,2552,8
-tmp@57,int,48,2560,8
-tmp@58,"pointer of (char), array of:char",53,2565,5
-tmp@59,int,61,2573,8
-
-symbol table id,symbol table name,parent id,table off
-10,scope@10,9,168
-name,type,offset,offset+base,width
-tmp@27,long,8,2559,8
-tmp@28,long,16,2567,8
-tmp@29,long,24,2575,8
-tmp@30,long,32,2583,8
-tmp@31,long,40,2591,8
-tmp@32,long,48,2599,8
-tmp@33,long,56,2607,8
-tmp@34,long,64,2615,8
-tmp@35,long,72,2623,8
-tmp@36,long,80,2631,8
-tmp@37,long,88,2639,8
-tmp@38,long,96,2647,8
-tmp@39,long,104,2655,8
-tmp@40,long,112,2663,8
-tmp@41,long,120,2671,8
-tmp@42,int,128,2679,8
-tmp@43,int,136,2687,8
-tmp@44,int,144,2695,8
-tmp@45,int,152,2703,8
-tmp@46,int,160,2711,8
-tmp@47,int,168,2719,8
+tmp@1,pointer of (void),8,41,8
+tmp@2,long,16,49,8
+tmp@3,int,24,57,8
+tmp@4,long,32,65,8
+tmp@5,int,40,73,8
