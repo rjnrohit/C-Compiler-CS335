@@ -3,10 +3,10 @@
 //     return fib(n-1) + fib(n-2);
 // }
 void printf(char s[20], int c);
-int many_sum(int a,int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, float l){
-    float s =  a+b+c+d+e+f+g+h+i+j+k+l;
-    printf("%ld\n", (int)s);
-    return s;
+int many_sum(int a,int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, float l, float m, float n, float o, float p, float q, float r , float s, float t, float u){
+    float ss =  a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u;
+    printf("%ld\n", (int)ss);
+    return ss;
 }
 
 void scanf(char s[20],int *c);
@@ -63,7 +63,7 @@ int main(int argc) {
 //    fprintf(ptr1, "%s\n",str1);
 //    fclose(ptr1);
 //    fclose(ptr2);
-   printf("%ld\n", many_sum(1, 2,3,4,5,6,7,8,9,10,11, 11.7));
+   printf("%ld\n", many_sum(1, 2,3,4,5,6,7,8,9,10,11, 11.7, 12.7, 13, 12,11,1.3, 0.1,0.01,4.999,1));
    return 0;
 }
 

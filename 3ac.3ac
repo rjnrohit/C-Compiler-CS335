@@ -12,21 +12,30 @@ tmp@8 = tmp@7 int+ j|many_sum
 tmp@9 = tmp@8 int+ k|many_sum
 tmp@10 = int_to_float tmp@9
 tmp@11 = tmp@10 float+ l|many_sum
-s|many_sum = tmp@11
-tmp@13 = sconst@%ld
+tmp@12 = tmp@11 float+ m|many_sum
+tmp@13 = tmp@12 float+ n|many_sum
+tmp@14 = tmp@13 float+ o|many_sum
+tmp@15 = tmp@14 float+ p|many_sum
+tmp@16 = tmp@15 float+ q|many_sum
+tmp@17 = tmp@16 float+ r|many_sum
+tmp@18 = tmp@17 float+ s|many_sum
+tmp@19 = tmp@18 float+ t|many_sum
+tmp@20 = tmp@19 float+ u|many_sum
+ss|many_sum = tmp@20
+tmp@22 = sconst@%ld
 
-tmp@12 = float_to_int s|many_sum
-push tmp@13
-push tmp@12
+tmp@21 = float_to_int ss|many_sum
+push tmp@22
+push tmp@21
 None = func_call printf
-pop tmp@12
-pop tmp@13
-tmp@14 = float_to_int s|many_sum
-return tmp@14
+pop tmp@21
+pop tmp@22
+tmp@23 = float_to_int ss|many_sum
+return tmp@23
 EndFunc
 main:
 BeginFunc
-tmp@16 = sconst@%ld
+tmp@25 = sconst@%ld
 
 push lconst@1
 push lconst@2
@@ -40,7 +49,25 @@ push lconst@9
 push lconst@10
 push lconst@11
 push fconst@11.7
-tmp@15 = func_call many_sum
+push fconst@12.7
+push fconst@13
+push fconst@12
+push fconst@11
+push fconst@1.3
+push fconst@0.1
+push fconst@0.01
+push fconst@4.999
+push fconst@1
+tmp@24 = func_call many_sum
+pop fconst@1
+pop fconst@4.999
+pop fconst@0.01
+pop fconst@0.1
+pop fconst@1.3
+pop fconst@11
+pop fconst@12
+pop fconst@13
+pop fconst@12.7
 pop fconst@11.7
 pop lconst@11
 pop lconst@10
@@ -53,10 +80,10 @@ pop lconst@4
 pop lconst@3
 pop lconst@2
 pop lconst@1
-push tmp@16
-push tmp@15
+push tmp@25
+push tmp@24
 None = func_call printf
-pop tmp@15
-pop tmp@16
+pop tmp@24
+pop tmp@25
 return lconst@0
 EndFunc
