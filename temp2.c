@@ -13,6 +13,6 @@ int main(){
         a.arr[i] = arr[i] = i;
     }
     printf("%ld\n",arr[4]);
-    printf("%ld\n",arr[5]);
+    printf("%ld\n",&arr[5]);
     return 0;
 }

@@ -611,7 +611,7 @@ def p_unary_expression_2(p):
     '''
     unary_expression : unary_operator cast_expression
     '''    
-    p[2] = load_place(p[2]) 
+    # p[2] = load_place(p[2]) 
     p[0] = type_check_unary(node1=p[2],op=p[1]['op'],token=p[1]['token'])
 
 #Node

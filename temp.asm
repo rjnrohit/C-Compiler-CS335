@@ -167,9 +167,9 @@ mov qword[rbp-302], rax
 add rsp,8
 pop rax
 mov r10d, dword[const6+0]
-mov dword[rbp-331+0], r10d
+mov dword[rbp-323+0], r10d
 mov r10b, byte[const6+4]
-mov byte[rbp-331+4], r10b
+mov byte[rbp-323+4], r10b
 lea r10, [rbp-88]
 mov qword [rbp-310], r10
 mov r10, qword [rbp-310]
@@ -177,14 +177,14 @@ mov r11, qword [const7]
 add r10, r11
 mov qword[rbp-318], r10
 mov r10, qword [rbp-318]
-mov qword[rbp-326], r10
+mov qword[rbp-331], r10
 ;preparing extern function printf
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-mov rsi, qword [rbp-326]
-lea rdi, [rbp-331]
+mov rsi, qword [rbp-331]
+lea rdi, [rbp-323]
 xor rax, rax
 call printf
 ;copy return value from rax

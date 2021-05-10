@@ -35,6 +35,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             return node
         else: error = True
     elif op == "+" or op == "-":
+        node1 = load_place(node1)
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
             if op == "+":
@@ -55,10 +56,14 @@ def type_check_unary(node1,op,token,is_typename=False):
         else:
             node =  Node(name="unary_op",value=op,children=[node1],type=PointerType(node1.type))
             node.code = node1.code
+            if "load$" in node1.place:
+                node.place = node1.place.split("load$")[-1]
+                return node
             node.place = get_newtmp()
             node.code += [gen(op="addr",place1=node1.place,place3=node.place,code=node.place+" = "+"addr("+node1.place+")")]
             return node
     elif op == "*":
+        node1 = load_place(node1)
         if const:
             error_const = True
         elif node1.type.class_type == "PointerType":
@@ -78,6 +83,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             )
             return Node(type="error")
     elif op == "~":
+        node1 = load_place(node1)
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base_1:
             node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
             if "const@" in node1.place:
@@ -89,6 +95,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             return node
         error = True
     elif op == "!":
+        node1 = load_place(node1)
         if node1.type.is_convertible_to(BasicType('bool')):
             node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=BasicType('bool'))
             if "const@" in node1.place:

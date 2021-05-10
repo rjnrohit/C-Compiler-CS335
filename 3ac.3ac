@@ -30,15 +30,15 @@ push tmp@13
 tmp@15 = func_call printf
 pop tmp@13
 pop tmp@14
-tmp@19 = sconst@%ld
+tmp@18 = sconst@%ld
 
 tmp@16 = addr(arr|main)
 tmp@17 = tmp@16 long+ lconst@40
-tmp@18 = load(tmp@17)
-push tmp@19
+tmp@19 = long_to_int tmp@17
 push tmp@18
+push tmp@19
 tmp@20 = func_call printf
-pop tmp@18
 pop tmp@19
+pop tmp@18
 return lconst@0
 EndFunc
