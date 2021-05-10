@@ -16,11 +16,15 @@ SYS_fork equ 57 ; fork
 SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
-const0 dq 0
-const1 db "%ld", NULL
-const2 db "Enter a positive number",LF, NULL
-const3 db "%ld",LF, NULL
-const4 dq 1
+const0 dq 1
+const1 dq 2
+const2 db "This is ", NULL
+const3 db "programiz.com", NULL
+const4 db "rohit", NULL
+const5 db "strings are same",LF, NULL
+const6 dq 3
+const7 db "they are not same",LF, NULL
+const8 dq 0
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
@@ -70,6 +74,62 @@ extern ceil
 extern fabs
 extern floor
 section .text
+global fib
+fib:
+push   rbp
+mov    rbp,rsp
+; saving the arguments values in the stack
+sub rsp, 8; adjust rsp for return entry
+sub rsp, 8
+mov qword [rsp],rdi
+;add space for symbols
+sub rsp, 41
+mov r10, qword [rbp-16]
+mov r11, qword [const0]
+cmp r10, r11
+jle label#3
+mov r10,0
+jmp label#4
+label#3:
+mov r10,1
+label#4:
+mov byte[rbp-17], r10b
+mov r10b, byte [rbp-17]
+cmp r10, 0
+je label#0
+;copy return value in rax
+mov rax , qword[rbp-16]
+leave
+ret
+label#0:
+mov r10, qword [rbp-16]
+mov r11, qword [const0]
+sub r10, r11
+mov qword[rbp-25], r10
+; saving arguments for call
+mov rdi, qword [rbp-25]
+call fib
+;copy return value from rax
+mov qword[rbp-33], rax
+add rsp,0
+mov r10, qword [rbp-16]
+mov r11, qword [const1]
+sub r10, r11
+mov qword[rbp-41], r10
+; saving arguments for call
+mov rdi, qword [rbp-41]
+call fib
+;copy return value from rax
+mov qword[rbp-49], rax
+add rsp,0
+mov r10, qword [rbp-33]
+mov r11, qword [rbp-49]
+add r10, r11
+mov qword[rbp-57], r10
+;copy return value in rax
+mov rax , qword[rbp-57]
+leave
+ret
 global main
 main:
 push   rbp
@@ -77,167 +137,164 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
-sub rsp, 60
-mov r10, qword [const0]
-mov qword[rbp-16], r10
-mov r10d, dword[const1+0]
-mov dword[rbp-28+0], r10d
-lea r10, [rbp-16]
-mov qword [rbp-24], r10
-;preparing extern function scanf
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-24]
-lea rdi, [rbp-28]
-xor rax, rax
-call scanf
-add rsp,8
-pop rax
-mov r10, qword [rbp-16]
-mov r11, qword [const0]
-cmp r10, r11
-jl label#3
-mov r10,0
-jmp label#4
-label#3:
-mov r10,1
-label#4:
-mov byte[rbp-29], r10b
-mov r10b, byte [rbp-29]
-cmp r10, 0
-je label#0
+sub rsp, 662
 mov r10, qword[const2+0]
-mov qword[rbp-54+0], r10
-mov r10, qword[const2+8]
-mov qword[rbp-54+8], r10
-mov r10, qword[const2+16]
-mov qword[rbp-54+16], r10
-mov r10b, byte[const2+24]
-mov byte[rbp-54+24], r10b
-;preparing extern function printf
+mov qword[rbp-108+0], r10
+mov r10b, byte[const2+8]
+mov byte[rbp-108+8], r10b
+mov r10, qword[const3+0]
+mov qword[rbp-564+0], r10
+mov r10d, dword[const3+8]
+mov dword[rbp-564+8], r10d
+mov r10w, word[const3+12]
+mov word[rbp-564+12], r10w
+;preparing extern function strcat
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-mov rsi, qword [const0]
-lea rdi, [rbp-54]
+lea rsi, [rbp-564]
+lea rdi, [rbp-108]
 xor rax, rax
-call printf
-add rsp,8
-pop rax
-;copy return value in rax
-mov rax , qword[const0]
-leave
-ret
-label#0:
-mov r10d, dword[const3+0]
-mov dword[rbp-60+0], r10d
-mov r10b, byte[const3+4]
-mov byte[rbp-60+4], r10b
-; saving arguments for call
-mov rdi, qword [rbp-16]
-call is_odd
+call strcat
 ;copy return value from rax
-mov byte[rbp-55], al
-add rsp,0
-mov r10b, byte [rbp-55]
-mov qword[rbp-68], r10
-;preparing extern function printf
+mov qword[rbp-572], rax
+add rsp,8
+pop rax
+mov r10d, dword[const4+0]
+mov dword[rbp-578+0], r10d
+mov r10w, word[const4+4]
+mov word[rbp-578+4], r10w
+mov r10d, dword[const4+0]
+mov dword[rbp-584+0], r10d
+mov r10w, word[const4+4]
+mov word[rbp-584+4], r10w
+;preparing extern function strcmp
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-mov rsi, qword [rbp-68]
-lea rdi, [rbp-60]
+lea rsi, [rbp-584]
+lea rdi, [rbp-578]
 xor rax, rax
-call printf
+call strcmp
+;copy return value from rax
+mov qword[rbp-592], rax
 add rsp,8
 pop rax
-leave
-ret
-global is_odd
-is_odd:
-push   rbp
-mov    rbp,rsp
-; saving the arguments values in the stack
-sub rsp, 1; adjust rsp for return entry
-sub rsp, 8
-mov qword [rsp],rdi
-;add space for symbols
-sub rsp, 10
-mov r10, qword [rbp-9]
-mov r11, qword [const0]
-cmp r10, r11
+mov r10, qword [rbp-592]
+cmp r10, 0
 je label#5
 mov r10,0
 jmp label#6
 label#5:
 mov r10,1
 label#6:
-mov byte[rbp-10], r10b
-mov r10b, byte [rbp-10]
+mov byte[rbp-593], r10b
+mov r10b, byte [rbp-593]
 cmp r10, 0
 je label#1
-;copy return value in rax
-mov al , byte[const0]
-leave
-ret
-label#1:
-mov r10, qword [rbp-9]
-mov r11, qword [const4]
-sub r10, r11
-mov qword[rbp-18], r10
+mov r10, qword[const5+0]
+mov qword[rbp-611+0], r10
+mov r10, qword[const5+8]
+mov qword[rbp-611+8], r10
+mov r10w, word[const5+16]
+mov word[rbp-611+16], r10w
+;preparing extern function printf
 ; saving arguments for call
-mov rdi, qword [rbp-18]
-call is_even
-;copy return value from rax
-mov byte[rbp-19], al
-add rsp,0
-;copy return value in rax
-mov al , byte[rbp-19]
-leave
-ret
-global is_even
-is_even:
-push   rbp
-mov    rbp,rsp
-; saving the arguments values in the stack
-sub rsp, 1; adjust rsp for return entry
+and spl, 0x0
+push rax
 sub rsp, 8
-mov qword [rsp],rdi
-;add space for symbols
-sub rsp, 10
-mov r10, qword [rbp-9]
-mov r11, qword [const0]
-cmp r10, r11
-je label#7
-mov r10,0
-jmp label#8
-label#7:
-mov r10,1
-label#8:
-mov byte[rbp-10], r10b
-mov r10b, byte [rbp-10]
-cmp r10, 0
-je label#2
-;copy return value in rax
-mov al , byte[const4]
-leave
-ret
-label#2:
-mov r10, qword [rbp-9]
-mov r11, qword [const4]
-sub r10, r11
-mov qword[rbp-18], r10
+mov rsi, qword [const6]
+lea rdi, [rbp-611]
+xor rax, rax
+call printf
+add rsp,8
+pop rax
+jmp label#2
+label#1:
+mov r10, qword[const7+0]
+mov qword[rbp-630+0], r10
+mov r10, qword[const7+8]
+mov qword[rbp-630+8], r10
+mov r10w, word[const7+16]
+mov word[rbp-630+16], r10w
+mov r10b, byte[const7+18]
+mov byte[rbp-630+18], r10b
+;preparing extern function printf
 ; saving arguments for call
-mov rdi, qword [rbp-18]
-call is_odd
+and spl, 0x0
+push rax
+sub rsp, 8
+mov rsi, qword [const6]
+lea rdi, [rbp-630]
+xor rax, rax
+call printf
+add rsp,8
+pop rax
+label#2:
+;preparing extern function puts
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+lea rdi, [rbp-108]
+xor rax, rax
+call puts
 ;copy return value from rax
-mov byte[rbp-19], al
-add rsp,0
+mov qword[rbp-638], rax
+add rsp,8
+pop rax
+;preparing extern function puts
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+lea rdi, [rbp-564]
+xor rax, rax
+call puts
+;copy return value from rax
+mov qword[rbp-646], rax
+add rsp,8
+pop rax
+;preparing extern function strcpy
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+lea rsi, [rbp-108]
+lea rdi, [rbp-564]
+xor rax, rax
+call strcpy
+;copy return value from rax
+mov qword[rbp-654], rax
+add rsp,8
+pop rax
+;preparing extern function puts
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+lea rdi, [rbp-108]
+xor rax, rax
+call puts
+;copy return value from rax
+mov qword[rbp-662], rax
+add rsp,8
+pop rax
+;preparing extern function puts
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+lea rdi, [rbp-564]
+xor rax, rax
+call puts
+;copy return value from rax
+mov qword[rbp-670], rax
+add rsp,8
+pop rax
 ;copy return value in rax
-mov al , byte[rbp-19]
+mov rax , qword[const8]
 leave
 ret
