@@ -222,6 +222,10 @@ def p_primary_expression(p):
             if success:
                 p[0] = Node(name="id",value=p[1],type=success.type)
                 p[0].place = p[1]+"|"+success.symbol_table.name
+                if success.type.class_type == "PointerType" and success.type.is_array == True:
+                    tmp = get_newtmp()
+                    p[0].code += [gen(op="addr",place1=p[0].place,place3=tmp,code=tmp+" = "+"addr("+p[0].place+")")]
+                    p[0].place = tmp
             else:
                 p[0] = Node(name="id",type='error')
             return
@@ -319,6 +323,7 @@ def p_postfix_expression_1(p):
     postfix_expression : postfix_expression L_SQBR constant_expression R_SQBR
     '''
     # p[3] = load_place(p[3])
+    p[1] = load_place(p[1])
     allowed_class = {'BasicType'}
     allowd_base = {'int','long'}
     check1 = True
@@ -380,13 +385,17 @@ def p_postfix_expression_1(p):
             p[0].code += [code]
             # tmp1 = get_newtmp(BasicType("long"))
             #addr of array
-            if "load$" in p[1].place:
-                addr = p[1].place.split("$")[1]
+            # if "load$" in p[1].place:
+            #     addr = p[1].place.split("$")[1]
+            # else:
+            #     addr = get_newtmp(BasicType("long"))
+            #     p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
+            # tmp,code = get_opcode(op="long+",place1=addr,place2=tmp,type="long")
+            tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
+            if p[0].type.class_type == "PointerType" and p[0].type.is_array == True:
+                p[0].place = tmp
             else:
-                addr = get_newtmp(BasicType("long"))
-                p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
-            tmp,code = get_opcode(op="long+",place1=addr,place2=tmp,type="long")
-            p[0].place = "load$"+tmp
+                p[0].place = "load$"+tmp
             p[0].code += [code]
 
 
@@ -1702,7 +1711,8 @@ def p_pop_sym(p):
 def p_error(t):
     if t is None:
         print("End of File Reached. More Input required")    
-    print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
+    else:
+        print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
     exit(-1)
 
 

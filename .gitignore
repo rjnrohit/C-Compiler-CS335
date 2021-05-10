@@ -6,7 +6,7 @@ bin/__pycache__/*
 bin/__pycache__
 ast.dot
 ast.png
-dump.csv
+# dump.csv
 src/parser.out
 src/parsetab.py
 

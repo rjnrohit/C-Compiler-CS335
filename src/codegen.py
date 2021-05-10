@@ -885,6 +885,7 @@ def add_func_call(gen_obj):
                 width = typ.width
                 get_width = str(typ.width)
                 get_size = size_type[typ.width]
+            print("here it comes", arg)
             if byte8_args > len(arg_regs):
                 code += ['sub rsp, ' + get_width]
                 if typ.class_type != "PointerType":
