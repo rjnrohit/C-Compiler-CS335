@@ -1,6 +1,7 @@
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from threeaddr import *
+import copy
          
 
 #multiplication, division, modulus
@@ -421,10 +422,15 @@ def type_check_assign(node1,node2,token):
         node2 = typecast(node2,type=node1.type)
         node = Node("binary_op",node1.type.stype+"=",children = [node1,node2],type=node1.type)
         node.code = node1.code + node2.code
-        node.code += [gen(op=get_type(node2)+"=",place1=node2.place,place3=node1.place)]
+        if "load$" in node1.place:
+            place = node1.place.split("load$")[-1]
+            node.code += [gen(op=get_type(node2)+"_eq",place1=node2.place,place3=place)]
+        else:
+            node.code += [gen(op=get_type(node2)+"=",place1=node2.place,place3=node1.place)]
         if "const@" in node2.place:
             const_use(node2.place)
         node.place = node1.place
+        node = load_place(node)
         return node
     Errors(
         errorType='TypeError',
@@ -440,6 +446,8 @@ def type_check_assign_op(node1,node2,op,token):
     if op == "=":
         return type_check_assign(node1,node2,token)
     op = op[:-1]
+    eq_node = copy.copy(node1)
+    node1 = load_place(node1)
     if op == "+" or op == "-":
         node = type_check_add(node1,node2,op,token)
     elif op == "/" or op == "*":
@@ -455,10 +463,11 @@ def type_check_assign_op(node1,node2,op,token):
             token_object= token
         )
         return Node(type="error")
-    return type_check_assign(node1,node,token)
+    return type_check_assign(eq_node,node,token)
     
 
 def typecast(node1,type,token=None):
+    node1 = load_place(node1)
     assert isinstance(type,Type), "not of class Type"
     assert type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
     # assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
@@ -527,3 +536,18 @@ def get_type(node):
     if node.type.class_type == "PointerType":
         return "long"
     return node.type.type
+
+def load_place(node):
+    if node.type == "error":
+        return node
+    if "load$" not in node.place:
+        return node
+    if node.type.class_type == "PointerType" and node.type.is_array == True:
+        node.place = node.place.split("load$")[-1]
+        return node
+    tmp = get_newtmp(type=node.type)
+    place = node.place.split("load$")[-1]
+    print(tmp)
+    node.code += [gen(op="load",place1=place,place3=tmp,code=tmp + " = " + "load("+place+")")]
+    node.place = tmp
+    return node

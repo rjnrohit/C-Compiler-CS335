@@ -11,30 +11,34 @@ tmp@5 = tmp@3 long+ tmp@4
 tmp@6 = i|main long* lconst@8
 tmp@7 = addr(arr|main)
 tmp@8 = tmp@7 long+ tmp@6
-load$tmp@8 = i|main
-load$tmp@5 = load$tmp@8
+tmp@8 eq i|main
+tmp@9 = load(tmp@8)
+tmp@5 eq tmp@9
+tmp@10 = load(tmp@5)
 label#1:
 tmp@1 = i|main
 i|main = i|main int+ lconst@1
 goto label#0
 label#2:
-tmp@11 = sconst@%ld
+tmp@14 = sconst@%ld
 
-tmp@9 = addr(arr|main)
-tmp@10 = tmp@9 long+ lconst@32
-push tmp@11
-push load$tmp@10
-tmp@12 = func_call printf
-pop load$tmp@10
-pop tmp@11
-tmp@15 = sconst@%ld
+tmp@11 = addr(arr|main)
+tmp@12 = tmp@11 long+ lconst@32
+tmp@13 = load(tmp@12)
+push tmp@14
+push tmp@13
+tmp@15 = func_call printf
+pop tmp@13
+pop tmp@14
+tmp@19 = sconst@%ld
 
-tmp@13 = addr(arr|main)
-tmp@14 = tmp@13 long+ lconst@40
-push tmp@15
-push load$tmp@14
-tmp@16 = func_call printf
-pop load$tmp@14
-pop tmp@15
+tmp@16 = addr(arr|main)
+tmp@17 = tmp@16 long+ lconst@40
+tmp@18 = load(tmp@17)
+push tmp@19
+push tmp@18
+tmp@20 = func_call printf
+pop tmp@18
+pop tmp@19
 return lconst@0
 EndFunc

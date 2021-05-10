@@ -272,6 +272,7 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
         allowed_base = {'int','float','char','long'}
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
@@ -317,6 +318,7 @@ def p_postfix_expression_1(p):
     ''' 
     postfix_expression : postfix_expression L_SQBR constant_expression R_SQBR
     '''
+    # p[3] = load_place(p[3])
     allowed_class = {'BasicType'}
     allowd_base = {'int','long'}
     check1 = True
@@ -397,6 +399,7 @@ def p_postfix_expression_2(p):
                        | postfix_expression L_PAREN argument_expression_list R_PAREN
     
     '''
+    p[1] = load_place(p[1])
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
@@ -530,6 +533,7 @@ def p_postfix_expression_4(p):
     postfix_expression : postfix_expression ARROW IDENTIFIER
     
     '''
+    p[1] = load_place(p[1])
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
@@ -572,11 +576,13 @@ def p_argument_expression_list(p):
 	                         | argument_expression_list COMMA assignment_expression
     '''
     if len(p) == 2:
+        # p[1] = load_place(p[1])
         p[0] = Node("argument_expression_list",children=[p[1]])
         p[0].data['args_type'] = [p[1].type]
         p[0].place = [p[1].place]
         p[0].code += p[1].code
     else:
+        # p[3] = load_place(p[3])
         p[1].addChild(p[3])
         p[1].data['args_type'] += [p[3].type]
         p[1].code += p[3].code
@@ -597,6 +603,7 @@ def p_unary_expression_1(p):
     unary_expression : INCREMENT unary_expression
                      | DECREMENT unary_expression
     '''
+    p[2] = load_place(p[2])
     p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
 
 #Node
@@ -604,6 +611,7 @@ def p_unary_expression_2(p):
     '''
     unary_expression : unary_operator cast_expression
     '''    
+    p[2] = load_place(p[2]) 
     p[0] = type_check_unary(node1=p[2],op=p[1]['op'],token=p[1]['token'])
 
 #Node
@@ -612,6 +620,7 @@ def p_unary_expression_3(p):
     unary_expression : SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
+    p[2] = load_place(p[2])
     if len(p) == 3:
         p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
     else:
@@ -662,12 +671,16 @@ def p_multiplicative_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_multi(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 def p_multiplicative_expression_1(p):
     '''
     multiplicative_expression : multiplicative_expression MODULUS cast_expression
     '''
+    p[1] = load_place(p[1])
+    p[3] = load_place(p[3])
     p[0] = type_check_multi(node1=p[1],node2=p[3],op=p[2],token=p.slice[2],decimal=False)
 
 
@@ -681,6 +694,8 @@ def p_additive_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_add(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
@@ -694,6 +709,8 @@ def p_shift_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
@@ -709,6 +726,8 @@ def p_relational_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
         
 #Node
@@ -722,6 +741,8 @@ def p_equality_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 #Node
 def p_and_expression(p):
@@ -732,6 +753,8 @@ def p_and_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
     
@@ -746,6 +769,8 @@ def p_exclusive_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 
@@ -760,6 +785,8 @@ def p_inclusive_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 
@@ -773,7 +800,9 @@ def p_logical_and_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-       p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
+        p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
 def p_logical_or_expression(p):
@@ -785,6 +814,8 @@ def p_logical_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
         
     
@@ -799,6 +830,9 @@ def p_conditional_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
+        p[5] = load_place(p[5])
         if p[1].type == "error" or p[3].type == "error" or p[5].type == "error":
             p[0] = Node(type="error")
             return
@@ -851,8 +885,10 @@ def p_assignment_expression(p):
     '''
 
     if len(p) == 2:
+        p[1] = load_place(p[1])
         p[0] = p[1]
     else:
+        p[3] = load_place(p[3])
         p[0] = type_check_assign_op(node1=p[1],node2=p[3],op=p[2]['op'],token=p[2]['token'])
 
 
@@ -898,6 +934,7 @@ def p_constant_expression(p):
     '''
     constant_expression : conditional_expression
     '''
+    p[1] = load_place(p[1])
     p[0] = p[1]
     # if "const@" in p[1].place:
     #     const_use(p[1].place)

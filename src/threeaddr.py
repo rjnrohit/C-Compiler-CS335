@@ -53,7 +53,7 @@ class gen:
 
         assert place3, "please provide variable to assign final value"
         assign_op = ["long=","int=","char=","float=","str=","bool="]
-        if op == 'assign' or op in assign_op or ("struct" in op and "=" in op) or op[:2] == "eq":
+        if op == 'assign' or op in assign_op or ("struct" in op and "=" in op) or op[-2:] == "eq":
             assert place2 is None, "extra operand given for assignment"
             return self.assign(place1, place3,op)
 
@@ -78,7 +78,9 @@ class gen:
     def assign(self,place1, place3,op):
         assert place1, "cannot assign with single operand"
         assert place3, "cannot assign with single operand"
-
+        if "eq" in op:
+            code = place3 +' eq ' + place1
+            return code
         code = place3 +' = ' + place1 #+ "({})".format(op.replace("=",""))
 
         return code
