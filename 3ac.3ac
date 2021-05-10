@@ -1,41 +1,190 @@
+fib:
+BeginFunc
+tmp@0 = n|fib int<= lconst@1
+ifz tmp@0 goto label#0
+return n|fib
+label#0:
+tmp@1 = n|fib int- lconst@1
+push tmp@1
+tmp@2 = func_call fib
+pop tmp@1
+tmp@3 = n|fib int- lconst@2
+push tmp@3
+tmp@4 = func_call fib
+pop tmp@3
+tmp@5 = tmp@2 int+ tmp@4
+return tmp@5
+EndFunc
 many_sum:
 BeginFunc
-tmp@0 = a|many_sum int+ b|many_sum
-tmp@1 = tmp@0 int+ c|many_sum
-tmp@2 = tmp@1 int+ d|many_sum
-tmp@3 = tmp@2 int+ e|many_sum
-tmp@4 = tmp@3 int+ f|many_sum
-tmp@5 = tmp@4 int+ g|many_sum
-tmp@6 = tmp@5 int+ h|many_sum
-tmp@7 = tmp@6 int+ i|many_sum
-tmp@8 = tmp@7 int+ j|many_sum
-tmp@9 = tmp@8 int+ k|many_sum
-tmp@10 = int_to_float tmp@9
-tmp@11 = tmp@10 float+ l|many_sum
-tmp@12 = tmp@11 float+ m|many_sum
-tmp@13 = tmp@12 float+ n|many_sum
-tmp@14 = tmp@13 float+ o|many_sum
-tmp@15 = tmp@14 float+ p|many_sum
-tmp@16 = tmp@15 float+ q|many_sum
-tmp@17 = tmp@16 float+ r|many_sum
-tmp@18 = tmp@17 float+ s|many_sum
-tmp@19 = tmp@18 float+ t|many_sum
-tmp@20 = tmp@19 float+ u|many_sum
-ss|many_sum = tmp@20
-tmp@22 = sconst@%ld
+tmp@6 = a|many_sum int+ b|many_sum
+tmp@7 = tmp@6 int+ c|many_sum
+tmp@8 = tmp@7 int+ d|many_sum
+tmp@9 = tmp@8 int+ e|many_sum
+tmp@10 = tmp@9 int+ f|many_sum
+tmp@11 = tmp@10 int+ g|many_sum
+tmp@12 = tmp@11 int+ h|many_sum
+tmp@13 = tmp@12 int+ i|many_sum
+tmp@14 = tmp@13 int+ j|many_sum
+tmp@15 = tmp@14 int+ k|many_sum
+tmp@16 = int_to_float tmp@15
+tmp@17 = tmp@16 float+ l|many_sum
+tmp@18 = tmp@17 float+ m|many_sum
+tmp@19 = tmp@18 float+ n|many_sum
+tmp@20 = tmp@19 float+ o|many_sum
+tmp@21 = tmp@20 float+ p|many_sum
+tmp@22 = tmp@21 float+ q|many_sum
+tmp@23 = tmp@22 float+ r|many_sum
+tmp@24 = tmp@23 float+ s|many_sum
+tmp@25 = tmp@24 float+ t|many_sum
+tmp@26 = tmp@25 float+ u|many_sum
+ss|many_sum = tmp@26
+tmp@28 = sconst@%ld
 
-tmp@21 = float_to_int ss|many_sum
-push tmp@22
-push tmp@21
+tmp@27 = float_to_int ss|many_sum
+push tmp@28
+push tmp@27
 None = func_call printf
-pop tmp@21
-pop tmp@22
-tmp@23 = float_to_int ss|many_sum
-return tmp@23
+pop tmp@27
+pop tmp@28
+tmp@29 = float_to_int ss|many_sum
+return tmp@29
 EndFunc
 main:
 BeginFunc
-tmp@25 = sconst@%ld
+tmp@30 = sconst@%ld
+
+push tmp@30
+push argc|main
+None = func_call printf
+pop argc|main
+pop tmp@30
+str1|main = sconst@This is 
+str2|main = sconst@programiz.com
+push str1|main
+push str2|main
+tmp@31 = func_call strcat
+pop str2|main
+pop str1|main
+tmp@32 = sconst@rohit
+tmp@33 = sconst@rohit
+push tmp@32
+push tmp@33
+tmp@34 = func_call strcmp
+pop tmp@33
+pop tmp@32
+tmp@35 = not_bool tmp@34
+ifz tmp@35 goto label#1
+tmp@36 = sconst@strings are same
+
+push tmp@36
+push lconst@3
+None = func_call printf
+pop lconst@3
+pop tmp@36
+goto label#2
+label#1:
+tmp@37 = sconst@they are not same
+
+push tmp@37
+push lconst@3
+None = func_call printf
+pop lconst@3
+pop tmp@37
+label#2:
+push str1|main
+tmp@38 = func_call puts
+pop str1|main
+push str2|main
+tmp@39 = func_call puts
+pop str2|main
+push str2|main
+push str1|main
+tmp@40 = func_call strcpy
+pop str1|main
+pop str2|main
+push str1|main
+tmp@41 = func_call puts
+pop str1|main
+push str2|main
+tmp@42 = func_call puts
+pop str2|main
+tmp@43 = sconst@temp1.txt
+tmp@44 = sconst@w
+push tmp@43
+push tmp@44
+tmp@45 = func_call fopen
+pop tmp@44
+pop tmp@43
+ptr1|main = tmp@45
+tmp@46 = sconst@temp2.txt
+tmp@47 = sconst@r
+push tmp@46
+push tmp@47
+tmp@48 = func_call fopen
+pop tmp@47
+pop tmp@46
+ptr2|main = tmp@48
+tmp@49 = long_to_int ptr1|main
+tmp@50 = not_bool tmp@49
+ifz tmp@50 goto label#3
+tmp@51 = sconst@error
+
+push tmp@51
+push lconst@1
+None = func_call printf
+pop lconst@1
+pop tmp@51
+push lconst@-1
+None = func_call exit
+pop lconst@-1
+label#3:
+tmp@52 = long_to_int ptr2|main
+tmp@53 = not_bool tmp@52
+ifz tmp@53 goto label#4
+tmp@54 = sconst@error
+
+push tmp@54
+push lconst@1
+None = func_call printf
+pop lconst@1
+pop tmp@54
+push lconst@-1
+None = func_call exit
+pop lconst@-1
+label#4:
+tmp@56 = sconst@%ld
+tmp@55 = addr(sc|main)
+push ptr2|main
+push tmp@56
+push tmp@55
+tmp@57 = func_call fscanf
+pop tmp@55
+pop tmp@56
+pop ptr2|main
+tmp@58 = sconst@sc: %ld
+
+push tmp@58
+push sc|main
+None = func_call printf
+pop sc|main
+pop tmp@58
+tmp@59 = sconst@%s
+
+push ptr1|main
+push tmp@59
+push str1|main
+tmp@60 = func_call fprintf
+pop str1|main
+pop tmp@59
+pop ptr1|main
+push ptr1|main
+tmp@61 = func_call fclose
+pop ptr1|main
+push ptr2|main
+tmp@62 = func_call fclose
+pop ptr2|main
+tmp@64 = sconst@%ld
 
 push lconst@1
 push lconst@2
@@ -58,7 +207,7 @@ push fconst@0.1
 push fconst@0.01
 push fconst@4.999
 push fconst@1
-tmp@24 = func_call many_sum
+tmp@63 = func_call many_sum
 pop fconst@1
 pop fconst@4.999
 pop fconst@0.01
@@ -80,10 +229,10 @@ pop lconst@4
 pop lconst@3
 pop lconst@2
 pop lconst@1
-push tmp@25
-push tmp@24
+push tmp@64
+push tmp@63
 None = func_call printf
-pop tmp@24
-pop tmp@25
+pop tmp@63
+pop tmp@64
 return lconst@0
 EndFunc
