@@ -97,52 +97,21 @@ push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
-sub rsp, 8
-mov qword [rsp],rdi
-sub rsp, 8
-mov qword [rsp],rsi
-sub rsp, 8
-mov qword [rsp],rdx
 ;add space for symbols
 sub rsp, 187
 mov r10, qword [rbp-16]
 mov r11, qword [const0]
 cmp r10, r11
-je label#1
+je label#7
 mov r10,0
-jmp label#2
-label#1:
+jmp label#8
+label#7:
 mov r10,1
-label#2:
-mov byte[rbp-33], r10b
-mov r10b, byte [rbp-33]
-cmp r10, 0
-je label#0
-;preparing extern function malloc
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rdi, qword [const1]
-xor rax, rax
-call malloc
-;copy return value from rax
-mov qword[rbp-41], rax
-add rsp,8
-pop rax
-mov r10, qword [rbp-41]
-mov qword[rbp-16], r10
-mov r10, qword [rbp-16]
-mov r11, qword [const2]
-add r10, r11
-mov qword[rbp-49], r10
-mov r10, qword [rbp-24]
-mov r11, qword [rbp-49]
-mov qword[r11], r10
-mov r10, qword [rbp-49]
-mov r11,qword [r10]
-mov qword[rbp-57], r11
-mov r10, qword [rbp-16]
+label#8:
+mov byte[rbp-26], r10b
+mov r10b, byte [rbp-26]
+mov byte[rbp-27], r10b
+mov r10b, byte [rbp-9]
 mov r11, qword [const3]
 add r10, r11
 mov qword[rbp-65], r10

@@ -1,4 +1,4 @@
-insert:
+main:
 BeginFunc
 tmp@0 = head|insert long== lconst@0
 ifz tmp@0 goto label#0

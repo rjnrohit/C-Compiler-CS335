@@ -184,7 +184,7 @@ def get_const_value(place):
 
 def break_continue(input, break_label, continue_label):
     assert break_label, "label1 not given"
-    # assert continue_label, "label2 not given"
+    assert continue_label, "label2 not given"
 
     for gens in input:
         if gens == None:
@@ -199,6 +199,20 @@ def break_continue(input, break_label, continue_label):
             gens.place1 = break_label
             gens.code = 'goto ' + break_label
 
+    return input
+
+def break_only(input,break_label):
+    assert break_label, "label1 not given"
+    for gens in input:
+        if gens == None:
+            continue
+        assert isinstance(gens, gen), "input must list of gen's"
+        if gens.op == 'continue':
+            return False
+        if gens.op == "break":
+            gens.op = 'goto'
+            gens.place1 = break_label
+            gens.code = 'goto ' + break_label
     return input
 
 def fill_return(input, label):

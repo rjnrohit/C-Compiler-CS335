@@ -35,24 +35,18 @@ fconst@4.3,float,134,134,4
 ","pointer of (char), array of:char",153,153,13
 
 symbol table id,symbol table name,parent id,table off
-1,Node,0,24
+2,scope@2,1,50
 name,type,offset,offset+base,width
-a,int,8,8,8
-b,int,16,16,8
-next,pointer of (struct Node),24,24,8
 
 symbol table id,symbol table name,parent id,table off
-2,malloc,0,16
+3,scope@3,2,8
 name,type,offset,offset+base,width
-d,int,16,16,8
+tmp@1,long,8,43,8
 
 symbol table id,symbol table name,parent id,table off
-3,printf,0,40
+4,scope@4,2,8
 name,type,offset,offset+base,width
-s,pointer of (char),16,16,8
-ab,int,24,24,8
-db,int,32,32,8
-bd,int,40,40,8
+tmp@2,long,8,51,8
 
 symbol table id,symbol table name,parent id,table off
 4,printf1,0,20

@@ -629,6 +629,7 @@ def p_unary_expression_3(p):
     unary_expression : SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
+   
     if len(p) == 3:
         p[2] = load_place(p[2])
         p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
@@ -1536,7 +1537,16 @@ def p_selection_statement(p):
                 p[0].code += labels.data["stmt"].code
                 p[0].code += [gen("label",place1=new_label)]
         p[0].code += [gen("label",place1=end_label)]
-        p[0].code = break_continue(p[0].code,break_label=end_label,continue_label=None)
+        code = break_only(p[0].code,break_label=end_label)
+        if code == False:
+            Errors(
+                errorType='SyntaxError',
+                errorText='invalid continue in switch case',
+                token_object= p.slice[1],
+            )
+            p[0] = Node(type="error")
+            return
+        p[0].code = code
 
 # Node
 def p_iteration_statement(p):

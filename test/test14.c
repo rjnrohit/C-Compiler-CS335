@@ -32,6 +32,7 @@ int main(){
     case '>':{
         x = a>b;
         break;
+        continue;
     }
     default: x = a;
     }
