@@ -435,9 +435,9 @@ def p_postfix_expression_2(p):
             )
         else:
             p[0] = Node(name="func_call",type=return_type,children=[p[1]])
-            p[0].place = get_newtmp(type=return_type)
             p[0].code = p[1].code
-            p[0].code += [gen(op="func_call",place1=p[1].value,place3=p[0].place)]
+            p[0].place = get_newtmp(type=return_type) if return_type.stype != "void" else "None"
+            p[0].code += [gen(op="func_call",place1=p[1].value,place2 = list(),place3=p[0].place)]
     else:
         arg_list = p[3].children
         if len(arg_list) != len(param_list):

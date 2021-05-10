@@ -21,8 +21,11 @@ const1 dq 1
 const2 dq 80
 const3 dq 8
 const4 db "%ld", NULL
-const5 db "%ld ", NULL
-const6 db "",LF, NULL
+const5 db "%ld",LF, NULL
+const6 dq 3
+const7 db "%ld ", NULL
+const8 db "",LF, NULL
+const9 db "successful",LF, NULL
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
@@ -173,6 +176,33 @@ jmp label#0
 label#4:
 leave
 ret
+global foo
+foo:
+push   rbp
+mov    rbp,rsp
+; saving the arguments values in the stack
+sub rsp, 0; adjust rsp for return entry
+;add space for symbols
+sub rsp, 13
+mov r10d, dword[const5+0]
+mov dword[rbp-5+0], r10d
+mov r10b, byte[const5+4]
+mov byte[rbp-5+4], r10b
+;preparing extern function printf
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+mov rsi, qword [const6]
+lea rdi, [rbp-5]
+xor rax, rax
+call printf
+;copy return value from rax
+mov qword[rbp-13], rax
+add rsp,8
+pop rax
+leave
+ret
 global main
 main:
 push   rbp
@@ -180,7 +210,7 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
-sub rsp, 2514
+sub rsp, 2534
 mov r10d, dword[const4+0]
 mov dword[rbp-2428+0], r10d
 lea r10, [rbp-2416]
@@ -211,6 +241,9 @@ mov qword [rbp-2452], r10
 mov rsi, qword [rbp-2416]
 mov rdi, qword [rbp-2452]
 call input_matrix
+add rsp,0
+; saving arguments for call
+call foo
 add rsp,0
 mov r10, qword [const0]
 mov qword[rbp-2460], r10
@@ -439,9 +472,9 @@ mov byte[rbp-2504], r10b
 mov r10b, byte [rbp-2504]
 cmp r10, 0
 je label#15
-mov r10d, dword[const5+0]
+mov r10d, dword[const7+0]
 mov dword[rbp-2565+0], r10d
-mov r10b, byte[const5+4]
+mov r10b, byte[const7+4]
 mov byte[rbp-2565+4], r10b
 lea r10, [rbp-2408]
 mov qword [rbp-2520], r10
@@ -486,7 +519,7 @@ add r10, r11
 mov qword[rbp-2468], r10
 jmp label#13
 label#15:
-mov r10w, word[const6+0]
+mov r10w, word[const8+0]
 mov word[rbp-2575+0], r10w
 ;preparing extern function printf
 ; saving arguments for call
@@ -510,6 +543,23 @@ add r10, r11
 mov qword[rbp-2460], r10
 jmp label#12
 label#17:
+mov r10, qword[const9+0]
+mov qword[rbp-2534+0], r10
+mov r10d, dword[const9+8]
+mov dword[rbp-2534+8], r10d
+;preparing extern function printf
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+mov rsi, qword [const1]
+lea rdi, [rbp-2534]
+xor rax, rax
+call printf
+;copy return value from rax
+mov qword[rbp-2542], rax
+add rsp,8
+pop rax
 ;copy return value in rax
 mov rax , qword[const0]
 leave

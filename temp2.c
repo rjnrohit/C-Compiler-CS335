@@ -23,9 +23,9 @@ void input_matrix(int a[10][10],int n){
     // return 0;
 }
 
-// void foo(){
-//     printf("%ld\n",3);
-// }
+void foo(){
+    printf("%ld\n",3);
+}
 
 int main(){
     int a[10][10];
@@ -38,7 +38,7 @@ int main(){
     // printf("%ld\n",a);
     input_matrix(a,n);
     input_matrix(b,n);
-    // foo();
+    foo();
     int i,j,k;
     for(i = 0;i<n;i++){
         for(j = 0;j<n;j++){
