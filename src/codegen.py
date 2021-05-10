@@ -301,9 +301,11 @@ def add_args_copy_code(fname):
     required = symbol_table.offset
 
     for typ in args_type:
+        exclude = True
         if typ.stype == "float":
             float_args += 1
             if float_args <= len(arg_regsf):
+                exclude = False
                 code += ["sub rsp, 4"]
                 code += ["movss dword [rsp]," + arg_regsf[float_args-1]]
             else:
@@ -321,6 +323,7 @@ def add_args_copy_code(fname):
                 get_width = str(typ.width)
                 get_size = size_type[typ.width]
             if byte8_args <= len(arg_regs):
+                exclude = False
                 code += ["sub rsp, " + get_width]
                 code += ["mov "+get_size+" [rsp]," + arg_regs[byte8_args-1][width]]
             else:
@@ -332,12 +335,14 @@ def add_args_copy_code(fname):
             other_args += 1
             code += ['; copying data in stack of ' + typ.stype]
             code += add_copy_data_code(typ.width, "rbp+" +str(off))
-        if typ.class_type == "PointerType":
-            off += 8
-            reserved += 8
-        else:
-            off += typ.width
-            reserved += typ.width
+
+        if exclude:
+            if typ.class_type == "PointerType":
+                off += 8
+                reserved += 8
+            else:
+                off += typ.width
+                reserved += typ.width
     
     required -= reserved
     code += [';add space for symbols']
@@ -633,7 +638,8 @@ def add_typecast_code(gen_obj, not_bool = False):
         code += ["cvtsi2ss {},{}".format('xmm0', temp_regs[0][4])]
         code += ["movss " + get_size + "[" + addr+"], xmm0"]
     elif 'float_to' in gen_obj.op:
-        code += ["cvtss2si {},{}".format(temp_regs[0][4], 'xmm0')]
+        #for rounding up we use cvtss2si
+        code += ["cvttss2si {},{}".format(temp_regs[0][4], 'xmm0')]
         code += ["movsxd {},{}".format(temp_regs[0][8], temp_regs[0][4])]
         code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
     elif 'to_bool' in gen_obj.op or not_bool:
