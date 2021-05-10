@@ -65,8 +65,9 @@ def type_check_unary(node1,op,token,is_typename=False):
             if node.type.class_type == "PointerType":
                 node.type.array_size = node1.type.array_size[1:]
             node.code = node1.code
-            node.place = get_newtmp(node1.type.type)
-            node.code += [gen(op="load",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]
+            # node.place = get_newtmp(node1.type.type)
+            # node.code += [gen(op="load",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]
+            node.place = "load$"+node1.place
             return node
         else:
             Errors(
@@ -96,14 +97,6 @@ def type_check_unary(node1,op,token,is_typename=False):
             node.code = node1.code
             node.place = get_newtmp(type=BasicType('bool'))
             node.code += [gen(op="not_bool",place1=node1.place,place3=node.place)]
-            # label1 = get_newlabel()
-            # label2 = get_newlabel()
-            # node.code += [gen(op="ifz",place1=node1.place,place2=label1)]
-            # node.code += [gen(op="=",place3=node.place,place1=get_const(1,'bool',True))]
-            # node.code += [gen("goto",place1=label2)]
-            # node.code += [gen("label",place1=label1)]
-            # node.code += [gen(op="=",place3=node.place,place1=get_const(0,'bool',True))]
-            # node.code += [gen("label",place1=label2)]
             return node
         error = True
     elif op == "sizeof":

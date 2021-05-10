@@ -240,7 +240,7 @@ def p_primary_expression(p):
         
         elif p.slice[-1].type == "CHAR_CONSTANT":
             p[0] = Node(name="constant",value=p[1],type=BasicType('char'))
-            p[0].constant = ord(p[1][1])
+            p[0].constant = ord(remove_backslash(p[1][1]))
 
         elif p.slice[-1].type == "STR_CONSTANT":
             string = remove_backslash(p[1][1:-1])
@@ -358,13 +358,15 @@ def p_postfix_expression_1(p):
         #type_casting
         p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
         p[0].code = p[1].code + p[3].code
+        #when pointer
         if len(p[1].type.array_size) == 0:
             const_place = get_const(p[1].type.type_size,type="long")
             tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
             p[0].code += [code]
             tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
-            p[0].place = tmp
+            p[0].place = "load$"+tmp
             p[0].code += [code]
+        #when array
         else:
             p[0].type.array_size = p[1].type.array_size[1:]
             width = 1
@@ -374,10 +376,15 @@ def p_postfix_expression_1(p):
             const_place = get_const(width,type="long")
             tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
             p[0].code += [code]
-            tmp1 = get_newtmp(BasicType("long"))
-            p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp1)]
-            tmp,code = get_opcode(op="long+",place1=tmp1,place2=tmp,type="long")
-            p[0].place = tmp
+            # tmp1 = get_newtmp(BasicType("long"))
+            #addr of array
+            if "load$" in p[1].place:
+                addr = p[1].place.split("$")[1]
+            else:
+                addr = get_newtmp(BasicType("long"))
+                p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
+            tmp,code = get_opcode(op="long+",place1=addr,place2=tmp,type="long")
+            p[0].place = "load$"+tmp
             p[0].code += [code]
 
 
@@ -500,13 +507,19 @@ def p_postfix_expression_3(p):
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     p[0].code = p[1].code
-    tmp = get_newtmp()
-    p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
+    # tmp = get_newtmp()
+    # p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
+    #addr of struct
+    if "load$" in p[1].place:
+        addr = p[1].place.split("$")[1]
+    else:
+        addr = get_newtmp()
+        p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
+    print(success.offset)
     const_place = get_const(const=success.offset,type="long")
-    tmp1,code = get_opcode(op="long+",place1=tmp,place2=const_place,type="long")
+    tmp1,code = get_opcode(op="long+",place1=addr,place2=const_place,type="long")
     p[0].code += [code]
-    p[0].code += [gen(op="load",place1=tmp1,place3=tmp1,code=tmp1+" = "+"load("+tmp1+")")]
-    p[0].place = tmp1
+    p[0].place = "load$"+tmp1
 
     
 
@@ -547,8 +560,7 @@ def p_postfix_expression_4(p):
     const_place = get_const(const=success.offset,type="long")
     tmp,code = get_opcode(op="long+",place1=p[1].place,place2=const_place,type="long")
     p[0].code += [code]
-    p[0].code += [gen(op="load",place1=tmp,place3=tmp,code=tmp+" = "+"load("+tmp+")")]
-    p[0].place = tmp
+    p[0].place = "load$"+tmp
 
 
 
