@@ -1,4 +1,4 @@
-from structure import FunctionType, StructType, SymbolTable, sym_table, PointerType, BasicType
+from structure import FunctionType, StructType, SymbolTable, Type, sym_table, PointerType, BasicType
 from threeaddr import gen, get_newlabel
 from threeaddr import alloc, temp_dict
 import math
@@ -444,6 +444,29 @@ def add_assign_code(gen_obj):
         code += add_copy_data_code(min(typ1.width, typ3.width), addr1, addr3)
     return code
 
+def add_eq_code(gen_obj):
+    code =[]
+    if gen_obj.op in ["long_eq","int_eq","char_eq","bool_eq", 'float_eq']:
+        width = Type.size_dict[gen_obj.op[:-3]]
+        get_size = size_type[width]
+        code += load_var(gen_obj.place1)
+        addr = get_var_addr(gen_obj.place3)
+        code += ["mov r11, qword [{}]".format(addr)]
+        # print(gen_obj.code)
+        if gen_obj.op != 'float_eq':
+            code += ["mov " + get_size + "[r11], " + temp_regs[0][width]]
+        else:
+            code += ["movss " + get_size + "[r11], " + arg_regsf[0]]
+    elif gen_obj.op == 'str_eq':
+        assert False, "string can't be assigned at designated place"
+    elif 'struct' in gen_obj.op and 'eq' in gen_obj.op:
+        addr1 = get_var_addr(gen_obj.place1)
+        addr3 = get_var_addr(gen_obj.place3)
+        typ3 = get_var_type(gen_obj.place3)
+        code += ["mov r11, qword [{}]".format(addr1)]
+        code += add_copy_data_code(typ3.width, "r11", addr3)
+    return code
+
 def add_plus_code(gen_obj):
     code =[]
     #print(gen_obj, get_var_type(gen_obj.place1))
@@ -618,9 +641,11 @@ def add_load_addr(gen_obj):
     if gen_obj.op == 'load':
         code += load_var(gen_obj.place1)
         if 'xmm' in code[-1]:
-            code += ["movss " + get_size + "[" +addr+"], xmm0"]
+            # code += ["movss " + get_size + "[" +addr+"], xmm0"]
+            assert False, "load can't have float address"
         else:
-            code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
+            code += ["mov {},{} [r10]".format(temp_regs[1][width],get_size)]
+            code += ["mov " + get_size + "[" +addr+"], " + temp_regs[1][width]]
     else:
         addr1 = get_var_addr(gen_obj.place1)
         code += ["lea r10, [" + addr1+"]"]
@@ -757,6 +782,8 @@ def add_other_opcode(gen_obj):
         code += add_relational_code(gen_obj)
     elif gen_obj.op == 'not_bool':
         code += add_not_bool_code(gen_obj)
+    elif 'eq' in gen_obj.op:
+        code += add_eq_code(gen_obj)
     return code
 
 
