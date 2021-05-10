@@ -454,6 +454,7 @@ def type_check_assign_op(node1,node2,op,token):
         return type_check_assign(node1,node2,token)
     op = op[:-1]
     eq_node = copy.copy(node1)
+    eq_node.code = list()
     node1 = load_place(node1)
     if op == "+" or op == "-":
         node = type_check_add(node1,node2,op,token)

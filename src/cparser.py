@@ -8,6 +8,7 @@ import ply.yacc as yacc
 import clexer as lexer
 import argparse
 import pygraphviz as pgv
+import copy
 
 
 from utils import draw_ast
@@ -276,7 +277,7 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[1] = load_place(p[1])
+        # p[1] = load_place(p[1])
         allowed_base = {'int','float','char','long'}
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
@@ -288,25 +289,46 @@ def p_postfix_expression(p):
             token_object= p.slice[-1]
             )
             p[0] = Node(type="error")
-        elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
+        elif (p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base) or p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
-            p[0].code = p[1].code
-            p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
+            print(p[1].place+"1")
+            node_assign = type_check_assign(p[0],copy.copy(p[1]),token=p.slice[-1])
+            if node_assign.type == "error":
+                p[0] = Node(type="error")
+                return
+            print(p[1].place+"1")
+            p[0].code = node_assign.code
+            const_place = get_const(const=1,type=BasicType("long"),use=True)
+            node_1 = Node(type=BasicType("long"))
+            node_1.place = const_place
+            p[1].code = list()
+            node_op = type_check_assign_op(p[1],node_1,op=p[2][0]+"=",token=p.slice[-1])
+            if node_op.type == "error":
+                p[0] = Node(type="error")
+                return
+            p[0].code += node_op.code
             #print(p[0].code)
-            const_place = get_const(const=1,type=p[1].type,use=True)
-            #add type conversion
-            p[0].code += [gen(op=str(p[1].type)+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
-            #print(p[0].code)
-        elif p[1].type.class_type in allowed_class and p[1].is_array == False:
-            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
-            p[0].place = get_newtmp(type=p[1].type)
-            p[0].code = p[1].code
-            p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
-            width = p[1].type.type_size
-            const_place = get_const(const=width,type="long",use=True)
-            p[0].code += [gen(op="long"+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
-            #print(p[0].code)
+        
+        # elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
+        #     p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+        #     p[0].place = get_newtmp(type=p[1].type)
+        #     p[0].code = p[1].code
+        #     p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
+        #     #print(p[0].code)
+        #     const_place = get_const(const=1,type=p[1].type,use=True)
+        #     #add type conversion
+        #     p[0].code += [gen(op=str(p[1].type)+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
+        #     #print(p[0].code)
+        # elif p[1].type.class_type in allowed_class:
+        #     p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+        #     p[0].place = get_newtmp(type=p[1].type)
+        #     p[0].code = p[1].code
+        #     p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
+        #     width = p[1].type.type_size
+        #     const_place = get_const(const=width,type="long",use=True)
+        #     p[0].code += [gen(op="long"+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
+        #     #print(p[0].code)
         else:
             p[0] = p[1]
             p[0].type = 'error'

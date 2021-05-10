@@ -16,14 +16,9 @@ SYS_fork equ 57 ; fork
 SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
-const0 dq 94
-const1 dq 1386
-const2 dq 1103
-const3 dq 124
-const4 dq 38
-const5 dq 126
-const6 dq 60
-const7 dq 62
+const0 dq 16
+const1 dq 1
+const2 dd 1.0
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
@@ -87,102 +82,42 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
-sub rsp, 27
-mov r10, qword [const0]
-mov byte[rbp-9], r10b
-mov r10, qword [const1]
-mov qword[rbp-17], r10
-mov r10, qword [const2]
-mov qword[rbp-25], r10
-mov r10, qword [rbp-17]
-mov r11, qword [rbp-25]
-cmp r10, r11
-je label#7
-mov r10,0
-jmp label#8
-label#7:
-mov r10,1
-label#8:
-mov byte[rbp-26], r10b
-mov r10b, byte [rbp-26]
-mov byte[rbp-27], r10b
-mov r10b, byte [rbp-9]
-mov r11, qword [const3]
-cmp r10, r11
-jne label#0
-mov r10, qword [rbp-43]
-mov qword[rbp-35], r10
-jmp label#6
-label#0:
-mov r10b, byte [rbp-9]
-mov r11, qword [const4]
-cmp r10, r11
-jne label#1
-mov r10, qword [rbp-51]
-mov qword[rbp-35], r10
-jmp label#6
-label#1:
-mov r10b, byte [rbp-9]
+sub rsp, 116
+lea r10, [rbp-40]
+mov qword [rbp-48], r10
+mov r10, qword [rbp-48]
 mov r11, qword [const0]
-cmp r10, r11
-jne label#2
-mov r10, qword [rbp-59]
-mov qword[rbp-35], r10
-jmp label#6
-label#2:
-mov r10b, byte [rbp-9]
-mov r11, qword [const5]
-cmp r10, r11
-jne label#3
-mov r10, qword [rbp-17]
-not r11
-mov qword[rbp-67], r11
-mov r10, qword [rbp-67]
-mov qword[rbp-35], r10
-jmp label#6
-label#3:
-mov r10b, byte [rbp-9]
-mov r11, qword [const6]
-cmp r10, r11
-jne label#4
-mov r10, qword [rbp-17]
-mov r11, qword [rbp-25]
-cmp r10, r11
-jl label#9
-mov r10,0
-jmp label#10
-label#9:
-mov r10,1
-label#10:
-mov byte[rbp-68], r10b
-mov r10b, byte [rbp-68]
-mov qword[rbp-76], r10
-mov r10, qword [rbp-76]
-mov qword[rbp-35], r10
-jmp label#6
-label#4:
-mov r10b, byte [rbp-9]
-mov r11, qword [const7]
-cmp r10, r11
-jne label#5
-mov r10, qword [rbp-17]
-mov r11, qword [rbp-25]
-cmp r10, r11
-jg label#11
-mov r10,0
-jmp label#12
-label#11:
-mov r10,1
-label#12:
-mov byte[rbp-77], r10b
-mov r10b, byte [rbp-77]
-mov qword[rbp-85], r10
-mov r10, qword [rbp-85]
-mov qword[rbp-35], r10
-jmp label#6
-label#5:
-mov r10, qword [rbp-17]
-mov qword[rbp-35], r10
-label#6:
+add r10, r11
+mov qword[rbp-56], r10
+mov r10, qword [rbp-56]
+mov r11,qword [r10]
+mov qword[rbp-72], r11
+mov r10, qword [rbp-72]
+mov qword[rbp-64], r10
+mov r10, qword [rbp-56]
+mov r11,qword [r10]
+mov qword[rbp-80], r11
+mov r10, qword [rbp-80]
+mov qword[rbp-88], r10
+mov r10, qword [rbp-88]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-96], r10
+mov r10, qword [rbp-96]
+mov qword[rbp-104], r10
+mov r10, qword [rbp-104]
+mov r11, qword [rbp-56]
+mov qword[r11], r10
+mov r10, qword [rbp-56]
+mov r11,qword [r10]
+mov qword[rbp-112], r11
+movss xmm0, dword [rbp-116]
+movss dword[rbp-120], xmm0
+movss xmm0, dword [rbp-116]
+movss xmm1, dword [const2]
+addss xmm0, xmm1
+movss dword[rbp-124], xmm0
+movss xmm0, dword [rbp-124]
+movss dword[rbp-116], xmm0
 leave
 ret
