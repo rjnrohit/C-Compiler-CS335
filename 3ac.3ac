@@ -52,7 +52,7 @@ tmp@28 = load(tmp@23)
 n|s = m|s
 return n|s
 EndFunc
-main:
+foo:
 BeginFunc
 a|main = lconst@0
 push a|main
