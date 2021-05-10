@@ -1,118 +1,42 @@
-insert:
+main:
 BeginFunc
-tmp@0 = head|insert long== lconst@0
-ifz tmp@0 goto label#0
-push lconst@24
-tmp@1 = func_call malloc
-pop lconst@24
-head|insert = tmp@1
-tmp@2 = head|insert long+ lconst@8
-tmp@2 eq a|insert
-tmp@3 = load(tmp@2)
-tmp@4 = head|insert long+ lconst@16
-tmp@4 eq b|insert
-tmp@5 = load(tmp@4)
-return head|insert
+operator|main = lconst@94
+a|main = lconst@1386
+b|main = lconst@1103
+tmp@0 = a|main long== b|main
+equal|main = tmp@0
+if operator|main <> lconst@124 goto label#0
+tmp@1 = a|main long| b|main
+x|main = tmp@1
+goto label#6
 label#0:
-tmp@6 = head|insert long+ lconst@24
-push lconst@24
-tmp@7 = func_call malloc
-pop lconst@24
-tmp@6 eq tmp@7
-tmp@8 = load(tmp@6)
-tmp@9 = head|insert long+ lconst@24
-tmp@10 = load(tmp@9)
-head|insert = tmp@10
-tmp@11 = head|insert long+ lconst@8
-tmp@11 eq a|insert
-tmp@12 = load(tmp@11)
-tmp@13 = head|insert long+ lconst@16
-tmp@13 eq b|insert
-tmp@14 = load(tmp@13)
-return head|insert
-EndFunc
-s:
-BeginFunc
-tmp@15 = addr(n|s)
-tmp@16 = tmp@15 long+ lconst@8
-tmp@17 = addr(m|s)
-tmp@18 = tmp@17 long+ lconst@8
-tmp@19 = load(tmp@18)
-tmp@20 = tmp@19 int+ lconst@3
-tmp@16 eq tmp@20
-tmp@21 = load(tmp@16)
-tmp@22 = addr(n|s)
-tmp@23 = tmp@22 long+ lconst@16
-tmp@24 = addr(m|s)
-tmp@25 = tmp@24 long+ lconst@16
-tmp@26 = load(tmp@25)
-tmp@27 = tmp@26 int+ lconst@4
-tmp@23 eq tmp@27
-tmp@28 = load(tmp@23)
-n|s = m|s
-return n|s
-EndFunc
-foo:
-BeginFunc
-a|main = lconst@0
-push a|main
-push lconst@4
-push lconst@5
-tmp@29 = func_call insert
-pop lconst@5
-pop lconst@4
-pop a|main
-a|main = tmp@29
-push a|main
-push lconst@3
-push lconst@2
-tmp@30 = func_call insert
-pop lconst@2
-pop lconst@3
-pop a|main
-a|main = tmp@30
-tmp@31 = addr(n|main)
-tmp@32 = tmp@31 long+ lconst@8
-tmp@32 eq lconst@4
-tmp@33 = load(tmp@32)
-tmp@34 = addr(n|main)
-tmp@35 = tmp@34 long+ lconst@16
-tmp@35 eq lconst@69
-tmp@36 = load(tmp@35)
-push n|main
-tmp@37 = func_call s
-pop n|main
-n|main = tmp@37
-tmp@42 = sconst@%ld %ld %ld
-
-tmp@38 = a|main long+ lconst@8
-tmp@39 = load(tmp@38)
-tmp@40 = a|main long+ lconst@16
-tmp@41 = load(tmp@40)
-push tmp@42
-push lconst@24
-push tmp@39
-push tmp@41
-tmp@43 = func_call printf
-pop tmp@41
-pop tmp@39
-pop lconst@24
-pop tmp@42
-tmp@50 = sconst@%ld %ld
-
-tmp@44 = addr(n|main)
-tmp@45 = tmp@44 long+ lconst@8
-tmp@46 = load(tmp@45)
-tmp@47 = addr(n|main)
-tmp@48 = tmp@47 long+ lconst@16
-tmp@49 = load(tmp@48)
-push tmp@50
-push tmp@46
-push tmp@49
-push lconst@0
-tmp@51 = func_call printf
-pop lconst@0
-pop tmp@49
-pop tmp@46
-pop tmp@50
+if operator|main <> lconst@38 goto label#1
+tmp@2 = a|main long& b|main
+x|main = tmp@2
+goto label#6
+label#1:
+if operator|main <> lconst@94 goto label#2
+tmp@3 = a|main long^ b|main
+x|main = tmp@3
+goto label#6
+label#2:
+if operator|main <> lconst@126 goto label#3
+tmp@4 = long~ a|main
+x|main = tmp@4
+goto label#6
+label#3:
+if operator|main <> lconst@60 goto label#4
+tmp@5 = a|main long< b|main
+tmp@6 = bool_to_long tmp@5
+x|main = tmp@6
+goto label#6
+label#4:
+if operator|main <> lconst@62 goto label#5
+tmp@7 = a|main long> b|main
+tmp@8 = bool_to_long tmp@7
+x|main = tmp@8
+goto label#6
+label#5:
+x|main = a|main
+label#6:
 EndFunc
