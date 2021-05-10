@@ -393,6 +393,7 @@ def load_var(var1, var2 = None):
     code =[]
     addr = get_var_addr(var1)
     typ = get_var_type(var1)
+    assert not isinstance(typ, StructType), "struct var can't load in reg"
     width = typ.width
     #print(typ, var1)
     get_size = size_type[typ.width]
@@ -640,15 +641,17 @@ def add_load_addr(gen_obj):
     
     if gen_obj.op == 'load':
         code += load_var(gen_obj.place1)
-        if 'xmm' in code[-1]:
-            # code += ["movss " + get_size + "[" +addr+"], xmm0"]
-            assert False, "load can't have float address"
-        if typ.class_type == "BasicType" or typ.class_type == "PointerType":
-            width = typ.width
-            get_size = size_type[width]
-            code += ["mov {},{} [r10]".format(temp_regs[1][width],get_size)]
-            code += ["mov " + get_size + "[" +addr+"], " + temp_regs[1][width]]
-            
+        if typ.class_type == 'StructType' or typ.width > 8:
+            code += [';copy return value at addr in rax']
+            print("it'll come here")
+            code += ["mov r11, r10"]
+            code += add_copy_data_code(typ.width, 'r11', addr)
+        elif typ.stype == 'float':
+            code += ["movss xmm0, " +size_type[typ.width] +"[r10]"]
+            code += ["movss {}[{}], xmm0".format(size_type[typ.width], addr)]
+        else:
+            code += ["mov {},{} [r10]".format(temp_regs[1][typ.width],size_type[typ.width])]
+            code += ["mov " + size_type[typ.width] + "[" +addr+"], " + temp_regs[1][typ.width]]
     else:
         addr1 = get_var_addr(gen_obj.place1)
         code += ["lea r10, [" + addr1+"]"]
@@ -789,13 +792,15 @@ def add_other_opcode(gen_obj):
         code += add_eq_code(gen_obj)
     return code
 
+def multiple_scanf_printf(name):
+    return name.startswith("printf") or name.startswith("scanf")
 
 def add_func_body_code(name, func_code):
     code =[]
     for gen_obj in func_code:
         if gen_obj.op == 'func_call':
             #add_func_call handles value assignment to place3
-            if gen_obj.place1 in extern_functions:
+            if gen_obj.place1 in extern_functions or multiple_scanf_printf(gen_obj.place1):
                 code += add_extern_code(gen_obj)
             else:
                 code += add_func_call(gen_obj)
@@ -810,8 +815,13 @@ def add_func_body_code(name, func_code):
     return code
 
 def add_func_code(func):
-    code = ['global ' + func['name']]
-    code += [func['name'] + ':']
+    if func['name'] != 'main':
+        code = ['global ' + func['name'] + '@func']
+        code += [func['name'] + '@func' + ':']    
+    else:
+        code = ['global ' + func['name']]
+        code += [func['name'] +':']    
+    
     code += ['push   rbp']
     code += ['mov    rbp,rsp']
     code += add_args_copy_code(func['name'])
@@ -913,7 +923,7 @@ def add_func_call(gen_obj):
             code += ['; copying data in stack of ' + typ.stype]
             code += add_copy_data_code(typ.width, addr)
             other_args -= 1
-    code += ["call " + gen_obj.place1]
+    code += ["call " + gen_obj.place1 + '@func']
     code += add_post_call(place3)
     code += ["add rsp," + str(shift)]
     return code
@@ -1029,7 +1039,13 @@ def add_extern_code(gen_obj):
     else:
         code += ["xor rax, rax"]
 
-    code += ["call " + gen_obj.place1]
+    if multiple_scanf_printf(gen_obj.place1):
+        if 'printf' in gen_obj.place1:
+            code += ["call printf"]
+        else:
+            code += ["call scanf"]
+    else:
+        code += ["call " + gen_obj.place1]
     code += add_post_call(place3, in_extern=True)
     code += ["add rsp," + str(shift)]
     code += ["pop rax"]
