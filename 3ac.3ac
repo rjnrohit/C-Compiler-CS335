@@ -1,109 +1,80 @@
-insert:
-BeginFunc
-tmp@0 = sconst@hello
-
-push tmp@0
-tmp@1 = func_call printf1
-pop tmp@0
-push lconst@32
-tmp@2 = func_call malloc
-pop lconst@32
-tempNode|insert = tmp@2
-tmp@3 = sconst@hello
-
-push tmp@3
-tmp@4 = func_call printf1
-pop tmp@3
-tmp@5 = tempNode|insert long+ lconst@8
-tmp@5 eq data|insert
-tmp@6 = load(tmp@5)
-tmp@7 = tempNode|insert long+ lconst@16
-tmp@7 eq lconst@0
-tmp@8 = load(tmp@7)
-tmp@9 = tempNode|insert long+ lconst@24
-tmp@9 eq lconst@0
-tmp@10 = load(tmp@9)
-tmp@11 = root|global long== lconst@0
-ifz tmp@11 goto label#0
-root|global = tempNode|insert
-return
-label#0:
-current|insert = root|global
-parent|insert = lconst@0
-label#1:
-ifz lconst@1 goto label#5
-parent|insert = current|insert
-tmp@12 = parent|insert long+ lconst@8
-tmp@13 = load(tmp@12)
-tmp@14 = data|insert int< tmp@13
-ifz tmp@14 goto label#3
-tmp@15 = current|insert long+ lconst@16
-tmp@16 = load(tmp@15)
-current|insert = tmp@16
-tmp@17 = current|insert long== lconst@0
-ifz tmp@17 goto label#2
-tmp@18 = parent|insert long+ lconst@16
-tmp@18 eq tempNode|insert
-tmp@19 = load(tmp@18)
-return
-label#2:
-goto label#4
-label#3:
-tmp@20 = current|insert long+ lconst@24
-tmp@21 = load(tmp@20)
-current|insert = tmp@21
-tmp@22 = current|insert long== lconst@0
-ifz tmp@22 goto label#4
-tmp@23 = parent|insert long+ lconst@24
-tmp@23 eq tempNode|insert
-tmp@24 = load(tmp@23)
-return
-label#4:
-goto label#1
-label#5:
-EndFunc
-inorder_traversal:
-BeginFunc
-tmp@25 = root|inorder_traversal long!= lconst@0
-ifz tmp@25 goto label#6
-tmp@26 = root|inorder_traversal long+ lconst@16
-tmp@27 = load(tmp@26)
-push tmp@27
-None = func_call inorder_traversal
-pop tmp@27
-tmp@30 = sconst@%d 
-tmp@28 = root|inorder_traversal long+ lconst@8
-tmp@29 = load(tmp@28)
-push tmp@30
-push tmp@29
-tmp@31 = func_call printf
-pop tmp@29
-pop tmp@30
-tmp@32 = root|inorder_traversal long+ lconst@24
-tmp@33 = load(tmp@32)
-push tmp@33
-None = func_call inorder_traversal
-pop tmp@33
-label#6:
-EndFunc
 main:
 BeginFunc
-push lconst@2
-None = func_call insert
-pop lconst@2
-push lconst@7
-None = func_call insert
-pop lconst@7
-push lconst@1
-None = func_call insert
-pop lconst@1
-push lconst@9
-None = func_call insert
-pop lconst@9
-push lconst@-1
-None = func_call insert
-pop lconst@-1
-push root|global
-None = func_call inorder_traversal
-pop root|global
+a|main = lconst@21
+tmp@0 = sconst@%ld
+
+push tmp@0
+push a|main
+tmp@1 = func_call printf
+pop a|main
+pop tmp@0
+b|main = lconst@69
+c|main = fconst@3.1
+tmp@7 = sconst@%f
+
+tmp@2 = b|main int- lconst@65
+tmp@3 = int_to_float tmp@2
+tmp@4 = c|main float* tmp@3
+tmp@5 = int_to_float a|main
+tmp@6 = tmp@4 float+ tmp@5
+push tmp@7
+push tmp@6
+tmp@8 = func_call printf1
+pop tmp@6
+pop tmp@7
+tmp@14 = sconst@%ld
+
+tmp@9 = b|main int- lconst@65
+tmp@10 = int_to_float tmp@9
+tmp@11 = c|main float* tmp@10
+tmp@12 = int_to_float a|main
+tmp@13 = tmp@11 float+ tmp@12
+tmp@15 = float_to_int tmp@13
+push tmp@14
+push tmp@15
+tmp@16 = func_call printf
+pop tmp@15
+pop tmp@14
+tmp@23 = sconst@%f
+
+tmp@17 = b|main int- lconst@65
+tmp@18 = int_to_float tmp@17
+tmp@19 = tmp@18 float* c|main
+tmp@20 = int_to_float a|main
+tmp@21 = tmp@19 float+ tmp@20
+tmp@22 = float_to_int tmp@21
+tmp@24 = int_to_float tmp@22
+push tmp@23
+push tmp@24
+tmp@25 = func_call printf1
+pop tmp@24
+pop tmp@23
+chr|main = lconst@90
+tmp@26 = sconst@%c
+
+tmp@27 = char_to_int chr|main
+push tmp@26
+push tmp@27
+tmp@28 = func_call printf
+pop tmp@27
+pop tmp@26
+tmp@31 = sconst@%c
+
+tmp@29 = char_to_float chr|main
+tmp@30 = tmp@29 float- fconst@24.0
+tmp@32 = float_to_int tmp@30
+push tmp@31
+push tmp@32
+tmp@33 = func_call printf
+pop tmp@32
+pop tmp@31
+d|main = lconst@1
+tmp@34 = sconst@%ld
+
+tmp@35 = bool_to_int d|main
+push tmp@34
+push tmp@35
+tmp@36 = func_call printf
+pop tmp@35
+pop tmp@34
 EndFunc

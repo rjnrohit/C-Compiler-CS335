@@ -128,7 +128,10 @@ def get_const(const,type,use=False):
             assert type.type in {"bool","long","char","int","float"}
             type = type.type
     #long const
-    if type != "float":
+    if type == "bool":
+        value = "0" if const == 0 else "1"
+        name = "lconst@"+value
+    elif type != "float":
         name = "lconst@"+str(int(const))
     #float
     else:

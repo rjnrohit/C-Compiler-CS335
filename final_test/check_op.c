@@ -1,3 +1,4 @@
+// checks multiple if and most of operator
 int printf(char s[20],int a);
 int printf1(char s[20]);
 int scanf(char s[20],int *a);
