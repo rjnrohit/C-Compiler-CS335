@@ -1,53 +1,130 @@
-func:
+binary_search:
 BeginFunc
-tmp@0 = x|func float* x|func
-tmp@1 = tmp@0 float* x|func
-tmp@2 = x|func float* x|func
-tmp@3 = tmp@1 float- tmp@2
-tmp@4 = tmp@3 float+ fconst@2
-return tmp@4
-EndFunc
-deriv:
-BeginFunc
-tmp@5 = fconst@3 float* x|deriv
-tmp@6 = tmp@5 float* x|deriv
-tmp@7 = fconst@2 float* x|deriv
-tmp@8 = tmp@6 float- tmp@7
-return tmp@8
-EndFunc
-newton_raphson:
-BeginFunc
-i|newton_raphson = lconst@0
+tmp@0 = r|binary_search int< l|binary_search
+ifz tmp@0 goto label#0
+return lconst@-1
 label#0:
-tmp@9 = i|newton_raphson int< max_itr|newton_raphson
-ifz tmp@9 goto label#2
+tmp@1 = r|binary_search int- l|binary_search
+tmp@2 = tmp@1 int/ lconst@2
+tmp@3 = l|binary_search int+ tmp@2
+mid|binary_search = tmp@3
+tmp@4 = mid|binary_search long* lconst@8
+tmp@5 = arr|binary_search long+ tmp@4
+tmp@6 = load(tmp@5)
+tmp@7 = tmp@6 int== a|binary_search
+ifz tmp@7 goto label#1
+return mid|binary_search
 label#1:
-tmp@10 = i|newton_raphson
-tmp@11 = i|newton_raphson long+ lconst@1
-i|newton_raphson = tmp@11
-goto label#0
+tmp@8 = mid|binary_search long* lconst@8
+tmp@9 = arr|binary_search long+ tmp@8
+tmp@10 = load(tmp@9)
+tmp@11 = tmp@10 int> a|binary_search
+ifz tmp@11 goto label#2
+tmp@12 = mid|binary_search int- lconst@1
+push arr|binary_search
+push l|binary_search
+push tmp@12
+push a|binary_search
+tmp@13 = func_call binary_search
+pop a|binary_search
+pop tmp@12
+pop l|binary_search
+pop arr|binary_search
+return tmp@13
 label#2:
-return x|newton_raphson
+tmp@14 = mid|binary_search int+ lconst@1
+push arr|binary_search
+push tmp@14
+push r|binary_search
+push a|binary_search
+tmp@15 = func_call binary_search
+pop a|binary_search
+pop r|binary_search
+pop tmp@14
+pop arr|binary_search
+return tmp@15
 EndFunc
 main:
 BeginFunc
-a|main = fconst@2
-tmp@12 = a|main float/ fconst@2
-tmp@13 = float_to_int tmp@12
-b|main = tmp@13
-tmp@15 = sconst@%f
+tmp@17 = sconst@%ld
+tmp@16 = addr(n|main)
+push tmp@17
+push tmp@16
+tmp@18 = func_call scanf
+pop tmp@16
+pop tmp@17
+tmp@19 = n|main int>= lconst@50
+ifz tmp@19 goto label#3
+tmp@20 = sconst@array size should be less than 50
 
-push fconst@-10
-push fconst@0.001
-push lconst@100
-tmp@14 = func_call newton_raphson
-pop lconst@100
-pop fconst@0.001
-pop fconst@-10
-push tmp@15
-push tmp@14
-tmp@16 = func_call printf
-pop tmp@14
-pop tmp@15
-return lconst@0
+push tmp@20
+tmp@21 = func_call printf1
+pop tmp@20
+return lconst@-1
+label#3:
+tmp@22 = sconst@Enter array in sorted order
+
+push tmp@22
+tmp@23 = func_call printf1
+pop tmp@22
+i|main = lconst@0
+label#4:
+tmp@24 = i|main int< n|main
+ifz tmp@24 goto label#6
+tmp@30 = sconst@%ld
+tmp@27 = addr(arr|main)
+tmp@28 = i|main long* lconst@8
+tmp@29 = tmp@27 long+ tmp@28
+push tmp@30
+push tmp@29
+tmp@31 = func_call scanf
+pop tmp@29
+pop tmp@30
+label#5:
+tmp@25 = i|main
+tmp@26 = i|main long+ lconst@1
+i|main = tmp@26
+goto label#4
+label#6:
+tmp@32 = sconst@Enter element to search: 
+push tmp@32
+tmp@33 = func_call printf1
+pop tmp@32
+tmp@35 = sconst@%ld
+tmp@34 = addr(a|main)
+push tmp@35
+push tmp@34
+tmp@36 = func_call scanf
+pop tmp@34
+pop tmp@35
+tmp@37 = addr(arr|main)
+tmp@38 = n|main int- lconst@1
+push tmp@37
+push lconst@0
+push tmp@38
+push a|main
+tmp@39 = func_call binary_search
+pop a|main
+pop tmp@38
+pop lconst@0
+pop tmp@37
+index|main = tmp@39
+tmp@40 = index|main int== lconst@-1
+ifz tmp@40 goto label#7
+tmp@41 = sconst@Element not found
+
+push tmp@41
+tmp@42 = func_call printf1
+pop tmp@41
+goto label#8
+label#7:
+tmp@44 = sconst@Element found at position %ld
+
+tmp@43 = index|main int+ lconst@1
+push tmp@44
+push tmp@43
+tmp@45 = func_call printf
+pop tmp@43
+pop tmp@44
+label#8:
 EndFunc
