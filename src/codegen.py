@@ -75,6 +75,7 @@ extern_functions = [
     'sqrt',
     'exit',
     'puts',
+    'gets',
     'atoi',
     'atol',
     'strlen',
@@ -120,7 +121,11 @@ extern_functions = [
     'fscanf',
     'fread',
     'fwrite',
-    'fseek'
+    'fseek',
+    'tan',
+    'log2',
+    'trunc',
+    'round'
 ]
 
 def add_standard_constant():

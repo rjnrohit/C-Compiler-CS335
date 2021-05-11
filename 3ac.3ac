@@ -1,137 +1,228 @@
-newNode:
+many_sum:
 BeginFunc
-push lconst@24
-tmp@0 = func_call malloc
-pop lconst@24
-node|newNode = tmp@0
-tmp@1 = node|newNode long+ lconst@8
-tmp@1 eq data|newNode
-tmp@2 = load(tmp@1)
-tmp@3 = node|newNode long+ lconst@16
-tmp@3 eq lconst@0
-tmp@4 = load(tmp@3)
-tmp@5 = node|newNode long+ lconst@24
-tmp@5 eq lconst@0
-tmp@6 = load(tmp@5)
-return node|newNode
-EndFunc
-printInorder:
-BeginFunc
-tmp@7 = node|printInorder long== lconst@0
-ifz tmp@7 goto label#0
-return
-label#0:
-tmp@8 = node|printInorder long+ lconst@16
-tmp@9 = load(tmp@8)
-push tmp@9
-None = func_call printInorder
-pop tmp@9
-tmp@12 = sconst@%ld 
-tmp@10 = node|printInorder long+ lconst@8
-tmp@11 = load(tmp@10)
-push tmp@12
-push tmp@11
-None = func_call printf
-pop tmp@11
-pop tmp@12
-tmp@13 = node|printInorder long+ lconst@24
-tmp@14 = load(tmp@13)
-push tmp@14
-None = func_call printInorder
-pop tmp@14
-EndFunc
-insert:
-BeginFunc
-ifz root|insert goto label#2
-tmp@15 = root|insert long+ lconst@8
-tmp@16 = load(tmp@15)
-tmp@17 = b|insert int>= tmp@16
-ifz tmp@17 goto label#1
-tmp@18 = root|insert long+ lconst@24
-tmp@19 = root|insert long+ lconst@24
-tmp@20 = load(tmp@19)
-push tmp@20
-push b|insert
-tmp@21 = func_call insert
-pop b|insert
-pop tmp@20
-tmp@18 eq tmp@21
-tmp@22 = load(tmp@18)
-return root|insert
-label#1:
-tmp@23 = root|insert long+ lconst@16
-tmp@24 = root|insert long+ lconst@16
-tmp@25 = load(tmp@24)
+tmp@0 = a|many_sum int+ b|many_sum
+tmp@1 = tmp@0 int+ c|many_sum
+tmp@2 = tmp@1 int+ d|many_sum
+tmp@3 = tmp@2 int+ e|many_sum
+tmp@4 = tmp@3 int+ f|many_sum
+tmp@5 = tmp@4 int+ g|many_sum
+tmp@6 = tmp@5 int+ h|many_sum
+tmp@7 = tmp@6 int+ i|many_sum
+tmp@8 = tmp@7 int+ j|many_sum
+tmp@9 = tmp@8 int+ k|many_sum
+tmp@10 = int_to_float tmp@9
+tmp@11 = tmp@10 float+ l|many_sum
+tmp@12 = tmp@11 float+ m|many_sum
+tmp@13 = tmp@12 float+ n|many_sum
+tmp@14 = tmp@13 float+ o|many_sum
+tmp@15 = tmp@14 float+ p|many_sum
+tmp@16 = tmp@15 float+ q|many_sum
+tmp@17 = tmp@16 float+ r|many_sum
+tmp@18 = tmp@17 float+ s|many_sum
+tmp@19 = tmp@18 float+ t|many_sum
+tmp@20 = tmp@19 float+ u|many_sum
+sum|many_sum = tmp@20
+tmp@21 = sconst@a:%ld
+
+push tmp@21
+push a|many_sum
+None = func_call printfi
+pop a|many_sum
+pop tmp@21
+tmp@22 = sconst@b:%ld
+
+push tmp@22
+push b|many_sum
+None = func_call printfi
+pop b|many_sum
+pop tmp@22
+tmp@23 = sconst@c:%ld
+
+push tmp@23
+push c|many_sum
+None = func_call printfi
+pop c|many_sum
+pop tmp@23
+tmp@24 = sconst@d:%ld
+
+push tmp@24
+push d|many_sum
+None = func_call printfi
+pop d|many_sum
+pop tmp@24
+tmp@25 = sconst@e:%ld
+
 push tmp@25
-push b|insert
-tmp@26 = func_call insert
-pop b|insert
+push e|many_sum
+None = func_call printfi
+pop e|many_sum
 pop tmp@25
-tmp@23 eq tmp@26
-tmp@27 = load(tmp@23)
-return root|insert
-label#2:
-push b|insert
-tmp@28 = func_call newNode
-pop b|insert
-root|insert = tmp@28
-return root|insert
+tmp@26 = sconst@f:%ld
+
+push tmp@26
+push f|many_sum
+None = func_call printfi
+pop f|many_sum
+pop tmp@26
+tmp@27 = sconst@g:%ld
+
+push tmp@27
+push g|many_sum
+None = func_call printfi
+pop g|many_sum
+pop tmp@27
+tmp@28 = sconst@h:%ld
+
+push tmp@28
+push h|many_sum
+None = func_call printfi
+pop h|many_sum
+pop tmp@28
+tmp@29 = sconst@i:%ld
+
+push tmp@29
+push i|many_sum
+None = func_call printfi
+pop i|many_sum
+pop tmp@29
+tmp@30 = sconst@j:%ld
+
+push tmp@30
+push j|many_sum
+None = func_call printfi
+pop j|many_sum
+pop tmp@30
+tmp@31 = sconst@k:%ld
+
+push tmp@31
+push k|many_sum
+None = func_call printfi
+pop k|many_sum
+pop tmp@31
+tmp@32 = sconst@l:%f
+
+push tmp@32
+push l|many_sum
+None = func_call printff
+pop l|many_sum
+pop tmp@32
+tmp@33 = sconst@m:%f
+
+push tmp@33
+push m|many_sum
+None = func_call printff
+pop m|many_sum
+pop tmp@33
+tmp@34 = sconst@n:%f
+
+push tmp@34
+push n|many_sum
+None = func_call printff
+pop n|many_sum
+pop tmp@34
+tmp@35 = sconst@o:%f
+
+push tmp@35
+push o|many_sum
+None = func_call printff
+pop o|many_sum
+pop tmp@35
+tmp@36 = sconst@p:%f
+
+push tmp@36
+push p|many_sum
+None = func_call printff
+pop p|many_sum
+pop tmp@36
+tmp@37 = sconst@q:%f
+
+push tmp@37
+push q|many_sum
+None = func_call printff
+pop q|many_sum
+pop tmp@37
+tmp@38 = sconst@r:%f
+
+push tmp@38
+push r|many_sum
+None = func_call printff
+pop r|many_sum
+pop tmp@38
+tmp@39 = sconst@s:%f
+
+push tmp@39
+push s|many_sum
+None = func_call printff
+pop s|many_sum
+pop tmp@39
+tmp@40 = sconst@t:%f
+
+push tmp@40
+push t|many_sum
+None = func_call printff
+pop t|many_sum
+pop tmp@40
+tmp@41 = sconst@u:%f
+
+push tmp@41
+push u|many_sum
+None = func_call printff
+pop u|many_sum
+pop tmp@41
+return sum|many_sum
 EndFunc
 main:
 BeginFunc
-tmp@29 = sconst@enter number of elements in tree: 
-push tmp@29
-None = func_call printfs
-pop tmp@29
-tmp@31 = sconst@%ld
-tmp@30 = addr(n|main)
-push tmp@31
-push tmp@30
-None = func_call scanf
-pop tmp@30
-pop tmp@31
-tmp@32 = sconst@enter %ld 
-push tmp@32
-push n|main
-None = func_call printf
-pop n|main
-pop tmp@32
-tmp@33 = sconst@numbers
+push lconst@1
+push lconst@2
+push lconst@3
+push lconst@4
+push lconst@5
+push lconst@6
+push lconst@7
+push lconst@7
+push lconst@4
+push lconst@3
+push lconst@4
+push fconst@1.1
+push fconst@0.99
+push fconst@3
+push fconst@1
+push fconst@4.56
+push fconst@99999.9
+push fconst@3
+push fconst@9
+push fconst@-32
+push fconst@-11
+tmp@42 = func_call many_sum
+pop fconst@-11
+pop fconst@-32
+pop fconst@9
+pop fconst@3
+pop fconst@99999.9
+pop fconst@4.56
+pop fconst@1
+pop fconst@3
+pop fconst@0.99
+pop fconst@1.1
+pop lconst@4
+pop lconst@3
+pop lconst@4
+pop lconst@7
+pop lconst@7
+pop lconst@6
+pop lconst@5
+pop lconst@4
+pop lconst@3
+pop lconst@2
+pop lconst@1
+sum|main = tmp@42
+tmp@43 = sconst@%f
 
-push tmp@33
-None = func_call printfs
-pop tmp@33
-root|main = lconst@0
-label#3:
-tmp@34 = n|main
-tmp@35 = n|main long- lconst@1
-n|main = tmp@35
-ifz tmp@34 goto label#4
-tmp@37 = sconst@%ld
-tmp@36 = addr(i|scope@12)
-push tmp@37
-push tmp@36
-None = func_call scanf
-pop tmp@36
-pop tmp@37
-push root|main
-push i|scope@12
-tmp@38 = func_call insert
-pop i|scope@12
-pop root|main
-root|main = tmp@38
-goto label#3
-label#4:
-tmp@39 = sconst@tree: 
-push tmp@39
-None = func_call printfs
-pop tmp@39
-push root|main
-None = func_call printInorder
-pop root|main
-tmp@40 = sconst@
-
-push tmp@40
-None = func_call printfs
-pop tmp@40
+push tmp@43
+push sum|main
+None = func_call printff
+pop sum|main
+pop tmp@43
+return lconst@0
 EndFunc

@@ -1,3 +1,5 @@
+//binary search tree with dynamic memory allocation
+//sort given inputs using BST
 struct node {
     int data;
     struct node* left;
