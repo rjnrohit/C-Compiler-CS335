@@ -29,6 +29,9 @@ struct Node *insert(struct Node *root,int data){
 
 
 int main(){
-    int a = 7, b= 3;
-    printf("%ld\n", a|b);
+    struct Node *root = NULL;
+    root = insert(root,1);
+    printf("%ld\n", root->data);
+    root = insert(root,2);
+    printf("%ld\n", root->right->data);
 }

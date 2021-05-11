@@ -4,7 +4,7 @@ int scanf(char s[20],int *a);
 void *malloc(int size);
 
 struct node {
-   int data; 
+   int data;
    struct node *left;
    struct node *right;
 };
