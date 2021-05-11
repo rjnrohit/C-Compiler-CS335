@@ -1046,6 +1046,10 @@ def add_extern_code(gen_obj):
     else:
         code += ["xor rax, rax"]
 
+    if gen_obj.place1 == 'malloc':
+        code += ["add rdi, 15"]
+        code += ["and dil, 0xf0"]
+
     if multiple_scanf_printf(gen_obj.place1):
         if 'printf' in gen_obj.place1:
             code += ["call printf"]
