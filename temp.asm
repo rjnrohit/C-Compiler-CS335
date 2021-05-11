@@ -19,11 +19,26 @@ SYS_creat equ 85 ; file open/create
 const0 dq 8
 const1 dq 1
 const2 dq 0
+<<<<<<< HEAD
 const3 db "%ld", NULL
 const4 dq 50
 const5 db "array size should be less than 50", NULL
 const6 db "%ld ", NULL
 const7 db "",LF, NULL
+||||||| 35696b8
+const3 dq 1
+const4 dq 2
+const5 dd -10.0
+const6 dd 0.001
+const7 dq 100
+const8 db "%f",LF, NULL
+=======
+const3 dq 1
+const4 dd -10.0
+const5 dd 0.001
+const6 dq 100
+const7 db "%f",LF, NULL
+>>>>>>> 9dbe9d0966d6fe19747bb1b4adbbae43710c2434
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
@@ -394,6 +409,7 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
+<<<<<<< HEAD
 sub rsp, 620
 mov r10d, dword[const3+0]
 mov dword[rbp-428+0], r10d
@@ -436,7 +452,37 @@ mov qword[rbp-471+24], r10
 mov r10w, word[const5+32]
 mov word[rbp-471+32], r10w
 ;preparing extern function printf1
+||||||| 35696b8
+sub rsp, 40
+mov r10, qword [const4]
+mov qword[rbp-16], r10
+push rax
+mov rax, qword[rbp-16]
+cqo
+idiv qword[const4]
+mov qword[rbp-24], rax
+pop rax
+mov r10, qword [rbp-24]
+mov qword[rbp-32], r10
+mov r10d, dword[const8+0]
+mov dword[rbp-40+0], r10d
+=======
+sub rsp, 40
+movss xmm0, dword [const0]
+movss dword[rbp-12], xmm0
+divss xmm0, xmm1
+movss dword[rbp-16], xmm0
+movss xmm0, dword [rbp-16]
+cvttss2si r10d,xmm0
+movsxd r10,r10d
+mov qword[rbp-24], r10
+mov r10, qword [rbp-24]
+mov qword[rbp-32], r10
+mov r10d, dword[const7+0]
+mov dword[rbp-40+0], r10d
+>>>>>>> 9dbe9d0966d6fe19747bb1b4adbbae43710c2434
 ; saving arguments for call
+<<<<<<< HEAD
 and spl, 0x0
 push rax
 sub rsp, 8
@@ -511,6 +557,21 @@ mov rdx, qword [rbp-556]
 mov rsi, qword [const2]
 mov rdi, qword [rbp-548]
 call quicksort@func
+||||||| 35696b8
+mov rdi, qword [const7]
+movss xmm1, dword [const6]
+movss xmm0, dword [const5]
+call newton_raphson@func
+;copy return value from xmm0
+movss dword[rbp-36], xmm0
+=======
+mov rdi, qword [const6]
+movss xmm1, dword [const5]
+movss xmm0, dword [const4]
+call newton_raphson@func
+;copy return value from xmm0
+movss dword[rbp-36], xmm0
+>>>>>>> 9dbe9d0966d6fe19747bb1b4adbbae43710c2434
 add rsp,0
 mov r10, qword [const2]
 mov qword[rbp-487], r10
