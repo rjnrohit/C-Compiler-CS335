@@ -620,12 +620,15 @@ class Errors:
 
 
     def __str__(self):
-        res = self.filename + " "
-        res += "at line no: "+ str(self.lineno)+", "
-        res = "\033[94m {}\033[00m".format(res)
-        res += "\033[91m {}\033[00m".format(self.errorType +": ")
-        res += self.errorText
-        return res
+        if self.token_object:
+            res = self.filename + " "
+            res += "at line no: "+ str(self.lineno)+", "
+            res = "\033[94m {}\033[00m".format(res)
+            res += "\033[91m {}\033[00m".format(self.errorType +": ")
+            res += self.errorText
+            return res
+        return "\033[91m {}\033[00m".format(self.errorType +": ")+self.errorText
+
 
 def getMutliPointerType(type = None, level = 0):
     levObj = PointerType(type = type)

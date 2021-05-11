@@ -237,7 +237,14 @@ def op_on_const(op,place1,place2):
     #length 1 +,-,/,*,%,^,&,|
     if op[-1] == "+": return value1+value2
     if op[-1] == "-": return value1-value2
-    if op[-1] == "/": return value1 / value2 #handle division by zero
+    if op[-1] == "/":
+        if value2 == 0:
+            Errors(
+                errorType='RuntimeError',
+                errorText='division by zero',
+            )
+            return 0 
+        return value1 / value2 
     if op[-1] == "*": return value1*value2
     if op[-1] == "%": return value1%value2
     if op[-1] == "^": return value1^value2
