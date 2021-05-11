@@ -1,0 +1,67 @@
+insert:
+BeginFunc
+tmp@0 = root|insert long== lconst@0
+ifz tmp@0 goto label#0
+push lconst@24
+tmp@1 = func_call malloc
+pop lconst@24
+node|scope@7 = tmp@1
+tmp@2 = node|scope@7 long+ lconst@8
+tmp@2 eq data|insert
+tmp@3 = load(tmp@2)
+tmp@4 = node|scope@7 long+ lconst@16
+tmp@4 eq lconst@0
+tmp@5 = load(tmp@4)
+tmp@6 = node|scope@7 long+ lconst@24
+tmp@6 eq lconst@0
+tmp@7 = load(tmp@6)
+return node|scope@7
+label#0:
+tmp@8 = root|insert long+ lconst@24
+tmp@9 = root|insert long+ lconst@24
+tmp@10 = load(tmp@9)
+push tmp@10
+push data|insert
+tmp@11 = func_call insert
+pop data|insert
+pop tmp@10
+tmp@8 eq tmp@11
+tmp@12 = load(tmp@8)
+return root|insert
+EndFunc
+main:
+BeginFunc
+root|main = lconst@0
+push root|main
+push lconst@1
+tmp@13 = func_call insert
+pop lconst@1
+pop root|main
+root|main = tmp@13
+tmp@16 = sconst@%ld
+
+tmp@14 = root|main long+ lconst@8
+tmp@15 = load(tmp@14)
+push tmp@16
+push tmp@15
+tmp@17 = func_call printf
+pop tmp@15
+pop tmp@16
+push root|main
+push lconst@2
+tmp@18 = func_call insert
+pop lconst@2
+pop root|main
+root|main = tmp@18
+tmp@23 = sconst@%ld
+
+tmp@19 = root|main long+ lconst@24
+tmp@20 = load(tmp@19)
+tmp@21 = tmp@20 long+ lconst@8
+tmp@22 = load(tmp@21)
+push tmp@23
+push tmp@22
+tmp@24 = func_call printf
+pop tmp@22
+pop tmp@23
+EndFunc

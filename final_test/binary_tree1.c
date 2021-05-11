@@ -4,7 +4,7 @@ int scanf(char s[20],int *a);
 void *malloc(int size);
 
 struct node {
-   int data; 
+   int data;
    struct node *left;
    struct node *right;
 };
@@ -13,7 +13,7 @@ struct node *root = NULL;
 
 void insert(int data) {
    printf1("hello\n");
-   struct node *tempNode = (struct node*) malloc(sizeof(struct node));
+   struct node *tempNode = (struct node*) malloc(32);
    struct node *current;
    struct node *parent;
    printf1("hello\n");
