@@ -390,10 +390,10 @@ def type_check_logical(node1,node2,op,token):
         node.code += [gen(op="ifz",place1=node1.place,place2=label1)]
         node.code += node2.code
         node.code += [gen(op="ifz",place1=node2.place,place2=label1)]
-        node.code += [gen(op="=",place1=get_const(1,type='bool',use=True),place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(1,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="goto",place1=label2)]
         node.code += [gen(op="label",place1=label1)]
-        node.code += [gen(op="=",place1=get_const(0,type='bool',use=True),place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(0,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="label",place1=label2)]
     else:
         if "const@" in node1.place and "const@" in node2.place:
@@ -411,10 +411,10 @@ def type_check_logical(node1,node2,op,token):
         node.code += [gen(op="ifnz",place1=node1.place,place2=label1)]
         node.code += node2.code
         node.code += [gen(op="ifnz",place1=node2.place,place2=label1)]
-        node.code += [gen(op="=",place1="get_const(0,type='bool',use=True)",place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(0,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="goto",place1=label2)]
         node.code += [gen(op="label",place1=label1)]
-        node.code += [gen(op="=",place1=get_const(1,type='bool',use=True),place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(1,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="label",place1=label2)]
     return node
 
