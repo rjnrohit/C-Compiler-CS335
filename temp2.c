@@ -3,9 +3,13 @@ struct Node{
     struct Node*next;
 };
 
+float glo[200];
+
 void *malloc(int d);
 int printf(char s[20], int ab, int db, int bd);
+int printf2(char s[20], int ab);
 int printf1(char s[20],float b);
+float sqrt(float i);
 
 struct Node *insert(struct Node *head,int a,int b){
     if (head == NULL){
@@ -37,6 +41,16 @@ int main(){
     // a = *(push(&a, 4,5));
     // printf("%ld %ld %ld\n", sizeof(struct Node), a.a, a.b);
     // return 0; 
+    int i;
+    for(i=0;i<200;i++){
+        glo[i] = sqrt(i);
+        // printf2("%ld\n", glo[i]);
+    }
+    for(i=1;i<100;){
+        printf1("%lf\n", glo[i]);
+        // printf2("%ld\n", i);
+        i+=1;
+    }
     printf("here\n", 1,1,1) ;
     struct Node *a = NULL;
     a =  insert(a,4,5);

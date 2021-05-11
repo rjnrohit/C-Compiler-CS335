@@ -1,288 +1,232 @@
-input_matrix:
+insert:
 BeginFunc
-tmp@0 = sconst@give matrix input of size %ldx%ld
+tmp@0 = head|insert long== lconst@0
+ifz tmp@0 goto label#0
+push lconst@24
+tmp@1 = func_call malloc
+pop lconst@24
+head|insert = tmp@1
+tmp@2 = head|insert long+ lconst@8
+tmp@2 eq a|insert
+tmp@3 = load(tmp@2)
+tmp@4 = head|insert long+ lconst@16
+tmp@4 eq b|insert
+tmp@5 = load(tmp@4)
+tmp@6 = sconst@insert complete
 
-push tmp@0
-push n|input_matrix
-push m|input_matrix
-tmp@1 = func_call printf1
-pop m|input_matrix
-pop n|input_matrix
-pop tmp@0
-i|input_matrix = lconst@0
+push tmp@6
+push lconst@0
+push lconst@0
+push lconst@0
+tmp@7 = func_call printf
+pop lconst@0
+pop lconst@0
+pop lconst@0
+pop tmp@6
+return head|insert
 label#0:
-tmp@2 = i|input_matrix int< n|input_matrix
-ifz tmp@2 goto label#4
-j|input_matrix = lconst@0
-label#1:
-tmp@5 = j|input_matrix int< m|input_matrix
-ifz tmp@5 goto label#3
-tmp@12 = sconst@%ld
-tmp@8 = i|input_matrix long* lconst@800
-tmp@9 = matrix|input_matrix long+ tmp@8
-tmp@10 = j|input_matrix long* lconst@8
-tmp@11 = tmp@9 long+ tmp@10
-push tmp@12
-push tmp@11
-tmp@13 = func_call scanf
-pop tmp@11
-pop tmp@12
-label#2:
-tmp@6 = j|input_matrix
-tmp@7 = j|input_matrix long+ lconst@1
-j|input_matrix = tmp@7
-goto label#1
-label#3:
-tmp@3 = i|input_matrix
-tmp@4 = i|input_matrix long+ lconst@1
-i|input_matrix = tmp@4
-goto label#0
-label#4:
+tmp@8 = head|insert long+ lconst@24
+push lconst@24
+tmp@9 = func_call malloc
+pop lconst@24
+tmp@8 eq tmp@9
+tmp@10 = load(tmp@8)
+tmp@11 = head|insert long+ lconst@24
+tmp@12 = load(tmp@11)
+head|insert = tmp@12
+tmp@13 = head|insert long+ lconst@8
+tmp@13 eq a|insert
+tmp@14 = load(tmp@13)
+tmp@15 = head|insert long+ lconst@16
+tmp@15 eq b|insert
+tmp@16 = load(tmp@15)
+tmp@17 = sconst@insert complete
+
+push tmp@17
+push lconst@0
+push lconst@0
+push lconst@0
+tmp@18 = func_call printf
+pop lconst@0
+pop lconst@0
+pop lconst@0
+pop tmp@17
+return head|insert
+EndFunc
+s:
+BeginFunc
+tmp@19 = addr(n|s)
+tmp@20 = tmp@19 long+ lconst@8
+tmp@21 = addr(m|s)
+tmp@22 = tmp@21 long+ lconst@8
+tmp@23 = load(tmp@22)
+tmp@24 = tmp@23 int+ lconst@3
+tmp@20 eq tmp@24
+tmp@25 = load(tmp@20)
+tmp@26 = addr(n|s)
+tmp@27 = tmp@26 long+ lconst@16
+tmp@28 = addr(m|s)
+tmp@29 = tmp@28 long+ lconst@16
+tmp@30 = load(tmp@29)
+tmp@31 = tmp@30 int+ lconst@4
+tmp@27 eq tmp@31
+tmp@32 = load(tmp@27)
+n|s = m|s
+return n|s
 EndFunc
 main:
 BeginFunc
-tmp@14 = sconst@Enter matrix size (less than 100)
+i|main = lconst@0
+label#1:
+tmp@33 = i|main int< lconst@200
+ifz tmp@33 goto label#3
+tmp@36 = addr(glo|global)
+tmp@37 = i|main long* lconst@4
+tmp@38 = tmp@36 long+ tmp@37
+tmp@39 = int_to_float i|main
+push tmp@39
+tmp@40 = func_call sqrt
+pop tmp@39
+tmp@38 eq tmp@40
+tmp@41 = load(tmp@38)
+label#2:
+tmp@34 = i|main
+tmp@35 = i|main long+ lconst@1
+i|main = tmp@35
+goto label#1
+label#3:
+i|main = lconst@1
+label#4:
+tmp@42 = i|main int< lconst@100
+ifz tmp@42 goto label#5
+tmp@47 = sconst@%lf
 
-push tmp@14
-tmp@15 = func_call printf2
-pop tmp@14
-tmp@17 = sconst@%ld
-tmp@16 = addr(m|main)
-push tmp@17
-push tmp@16
-tmp@18 = func_call scanf
-pop tmp@16
-pop tmp@17
-tmp@20 = sconst@%ld
-tmp@19 = addr(n|main)
-push tmp@20
-push tmp@19
-tmp@21 = func_call scanf
-pop tmp@19
-pop tmp@20
-tmp@23 = sconst@%ld
-tmp@22 = addr(p|main)
-push tmp@23
-push tmp@22
-tmp@24 = func_call scanf
-pop tmp@22
-pop tmp@23
-tmp@25 = sconst@%ld %ld %ld
-
-push tmp@25
-push m|main
-push n|main
-push p|main
-tmp@26 = func_call printf3
-pop p|main
-pop n|main
-pop m|main
-pop tmp@25
-tmp@27 = m|main int>= lconst@100
-ifnz tmp@27 goto label#5
-tmp@28 = n|main int>= lconst@100
-ifnz tmp@28 goto label#5
-tmp@29 = lconst@0
-goto label#6
+tmp@43 = addr(glo|global)
+tmp@44 = i|main long* lconst@4
+tmp@45 = tmp@43 long+ tmp@44
+tmp@46 = load(tmp@45)
+push tmp@47
+push tmp@46
+tmp@48 = func_call printf1
+pop tmp@46
+pop tmp@47
+tmp@49 = i|main int+ lconst@1
+i|main = tmp@49
+goto label#4
 label#5:
-tmp@29 = lconst@1
-label#6:
-ifnz tmp@29 goto label#7
-tmp@30 = p|main int>= lconst@100
-ifnz tmp@30 goto label#7
-tmp@31 = lconst@0
-goto label#8
-label#7:
-tmp@31 = lconst@1
-label#8:
-ifz tmp@31 goto label#9
-tmp@32 = sconst@Invalid size1
+tmp@50 = sconst@here
 
-push tmp@32
-tmp@33 = func_call printf2
-pop tmp@32
-label#9:
-tmp@34 = p|main int>= lconst@100
-ifnz tmp@34 goto label#10
-tmp@35 = n|main int>= lconst@100
-ifnz tmp@35 goto label#10
-tmp@36 = lconst@0
-goto label#11
-label#10:
-tmp@36 = lconst@1
-label#11:
-ifz tmp@36 goto label#12
-tmp@37 = sconst@Invalid size2
-
-push tmp@37
-tmp@38 = func_call printf2
-pop tmp@37
-label#12:
-tmp@39 = m|main int>= lconst@100
-ifnz tmp@39 goto label#13
-tmp@40 = n|main int>= lconst@100
-ifnz tmp@40 goto label#13
-tmp@41 = lconst@0
-goto label#14
-label#13:
-tmp@41 = lconst@1
-label#14:
-ifz tmp@41 goto label#15
-tmp@42 = sconst@Invalid size3
-
-push tmp@42
-tmp@43 = func_call printf2
-pop tmp@42
-label#15:
-tmp@44 = n|main int>= lconst@100
-ifz tmp@44 goto label#16
-tmp@45 = sconst@Invalid size4
-
-push tmp@45
-tmp@46 = func_call printf2
-pop tmp@45
-label#16:
-tmp@47 = m|main int>= lconst@100
-ifz tmp@47 goto label#17
-tmp@48 = sconst@Invalid size5
-
-push tmp@48
-tmp@49 = func_call printf2
-pop tmp@48
-label#17:
-tmp@50 = p|main int>= lconst@100
-ifz tmp@50 goto label#18
-tmp@51 = sconst@Invalid size6
-
-push tmp@51
-tmp@52 = func_call printf2
-pop tmp@51
-label#18:
-tmp@53 = m|main int>= lconst@100
-ifnz tmp@53 goto label#19
-tmp@54 = p|main int>= lconst@100
-ifnz tmp@54 goto label#19
-tmp@55 = lconst@0
-goto label#20
-label#19:
-tmp@55 = lconst@1
-label#20:
-ifz tmp@55 goto label#21
-tmp@56 = sconst@Invalid size7
-
-push tmp@56
-tmp@57 = func_call printf2
-pop tmp@56
-label#21:
-return lconst@0
-tmp@58 = addr(a|main)
-push tmp@58
-push m|main
+push tmp@50
+push lconst@1
+push lconst@1
+push lconst@1
+tmp@51 = func_call printf
+pop lconst@1
+pop lconst@1
+pop lconst@1
+pop tmp@50
+a|main = lconst@0
+push a|main
+push lconst@4
+push lconst@5
+tmp@52 = func_call insert
+pop lconst@5
+pop lconst@4
+pop a|main
+a|main = tmp@52
+push a|main
+push lconst@3
+push lconst@2
+tmp@53 = func_call insert
+pop lconst@2
+pop lconst@3
+pop a|main
+a|main = tmp@53
+tmp@54 = addr(n|main)
+tmp@55 = tmp@54 long+ lconst@8
+tmp@55 eq lconst@4
+tmp@56 = load(tmp@55)
+tmp@57 = addr(n|main)
+tmp@58 = tmp@57 long+ lconst@16
+tmp@58 eq lconst@69
+tmp@59 = load(tmp@58)
 push n|main
-None = func_call input_matrix
+tmp@60 = func_call s
 pop n|main
-pop m|main
-pop tmp@58
-tmp@59 = addr(b|main)
-push tmp@59
-push n|main
-push p|main
-None = func_call input_matrix
-pop p|main
-pop n|main
-pop tmp@59
-i|main = lconst@0
-label#22:
-tmp@60 = i|main int< m|main
-ifz tmp@60 goto label#28
-j|main = lconst@0
-label#23:
-tmp@63 = j|main int< p|main
-ifz tmp@63 goto label#27
-tmp@66 = addr(c|main)
-tmp@67 = i|main long* lconst@800
-tmp@68 = tmp@66 long+ tmp@67
-tmp@69 = j|main long* lconst@8
-tmp@70 = tmp@68 long+ tmp@69
-tmp@70 eq lconst@0
-tmp@71 = load(tmp@70)
-k|main = lconst@0
-label#24:
-tmp@72 = k|main int< n|main
-ifz tmp@72 goto label#26
-tmp@75 = addr(c|main)
-tmp@76 = i|main long* lconst@800
-tmp@77 = tmp@75 long+ tmp@76
-tmp@78 = j|main long* lconst@8
-tmp@79 = tmp@77 long+ tmp@78
-tmp@93 = load(tmp@79)
-tmp@80 = addr(a|main)
-tmp@81 = i|main long* lconst@800
-tmp@82 = tmp@80 long+ tmp@81
-tmp@83 = k|main long* lconst@8
-tmp@84 = tmp@82 long+ tmp@83
-tmp@90 = load(tmp@84)
-tmp@85 = addr(b|main)
-tmp@86 = k|main long* lconst@800
-tmp@87 = tmp@85 long+ tmp@86
-tmp@88 = j|main long* lconst@8
-tmp@89 = tmp@87 long+ tmp@88
-tmp@91 = load(tmp@89)
-tmp@92 = tmp@90 int* tmp@91
-tmp@94 = tmp@93 int+ tmp@92
-tmp@79 eq tmp@94
-tmp@95 = load(tmp@79)
-label#25:
-tmp@73 = k|main
-tmp@74 = k|main long+ lconst@1
-k|main = tmp@74
-goto label#24
-label#26:
-tmp@64 = j|main
-tmp@65 = j|main long+ lconst@1
-j|main = tmp@65
-goto label#23
-label#27:
-tmp@61 = i|main
-tmp@62 = i|main long+ lconst@1
-i|main = tmp@62
-goto label#22
-label#28:
-i|main = lconst@0
-label#29:
-tmp@96 = i|main int< m|main
-ifz tmp@96 goto label#34
-j|main = lconst@0
-label#30:
-tmp@99 = j|main int< p|main
-ifz tmp@99 goto label#32
-tmp@108 = sconst@%ld 
-tmp@102 = addr(c|main)
-tmp@103 = i|main long* lconst@800
-tmp@104 = tmp@102 long+ tmp@103
-tmp@105 = j|main long* lconst@8
-tmp@106 = tmp@104 long+ tmp@105
-tmp@107 = load(tmp@106)
-push tmp@108
-push tmp@107
-tmp@109 = func_call printf
-pop tmp@107
-pop tmp@108
-label#31:
-tmp@100 = j|main
-tmp@101 = j|main long+ lconst@1
-j|main = tmp@101
-goto label#30
-label#32:
-tmp@110 = sconst@
+n|main = tmp@60
+tmp@61 = sconst@flag
 
-push tmp@110
-tmp@111 = func_call printf2
-pop tmp@110
-label#33:
-tmp@97 = i|main
-tmp@98 = i|main long+ lconst@1
-i|main = tmp@98
-goto label#29
-label#34:
+push tmp@61
+push lconst@1
+push lconst@11
+push lconst@1
+tmp@62 = func_call printf
+pop lconst@1
+pop lconst@11
+pop lconst@1
+pop tmp@61
+tmp@69 = sconst@%ld %ld
+
+tmp@63 = addr(n|main)
+tmp@64 = tmp@63 long+ lconst@8
+tmp@65 = load(tmp@64)
+tmp@66 = addr(n|main)
+tmp@67 = tmp@66 long+ lconst@16
+tmp@68 = load(tmp@67)
+push tmp@69
+push tmp@65
+push tmp@68
+push lconst@0
+tmp@70 = func_call printf
+pop lconst@0
+pop tmp@68
+pop tmp@65
+pop tmp@69
+aa|main = fconst@3
+tmp@71 = addr(aa|main)
+b|main = tmp@71
+b|main eq fconst@4.3
+tmp@72 = load(b|main)
+tmp@74 = sconst@%.1f
+
+tmp@73 = load(b|main)
+push tmp@74
+push tmp@73
+tmp@75 = func_call printf1
+pop tmp@73
+pop tmp@74
+tmp@76 = load(a|main)
+n|main = tmp@76
+tmp@81 = sconst@%ld %ld %ld
+
+tmp@77 = a|main long+ lconst@8
+tmp@78 = load(tmp@77)
+tmp@79 = a|main long+ lconst@16
+tmp@80 = load(tmp@79)
+push tmp@81
+push lconst@24
+push tmp@78
+push tmp@80
+tmp@82 = func_call printf
+pop tmp@80
+pop tmp@78
+pop lconst@24
+pop tmp@81
+tmp@89 = sconst@%ld %ld
+
+tmp@83 = addr(n|main)
+tmp@84 = tmp@83 long+ lconst@8
+tmp@85 = load(tmp@84)
+tmp@86 = addr(n|main)
+tmp@87 = tmp@86 long+ lconst@16
+tmp@88 = load(tmp@87)
+push tmp@89
+push tmp@85
+push tmp@88
+push lconst@0
+tmp@90 = func_call printf
+pop lconst@0
+pop tmp@88
+pop tmp@85
+pop tmp@89
 EndFunc

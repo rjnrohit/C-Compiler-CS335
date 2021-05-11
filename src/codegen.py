@@ -643,7 +643,7 @@ def add_load_addr(gen_obj):
         code += load_var(gen_obj.place1)
         if typ.class_type == 'StructType' or typ.width > 8:
             code += [';copy return value at addr in rax']
-            print("it'll come here")
+            #print("it'll come here")
             code += ["mov r11, r10"]
             code += add_copy_data_code(typ.width, 'r11', addr)
         elif typ.stype == 'float':
@@ -795,12 +795,15 @@ def add_other_opcode(gen_obj):
 def multiple_scanf_printf(name):
     return name.startswith("printf") or name.startswith("scanf")
 
+def multiple_fscanf_fprintf(name):
+    return name.startswith("fprintf") or name.startswith("fscanf")
+
 def add_func_body_code(name, func_code):
     code =[]
     for gen_obj in func_code:
         if gen_obj.op == 'func_call':
             #add_func_call handles value assignment to place3
-            if gen_obj.place1 in extern_functions or multiple_scanf_printf(gen_obj.place1):
+            if gen_obj.place1 in extern_functions or multiple_scanf_printf(gen_obj.place1) or multiple_fscanf_fprintf(gen_obj.place1):
                 code += add_extern_code(gen_obj)
             else:
                 code += add_func_call(gen_obj)
@@ -898,7 +901,7 @@ def add_func_call(gen_obj):
                 width = typ.width
                 get_width = str(typ.width)
                 get_size = size_type[typ.width]
-            print("here it comes", arg)
+            #print("here it comes", arg)
             if byte8_args > len(arg_regs):
                 code += ['sub rsp, ' + get_width]
                 if typ.class_type != "PointerType":
@@ -1044,6 +1047,11 @@ def add_extern_code(gen_obj):
             code += ["call printf"]
         else:
             code += ["call scanf"]
+    elif multiple_fscanf_fprintf(gen_obj.place1):
+        if 'fprintf' in gen_obj.place1:
+            code += ["call fprintf"]
+        else:
+            code += ["call fscanf"]
     else:
         code += ["call " + gen_obj.place1]
     code += add_post_call(place3, in_extern=True)
