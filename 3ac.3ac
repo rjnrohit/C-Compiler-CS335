@@ -1,162 +1,119 @@
-insert:
+func:
 BeginFunc
-tmp@0 = root|insert long== lconst@0
-ifz tmp@0 goto label#0
-push lconst@24
-tmp@1 = func_call malloc
-pop lconst@24
-node|scope@7 = tmp@1
-tmp@2 = node|scope@7 long+ lconst@8
-tmp@2 eq data|insert
-tmp@3 = load(tmp@2)
-tmp@4 = node|scope@7 long+ lconst@16
-tmp@4 eq lconst@0
-tmp@5 = load(tmp@4)
-tmp@6 = node|scope@7 long+ lconst@24
-tmp@6 eq lconst@0
-tmp@7 = load(tmp@6)
-return node|scope@7
+tmp@0 = x|func float* x|func
+tmp@1 = tmp@0 float* x|func
+tmp@2 = x|func float* x|func
+tmp@3 = tmp@1 float- tmp@2
+tmp@4 = tmp@3 float+ fconst@2
+return tmp@4
+EndFunc
+deriv:
+BeginFunc
+tmp@5 = fconst@3 float* x|deriv
+tmp@6 = tmp@5 float* x|deriv
+tmp@7 = fconst@2 float* x|deriv
+tmp@8 = tmp@6 float- tmp@7
+return tmp@8
+EndFunc
+newton_raphson:
+BeginFunc
+tmp@9 = sconst@%f
+
+push tmp@9
+push epsilon|newton_raphson
+tmp@10 = func_call printf
+pop epsilon|newton_raphson
+pop tmp@9
+tmp@12 = sconst@%f
+
+tmp@11 = ufloat- epsilon|newton_raphson
+push tmp@12
+push tmp@11
+tmp@13 = func_call printf
+pop tmp@11
+pop tmp@12
+i|newton_raphson = lconst@0
 label#0:
-tmp@8 = root|insert long+ lconst@8
-tmp@9 = load(tmp@8)
-tmp@10 = tmp@9 int> data|insert
-ifz tmp@10 goto label#1
-tmp@11 = root|insert long+ lconst@16
-tmp@12 = root|insert long+ lconst@16
-tmp@13 = load(tmp@12)
-push tmp@13
-push data|insert
-tmp@14 = func_call insert
-pop data|insert
-pop tmp@13
-tmp@11 eq tmp@14
-tmp@15 = load(tmp@11)
-goto label#2
-label#1:
-tmp@16 = root|insert long+ lconst@24
-tmp@17 = root|insert long+ lconst@24
-tmp@18 = load(tmp@17)
-push tmp@18
-push data|insert
-tmp@19 = func_call insert
-pop data|insert
-pop tmp@18
-tmp@16 eq tmp@19
-tmp@20 = load(tmp@16)
-label#2:
-return root|insert
-EndFunc
-inorder:
-BeginFunc
-tmp@21 = root|inorder long== lconst@0
-ifz tmp@21 goto label#3
-return
-label#3:
-tmp@22 = root|inorder long+ lconst@16
-tmp@23 = load(tmp@22)
-push tmp@23
-None = func_call inorder
-pop tmp@23
-tmp@26 = sconst@%ld 
-tmp@24 = root|inorder long+ lconst@8
-tmp@25 = load(tmp@24)
+tmp@14 = i|newton_raphson int< max_itr|newton_raphson
+ifz tmp@14 goto label#6
+push x|newton_raphson
+tmp@17 = func_call func
+pop x|newton_raphson
+push x|newton_raphson
+tmp@18 = func_call deriv
+pop x|newton_raphson
+tmp@19 = tmp@17 float/ tmp@18
+h|scope@6 = tmp@19
+push x|newton_raphson
+tmp@20 = func_call func
+pop x|newton_raphson
+a|scope@6 = tmp@20
+push x|newton_raphson
+tmp@21 = func_call deriv
+pop x|newton_raphson
+b|scope@6 = tmp@21
+tmp@22 = i|newton_raphson int< lconst@10
+ifz tmp@22 goto label#1
+tmp@26 = sconst@%f %f %f %f
+
+push x|newton_raphson
+tmp@23 = func_call func
+pop x|newton_raphson
+push x|newton_raphson
+tmp@24 = func_call deriv
+pop x|newton_raphson
+tmp@25 = a|scope@6 float/ b|scope@6
 push tmp@26
+push tmp@23
+push tmp@24
+push h|scope@6
 push tmp@25
-tmp@27 = func_call printf
+tmp@27 = func_call printf1
 pop tmp@25
+pop h|scope@6
+pop tmp@24
+pop tmp@23
 pop tmp@26
-tmp@28 = root|inorder long+ lconst@24
-tmp@29 = load(tmp@28)
-push tmp@29
-None = func_call inorder
-pop tmp@29
-EndFunc
-preorder:
-BeginFunc
-tmp@30 = root|preorder long== lconst@0
-ifz tmp@30 goto label#4
-return
+label#1:
+tmp@28 = h|scope@6 float< epsilon|newton_raphson
+ifz tmp@28 goto label#2
+tmp@29 = ufloat- epsilon|newton_raphson
+tmp@30 = h|scope@6 float> tmp@29
+ifz tmp@30 goto label#2
+tmp@31 = lconst@1
+goto label#3
+label#2:
+tmp@31 = lconst@0
+label#3:
+ifz tmp@31 goto label#4
+return x|newton_raphson
 label#4:
-tmp@33 = sconst@%ld 
-tmp@31 = root|preorder long+ lconst@8
-tmp@32 = load(tmp@31)
-push tmp@33
-push tmp@32
-tmp@34 = func_call printf
-pop tmp@32
-pop tmp@33
-tmp@35 = root|preorder long+ lconst@16
-tmp@36 = load(tmp@35)
-push tmp@36
-None = func_call inorder
-pop tmp@36
-tmp@37 = root|preorder long+ lconst@24
-tmp@38 = load(tmp@37)
-push tmp@38
-None = func_call inorder
-pop tmp@38
-EndFunc
-postorder:
-BeginFunc
-tmp@39 = root|postorder long== lconst@0
-ifz tmp@39 goto label#5
-return
+tmp@32 = x|newton_raphson float- h|scope@6
+x|newton_raphson = tmp@32
 label#5:
-tmp@40 = root|postorder long+ lconst@16
-tmp@41 = load(tmp@40)
-push tmp@41
-None = func_call inorder
-pop tmp@41
-tmp@42 = root|postorder long+ lconst@24
-tmp@43 = load(tmp@42)
-push tmp@43
-None = func_call inorder
-pop tmp@43
-tmp@46 = sconst@%ld 
-tmp@44 = root|postorder long+ lconst@8
-tmp@45 = load(tmp@44)
-push tmp@46
-push tmp@45
-tmp@47 = func_call printf
-pop tmp@45
-pop tmp@46
+tmp@15 = i|newton_raphson
+tmp@16 = i|newton_raphson long+ lconst@1
+i|newton_raphson = tmp@16
+goto label#0
+label#6:
+return x|newton_raphson
 EndFunc
 main:
 BeginFunc
-root|main = lconst@0
-tmp@48 = sconst@Enter number to insert in BST (stop at -1)
+a|main = fconst@2
+tmp@34 = sconst@root: %f
 
-push tmp@48
-tmp@49 = func_call printf1
-pop tmp@48
-label#6:
-tmp@51 = sconst@%ld
-tmp@50 = addr(n|main)
-push tmp@51
-push tmp@50
-tmp@52 = func_call scanf
-pop tmp@50
-pop tmp@51
-tmp@53 = n|main int== lconst@-1
-ifz tmp@53 goto label#7
-goto label#9
-label#7:
-push root|main
-push n|main
-tmp@54 = func_call insert
-pop n|main
-pop root|main
-root|main = tmp@54
-label#8:
-ifnz lconst@1 goto label#6
-label#9:
-push root|main
-None = func_call inorder
-pop root|main
-push root|main
-None = func_call preorder
-pop root|main
-push root|main
-None = func_call postorder
-pop root|main
+push fconst@-20
+push fconst@0.001
+push lconst@100
+tmp@33 = func_call newton_raphson
+pop lconst@100
+pop fconst@0.001
+pop fconst@-20
+push tmp@34
+push tmp@33
+tmp@35 = func_call printf
+pop tmp@33
+pop tmp@34
+return lconst@0
 EndFunc
