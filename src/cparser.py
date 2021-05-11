@@ -550,7 +550,7 @@ def p_postfix_expression_3(p):
         addr = get_newtmp()
         p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
     # print(success.offset)
-    const_place = get_const(const=success.offset,type="long")
+    const_place = get_const(const=success.offset-success.width,type="long")
     tmp1,code = get_opcode(op="long+",place1=addr,place2=const_place,type="long")
     p[0].code += [code]
     p[0].place = "load$"+tmp1

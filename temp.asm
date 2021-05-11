@@ -16,11 +16,11 @@ SYS_fork equ 57 ; fork
 SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
-const0 dq 8
-const1 dq 16
+const0 dq 0
+const1 dq 8
 const2 dq 1000
-const3 db "%ldkm %ldm",LF, NULL
-const4 db "Distance: ", NULL
+const3 db "Distance: ", NULL
+const4 db "%ldkm %ldm",LF, NULL
 const5 dq 1
 const6 dq 500
 const7 dq 2
@@ -95,7 +95,7 @@ push qword [rbp+16+8]
 push qword [rbp+32+0]
 push qword [rbp+32+8]
 ;add space for symbols
-sub rsp, 324
+sub rsp, 256
 lea r10, [rbp-64]
 mov qword [rbp-72], r10
 mov r10, qword [rbp-72]
@@ -202,42 +202,6 @@ mov qword[r11], r10
 mov r10, qword [rbp-232]
 mov r11,qword [r10]
 mov qword[rbp-304], r11
-mov r10, qword[const3+0]
-mov qword[rbp-364+0], r10
-mov r10d, dword[const3+8]
-mov dword[rbp-364+8], r10d
-lea r10, [rbp-64]
-mov qword [rbp-312], r10
-mov r10, qword [rbp-312]
-mov r11, qword [const0]
-add r10, r11
-mov qword[rbp-320], r10
-mov r10, qword [rbp-320]
-mov r11,qword [r10]
-mov qword[rbp-328], r11
-lea r10, [rbp-64]
-mov qword [rbp-336], r10
-mov r10, qword [rbp-336]
-mov r11, qword [const1]
-add r10, r11
-mov qword[rbp-344], r10
-mov r10, qword [rbp-344]
-mov r11,qword [r10]
-mov qword[rbp-352], r11
-;preparing extern function printf
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rdx, qword [rbp-352]
-mov rsi, qword [rbp-328]
-lea rdi, [rbp-364]
-xor rax, rax
-call printf
-;copy return value from rax
-mov qword[rbp-372], rax
-add rsp,8
-pop rax
 ;copy return value at addr in rax
 mov r10, qword[rbp-64+0]
 mov qword[rax+0], r10
@@ -256,11 +220,11 @@ push qword [rbp+16+0]
 push qword [rbp+16+8]
 ;add space for symbols
 sub rsp, 87
-mov r10, qword[const4+0]
+mov r10, qword[const3+0]
 mov qword[rbp-27+0], r10
-mov r10w, word[const4+8]
+mov r10w, word[const3+8]
 mov word[rbp-27+8], r10w
-mov r10b, byte[const4+10]
+mov r10b, byte[const3+10]
 mov byte[rbp-27+10], r10b
 ;preparing extern function printf1
 ; saving arguments for call
@@ -274,9 +238,9 @@ call printf
 mov qword[rbp-35], rax
 add rsp,8
 pop rax
-mov r10, qword[const3+0]
+mov r10, qword[const4+0]
 mov qword[rbp-95+0], r10
-mov r10d, dword[const3+8]
+mov r10d, dword[const4+8]
 mov dword[rbp-95+8], r10d
 lea r10, [rbp-16]
 mov qword [rbp-43], r10
@@ -392,9 +356,9 @@ mov qword[r11], r10
 mov r10, qword [rbp-192]
 mov r11,qword [r10]
 mov qword[rbp-200], r11
-mov r10, qword[const3+0]
+mov r10, qword[const4+0]
 mov qword[rbp-260+0], r10
-mov r10d, dword[const3+8]
+mov r10d, dword[const4+8]
 mov dword[rbp-260+8], r10d
 lea r10, [rbp-24]
 mov qword [rbp-208], r10
@@ -428,9 +392,9 @@ call printf
 mov qword[rbp-268], rax
 add rsp,8
 pop rax
-mov r10, qword[const3+0]
+mov r10, qword[const4+0]
 mov qword[rbp-328+0], r10
-mov r10d, dword[const3+8]
+mov r10d, dword[const4+8]
 mov dword[rbp-328+8], r10d
 lea r10, [rbp-40]
 mov qword [rbp-276], r10
@@ -464,9 +428,9 @@ call printf
 mov qword[rbp-336], rax
 add rsp,8
 pop rax
-mov r10, qword[const3+0]
+mov r10, qword[const4+0]
 mov qword[rbp-396+0], r10
-mov r10d, dword[const3+8]
+mov r10d, dword[const4+8]
 mov dword[rbp-396+8], r10d
 lea r10, [rbp-56]
 mov qword [rbp-344], r10
