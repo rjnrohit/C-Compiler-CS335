@@ -1,145 +1,44 @@
-addDistance:
-BeginFunc
-tmp@0 = addr(d|addDistance)
-tmp@1 = tmp@0 long+ lconst@0
-tmp@2 = addr(d1|addDistance)
-tmp@3 = tmp@2 long+ lconst@0
-tmp@6 = load(tmp@3)
-tmp@4 = addr(d2|addDistance)
-tmp@5 = tmp@4 long+ lconst@0
-tmp@7 = load(tmp@5)
-tmp@8 = tmp@6 int+ tmp@7
-tmp@9 = addr(d1|addDistance)
-tmp@10 = tmp@9 long+ lconst@8
-tmp@13 = load(tmp@10)
-tmp@11 = addr(d2|addDistance)
-tmp@12 = tmp@11 long+ lconst@8
-tmp@14 = load(tmp@12)
-tmp@15 = tmp@13 int+ tmp@14
-tmp@16 = tmp@15 int/ lconst@1000
-tmp@17 = tmp@8 int+ tmp@16
-tmp@1 eq tmp@17
-tmp@18 = load(tmp@1)
-tmp@19 = addr(d|addDistance)
-tmp@20 = tmp@19 long+ lconst@8
-tmp@21 = addr(d1|addDistance)
-tmp@22 = tmp@21 long+ lconst@8
-tmp@25 = load(tmp@22)
-tmp@23 = addr(d2|addDistance)
-tmp@24 = tmp@23 long+ lconst@8
-tmp@26 = load(tmp@24)
-tmp@27 = tmp@25 int+ tmp@26
-tmp@28 = tmp@27 int% lconst@1000
-tmp@20 eq tmp@28
-tmp@29 = load(tmp@20)
-return d|addDistance
-EndFunc
-printDistance:
-BeginFunc
-tmp@30 = sconst@Distance: 
-push tmp@30
-tmp@31 = func_call printf1
-pop tmp@30
-tmp@38 = sconst@%ldkm %ldm
-
-tmp@32 = addr(d|printDistance)
-tmp@33 = tmp@32 long+ lconst@0
-tmp@34 = load(tmp@33)
-tmp@35 = addr(d|printDistance)
-tmp@36 = tmp@35 long+ lconst@8
-tmp@37 = load(tmp@36)
-push tmp@38
-push tmp@34
-push tmp@37
-tmp@39 = func_call printf
-pop tmp@37
-pop tmp@34
-pop tmp@38
-EndFunc
 main:
 BeginFunc
-tmp@40 = addr(d1|main)
-tmp@41 = tmp@40 long+ lconst@0
-tmp@41 eq lconst@1
-tmp@42 = load(tmp@41)
-tmp@43 = addr(d1|main)
-tmp@44 = tmp@43 long+ lconst@8
-tmp@44 eq lconst@500
-tmp@45 = load(tmp@44)
-tmp@46 = addr(d2|main)
-tmp@47 = tmp@46 long+ lconst@0
-tmp@47 eq lconst@2
-tmp@48 = load(tmp@47)
-tmp@49 = addr(d2|main)
-tmp@50 = tmp@49 long+ lconst@8
-tmp@50 eq lconst@600
-tmp@51 = load(tmp@50)
-tmp@52 = addr(d3|main)
-tmp@53 = tmp@52 long+ lconst@0
-tmp@53 eq lconst@1
-tmp@54 = load(tmp@53)
-tmp@55 = addr(d3|main)
-tmp@56 = tmp@55 long+ lconst@8
-tmp@56 eq lconst@200
-tmp@57 = load(tmp@56)
-tmp@64 = sconst@%ldkm %ldm
+a|main = lconst@29
+tmp@0 = sconst@%ld
 
-tmp@58 = addr(d1|main)
-tmp@59 = tmp@58 long+ lconst@0
-tmp@60 = load(tmp@59)
-tmp@61 = addr(d1|main)
-tmp@62 = tmp@61 long+ lconst@8
-tmp@63 = load(tmp@62)
-push tmp@64
-push tmp@60
-push tmp@63
-tmp@65 = func_call printf
-pop tmp@63
-pop tmp@60
-pop tmp@64
-tmp@72 = sconst@%ldkm %ldm
+push tmp@0
+push a|main
+tmp@1 = func_call printf
+pop a|main
+pop tmp@0
+a|main = lconst@6
+tmp@2 = sconst@%ld
 
-tmp@66 = addr(d2|main)
-tmp@67 = tmp@66 long+ lconst@0
-tmp@68 = load(tmp@67)
-tmp@69 = addr(d2|main)
-tmp@70 = tmp@69 long+ lconst@8
-tmp@71 = load(tmp@70)
-push tmp@72
-push tmp@68
-push tmp@71
-tmp@73 = func_call printf
-pop tmp@71
-pop tmp@68
-pop tmp@72
-tmp@80 = sconst@%ldkm %ldm
+push tmp@2
+push a|main
+tmp@3 = func_call printf
+pop a|main
+pop tmp@2
+b|main = fconst@33
+tmp@4 = sconst@%f
 
-tmp@74 = addr(d3|main)
-tmp@75 = tmp@74 long+ lconst@0
-tmp@76 = load(tmp@75)
-tmp@77 = addr(d3|main)
-tmp@78 = tmp@77 long+ lconst@8
-tmp@79 = load(tmp@78)
-push tmp@80
-push tmp@76
-push tmp@79
-tmp@81 = func_call printf
-pop tmp@79
-pop tmp@76
-pop tmp@80
-push d1|main
-push d2|main
-tmp@82 = func_call addDistance
-pop d2|main
-pop d1|main
-d|main = tmp@82
+push tmp@4
+push b|main
+tmp@5 = func_call printf1
+pop b|main
+pop tmp@4
+c|main = lconst@1
+tmp@6 = sconst@%ld
+
+tmp@7 = bool_to_int c|main
+push tmp@6
+push tmp@7
+tmp@8 = func_call printf
+pop tmp@7
+pop tmp@6
+d|main = lconst@200
+tmp@9 = sconst@%ld
+
+push tmp@9
 push d|main
-push d3|main
-tmp@83 = func_call addDistance
-pop d3|main
+tmp@10 = func_call printf
 pop d|main
-d|main = tmp@83
-push d|main
-None = func_call printDistance
-pop d|main
+pop tmp@9
 EndFunc

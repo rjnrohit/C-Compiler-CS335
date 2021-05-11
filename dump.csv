@@ -1,142 +1,48 @@
 
 symbol table id,symbol table name,table off
-0,global,87
+0,global,53
 name,type,offset,offset+base,width
-printf,"int function([pointer of (char), int, int])",0,0,32
-printf1,int function([pointer of (char)]),0,0,16
-addDistance,"struct distance function([struct distance, struct distance])",0,0,48
-lconst@0,long,8,8,8
-lconst@8,long,16,16,8
-lconst@1000,long,24,24,8
-printDistance,void function([struct distance]),24,24,16
-sconst@Distance: ,"pointer of (char), array of:char",35,35,11
-"sconst@%ldkm %ldm
-","pointer of (char), array of:char",47,47,12
-main,int function(None),47,47,8
-lconst@1,long,55,55,8
-lconst@500,long,63,63,8
-lconst@2,long,71,71,8
-lconst@600,long,79,79,8
-lconst@200,long,87,87,8
+printf,"int function([pointer of (char), int])",0,0,24
+printf1,"int function([pointer of (char), float])",0,0,20
+main,int function(None),0,0,8
+lconst@1,long,8,8,8
+lconst@29,long,16,16,8
+"sconst@%ld
+","pointer of (char), array of:char",21,21,5
+lconst@6,long,29,29,8
+fconst@33,float,33,33,4
+"sconst@%f
+","pointer of (char), array of:char",37,37,4
+lconst@0,long,45,45,8
+lconst@200,long,53,53,8
 
 symbol table id,symbol table name,parent id,table off
-1,printf,0,32
+1,printf,0,24
 name,type,offset,offset+base,width
 s,pointer of (char),16,16,8
 a,int,24,24,8
-b,int,32,32,8
 
 symbol table id,symbol table name,parent id,table off
-2,printf1,0,16
+2,printf1,0,20
 name,type,offset,offset+base,width
 s,pointer of (char),16,16,8
+a,float,20,20,4
 
 symbol table id,symbol table name,parent id,table off
-3,distance,0,16
+3,main,0,101
 name,type,offset,offset+base,width
-km,int,8,8,8
-m,int,16,16,8
-
-symbol table id,symbol table name,parent id,table off
-4,addDistance,0,304
-name,type,offset,offset+base,width
-d1,struct distance,32,32,16
-d2,struct distance,48,48,16
-d,struct distance,64,64,16
-tmp@0,long,72,72,8
-tmp@1,long,80,80,8
-tmp@2,long,88,88,8
-tmp@3,long,96,96,8
-tmp@4,long,104,104,8
-tmp@5,long,112,112,8
-tmp@6,int,120,120,8
-tmp@7,int,128,128,8
-tmp@8,int,136,136,8
-tmp@9,long,144,144,8
-tmp@10,long,152,152,8
-tmp@11,long,160,160,8
-tmp@12,long,168,168,8
-tmp@13,int,176,176,8
-tmp@14,int,184,184,8
-tmp@15,int,192,192,8
-tmp@16,int,200,200,8
-tmp@17,int,208,208,8
-tmp@18,int,216,216,8
-tmp@19,long,224,224,8
-tmp@20,long,232,232,8
-tmp@21,long,240,240,8
-tmp@22,long,248,248,8
-tmp@23,long,256,256,8
-tmp@24,long,264,264,8
-tmp@25,int,272,272,8
-tmp@26,int,280,280,8
-tmp@27,int,288,288,8
-tmp@28,int,296,296,8
-tmp@29,int,304,304,8
-
-symbol table id,symbol table name,parent id,table off
-5,printDistance,0,103
-name,type,offset,offset+base,width
-d,struct distance,16,16,16
-tmp@30,"pointer of (char), array of:char",27,27,11
-tmp@31,int,35,35,8
-tmp@32,long,43,43,8
-tmp@33,long,51,51,8
-tmp@34,int,59,59,8
-tmp@35,long,67,67,8
-tmp@36,long,75,75,8
-tmp@37,int,83,83,8
-tmp@38,"pointer of (char), array of:char",95,95,12
-tmp@39,int,103,103,8
-
-symbol table id,symbol table name,parent id,table off
-6,main,0,452
-name,type,offset,offset+base,width
-d1,struct distance,24,24,16
-d2,struct distance,40,40,16
-d3,struct distance,56,56,16
-tmp@40,long,64,64,8
-tmp@41,long,72,72,8
-tmp@42,int,80,80,8
-tmp@43,long,88,88,8
-tmp@44,long,96,96,8
-tmp@45,int,104,104,8
-tmp@46,long,112,112,8
-tmp@47,long,120,120,8
-tmp@48,int,128,128,8
-tmp@49,long,136,136,8
-tmp@50,long,144,144,8
-tmp@51,int,152,152,8
-tmp@52,long,160,160,8
-tmp@53,long,168,168,8
-tmp@54,int,176,176,8
-tmp@55,long,184,184,8
-tmp@56,long,192,192,8
-tmp@57,int,200,200,8
-tmp@58,long,208,208,8
-tmp@59,long,216,216,8
-tmp@60,int,224,224,8
-tmp@61,long,232,232,8
-tmp@62,long,240,240,8
-tmp@63,int,248,248,8
-tmp@64,"pointer of (char), array of:char",260,260,12
-tmp@65,int,268,268,8
-tmp@66,long,276,276,8
-tmp@67,long,284,284,8
-tmp@68,int,292,292,8
-tmp@69,long,300,300,8
-tmp@70,long,308,308,8
-tmp@71,int,316,316,8
-tmp@72,"pointer of (char), array of:char",328,328,12
-tmp@73,int,336,336,8
-tmp@74,long,344,344,8
-tmp@75,long,352,352,8
-tmp@76,int,360,360,8
-tmp@77,long,368,368,8
-tmp@78,long,376,376,8
-tmp@79,int,384,384,8
-tmp@80,"pointer of (char), array of:char",396,396,12
-tmp@81,int,404,404,8
-d,struct distance,420,420,16
-tmp@82,struct distance,436,436,16
-tmp@83,struct distance,452,452,16
+a,int,16,16,8
+tmp@0,"pointer of (char), array of:char",21,21,5
+tmp@1,int,29,29,8
+tmp@2,"pointer of (char), array of:char",34,34,5
+tmp@3,int,42,42,8
+b,float,46,46,4
+tmp@4,"pointer of (char), array of:char",50,50,4
+tmp@5,int,58,58,8
+c,bool,59,59,1
+tmp@6,"pointer of (char), array of:char",64,64,5
+tmp@7,int,72,72,8
+tmp@8,int,80,80,8
+d,int,88,88,8
+tmp@9,"pointer of (char), array of:char",93,93,5
+tmp@10,int,101,101,8

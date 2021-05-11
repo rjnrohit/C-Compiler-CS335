@@ -856,7 +856,7 @@ def p_logical_or_expression(p):
 def p_conditional_expression(p):
     '''
     conditional_expression : logical_or_expression
-	                       | logical_or_expression QUES_MARK expression COLON conditional_expression
+	                       | logical_or_expression QUES_MARK assignment_expression COLON conditional_expression
     '''
 
     if len(p) == 2:
@@ -894,6 +894,7 @@ def p_conditional_expression(p):
             else:
                 p[0].place = p[5].place
                 p[0].code = p[5].code
+            return
         p[0].place = get_newtmp()
         label = get_newlabel()
         label1 = get_newlabel()
@@ -901,11 +902,11 @@ def p_conditional_expression(p):
         p[0].code = p[1].code
         p[0].code += [gen(op='ifz', place1=p[1].place, place2 = label)]
         p[0].code += p[3].code
-        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[3].place)]
+        p[0].code += [gen(op=get_type(p[0].place)+'=', place3 = p[0].place, place1 = p[3].place)]
         p[0].code += [gen(op='goto', place1=label1)]
         p[0].code += [gen(op = 'label', place1 = label)]
         p[0].code += p[5].code
-        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[5].place)]
+        p[0].code += [gen(op=get_type(p[0].place)+'=', place3 = p[0].place, place1 = p[5].place)]
         p[0].code += [gen(op = 'label', place1 = label1)]
 
 

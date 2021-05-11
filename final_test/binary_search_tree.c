@@ -1,5 +1,6 @@
 //binary search tree with dynamic memory allocation
 //sort given inputs using BST
+// return type pointer working
 struct node {
     int data;
     struct node* left;
