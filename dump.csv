@@ -1,109 +1,112 @@
 
 symbol table id,symbol table name,table off
-0,global,75
+0,global,42
 name,type,offset,offset+base,width
-printf,"int function([pointer of (char), float])",0,0,20
-printf1,"int function([pointer of (char), float, float, float, float])",0,0,32
-func,float function([float]),0,0,8
-fconst@2,float,4,4,4
-deriv,float function([float]),4,4,8
-fconst@3,float,8,8,4
-newton_raphson,"float function([float, float, int])",8,8,20
-"sconst@%f
-","pointer of (char), array of:char",12,12,4
-lconst@0,long,20,20,8
-lconst@1,long,28,28,8
-lconst@10,long,36,36,8
-"sconst@%f %f %f %f
-","pointer of (char), array of:char",49,49,13
-main,int function(None),49,49,8
-fconst@-20,float,53,53,4
-fconst@0.001,float,57,57,4
-lconst@100,long,65,65,8
-"sconst@root: %f
-","pointer of (char), array of:char",75,75,10
+printf,"int function([pointer of (char), int])",0,0,24
+printf1,int function([pointer of (char)]),0,0,16
+printf2,"int function([pointer of (char), int, int, int])",0,0,40
+main,int function(None),0,0,8
+lconst@1,long,8,8,8
+lconst@0,long,16,16,8
+"sconst@a:%ld b:%ld c:%ld
+","pointer of (char), array of:char",35,35,19
+"sconst@False
+","pointer of (char), array of:char",42,42,7
 
 symbol table id,symbol table name,parent id,table off
-1,printf,0,20
+1,printf,0,24
 name,type,offset,offset+base,width
 s,pointer of (char),16,16,8
-a,float,20,20,4
+a,int,24,24,8
 
 symbol table id,symbol table name,parent id,table off
-2,printf1,0,32
+2,printf1,0,16
 name,type,offset,offset+base,width
 s,pointer of (char),16,16,8
-a,float,20,20,4
-b,float,24,24,4
-c,float,28,28,4
-d,float,32,32,4
 
 symbol table id,symbol table name,parent id,table off
-3,func,0,28
+3,printf2,0,40
 name,type,offset,offset+base,width
-x,float,8,8,4
-tmp@0,float,12,12,4
-tmp@1,float,16,16,4
-tmp@2,float,20,20,4
-tmp@3,float,24,24,4
-tmp@4,float,28,28,4
+s,pointer of (char),16,16,8
+a,int,24,24,8
+b,int,32,32,8
+c,int,40,40,8
 
 symbol table id,symbol table name,parent id,table off
-4,deriv,0,24
+4,main,0,380
 name,type,offset,offset+base,width
-x,float,8,8,4
-tmp@5,float,12,12,4
-tmp@6,float,16,16,4
-tmp@7,float,20,20,4
-tmp@8,float,24,24,4
+a,int,16,16,8
+b,int,24,24,8
+c,int,32,32,8
+tmp@0,bool,33,33,1
+tmp@1,int,41,41,8
+tmp@2,long,49,49,8
+tmp@3,bool,50,50,1
+tmp@10,bool,120,120,1
+tmp@11,int,128,128,8
+tmp@12,long,136,136,8
+tmp@13,bool,137,137,1
+tmp@20,bool,207,207,1
+tmp@21,int,215,215,8
+tmp@22,long,223,223,8
+tmp@23,bool,224,224,1
+tmp@30,bool,294,294,1
+tmp@31,int,302,302,8
+tmp@32,long,310,310,8
+tmp@33,bool,311,311,1
 
 symbol table id,symbol table name,parent id,table off
-5,newton_raphson,0,150
+5,scope@5,4,27
 name,type,offset,offset+base,width
-x,float,8,8,4
-epsilon,float,12,12,4
-max_itr,int,20,20,8
-i,int,28,28,8
-tmp@9,"pointer of (char), array of:char",32,32,4
-tmp@10,int,40,40,8
-tmp@11,float,44,44,4
-tmp@12,"pointer of (char), array of:char",48,48,4
-tmp@13,int,56,56,8
-tmp@14,bool,57,57,1
-tmp@15,int,65,65,8
-tmp@16,long,73,73,8
+tmp@4,"pointer of (char), array of:char",19,69,19
+tmp@5,int,27,77,8
 
 symbol table id,symbol table name,parent id,table off
-8,main,0,34
+6,scope@6,4,42
 name,type,offset,offset+base,width
-a,float,12,12,4
-tmp@33,float,16,16,4
-tmp@34,"pointer of (char), array of:char",26,26,10
-tmp@35,int,34,34,8
+tmp@6,"pointer of (char), array of:char",7,84,7
+tmp@7,int,15,92,8
+tmp@8,"pointer of (char), array of:char",34,111,19
+tmp@9,int,42,119,8
 
 symbol table id,symbol table name,parent id,table off
-6,scope@6,5,77
+7,scope@7,4,27
 name,type,offset,offset+base,width
-tmp@17,float,4,77,4
-tmp@18,float,8,81,4
-tmp@19,float,12,85,4
-h,float,16,89,4
-tmp@20,float,20,93,4
-a,float,24,97,4
-tmp@21,float,28,101,4
-b,float,32,105,4
-tmp@22,bool,33,106,1
-tmp@23,float,37,110,4
-tmp@24,float,41,114,4
-tmp@25,float,45,118,4
-tmp@26,"pointer of (char), array of:char",58,131,13
-tmp@27,int,66,139,8
-tmp@28,bool,67,140,1
-tmp@29,float,71,144,4
-tmp@30,bool,72,145,1
-tmp@31,bool,73,146,1
-tmp@32,float,77,150,4
+tmp@14,"pointer of (char), array of:char",19,156,19
+tmp@15,int,27,164,8
 
 symbol table id,symbol table name,parent id,table off
-7,scope@7,6,0
+8,scope@8,4,42
 name,type,offset,offset+base,width
+tmp@16,"pointer of (char), array of:char",7,171,7
+tmp@17,int,15,179,8
+tmp@18,"pointer of (char), array of:char",34,198,19
+tmp@19,int,42,206,8
+
+symbol table id,symbol table name,parent id,table off
+9,scope@9,4,27
+name,type,offset,offset+base,width
+tmp@24,"pointer of (char), array of:char",19,243,19
+tmp@25,int,27,251,8
+
+symbol table id,symbol table name,parent id,table off
+10,scope@10,4,42
+name,type,offset,offset+base,width
+tmp@26,"pointer of (char), array of:char",7,258,7
+tmp@27,int,15,266,8
+tmp@28,"pointer of (char), array of:char",34,285,19
+tmp@29,int,42,293,8
+
+symbol table id,symbol table name,parent id,table off
+11,scope@11,4,27
+name,type,offset,offset+base,width
+tmp@34,"pointer of (char), array of:char",19,330,19
+tmp@35,int,27,338,8
+
+symbol table id,symbol table name,parent id,table off
+12,scope@12,4,42
+name,type,offset,offset+base,width
+tmp@36,"pointer of (char), array of:char",7,345,7
+tmp@37,int,15,353,8
+tmp@38,"pointer of (char), array of:char",34,372,19
+tmp@39,int,42,380,8
