@@ -292,14 +292,14 @@ def p_postfix_expression(p):
         elif (p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base) or p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
-            print(p[1].place+"1")
+            # print(p[1].place+"1")
             node_assign = type_check_assign(p[0],copy.copy(p[1]),token=p.slice[-1])
             if node_assign.type == "error":
                 p[0] = Node(type="error")
                 return
-            print(p[1].place+"1")
+            # print(p[1].place+"1")
             p[0].code = node_assign.code
-            const_place = get_const(const=1,type=BasicType("long"),use=True)
+            const_place = get_const(const=1,type=BasicType("long"))
             node_1 = Node(type=BasicType("long"))
             node_1.place = const_place
             p[1].code = list()
@@ -549,7 +549,7 @@ def p_postfix_expression_3(p):
     else:
         addr = get_newtmp()
         p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
-    print(success.offset)
+    # print(success.offset)
     const_place = get_const(const=success.offset,type="long")
     tmp1,code = get_opcode(op="long+",place1=addr,place2=const_place,type="long")
     p[0].code += [code]
@@ -634,7 +634,7 @@ def p_unary_expression_1(p):
     unary_expression : INCREMENT unary_expression
                      | DECREMENT unary_expression
     '''
-    p[2] = load_place(p[2])
+    # p[2] = load_place(p[2])
     p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
 
 #Node
@@ -1807,7 +1807,7 @@ def main():
     #can also add as args for optimization
     tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
-    print(alloc)
+    # print(alloc)
     print_asm(tac_code)
 if __name__ == "__main__":
     main()

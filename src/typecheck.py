@@ -18,21 +18,32 @@ def type_check_unary(node1,op,token,is_typename=False):
     if (op == "++" or op == "--"):
         if const:
             error_const = True
-        elif node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
+        elif (node1.type.class_type == "BasicType" and node1.type.type in allowed_base) or node1.type.class_type == "PointerType":
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
-            node.code = node1.code
-            const_place = get_const(const=1,type=node1.type,use=True)
-            node.code += [gen(op=node1.type.stype+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
             node.place = node1.place
+            const_place = get_const(const=1,type=BasicType("long"))
+            node_1 = Node(type=BasicType("long"))
+            node_1.place = const_place
+            node_assign = type_check_assign_op(node1,node_1,op=op[0]+"=",token=token)
+            if node_assign.type == "error":
+                return Node(type="error")
+            node.code = node_assign.code
             return node
-        elif node1.type.class_type == "PointerType":
-            node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
-            node.code = node1.code
-            width = node1.type.type_size
-            const_place = get_const(const=width,type="long",use=True)
-            node.code += [gen(op="long"+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
-            node.place = node1.place
-            return node
+        # elif node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
+        #     node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+        #     node.code = node1.code
+        #     const_place = get_const(const=1,type=node1.type,use=True)
+        #     node.code += [gen(op=node1.type.stype+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
+        #     node.place = node1.place
+        #     return node
+        # elif node1.type.class_type == "PointerType":
+        #     node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+        #     node.code = node1.code
+        #     width = node1.type.type_size
+        #     const_place = get_const(const=width,type="long",use=True)
+        #     node.code += [gen(op="long"+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
+        #     node.place = node1.place
+        #     return node
         else: error = True
     elif op == "+" or op == "-":
         node1 = load_place(node1)
@@ -508,6 +519,8 @@ def typecast(node1,type,token=None):
         
         if type1 == type2:
             return node
+        if type1 in {"long","int"} and type2 in {"long","int"}:
+            return node
         if "const@" in node1.place:
             node.place = get_const(const=get_const_value(node1.place),type=BasicType(type1))
             return node
@@ -555,7 +568,7 @@ def load_place(node):
         return node
     tmp = get_newtmp(type=node.type)
     place = node.place.split("load$")[-1]
-    print(tmp)
+    # print(tmp)
     node.code += [gen(op="load",place1=place,place3=tmp,code=tmp + " = " + "load("+place+")")]
     node.place = tmp
     return node
