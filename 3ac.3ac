@@ -76,119 +76,157 @@ return n|s
 EndFunc
 main:
 BeginFunc
-tmp@33 = sconst@here
+i|main = lconst@0
+label#1:
+tmp@33 = i|main int< lconst@200
+ifz tmp@33 goto label#3
+tmp@36 = addr(glo|global)
+tmp@37 = i|main long* lconst@4
+tmp@38 = tmp@36 long+ tmp@37
+tmp@39 = int_to_float i|main
+push tmp@39
+tmp@40 = func_call sqrt
+pop tmp@39
+tmp@38 eq tmp@40
+tmp@41 = load(tmp@38)
+label#2:
+tmp@34 = i|main
+tmp@35 = i|main long+ lconst@1
+i|main = tmp@35
+goto label#1
+label#3:
+i|main = lconst@1
+label#4:
+tmp@42 = i|main int< lconst@100
+ifz tmp@42 goto label#5
+tmp@47 = sconst@%lf
 
-push tmp@33
+tmp@43 = addr(glo|global)
+tmp@44 = i|main long* lconst@4
+tmp@45 = tmp@43 long+ tmp@44
+tmp@46 = load(tmp@45)
+push tmp@47
+push tmp@46
+tmp@48 = func_call printf1
+pop tmp@46
+pop tmp@47
+tmp@49 = i|main int+ lconst@1
+i|main = tmp@49
+goto label#4
+label#5:
+tmp@50 = sconst@here
+
+push tmp@50
 push lconst@1
 push lconst@1
 push lconst@1
-tmp@34 = func_call printf
+tmp@51 = func_call printf
 pop lconst@1
 pop lconst@1
 pop lconst@1
-pop tmp@33
+pop tmp@50
 a|main = lconst@0
 push a|main
 push lconst@4
 push lconst@5
-tmp@35 = func_call insert
+tmp@52 = func_call insert
 pop lconst@5
 pop lconst@4
 pop a|main
-a|main = tmp@35
+a|main = tmp@52
 push a|main
 push lconst@3
 push lconst@2
-tmp@36 = func_call insert
+tmp@53 = func_call insert
 pop lconst@2
 pop lconst@3
 pop a|main
-a|main = tmp@36
-tmp@37 = addr(n|main)
-tmp@38 = tmp@37 long+ lconst@8
-tmp@38 eq lconst@4
-tmp@39 = load(tmp@38)
-tmp@40 = addr(n|main)
-tmp@41 = tmp@40 long+ lconst@16
-tmp@41 eq lconst@69
-tmp@42 = load(tmp@41)
+a|main = tmp@53
+tmp@54 = addr(n|main)
+tmp@55 = tmp@54 long+ lconst@8
+tmp@55 eq lconst@4
+tmp@56 = load(tmp@55)
+tmp@57 = addr(n|main)
+tmp@58 = tmp@57 long+ lconst@16
+tmp@58 eq lconst@69
+tmp@59 = load(tmp@58)
 push n|main
-tmp@43 = func_call s
+tmp@60 = func_call s
 pop n|main
-n|main = tmp@43
-tmp@44 = sconst@flag
+n|main = tmp@60
+tmp@61 = sconst@flag
 
-push tmp@44
+push tmp@61
 push lconst@1
 push lconst@11
 push lconst@1
-tmp@45 = func_call printf
+tmp@62 = func_call printf
 pop lconst@1
 pop lconst@11
 pop lconst@1
-pop tmp@44
-tmp@52 = sconst@%ld %ld
-
-tmp@46 = addr(n|main)
-tmp@47 = tmp@46 long+ lconst@8
-tmp@48 = load(tmp@47)
-tmp@49 = addr(n|main)
-tmp@50 = tmp@49 long+ lconst@16
-tmp@51 = load(tmp@50)
-push tmp@52
-push tmp@48
-push tmp@51
-push lconst@0
-tmp@53 = func_call printf
-pop lconst@0
-pop tmp@51
-pop tmp@48
-pop tmp@52
-aa|main = fconst@3
-tmp@54 = addr(aa|main)
-b|main = tmp@54
-b|main eq fconst@4.3
-tmp@55 = load(b|main)
-tmp@57 = sconst@%.1f
-
-tmp@56 = load(b|main)
-push tmp@57
-push tmp@56
-tmp@58 = func_call printf1
-pop tmp@56
-pop tmp@57
-tmp@59 = load(a|main)
-n|main = tmp@59
-tmp@64 = sconst@%ld %ld %ld
-
-tmp@60 = a|main long+ lconst@8
-tmp@61 = load(tmp@60)
-tmp@62 = a|main long+ lconst@16
-tmp@63 = load(tmp@62)
-push tmp@64
-push lconst@24
-push tmp@61
-push tmp@63
-tmp@65 = func_call printf
-pop tmp@63
 pop tmp@61
-pop lconst@24
-pop tmp@64
-tmp@72 = sconst@%ld %ld
+tmp@69 = sconst@%ld %ld
 
+tmp@63 = addr(n|main)
+tmp@64 = tmp@63 long+ lconst@8
+tmp@65 = load(tmp@64)
 tmp@66 = addr(n|main)
-tmp@67 = tmp@66 long+ lconst@8
+tmp@67 = tmp@66 long+ lconst@16
 tmp@68 = load(tmp@67)
-tmp@69 = addr(n|main)
-tmp@70 = tmp@69 long+ lconst@16
-tmp@71 = load(tmp@70)
-push tmp@72
+push tmp@69
+push tmp@65
 push tmp@68
-push tmp@71
 push lconst@0
-tmp@73 = func_call printf
+tmp@70 = func_call printf
 pop lconst@0
-pop tmp@71
 pop tmp@68
-pop tmp@72
+pop tmp@65
+pop tmp@69
+aa|main = fconst@3
+tmp@71 = addr(aa|main)
+b|main = tmp@71
+b|main eq fconst@4.3
+tmp@72 = load(b|main)
+tmp@74 = sconst@%.1f
+
+tmp@73 = load(b|main)
+push tmp@74
+push tmp@73
+tmp@75 = func_call printf1
+pop tmp@73
+pop tmp@74
+tmp@76 = load(a|main)
+n|main = tmp@76
+tmp@81 = sconst@%ld %ld %ld
+
+tmp@77 = a|main long+ lconst@8
+tmp@78 = load(tmp@77)
+tmp@79 = a|main long+ lconst@16
+tmp@80 = load(tmp@79)
+push tmp@81
+push lconst@24
+push tmp@78
+push tmp@80
+tmp@82 = func_call printf
+pop tmp@80
+pop tmp@78
+pop lconst@24
+pop tmp@81
+tmp@89 = sconst@%ld %ld
+
+tmp@83 = addr(n|main)
+tmp@84 = tmp@83 long+ lconst@8
+tmp@85 = load(tmp@84)
+tmp@86 = addr(n|main)
+tmp@87 = tmp@86 long+ lconst@16
+tmp@88 = load(tmp@87)
+push tmp@89
+push tmp@85
+push tmp@88
+push lconst@0
+tmp@90 = func_call printf
+pop lconst@0
+pop tmp@88
+pop tmp@85
+pop tmp@89
 EndFunc
