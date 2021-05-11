@@ -1,79 +1,132 @@
 
 symbol table id,symbol table name,table off
-0,global,65
+0,global,113
 name,type,offset,offset+base,width
-printf,"int function([pointer of (char), int])",0,0,24
-printf1,"int function([pointer of (char), float])",0,0,20
-main,int function(None),0,0,8
-fconst@10.8,float,4,4,4
-lconst@21,long,12,12,8
-"sconst@%ld
-","pointer of (char), array of:char",17,17,5
-lconst@69,long,25,25,8
-fconst@3.1,float,29,29,4
-lconst@65,long,37,37,8
-"sconst@%f
-","pointer of (char), array of:char",41,41,4
-lconst@90,long,49,49,8
-"sconst@%c
-","pointer of (char), array of:char",53,53,4
-fconst@24.0,float,57,57,4
-lconst@1,long,65,65,8
+printf,"void function([pointer of (char), int])",0,0,16
+scanf,"void function([pointer of (char), pointer of (int)])",0,0,16
+printfs,void function([pointer of (char)]),0,0,8
+malloc,pointer of (void) function([int]),0,0,16
+newNode,pointer of (struct node) function([int]),0,0,16
+lconst@24,long,8,8,8
+lconst@8,long,16,16,8
+lconst@16,long,24,24,8
+lconst@0,long,32,32,8
+printInorder,void function([pointer of (struct node)]),32,32,8
+sconst@%ld ,"pointer of (char), array of:char",37,37,5
+insert,"pointer of (struct node) function([pointer of (struct node), int])",37,37,24
+main,int function(None),37,37,8
+sconst@enter number of elements in tree: ,"pointer of (char), array of:char",72,72,35
+sconst@%ld,"pointer of (char), array of:char",76,76,4
+sconst@enter %ld ,"pointer of (char), array of:char",87,87,11
+"sconst@numbers
+","pointer of (char), array of:char",96,96,9
+lconst@1,long,104,104,8
+sconst@tree: ,"pointer of (char), array of:char",111,111,7
+"sconst@
+","pointer of (char), array of:char",113,113,2
 
 symbol table id,symbol table name,parent id,table off
-1,printf,0,24
+1,node,0,24
 name,type,offset,offset+base,width
-s,pointer of (char),16,16,8
-a,int,24,24,8
+data,int,8,8,8
+left,pointer of (struct node),16,16,8
+right,pointer of (struct node),24,24,8
 
 symbol table id,symbol table name,parent id,table off
-2,printf1,0,20
+2,printf,0,16
 name,type,offset,offset+base,width
-s,pointer of (char),16,16,8
-a,float,20,20,4
+a,pointer of (char),8,8,8
+b,int,16,16,8
 
 symbol table id,symbol table name,parent id,table off
-3,main,0,241
+3,scanf,0,16
 name,type,offset,offset+base,width
-a,int,16,16,8
-tmp@0,"pointer of (char), array of:char",21,21,5
-tmp@1,int,29,29,8
-b,int,37,37,8
-c,float,41,41,4
-tmp@2,int,49,49,8
-tmp@3,float,53,53,4
-tmp@4,float,57,57,4
-tmp@5,float,61,61,4
-tmp@6,float,65,65,4
-tmp@7,"pointer of (char), array of:char",69,69,4
-tmp@8,int,77,77,8
-tmp@9,int,85,85,8
-tmp@10,float,89,89,4
-tmp@11,float,93,93,4
-tmp@12,float,97,97,4
-tmp@13,float,101,101,4
-tmp@14,"pointer of (char), array of:char",106,106,5
-tmp@15,int,114,114,8
-tmp@16,int,122,122,8
-tmp@17,int,130,130,8
-tmp@18,float,134,134,4
-tmp@19,float,138,138,4
-tmp@20,float,142,142,4
-tmp@21,float,146,146,4
-tmp@22,int,154,154,8
-tmp@23,"pointer of (char), array of:char",158,158,4
-tmp@24,float,162,162,4
-tmp@25,int,170,170,8
-chr,char,171,171,1
-tmp@26,"pointer of (char), array of:char",175,175,4
-tmp@27,int,183,183,8
-tmp@28,int,191,191,8
-tmp@29,float,195,195,4
-tmp@30,float,199,199,4
-tmp@31,"pointer of (char), array of:char",203,203,4
-tmp@32,int,211,211,8
-tmp@33,int,219,219,8
-d,bool,220,220,1
-tmp@34,"pointer of (char), array of:char",225,225,5
-tmp@35,int,233,233,8
-tmp@36,int,241,241,8
+a,pointer of (char),8,8,8
+b,pointer of (int),16,16,8
+
+symbol table id,symbol table name,parent id,table off
+4,printfs,0,8
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+
+symbol table id,symbol table name,parent id,table off
+5,malloc,0,16
+name,type,offset,offset+base,width
+s,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+6,newNode,0,80
+name,type,offset,offset+base,width
+data,int,16,16,8
+tmp@0,pointer of (void),24,24,8
+node,pointer of (struct node),32,32,8
+tmp@1,long,40,40,8
+tmp@2,int,48,48,8
+tmp@3,long,56,56,8
+tmp@4,pointer of (struct node),64,64,8
+tmp@5,long,72,72,8
+tmp@6,pointer of (struct node),80,80,8
+
+symbol table id,symbol table name,parent id,table off
+7,printInorder,0,62
+name,type,offset,offset+base,width
+node,pointer of (struct node),8,8,8
+tmp@7,bool,9,9,1
+tmp@8,long,17,17,8
+tmp@9,pointer of (struct node),25,25,8
+tmp@10,long,33,33,8
+tmp@11,int,41,41,8
+tmp@12,"pointer of (char), array of:char",46,46,5
+tmp@13,long,54,54,8
+tmp@14,pointer of (struct node),62,62,8
+
+symbol table id,symbol table name,parent id,table off
+8,insert,0,89
+name,type,offset,offset+base,width
+root,pointer of (struct node),16,16,8
+b,int,24,24,8
+tmp@28,pointer of (struct node),89,89,8
+
+symbol table id,symbol table name,parent id,table off
+11,main,0,144
+name,type,offset,offset+base,width
+n,int,16,16,8
+tmp@29,"pointer of (char), array of:char",51,51,35
+tmp@30,long,59,59,8
+tmp@31,"pointer of (char), array of:char",63,63,4
+tmp@32,"pointer of (char), array of:char",74,74,11
+tmp@33,"pointer of (char), array of:char",83,83,9
+root,pointer of (struct node),91,91,8
+tmp@34,int,99,99,8
+tmp@35,long,107,107,8
+tmp@39,"pointer of (char), array of:char",142,142,7
+tmp@40,"pointer of (char), array of:char",144,144,2
+
+symbol table id,symbol table name,parent id,table off
+9,scope@9,8,97
+name,type,offset,offset+base,width
+tmp@15,long,8,32,8
+tmp@16,int,16,40,8
+tmp@17,bool,17,41,1
+tmp@23,long,65,89,8
+tmp@24,long,73,97,8
+tmp@25,pointer of (struct node),81,105,8
+tmp@26,pointer of (struct node),89,113,8
+tmp@27,pointer of (struct node),97,121,8
+
+symbol table id,symbol table name,parent id,table off
+12,scope@12,11,28
+name,type,offset,offset+base,width
+i,int,8,115,8
+tmp@36,long,16,123,8
+tmp@37,"pointer of (char), array of:char",20,127,4
+tmp@38,pointer of (struct node),28,135,8
+
+symbol table id,symbol table name,parent id,table off
+10,scope@10,9,40
+name,type,offset,offset+base,width
+tmp@18,long,8,49,8
+tmp@19,long,16,57,8
+tmp@20,pointer of (struct node),24,65,8
+tmp@21,pointer of (struct node),32,73,8
+tmp@22,pointer of (struct node),40,81,8

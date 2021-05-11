@@ -690,6 +690,13 @@ def add_typecast_code(gen_obj, not_bool = False):
         code += [label2 + ':']
         code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
     else:
+        pwidth = get_var_type(gen_obj.place1).width
+        assert pwidth <=8, "typecast variable not possible for >8 size"
+        if pwidth != width:
+            if pwidth !=4:
+                code += ["movsx {},{}".format(temp_regs[0][width], temp_regs[0][pwidth])]
+            else:
+                code += ["movsxd {},{}".format(temp_regs[0][width], temp_regs[0][pwidth])]
         code += ["mov " + get_size + "[" + addr+ "], " + temp_regs[0][width]]
     return code
 
