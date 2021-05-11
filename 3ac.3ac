@@ -1,53 +1,170 @@
-func:
+quicksort:
 BeginFunc
-tmp@0 = x|func float* x|func
-tmp@1 = tmp@0 float* x|func
-tmp@2 = x|func float* x|func
-tmp@3 = tmp@1 float- tmp@2
-tmp@4 = tmp@3 float+ fconst@2
-return tmp@4
-EndFunc
-deriv:
-BeginFunc
-tmp@5 = fconst@3 float* x|deriv
-tmp@6 = tmp@5 float* x|deriv
-tmp@7 = fconst@2 float* x|deriv
-tmp@8 = tmp@6 float- tmp@7
-return tmp@8
-EndFunc
-newton_raphson:
-BeginFunc
-i|newton_raphson = lconst@0
+tmp@0 = first|quicksort int>= last|quicksort
+ifz tmp@0 goto label#0
+return
 label#0:
-tmp@9 = i|newton_raphson int< max_itr|newton_raphson
-ifz tmp@9 goto label#2
+pivot|quicksort = first|quicksort
+i|quicksort = first|quicksort
+j|quicksort = last|quicksort
 label#1:
-tmp@10 = i|newton_raphson
-tmp@11 = i|newton_raphson long+ lconst@1
-i|newton_raphson = tmp@11
-goto label#0
+tmp@1 = i|quicksort int< j|quicksort
+ifz tmp@1 goto label#8
 label#2:
-return x|newton_raphson
+tmp@2 = i|quicksort long* lconst@8
+tmp@3 = arr|quicksort long+ tmp@2
+tmp@6 = load(tmp@3)
+tmp@4 = pivot|quicksort long* lconst@8
+tmp@5 = arr|quicksort long+ tmp@4
+tmp@7 = load(tmp@5)
+tmp@8 = tmp@6 int<= tmp@7
+ifz tmp@8 goto label#3
+tmp@9 = i|quicksort int< last|quicksort
+ifz tmp@9 goto label#3
+tmp@10 = lconst@1
+goto label#4
+label#3:
+tmp@10 = lconst@0
+label#4:
+ifz tmp@10 goto label#5
+tmp@11 = i|quicksort
+tmp@12 = i|quicksort long+ lconst@1
+i|quicksort = tmp@12
+goto label#2
+label#5:
+tmp@13 = j|quicksort long* lconst@8
+tmp@14 = arr|quicksort long+ tmp@13
+tmp@17 = load(tmp@14)
+tmp@15 = pivot|quicksort long* lconst@8
+tmp@16 = arr|quicksort long+ tmp@15
+tmp@18 = load(tmp@16)
+tmp@19 = tmp@17 int> tmp@18
+ifz tmp@19 goto label#6
+tmp@20 = j|quicksort
+tmp@21 = j|quicksort long- lconst@1
+j|quicksort = tmp@21
+goto label#5
+label#6:
+tmp@22 = i|quicksort int< j|quicksort
+ifz tmp@22 goto label#7
+tmp@23 = i|quicksort long* lconst@8
+tmp@24 = arr|quicksort long+ tmp@23
+tmp@25 = load(tmp@24)
+temp|quicksort = tmp@25
+tmp@26 = i|quicksort long* lconst@8
+tmp@27 = arr|quicksort long+ tmp@26
+tmp@28 = j|quicksort long* lconst@8
+tmp@29 = arr|quicksort long+ tmp@28
+tmp@30 = load(tmp@29)
+tmp@27 eq tmp@30
+tmp@31 = load(tmp@27)
+tmp@32 = j|quicksort long* lconst@8
+tmp@33 = arr|quicksort long+ tmp@32
+tmp@33 eq temp|quicksort
+tmp@34 = load(tmp@33)
+label#7:
+goto label#1
+label#8:
+tmp@35 = pivot|quicksort long* lconst@8
+tmp@36 = arr|quicksort long+ tmp@35
+tmp@37 = load(tmp@36)
+temp|quicksort = tmp@37
+tmp@38 = pivot|quicksort long* lconst@8
+tmp@39 = arr|quicksort long+ tmp@38
+tmp@40 = j|quicksort long* lconst@8
+tmp@41 = arr|quicksort long+ tmp@40
+tmp@42 = load(tmp@41)
+tmp@39 eq tmp@42
+tmp@43 = load(tmp@39)
+tmp@44 = j|quicksort long* lconst@8
+tmp@45 = arr|quicksort long+ tmp@44
+tmp@45 eq temp|quicksort
+tmp@46 = load(tmp@45)
+tmp@47 = j|quicksort int- lconst@1
+push arr|quicksort
+push first|quicksort
+push tmp@47
+None = func_call quicksort
+pop tmp@47
+pop first|quicksort
+pop arr|quicksort
+tmp@48 = j|quicksort int+ lconst@1
+push arr|quicksort
+push tmp@48
+push last|quicksort
+None = func_call quicksort
+pop last|quicksort
+pop tmp@48
+pop arr|quicksort
 EndFunc
 main:
 BeginFunc
-a|main = fconst@2
-tmp@12 = a|main float/ fconst@2
-tmp@13 = float_to_int tmp@12
-b|main = tmp@13
-tmp@15 = sconst@%f
+tmp@50 = sconst@%ld
+tmp@49 = addr(n|main)
+push tmp@50
+push tmp@49
+tmp@51 = func_call scanf
+pop tmp@49
+pop tmp@50
+tmp@52 = n|main int>= lconst@50
+ifz tmp@52 goto label#9
+tmp@53 = sconst@array size should be less than 50
+push tmp@53
+tmp@54 = func_call printf1
+pop tmp@53
+label#9:
+i|main = lconst@0
+label#10:
+tmp@55 = i|main int< n|main
+ifz tmp@55 goto label#12
+tmp@61 = sconst@%ld
+tmp@58 = addr(arr|main)
+tmp@59 = i|main long* lconst@8
+tmp@60 = tmp@58 long+ tmp@59
+push tmp@61
+push tmp@60
+tmp@62 = func_call scanf
+pop tmp@60
+pop tmp@61
+label#11:
+tmp@56 = i|main
+tmp@57 = i|main long+ lconst@1
+i|main = tmp@57
+goto label#10
+label#12:
+tmp@63 = addr(arr|main)
+tmp@64 = n|main int- lconst@1
+push tmp@63
+push lconst@0
+push tmp@64
+None = func_call quicksort
+pop tmp@64
+pop lconst@0
+pop tmp@63
+i|main = lconst@0
+label#13:
+tmp@65 = i|main int< n|main
+ifz tmp@65 goto label#15
+tmp@72 = sconst@%ld 
+tmp@68 = addr(arr|main)
+tmp@69 = i|main long* lconst@8
+tmp@70 = tmp@68 long+ tmp@69
+tmp@71 = load(tmp@70)
+push tmp@72
+push tmp@71
+tmp@73 = func_call printf
+pop tmp@71
+pop tmp@72
+label#14:
+tmp@66 = i|main
+tmp@67 = i|main long+ lconst@1
+i|main = tmp@67
+goto label#13
+label#15:
+tmp@74 = sconst@
 
-push fconst@-10
-push fconst@0.001
-push lconst@100
-tmp@14 = func_call newton_raphson
-pop lconst@100
-pop fconst@0.001
-pop fconst@-10
-push tmp@15
-push tmp@14
-tmp@16 = func_call printf
-pop tmp@14
-pop tmp@15
+push tmp@74
+tmp@75 = func_call printf1
+pop tmp@74
 return lconst@0
 EndFunc
