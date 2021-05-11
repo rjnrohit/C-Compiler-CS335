@@ -602,6 +602,7 @@ def add_div_code(gen_obj):
         code += ["mov " + get_size[2] +"["+addr[2]+"], " + gp_regs[width[2]][0]]
         code += ["pop rax"]
     else:
+        code += load_var(gen_obj.place1, gen_obj.place2)
         code += ["divss xmm0, xmm1"]
         code += ["movss " + get_size[2] + "[" +addr[2]+"], xmm0"]
     return code

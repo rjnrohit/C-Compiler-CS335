@@ -2,154 +2,197 @@ insert:
 BeginFunc
 tmp@0 = root|insert long== lconst@0
 ifz tmp@0 goto label#0
+tmp@1 = sconst@%ld
+
+push tmp@1
 push lconst@24
-tmp@1 = func_call malloc
+tmp@2 = func_call printf
 pop lconst@24
-node|scope@7 = tmp@1
-tmp@2 = node|scope@7 long+ lconst@8
-tmp@2 eq data|insert
-tmp@3 = load(tmp@2)
-tmp@4 = node|scope@7 long+ lconst@16
-tmp@4 eq lconst@0
-tmp@5 = load(tmp@4)
-tmp@6 = node|scope@7 long+ lconst@24
-tmp@6 eq lconst@0
+pop tmp@1
+push lconst@24
+tmp@3 = func_call malloc
+pop lconst@24
+node|scope@7 = tmp@3
+tmp@4 = sconst@%ld
+
+push tmp@4
+push lconst@24
+tmp@5 = func_call printf
+pop lconst@24
+pop tmp@4
+tmp@6 = node|scope@7 long+ lconst@8
+tmp@6 eq data|insert
 tmp@7 = load(tmp@6)
+tmp@8 = node|scope@7 long+ lconst@16
+tmp@8 eq lconst@0
+tmp@9 = load(tmp@8)
+tmp@10 = node|scope@7 long+ lconst@24
+tmp@10 eq lconst@0
+tmp@11 = load(tmp@10)
 return node|scope@7
 label#0:
-tmp@8 = root|insert long+ lconst@8
-tmp@9 = load(tmp@8)
-tmp@10 = tmp@9 int> data|insert
-ifz tmp@10 goto label#1
-tmp@11 = root|insert long+ lconst@16
-tmp@12 = root|insert long+ lconst@16
+tmp@12 = root|insert long+ lconst@8
 tmp@13 = load(tmp@12)
-push tmp@13
+tmp@14 = tmp@13 int> data|insert
+ifz tmp@14 goto label#1
+tmp@15 = root|insert long+ lconst@16
+tmp@16 = root|insert long+ lconst@16
+tmp@17 = load(tmp@16)
+push tmp@17
 push data|insert
-tmp@14 = func_call insert
+tmp@18 = func_call insert
 pop data|insert
-pop tmp@13
-tmp@11 eq tmp@14
-tmp@15 = load(tmp@11)
+pop tmp@17
+tmp@15 eq tmp@18
+tmp@19 = load(tmp@15)
 goto label#2
 label#1:
-tmp@16 = root|insert long+ lconst@24
-tmp@17 = root|insert long+ lconst@24
-tmp@18 = load(tmp@17)
-push tmp@18
+tmp@20 = root|insert long+ lconst@24
+tmp@21 = root|insert long+ lconst@24
+tmp@22 = load(tmp@21)
+push tmp@22
 push data|insert
-tmp@19 = func_call insert
+tmp@23 = func_call insert
 pop data|insert
-pop tmp@18
-tmp@16 eq tmp@19
-tmp@20 = load(tmp@16)
+pop tmp@22
+tmp@20 eq tmp@23
+tmp@24 = load(tmp@20)
 label#2:
 return root|insert
 EndFunc
 inorder:
 BeginFunc
-tmp@21 = root|inorder long== lconst@0
-ifz tmp@21 goto label#3
+tmp@25 = root|inorder long== lconst@0
+ifz tmp@25 goto label#3
 return
 label#3:
-tmp@22 = root|inorder long+ lconst@16
-tmp@23 = load(tmp@22)
-push tmp@23
+tmp@26 = root|inorder long+ lconst@16
+tmp@27 = load(tmp@26)
+push tmp@27
 None = func_call inorder
-pop tmp@23
-tmp@26 = sconst@%ld 
-tmp@24 = root|inorder long+ lconst@8
-tmp@25 = load(tmp@24)
-push tmp@26
-push tmp@25
-tmp@27 = func_call printf
-pop tmp@25
-pop tmp@26
-tmp@28 = root|inorder long+ lconst@24
+pop tmp@27
+tmp@30 = sconst@%ld 
+tmp@28 = root|inorder long+ lconst@8
 tmp@29 = load(tmp@28)
+push tmp@30
 push tmp@29
-None = func_call inorder
+tmp@31 = func_call printf
 pop tmp@29
+pop tmp@30
+tmp@32 = root|inorder long+ lconst@24
+tmp@33 = load(tmp@32)
+push tmp@33
+None = func_call inorder
+pop tmp@33
 EndFunc
 preorder:
 BeginFunc
-tmp@30 = root|preorder long== lconst@0
-ifz tmp@30 goto label#4
+tmp@34 = root|preorder long== lconst@0
+ifz tmp@34 goto label#4
 return
 label#4:
-tmp@33 = sconst@%ld 
-tmp@31 = root|preorder long+ lconst@8
-tmp@32 = load(tmp@31)
-push tmp@33
-push tmp@32
-tmp@34 = func_call printf
-pop tmp@32
-pop tmp@33
-tmp@35 = root|preorder long+ lconst@16
+tmp@37 = sconst@%ld 
+tmp@35 = root|preorder long+ lconst@8
 tmp@36 = load(tmp@35)
+push tmp@37
 push tmp@36
-None = func_call inorder
+tmp@38 = func_call printf
 pop tmp@36
-tmp@37 = root|preorder long+ lconst@24
-tmp@38 = load(tmp@37)
-push tmp@38
+pop tmp@37
+tmp@39 = root|preorder long+ lconst@16
+tmp@40 = load(tmp@39)
+push tmp@40
 None = func_call inorder
-pop tmp@38
+pop tmp@40
+tmp@41 = root|preorder long+ lconst@24
+tmp@42 = load(tmp@41)
+push tmp@42
+None = func_call inorder
+pop tmp@42
 EndFunc
 postorder:
 BeginFunc
-tmp@39 = root|postorder long== lconst@0
-ifz tmp@39 goto label#5
+tmp@43 = root|postorder long== lconst@0
+ifz tmp@43 goto label#5
 return
 label#5:
-tmp@40 = root|postorder long+ lconst@16
-tmp@41 = load(tmp@40)
-push tmp@41
-None = func_call inorder
-pop tmp@41
-tmp@42 = root|postorder long+ lconst@24
-tmp@43 = load(tmp@42)
-push tmp@43
-None = func_call inorder
-pop tmp@43
-tmp@46 = sconst@%ld 
-tmp@44 = root|postorder long+ lconst@8
+tmp@44 = root|postorder long+ lconst@16
 tmp@45 = load(tmp@44)
-push tmp@46
 push tmp@45
-tmp@47 = func_call printf
+None = func_call inorder
 pop tmp@45
-pop tmp@46
+tmp@46 = root|postorder long+ lconst@24
+tmp@47 = load(tmp@46)
+push tmp@47
+None = func_call inorder
+pop tmp@47
+tmp@50 = sconst@%ld 
+tmp@48 = root|postorder long+ lconst@8
+tmp@49 = load(tmp@48)
+push tmp@50
+push tmp@49
+tmp@51 = func_call printf
+pop tmp@49
+pop tmp@50
+EndFunc
+foo:
+BeginFunc
+tmp@52 = root|foo long== lconst@0
+ifz tmp@52 goto label#6
+push lconst@24
+tmp@53 = func_call malloc
+pop lconst@24
+node|scope@13 = tmp@53
+label#6:
 EndFunc
 main:
 BeginFunc
 root|main = lconst@0
-tmp@48 = sconst@Enter number to insert in BST (stop at -1)
-
-push tmp@48
-tmp@49 = func_call printf1
-pop tmp@48
-label#6:
-tmp@51 = sconst@%ld
-tmp@50 = addr(n|main)
-push tmp@51
-push tmp@50
-tmp@52 = func_call scanf
-pop tmp@50
-pop tmp@51
-tmp@53 = n|main int== lconst@-1
-ifz tmp@53 goto label#7
-goto label#9
+i|main = lconst@3
 label#7:
+tmp@54 = i|main
+tmp@55 = i|main long- lconst@1
+i|main = tmp@55
+ifz tmp@54 goto label#8
+push root|main
+tmp@56 = func_call foo
+pop root|main
+root|main = tmp@56
+goto label#7
+label#8:
+tmp@57 = sconst@Enter number to insert in BST (stop at -1)
+
+push tmp@57
+tmp@58 = func_call printf1
+pop tmp@57
+label#9:
+tmp@60 = sconst@%ld
+tmp@59 = addr(n|main)
+push tmp@60
+push tmp@59
+tmp@61 = func_call scanf
+pop tmp@59
+pop tmp@60
+tmp@62 = n|main int== lconst@-1
+ifz tmp@62 goto label#10
+goto label#12
+label#10:
 push root|main
 push n|main
-tmp@54 = func_call insert
+tmp@63 = func_call insert
 pop n|main
 pop root|main
-root|main = tmp@54
-label#8:
-ifnz lconst@1 goto label#6
-label#9:
+root|main = tmp@63
+label#11:
+ifnz lconst@1 goto label#9
+label#12:
+tmp@64 = sconst@%ld
+
+push tmp@64
+push root|main
+tmp@65 = func_call printf
+pop root|main
+pop tmp@64
 push root|main
 None = func_call inorder
 pop root|main

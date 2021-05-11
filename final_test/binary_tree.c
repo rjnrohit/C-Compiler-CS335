@@ -15,7 +15,9 @@ struct Node{
 
 struct Node *insert(struct Node *root,int data){
     if (root == NULL){
+        printf("%ld\n", sizeof(struct Node));
         struct Node *node = (struct Node*)malloc(sizeof(struct Node));
+        printf("%ld\n", sizeof(struct Node));
         node->data = data;
         node->left = NULL;
         node->right = NULL;
@@ -47,8 +49,18 @@ void postorder(struct Node *root){
     printf("%ld ",root->data);
 }
 
+struct Node* foo(struct Node *root){
+    if(root== NULL){
+        struct Node *node = (struct Node*)malloc(sizeof(struct Node));
+    }
+    // return node;
+}
+
 int main(){
-    struct Node *root = NULL;
+    struct Node *root;
+    root = NULL;
+    int i = 3;
+    while(i--){root =foo(root);}
     printf1("Enter number to insert in BST (stop at -1)\n");
     int n;
     do{
@@ -57,7 +69,7 @@ int main(){
         root = insert(root,n);
 
     }while(true);
-    
+    printf("%ld\n", root);
     inorder(root);
     preorder(root);
     postorder(root);
