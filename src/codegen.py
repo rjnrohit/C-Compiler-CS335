@@ -792,6 +792,8 @@ def add_other_opcode(gen_obj):
         code += add_not_bool_code(gen_obj)
     elif 'eq' in gen_obj.op:
         code += add_eq_code(gen_obj)
+    elif gen_obj.op in [s+t for s in ['int', 'long', 'bool', 'char'] for t in ['^','|', '&']]:
+        code += add_bitwise_code(gen_obj)
     return code
 
 def multiple_scanf_printf(name):
