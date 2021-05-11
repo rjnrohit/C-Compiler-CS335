@@ -1,33 +1,45 @@
-// graph using matrix
-// array as function input
+// graph using adj list
+// referencing array using expression
+// using logical !
+// using do while loop
 int printf(char s[20],int a);
 int printf1(char s[20]);
 int printf2(char s[20],int a,int b);
 int scanf(char s[20],int *a);
+void *malloc(int size);
 
+struct Node{
+    int v;
+    struct Node *next;
+};
 
-void dfs(int adj[11][11],int visited[11],int u,int n,int p){
+struct Node *adj[11];
+int visited[11];
+
+void dfs(int u,int p){
+    visited[u] = 1;
     if (p == -1) printf("Node %ld: new tree\n",u+1);
     else printf2("Node %ld: Parent: %ld\n",u+1,p+1);
-
-    int i;
-    for(i = 0;i<n;i++){
-        if(adj[u][i] == 1 && visited[i] == 0){
-            visited[i] = 1;
-            dfs(adj,visited,i,n,u);
-        }
+    struct Node *node = adj[u];
+    while(node != NULL){
+        if (!visited[node->v]) dfs(node->v,u);
+        node = node->next;
     }
 }
 
+void push(int u,int v){
+    if(u>=11) return;
+    struct Node *node = (struct Node*)malloc(sizeof(struct Node));
+    node->v = v;
+    node->next = adj[u];
+    adj[u] = node;
+}
+
 int main(){
-    int adj[11][11];
-    int visited[11];
-    int i,j;
+    int i;
     for(i = 0;i<11;i++){
+        adj[i] = NULL;
         visited[i] = 0;
-        for(j = 0;j<11;j++){
-            adj[i][j] = 0;
-        }
     }
     int n;
     printf1("Enter number of vertice (<=10)\n");
@@ -43,18 +55,11 @@ int main(){
             if(v == -1){
                 break;
             }
-            if(v > n || v <= 0){
-                printf1("invalid number\n");
-                return -1;
-            }
-            adj[i][v-1] = 1;
+            push(i,v-1);
         }while(true);
     }
     for(i = 0;i<n;i++){
-        if(!visited[i]){
-            visited[i] = 1;
-            dfs(adj,visited,i,n,-1);
-        }
+        if(!visited[i]) dfs(i,-1);
     }
-    
+
 }

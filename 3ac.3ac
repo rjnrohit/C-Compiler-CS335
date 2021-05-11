@@ -1,228 +1,160 @@
-many_sum:
+addDistance:
 BeginFunc
-tmp@0 = a|many_sum int+ b|many_sum
-tmp@1 = tmp@0 int+ c|many_sum
-tmp@2 = tmp@1 int+ d|many_sum
-tmp@3 = tmp@2 int+ e|many_sum
-tmp@4 = tmp@3 int+ f|many_sum
-tmp@5 = tmp@4 int+ g|many_sum
-tmp@6 = tmp@5 int+ h|many_sum
-tmp@7 = tmp@6 int+ i|many_sum
-tmp@8 = tmp@7 int+ j|many_sum
-tmp@9 = tmp@8 int+ k|many_sum
-tmp@10 = int_to_float tmp@9
-tmp@11 = tmp@10 float+ l|many_sum
-tmp@12 = tmp@11 float+ m|many_sum
-tmp@13 = tmp@12 float+ n|many_sum
-tmp@14 = tmp@13 float+ o|many_sum
-tmp@15 = tmp@14 float+ p|many_sum
-tmp@16 = tmp@15 float+ q|many_sum
-tmp@17 = tmp@16 float+ r|many_sum
-tmp@18 = tmp@17 float+ s|many_sum
-tmp@19 = tmp@18 float+ t|many_sum
-tmp@20 = tmp@19 float+ u|many_sum
-sum|many_sum = tmp@20
-tmp@21 = sconst@a:%ld
+tmp@0 = addr(d|addDistance)
+tmp@1 = tmp@0 long+ lconst@8
+tmp@2 = addr(d1|addDistance)
+tmp@3 = tmp@2 long+ lconst@8
+tmp@6 = load(tmp@3)
+tmp@4 = addr(d2|addDistance)
+tmp@5 = tmp@4 long+ lconst@8
+tmp@7 = load(tmp@5)
+tmp@8 = tmp@6 int+ tmp@7
+tmp@9 = addr(d1|addDistance)
+tmp@10 = tmp@9 long+ lconst@16
+tmp@13 = load(tmp@10)
+tmp@11 = addr(d2|addDistance)
+tmp@12 = tmp@11 long+ lconst@16
+tmp@14 = load(tmp@12)
+tmp@15 = tmp@13 int+ tmp@14
+tmp@16 = tmp@15 int/ lconst@1000
+tmp@17 = tmp@8 int+ tmp@16
+tmp@1 eq tmp@17
+tmp@18 = load(tmp@1)
+tmp@19 = addr(d|addDistance)
+tmp@20 = tmp@19 long+ lconst@16
+tmp@21 = addr(d1|addDistance)
+tmp@22 = tmp@21 long+ lconst@16
+tmp@25 = load(tmp@22)
+tmp@23 = addr(d2|addDistance)
+tmp@24 = tmp@23 long+ lconst@16
+tmp@26 = load(tmp@24)
+tmp@27 = tmp@25 int+ tmp@26
+tmp@28 = tmp@27 int% lconst@1000
+tmp@20 eq tmp@28
+tmp@29 = load(tmp@20)
+tmp@36 = sconst@%ldkm %ldm
 
-push tmp@21
-push a|many_sum
-None = func_call printfi
-pop a|many_sum
-pop tmp@21
-tmp@22 = sconst@b:%ld
-
-push tmp@22
-push b|many_sum
-None = func_call printfi
-pop b|many_sum
-pop tmp@22
-tmp@23 = sconst@c:%ld
-
-push tmp@23
-push c|many_sum
-None = func_call printfi
-pop c|many_sum
-pop tmp@23
-tmp@24 = sconst@d:%ld
-
-push tmp@24
-push d|many_sum
-None = func_call printfi
-pop d|many_sum
-pop tmp@24
-tmp@25 = sconst@e:%ld
-
-push tmp@25
-push e|many_sum
-None = func_call printfi
-pop e|many_sum
-pop tmp@25
-tmp@26 = sconst@f:%ld
-
-push tmp@26
-push f|many_sum
-None = func_call printfi
-pop f|many_sum
-pop tmp@26
-tmp@27 = sconst@g:%ld
-
-push tmp@27
-push g|many_sum
-None = func_call printfi
-pop g|many_sum
-pop tmp@27
-tmp@28 = sconst@h:%ld
-
-push tmp@28
-push h|many_sum
-None = func_call printfi
-pop h|many_sum
-pop tmp@28
-tmp@29 = sconst@i:%ld
-
-push tmp@29
-push i|many_sum
-None = func_call printfi
-pop i|many_sum
-pop tmp@29
-tmp@30 = sconst@j:%ld
-
-push tmp@30
-push j|many_sum
-None = func_call printfi
-pop j|many_sum
-pop tmp@30
-tmp@31 = sconst@k:%ld
-
-push tmp@31
-push k|many_sum
-None = func_call printfi
-pop k|many_sum
-pop tmp@31
-tmp@32 = sconst@l:%f
-
-push tmp@32
-push l|many_sum
-None = func_call printff
-pop l|many_sum
-pop tmp@32
-tmp@33 = sconst@m:%f
-
-push tmp@33
-push m|many_sum
-None = func_call printff
-pop m|many_sum
-pop tmp@33
-tmp@34 = sconst@n:%f
-
-push tmp@34
-push n|many_sum
-None = func_call printff
-pop n|many_sum
-pop tmp@34
-tmp@35 = sconst@o:%f
-
-push tmp@35
-push o|many_sum
-None = func_call printff
-pop o|many_sum
-pop tmp@35
-tmp@36 = sconst@p:%f
-
+tmp@30 = addr(d|addDistance)
+tmp@31 = tmp@30 long+ lconst@8
+tmp@32 = load(tmp@31)
+tmp@33 = addr(d|addDistance)
+tmp@34 = tmp@33 long+ lconst@16
+tmp@35 = load(tmp@34)
 push tmp@36
-push p|many_sum
-None = func_call printff
-pop p|many_sum
+push tmp@32
+push tmp@35
+tmp@37 = func_call printf
+pop tmp@35
+pop tmp@32
 pop tmp@36
-tmp@37 = sconst@q:%f
-
-push tmp@37
-push q|many_sum
-None = func_call printff
-pop q|many_sum
-pop tmp@37
-tmp@38 = sconst@r:%f
-
+return d|addDistance
+EndFunc
+printDistance:
+BeginFunc
+tmp@38 = sconst@Distance: 
 push tmp@38
-push r|many_sum
-None = func_call printff
-pop r|many_sum
+tmp@39 = func_call printf1
 pop tmp@38
-tmp@39 = sconst@s:%f
+tmp@46 = sconst@%ldkm %ldm
 
-push tmp@39
-push s|many_sum
-None = func_call printff
-pop s|many_sum
-pop tmp@39
-tmp@40 = sconst@t:%f
-
-push tmp@40
-push t|many_sum
-None = func_call printff
-pop t|many_sum
-pop tmp@40
-tmp@41 = sconst@u:%f
-
-push tmp@41
-push u|many_sum
-None = func_call printff
-pop u|many_sum
-pop tmp@41
-return sum|many_sum
+tmp@40 = addr(d|printDistance)
+tmp@41 = tmp@40 long+ lconst@8
+tmp@42 = load(tmp@41)
+tmp@43 = addr(d|printDistance)
+tmp@44 = tmp@43 long+ lconst@16
+tmp@45 = load(tmp@44)
+push tmp@46
+push tmp@42
+push tmp@45
+tmp@47 = func_call printf
+pop tmp@45
+pop tmp@42
+pop tmp@46
 EndFunc
 main:
 BeginFunc
-push lconst@1
-push lconst@2
-push lconst@3
-push lconst@4
-push lconst@5
-push lconst@6
-push lconst@7
-push lconst@7
-push lconst@4
-push lconst@3
-push lconst@4
-push fconst@1.1
-push fconst@0.99
-push fconst@3
-push fconst@1
-push fconst@4.56
-push fconst@99999.9
-push fconst@3
-push fconst@9
-push fconst@-32
-push fconst@-11
-tmp@42 = func_call many_sum
-pop fconst@-11
-pop fconst@-32
-pop fconst@9
-pop fconst@3
-pop fconst@99999.9
-pop fconst@4.56
-pop fconst@1
-pop fconst@3
-pop fconst@0.99
-pop fconst@1.1
-pop lconst@4
-pop lconst@3
-pop lconst@4
-pop lconst@7
-pop lconst@7
-pop lconst@6
-pop lconst@5
-pop lconst@4
-pop lconst@3
-pop lconst@2
-pop lconst@1
-sum|main = tmp@42
-tmp@43 = sconst@%f
+tmp@48 = addr(d1|main)
+tmp@49 = tmp@48 long+ lconst@8
+tmp@49 eq lconst@1
+tmp@50 = load(tmp@49)
+tmp@51 = addr(d1|main)
+tmp@52 = tmp@51 long+ lconst@16
+tmp@52 eq lconst@500
+tmp@53 = load(tmp@52)
+tmp@54 = addr(d2|main)
+tmp@55 = tmp@54 long+ lconst@8
+tmp@55 eq lconst@2
+tmp@56 = load(tmp@55)
+tmp@57 = addr(d2|main)
+tmp@58 = tmp@57 long+ lconst@16
+tmp@58 eq lconst@600
+tmp@59 = load(tmp@58)
+tmp@60 = addr(d3|main)
+tmp@61 = tmp@60 long+ lconst@8
+tmp@61 eq lconst@1
+tmp@62 = load(tmp@61)
+tmp@63 = addr(d3|main)
+tmp@64 = tmp@63 long+ lconst@16
+tmp@64 eq lconst@200
+tmp@65 = load(tmp@64)
+tmp@72 = sconst@%ldkm %ldm
 
-push tmp@43
-push sum|main
-None = func_call printff
-pop sum|main
-pop tmp@43
-return lconst@0
+tmp@66 = addr(d1|main)
+tmp@67 = tmp@66 long+ lconst@8
+tmp@68 = load(tmp@67)
+tmp@69 = addr(d1|main)
+tmp@70 = tmp@69 long+ lconst@16
+tmp@71 = load(tmp@70)
+push tmp@72
+push tmp@68
+push tmp@71
+tmp@73 = func_call printf
+pop tmp@71
+pop tmp@68
+pop tmp@72
+tmp@80 = sconst@%ldkm %ldm
+
+tmp@74 = addr(d2|main)
+tmp@75 = tmp@74 long+ lconst@8
+tmp@76 = load(tmp@75)
+tmp@77 = addr(d2|main)
+tmp@78 = tmp@77 long+ lconst@16
+tmp@79 = load(tmp@78)
+push tmp@80
+push tmp@76
+push tmp@79
+tmp@81 = func_call printf
+pop tmp@79
+pop tmp@76
+pop tmp@80
+tmp@88 = sconst@%ldkm %ldm
+
+tmp@82 = addr(d3|main)
+tmp@83 = tmp@82 long+ lconst@8
+tmp@84 = load(tmp@83)
+tmp@85 = addr(d3|main)
+tmp@86 = tmp@85 long+ lconst@16
+tmp@87 = load(tmp@86)
+push tmp@88
+push tmp@84
+push tmp@87
+tmp@89 = func_call printf
+pop tmp@87
+pop tmp@84
+pop tmp@88
+push d1|main
+push d2|main
+tmp@90 = func_call addDistance
+pop d2|main
+pop d1|main
+d|main = tmp@90
+push d|main
+push d3|main
+tmp@91 = func_call addDistance
+pop d3|main
+pop d|main
+d|main = tmp@91
+push d|main
+None = func_call printDistance
+pop d|main
 EndFunc

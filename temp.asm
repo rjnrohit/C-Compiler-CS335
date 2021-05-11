@@ -16,45 +16,16 @@ SYS_fork equ 57 ; fork
 SYS_exit equ 60 ; terminate
 SYS_creat equ 85 ; file open/create
 ;add global variables and constants
-const0 db "a:%ld",LF, NULL
-const1 db "b:%ld",LF, NULL
-const2 db "c:%ld",LF, NULL
-const3 db "d:%ld",LF, NULL
-const4 db "e:%ld",LF, NULL
-const5 db "f:%ld",LF, NULL
-const6 db "g:%ld",LF, NULL
-const7 db "h:%ld",LF, NULL
-const8 db "i:%ld",LF, NULL
-const9 db "j:%ld",LF, NULL
-const10 db "k:%ld",LF, NULL
-const11 db "l:%f",LF, NULL
-const12 db "m:%f",LF, NULL
-const13 db "n:%f",LF, NULL
-const14 db "o:%f",LF, NULL
-const15 db "p:%f",LF, NULL
-const16 db "q:%f",LF, NULL
-const17 db "r:%f",LF, NULL
-const18 db "s:%f",LF, NULL
-const19 db "t:%f",LF, NULL
-const20 db "u:%f",LF, NULL
-const21 dq 1
-const22 dq 2
-const23 dq 3
-const24 dq 4
-const25 dq 5
-const26 dq 6
-const27 dq 7
-const28 dd 1.1
-const29 dd 0.99
-const30 dd 3.0
-const31 dd 1.0
-const32 dd 4.56
-const33 dd 99999.9
-const34 dd 9.0
-const35 dd -32.0
-const36 dd -11.0
-const37 db "%f",LF, NULL
-const38 dq 0
+const0 dq 8
+const1 dq 16
+const2 dq 1000
+const3 db "%ldkm %ldm",LF, NULL
+const4 db "Distance: ", NULL
+const5 dq 1
+const6 dq 500
+const7 dq 2
+const8 dq 600
+const9 dq 200
 ;add bss section for unintialized variables
 section .bss
 ;add extern symbols
@@ -116,497 +87,246 @@ extern log2
 extern trunc
 extern round
 section .text
-global many_sum@func
-many_sum@func:
+global addDistance@func
+addDistance@func:
 push   rbp
 mov    rbp,rsp
 ; saving the arguments values in the stack
-sub rsp, 4; adjust rsp for return entry
-sub rsp, 8
-mov qword [rsp],rdi
-sub rsp, 8
-mov qword [rsp],rsi
-sub rsp, 8
-mov qword [rsp],rdx
-sub rsp, 8
-mov qword [rsp],rcx
-sub rsp, 8
-mov qword [rsp],r8
-sub rsp, 8
-mov qword [rsp],r9
-sub rsp, 8
-mov r10, qword [rbp+16]
+sub rsp, 16; adjust rsp for return entry
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp+16+0]
 mov qword[rsp], r10
-sub rsp, 8
-mov r10, qword [rbp+24]
+sub rsp,8
+mov r10, qword[rbp+16+8]
 mov qword[rsp], r10
-sub rsp, 8
-mov r10, qword [rbp+32]
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp+32+0]
 mov qword[rsp], r10
-sub rsp, 8
-mov r10, qword [rbp+40]
+sub rsp,8
+mov r10, qword[rbp+32+8]
 mov qword[rsp], r10
-sub rsp, 8
-mov r10, qword [rbp+48]
-mov qword[rsp], r10
-sub rsp, 4
-movss dword [rsp],xmm0
-sub rsp, 4
-movss dword [rsp],xmm1
-sub rsp, 4
-movss dword [rsp],xmm2
-sub rsp, 4
-movss dword [rsp],xmm3
-sub rsp, 4
-movss dword [rsp],xmm4
-sub rsp, 4
-movss dword [rsp],xmm5
-sub rsp, 4
-movss dword [rsp],xmm6
-sub rsp, 4
-movss dword [rsp],xmm7
-sub rsp, 4
-movss xmm0, dword [rbp+56]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [rbp+60]
-movss dword [rsp], xmm0
 ;add space for symbols
-sub rsp, 345
-mov r10, qword [rbp-12]
-mov r11, qword [rbp-20]
+sub rsp, 324
+lea r10, [rbp-64]
+mov qword [rbp-72], r10
+mov r10, qword [rbp-72]
+mov r11, qword [const0]
 add r10, r11
-mov qword[rbp-140], r10
-mov r10, qword [rbp-140]
-mov r11, qword [rbp-28]
+mov qword[rbp-80], r10
+lea r10, [rbp-32]
+mov qword [rbp-88], r10
+mov r10, qword [rbp-88]
+mov r11, qword [const0]
 add r10, r11
-mov qword[rbp-148], r10
-mov r10, qword [rbp-148]
-mov r11, qword [rbp-36]
+mov qword[rbp-96], r10
+mov r10, qword [rbp-96]
+mov r11,qword [r10]
+mov qword[rbp-120], r11
+lea r10, [rbp-48]
+mov qword [rbp-104], r10
+mov r10, qword [rbp-104]
+mov r11, qword [const0]
 add r10, r11
-mov qword[rbp-156], r10
-mov r10, qword [rbp-156]
-mov r11, qword [rbp-44]
+mov qword[rbp-112], r10
+mov r10, qword [rbp-112]
+mov r11,qword [r10]
+mov qword[rbp-128], r11
+mov r10, qword [rbp-120]
+mov r11, qword [rbp-128]
 add r10, r11
-mov qword[rbp-164], r10
-mov r10, qword [rbp-164]
-mov r11, qword [rbp-52]
+mov qword[rbp-136], r10
+lea r10, [rbp-32]
+mov qword [rbp-144], r10
+mov r10, qword [rbp-144]
+mov r11, qword [const1]
 add r10, r11
-mov qword[rbp-172], r10
-mov r10, qword [rbp-172]
-mov r11, qword [rbp-60]
+mov qword[rbp-152], r10
+mov r10, qword [rbp-152]
+mov r11,qword [r10]
+mov qword[rbp-176], r11
+lea r10, [rbp-48]
+mov qword [rbp-160], r10
+mov r10, qword [rbp-160]
+mov r11, qword [const1]
 add r10, r11
-mov qword[rbp-180], r10
-mov r10, qword [rbp-180]
-mov r11, qword [rbp-68]
+mov qword[rbp-168], r10
+mov r10, qword [rbp-168]
+mov r11,qword [r10]
+mov qword[rbp-184], r11
+mov r10, qword [rbp-176]
+mov r11, qword [rbp-184]
 add r10, r11
-mov qword[rbp-188], r10
-mov r10, qword [rbp-188]
-mov r11, qword [rbp-76]
+mov qword[rbp-192], r10
+push rax
+mov rax, qword[rbp-192]
+cqo
+idiv qword[const2]
+mov qword[rbp-200], rax
+pop rax
+mov r10, qword [rbp-136]
+mov r11, qword [rbp-200]
 add r10, r11
-mov qword[rbp-196], r10
-mov r10, qword [rbp-196]
-mov r11, qword [rbp-84]
+mov qword[rbp-208], r10
+mov r10, qword [rbp-208]
+mov r11, qword [rbp-80]
+mov qword[r11], r10
+mov r10, qword [rbp-80]
+mov r11,qword [r10]
+mov qword[rbp-216], r11
+lea r10, [rbp-64]
+mov qword [rbp-224], r10
+mov r10, qword [rbp-224]
+mov r11, qword [const1]
 add r10, r11
-mov qword[rbp-204], r10
-mov r10, qword [rbp-204]
-mov r11, qword [rbp-92]
+mov qword[rbp-232], r10
+lea r10, [rbp-32]
+mov qword [rbp-240], r10
+mov r10, qword [rbp-240]
+mov r11, qword [const1]
 add r10, r11
-mov qword[rbp-212], r10
-mov r10, qword [rbp-212]
-cvtsi2ss xmm0,r10d
-movss dword[rbp-216], xmm0
-movss xmm0, dword [rbp-216]
-movss xmm1, dword [rbp-96]
-addss xmm0, xmm1
-movss dword[rbp-220], xmm0
-movss xmm0, dword [rbp-220]
-movss xmm1, dword [rbp-100]
-addss xmm0, xmm1
-movss dword[rbp-224], xmm0
-movss xmm0, dword [rbp-224]
-movss xmm1, dword [rbp-104]
-addss xmm0, xmm1
-movss dword[rbp-228], xmm0
-movss xmm0, dword [rbp-228]
-movss xmm1, dword [rbp-108]
-addss xmm0, xmm1
-movss dword[rbp-232], xmm0
-movss xmm0, dword [rbp-232]
-movss xmm1, dword [rbp-112]
-addss xmm0, xmm1
-movss dword[rbp-236], xmm0
-movss xmm0, dword [rbp-236]
-movss xmm1, dword [rbp-116]
-addss xmm0, xmm1
-movss dword[rbp-240], xmm0
-movss xmm0, dword [rbp-240]
-movss xmm1, dword [rbp-120]
-addss xmm0, xmm1
-movss dword[rbp-244], xmm0
-movss xmm0, dword [rbp-244]
-movss xmm1, dword [rbp-124]
-addss xmm0, xmm1
-movss dword[rbp-248], xmm0
-movss xmm0, dword [rbp-248]
-movss xmm1, dword [rbp-128]
-addss xmm0, xmm1
-movss dword[rbp-252], xmm0
-movss xmm0, dword [rbp-252]
-movss xmm1, dword [rbp-132]
-addss xmm0, xmm1
-movss dword[rbp-256], xmm0
-movss xmm0, dword [rbp-256]
-movss dword[rbp-260], xmm0
-mov r10d, dword[const0+0]
-mov dword[rbp-267+0], r10d
-mov r10w, word[const0+4]
-mov word[rbp-267+4], r10w
-mov r10b, byte[const0+6]
-mov byte[rbp-267+6], r10b
-;preparing extern function printfi
+mov qword[rbp-248], r10
+mov r10, qword [rbp-248]
+mov r11,qword [r10]
+mov qword[rbp-272], r11
+lea r10, [rbp-48]
+mov qword [rbp-256], r10
+mov r10, qword [rbp-256]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-264], r10
+mov r10, qword [rbp-264]
+mov r11,qword [r10]
+mov qword[rbp-280], r11
+mov r10, qword [rbp-272]
+mov r11, qword [rbp-280]
+add r10, r11
+mov qword[rbp-288], r10
+push rax
+mov rax, qword[rbp-288]
+cqo
+idiv qword[const2]
+mov qword[rbp-296], rdx
+pop rax
+mov r10, qword [rbp-296]
+mov r11, qword [rbp-232]
+mov qword[r11], r10
+mov r10, qword [rbp-232]
+mov r11,qword [r10]
+mov qword[rbp-304], r11
+mov r10, qword[const3+0]
+mov qword[rbp-364+0], r10
+mov r10d, dword[const3+8]
+mov dword[rbp-364+8], r10d
+lea r10, [rbp-64]
+mov qword [rbp-312], r10
+mov r10, qword [rbp-312]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-320], r10
+mov r10, qword [rbp-320]
+mov r11,qword [r10]
+mov qword[rbp-328], r11
+lea r10, [rbp-64]
+mov qword [rbp-336], r10
+mov r10, qword [rbp-336]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-344], r10
+mov r10, qword [rbp-344]
+mov r11,qword [r10]
+mov qword[rbp-352], r11
+;preparing extern function printf
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-mov rsi, qword [rbp-12]
-lea rdi, [rbp-267]
+mov rdx, qword [rbp-352]
+mov rsi, qword [rbp-328]
+lea rdi, [rbp-364]
 xor rax, rax
 call printf
+;copy return value from rax
+mov qword[rbp-372], rax
 add rsp,8
 pop rax
-mov r10d, dword[const1+0]
-mov dword[rbp-274+0], r10d
-mov r10w, word[const1+4]
-mov word[rbp-274+4], r10w
-mov r10b, byte[const1+6]
-mov byte[rbp-274+6], r10b
-;preparing extern function printfi
+;copy return value at addr in rax
+mov r10, qword[rbp-64+0]
+mov qword[rax+0], r10
+mov r10, qword[rbp-64+8]
+mov qword[rax+8], r10
+leave
+ret
+global printDistance@func
+printDistance@func:
+push   rbp
+mov    rbp,rsp
+; saving the arguments values in the stack
+sub rsp, 0; adjust rsp for return entry
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp+16+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp+16+8]
+mov qword[rsp], r10
+;add space for symbols
+sub rsp, 87
+mov r10, qword[const4+0]
+mov qword[rbp-27+0], r10
+mov r10w, word[const4+8]
+mov word[rbp-27+8], r10w
+mov r10b, byte[const4+10]
+mov byte[rbp-27+10], r10b
+;preparing extern function printf1
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-mov rsi, qword [rbp-20]
-lea rdi, [rbp-274]
+lea rdi, [rbp-27]
 xor rax, rax
 call printf
+;copy return value from rax
+mov qword[rbp-35], rax
 add rsp,8
 pop rax
-mov r10d, dword[const2+0]
-mov dword[rbp-281+0], r10d
-mov r10w, word[const2+4]
-mov word[rbp-281+4], r10w
-mov r10b, byte[const2+6]
-mov byte[rbp-281+6], r10b
-;preparing extern function printfi
+mov r10, qword[const3+0]
+mov qword[rbp-95+0], r10
+mov r10d, dword[const3+8]
+mov dword[rbp-95+8], r10d
+lea r10, [rbp-16]
+mov qword [rbp-43], r10
+mov r10, qword [rbp-43]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-51], r10
+mov r10, qword [rbp-51]
+mov r11,qword [r10]
+mov qword[rbp-59], r11
+lea r10, [rbp-16]
+mov qword [rbp-67], r10
+mov r10, qword [rbp-67]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-75], r10
+mov r10, qword [rbp-75]
+mov r11,qword [r10]
+mov qword[rbp-83], r11
+;preparing extern function printf
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-mov rsi, qword [rbp-28]
-lea rdi, [rbp-281]
+mov rdx, qword [rbp-83]
+mov rsi, qword [rbp-59]
+lea rdi, [rbp-95]
 xor rax, rax
 call printf
+;copy return value from rax
+mov qword[rbp-103], rax
 add rsp,8
 pop rax
-mov r10d, dword[const3+0]
-mov dword[rbp-288+0], r10d
-mov r10w, word[const3+4]
-mov word[rbp-288+4], r10w
-mov r10b, byte[const3+6]
-mov byte[rbp-288+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-36]
-lea rdi, [rbp-288]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const4+0]
-mov dword[rbp-295+0], r10d
-mov r10w, word[const4+4]
-mov word[rbp-295+4], r10w
-mov r10b, byte[const4+6]
-mov byte[rbp-295+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-44]
-lea rdi, [rbp-295]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const5+0]
-mov dword[rbp-302+0], r10d
-mov r10w, word[const5+4]
-mov word[rbp-302+4], r10w
-mov r10b, byte[const5+6]
-mov byte[rbp-302+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-52]
-lea rdi, [rbp-302]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const6+0]
-mov dword[rbp-309+0], r10d
-mov r10w, word[const6+4]
-mov word[rbp-309+4], r10w
-mov r10b, byte[const6+6]
-mov byte[rbp-309+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-60]
-lea rdi, [rbp-309]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const7+0]
-mov dword[rbp-316+0], r10d
-mov r10w, word[const7+4]
-mov word[rbp-316+4], r10w
-mov r10b, byte[const7+6]
-mov byte[rbp-316+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-68]
-lea rdi, [rbp-316]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const8+0]
-mov dword[rbp-323+0], r10d
-mov r10w, word[const8+4]
-mov word[rbp-323+4], r10w
-mov r10b, byte[const8+6]
-mov byte[rbp-323+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-76]
-lea rdi, [rbp-323]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const9+0]
-mov dword[rbp-330+0], r10d
-mov r10w, word[const9+4]
-mov word[rbp-330+4], r10w
-mov r10b, byte[const9+6]
-mov byte[rbp-330+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-84]
-lea rdi, [rbp-330]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const10+0]
-mov dword[rbp-337+0], r10d
-mov r10w, word[const10+4]
-mov word[rbp-337+4], r10w
-mov r10b, byte[const10+6]
-mov byte[rbp-337+6], r10b
-;preparing extern function printfi
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-mov rsi, qword [rbp-92]
-lea rdi, [rbp-337]
-xor rax, rax
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const11+0]
-mov dword[rbp-343+0], r10d
-mov r10w, word[const11+4]
-mov word[rbp-343+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-96]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-343]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const12+0]
-mov dword[rbp-349+0], r10d
-mov r10w, word[const12+4]
-mov word[rbp-349+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-100]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-349]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const13+0]
-mov dword[rbp-355+0], r10d
-mov r10w, word[const13+4]
-mov word[rbp-355+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-104]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-355]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const14+0]
-mov dword[rbp-361+0], r10d
-mov r10w, word[const14+4]
-mov word[rbp-361+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-108]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-361]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const15+0]
-mov dword[rbp-367+0], r10d
-mov r10w, word[const15+4]
-mov word[rbp-367+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-112]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-367]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const16+0]
-mov dword[rbp-373+0], r10d
-mov r10w, word[const16+4]
-mov word[rbp-373+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-116]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-373]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const17+0]
-mov dword[rbp-379+0], r10d
-mov r10w, word[const17+4]
-mov word[rbp-379+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-120]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-379]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const18+0]
-mov dword[rbp-385+0], r10d
-mov r10w, word[const18+4]
-mov word[rbp-385+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-124]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-385]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const19+0]
-mov dword[rbp-391+0], r10d
-mov r10w, word[const19+4]
-mov word[rbp-391+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-128]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-391]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-mov r10d, dword[const20+0]
-mov dword[rbp-397+0], r10d
-mov r10w, word[const20+4]
-mov word[rbp-397+4], r10w
-;preparing extern function printff
-; saving arguments for call
-and spl, 0x0
-push rax
-sub rsp, 8
-movss xmm0, dword [rbp-132]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-397]
-mov rax, 1
-call printf
-add rsp,8
-pop rax
-;copy return value in xmm0
-movss xmm0, dword[rbp-260]
 leave
 ret
 global main
@@ -616,64 +336,252 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 8; adjust rsp for return entry
 ;add space for symbols
-sub rsp, 12
-; saving arguments for call
-sub rsp, 4
-movss xmm0, dword [const36]
-movss dword [rsp], xmm0
-sub rsp, 4
-movss xmm0, dword [const35]
-movss dword [rsp], xmm0
-movss xmm7, dword [const34]
-movss xmm6, dword [const30]
-movss xmm5, dword [const33]
-movss xmm4, dword [const32]
-movss xmm3, dword [const31]
-movss xmm2, dword [const30]
-movss xmm1, dword [const29]
-movss xmm0, dword [const28]
-sub rsp, 8
-mov r10, qword [const24]
-mov qword [rsp], r10
-sub rsp, 8
-mov r10, qword [const23]
-mov qword [rsp], r10
-sub rsp, 8
-mov r10, qword [const24]
-mov qword [rsp], r10
-sub rsp, 8
-mov r10, qword [const27]
-mov qword [rsp], r10
-sub rsp, 8
-mov r10, qword [const27]
-mov qword [rsp], r10
-mov r9, qword [const26]
-mov r8, qword [const25]
-mov rcx, qword [const24]
-mov rdx, qword [const23]
-mov rsi, qword [const22]
-mov rdi, qword [const21]
-call many_sum@func
-;copy return value from xmm0
-movss dword[rbp-12], xmm0
-add rsp,48
-movss xmm0, dword [rbp-12]
-movss dword[rbp-16], xmm0
-mov r10d, dword[const37+0]
-mov dword[rbp-20+0], r10d
-;preparing extern function printff
+sub rsp, 444
+lea r10, [rbp-24]
+mov qword [rbp-64], r10
+mov r10, qword [rbp-64]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-72], r10
+mov r10, qword [const5]
+mov r11, qword [rbp-72]
+mov qword[r11], r10
+mov r10, qword [rbp-72]
+mov r11,qword [r10]
+mov qword[rbp-80], r11
+lea r10, [rbp-24]
+mov qword [rbp-88], r10
+mov r10, qword [rbp-88]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-96], r10
+mov r10, qword [const6]
+mov r11, qword [rbp-96]
+mov qword[r11], r10
+mov r10, qword [rbp-96]
+mov r11,qword [r10]
+mov qword[rbp-104], r11
+lea r10, [rbp-40]
+mov qword [rbp-112], r10
+mov r10, qword [rbp-112]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-120], r10
+mov r10, qword [const7]
+mov r11, qword [rbp-120]
+mov qword[r11], r10
+mov r10, qword [rbp-120]
+mov r11,qword [r10]
+mov qword[rbp-128], r11
+lea r10, [rbp-40]
+mov qword [rbp-136], r10
+mov r10, qword [rbp-136]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-144], r10
+mov r10, qword [const8]
+mov r11, qword [rbp-144]
+mov qword[r11], r10
+mov r10, qword [rbp-144]
+mov r11,qword [r10]
+mov qword[rbp-152], r11
+lea r10, [rbp-56]
+mov qword [rbp-160], r10
+mov r10, qword [rbp-160]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-168], r10
+mov r10, qword [const5]
+mov r11, qword [rbp-168]
+mov qword[r11], r10
+mov r10, qword [rbp-168]
+mov r11,qword [r10]
+mov qword[rbp-176], r11
+lea r10, [rbp-56]
+mov qword [rbp-184], r10
+mov r10, qword [rbp-184]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-192], r10
+mov r10, qword [const9]
+mov r11, qword [rbp-192]
+mov qword[r11], r10
+mov r10, qword [rbp-192]
+mov r11,qword [r10]
+mov qword[rbp-200], r11
+mov r10, qword[const3+0]
+mov qword[rbp-260+0], r10
+mov r10d, dword[const3+8]
+mov dword[rbp-260+8], r10d
+lea r10, [rbp-24]
+mov qword [rbp-208], r10
+mov r10, qword [rbp-208]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-216], r10
+mov r10, qword [rbp-216]
+mov r11,qword [r10]
+mov qword[rbp-224], r11
+lea r10, [rbp-24]
+mov qword [rbp-232], r10
+mov r10, qword [rbp-232]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-240], r10
+mov r10, qword [rbp-240]
+mov r11,qword [r10]
+mov qword[rbp-248], r11
+;preparing extern function printf
 ; saving arguments for call
 and spl, 0x0
 push rax
 sub rsp, 8
-movss xmm0, dword [rbp-16]
-cvtss2sd xmm0,xmm0
-lea rdi, [rbp-20]
-mov rax, 1
+mov rdx, qword [rbp-248]
+mov rsi, qword [rbp-224]
+lea rdi, [rbp-260]
+xor rax, rax
 call printf
+;copy return value from rax
+mov qword[rbp-268], rax
 add rsp,8
 pop rax
-;copy return value in rax
-mov rax , qword[const38]
+mov r10, qword[const3+0]
+mov qword[rbp-328+0], r10
+mov r10d, dword[const3+8]
+mov dword[rbp-328+8], r10d
+lea r10, [rbp-40]
+mov qword [rbp-276], r10
+mov r10, qword [rbp-276]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-284], r10
+mov r10, qword [rbp-284]
+mov r11,qword [r10]
+mov qword[rbp-292], r11
+lea r10, [rbp-40]
+mov qword [rbp-300], r10
+mov r10, qword [rbp-300]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-308], r10
+mov r10, qword [rbp-308]
+mov r11,qword [r10]
+mov qword[rbp-316], r11
+;preparing extern function printf
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+mov rdx, qword [rbp-316]
+mov rsi, qword [rbp-292]
+lea rdi, [rbp-328]
+xor rax, rax
+call printf
+;copy return value from rax
+mov qword[rbp-336], rax
+add rsp,8
+pop rax
+mov r10, qword[const3+0]
+mov qword[rbp-396+0], r10
+mov r10d, dword[const3+8]
+mov dword[rbp-396+8], r10d
+lea r10, [rbp-56]
+mov qword [rbp-344], r10
+mov r10, qword [rbp-344]
+mov r11, qword [const0]
+add r10, r11
+mov qword[rbp-352], r10
+mov r10, qword [rbp-352]
+mov r11,qword [r10]
+mov qword[rbp-360], r11
+lea r10, [rbp-56]
+mov qword [rbp-368], r10
+mov r10, qword [rbp-368]
+mov r11, qword [const1]
+add r10, r11
+mov qword[rbp-376], r10
+mov r10, qword [rbp-376]
+mov r11,qword [r10]
+mov qword[rbp-384], r11
+;preparing extern function printf
+; saving arguments for call
+and spl, 0x0
+push rax
+sub rsp, 8
+mov rdx, qword [rbp-384]
+mov rsi, qword [rbp-360]
+lea rdi, [rbp-396]
+xor rax, rax
+call printf
+;copy return value from rax
+mov qword[rbp-404], rax
+add rsp,8
+pop rax
+lea rsp, [rsp+16]
+lea rax, [rsp]
+; saving arguments for call
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp-40+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-40+8]
+mov qword[rsp], r10
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp-24+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-24+8]
+mov qword[rsp], r10
+call addDistance@func
+;copy return value from addr in rax
+mov r10, qword[rax+0]
+mov qword[rbp-436+0], r10
+mov r10, qword[rax+8]
+mov qword[rbp-436+8], r10
+add rsp,48
+mov r10, qword[rbp-436+0]
+mov qword[rbp-420+0], r10
+mov r10, qword[rbp-436+8]
+mov qword[rbp-420+8], r10
+lea rsp, [rsp+16]
+lea rax, [rsp]
+; saving arguments for call
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp-56+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-56+8]
+mov qword[rsp], r10
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp-420+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-420+8]
+mov qword[rsp], r10
+call addDistance@func
+;copy return value from addr in rax
+mov r10, qword[rax+0]
+mov qword[rbp-452+0], r10
+mov r10, qword[rax+8]
+mov qword[rbp-452+8], r10
+add rsp,48
+mov r10, qword[rbp-452+0]
+mov qword[rbp-420+0], r10
+mov r10, qword[rbp-452+8]
+mov qword[rbp-420+8], r10
+; saving arguments for call
+; copying data in stack of struct_distance
+sub rsp,8
+mov r10, qword[rbp-420+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-420+8]
+mov qword[rsp], r10
+call printDistance@func
+add rsp,16
 leave
 ret

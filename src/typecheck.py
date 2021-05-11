@@ -436,6 +436,13 @@ def type_check_assign(node1,node2,token):
                 token_object= token
         )
         return Node(type="error")
+    if node1.type.class_type == "PointerType" and node1.type.is_array == True:
+        Errors(
+                errorType='TypeError',
+                errorText="cannot asign to array",
+                token_object= token
+        )
+        return Node(type="error")
     if node2.type.is_convertible_to(node1.type):
         node2 = typecast(node2,type=node1.type)
         node = Node("binary_op",node1.type.stype+"=",children = [node1,node2],type=node1.type)
