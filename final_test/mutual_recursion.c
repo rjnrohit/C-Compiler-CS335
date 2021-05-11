@@ -1,4 +1,5 @@
 // mutual recursion
+// use of bool type and true/false
 bool is_odd(int n);
 bool is_even(int n);
 

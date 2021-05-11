@@ -603,7 +603,7 @@ def add_div_code(gen_obj):
         code += ["pop rax"]
     else:
         code += ["divss xmm0, xmm1"]
-        code += ["movss " + get_size + "[" +addr+"], xmm0"]
+        code += ["movss " + get_size[2] + "[" +addr[2]+"], xmm0"]
     return code
 
 def add_rem_code(gen_obj):
