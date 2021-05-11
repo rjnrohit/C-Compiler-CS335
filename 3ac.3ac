@@ -1,170 +1,130 @@
-quicksort:
+binary_search:
 BeginFunc
-tmp@0 = first|quicksort int>= last|quicksort
+tmp@0 = r|binary_search int< l|binary_search
 ifz tmp@0 goto label#0
-return
+return lconst@-1
 label#0:
-pivot|quicksort = first|quicksort
-i|quicksort = first|quicksort
-j|quicksort = last|quicksort
+tmp@1 = r|binary_search int- l|binary_search
+tmp@2 = tmp@1 int/ lconst@2
+tmp@3 = l|binary_search int+ tmp@2
+mid|binary_search = tmp@3
+tmp@4 = mid|binary_search long* lconst@8
+tmp@5 = arr|binary_search long+ tmp@4
+tmp@6 = load(tmp@5)
+tmp@7 = tmp@6 int== a|binary_search
+ifz tmp@7 goto label#1
+return mid|binary_search
 label#1:
-tmp@1 = i|quicksort int< j|quicksort
-ifz tmp@1 goto label#8
+tmp@8 = mid|binary_search long* lconst@8
+tmp@9 = arr|binary_search long+ tmp@8
+tmp@10 = load(tmp@9)
+tmp@11 = tmp@10 int> a|binary_search
+ifz tmp@11 goto label#2
+tmp@12 = mid|binary_search int- lconst@1
+push arr|binary_search
+push l|binary_search
+push tmp@12
+push a|binary_search
+tmp@13 = func_call binary_search
+pop a|binary_search
+pop tmp@12
+pop l|binary_search
+pop arr|binary_search
+return tmp@13
 label#2:
-tmp@2 = i|quicksort long* lconst@8
-tmp@3 = arr|quicksort long+ tmp@2
-tmp@6 = load(tmp@3)
-tmp@4 = pivot|quicksort long* lconst@8
-tmp@5 = arr|quicksort long+ tmp@4
-tmp@7 = load(tmp@5)
-tmp@8 = tmp@6 int<= tmp@7
-ifz tmp@8 goto label#3
-tmp@9 = i|quicksort int< last|quicksort
-ifz tmp@9 goto label#3
-tmp@10 = lconst@1
-goto label#4
-label#3:
-tmp@10 = lconst@0
-label#4:
-ifz tmp@10 goto label#5
-tmp@11 = i|quicksort
-tmp@12 = i|quicksort long+ lconst@1
-i|quicksort = tmp@12
-goto label#2
-label#5:
-tmp@13 = j|quicksort long* lconst@8
-tmp@14 = arr|quicksort long+ tmp@13
-tmp@17 = load(tmp@14)
-tmp@15 = pivot|quicksort long* lconst@8
-tmp@16 = arr|quicksort long+ tmp@15
-tmp@18 = load(tmp@16)
-tmp@19 = tmp@17 int> tmp@18
-ifz tmp@19 goto label#6
-tmp@20 = j|quicksort
-tmp@21 = j|quicksort long- lconst@1
-j|quicksort = tmp@21
-goto label#5
-label#6:
-tmp@22 = i|quicksort int< j|quicksort
-ifz tmp@22 goto label#7
-tmp@23 = i|quicksort long* lconst@8
-tmp@24 = arr|quicksort long+ tmp@23
-tmp@25 = load(tmp@24)
-temp|quicksort = tmp@25
-tmp@26 = i|quicksort long* lconst@8
-tmp@27 = arr|quicksort long+ tmp@26
-tmp@28 = j|quicksort long* lconst@8
-tmp@29 = arr|quicksort long+ tmp@28
-tmp@30 = load(tmp@29)
-tmp@27 eq tmp@30
-tmp@31 = load(tmp@27)
-tmp@32 = j|quicksort long* lconst@8
-tmp@33 = arr|quicksort long+ tmp@32
-tmp@33 eq temp|quicksort
-tmp@34 = load(tmp@33)
-label#7:
-goto label#1
-label#8:
-tmp@35 = pivot|quicksort long* lconst@8
-tmp@36 = arr|quicksort long+ tmp@35
-tmp@37 = load(tmp@36)
-temp|quicksort = tmp@37
-tmp@38 = pivot|quicksort long* lconst@8
-tmp@39 = arr|quicksort long+ tmp@38
-tmp@40 = j|quicksort long* lconst@8
-tmp@41 = arr|quicksort long+ tmp@40
-tmp@42 = load(tmp@41)
-tmp@39 eq tmp@42
-tmp@43 = load(tmp@39)
-tmp@44 = j|quicksort long* lconst@8
-tmp@45 = arr|quicksort long+ tmp@44
-tmp@45 eq temp|quicksort
-tmp@46 = load(tmp@45)
-tmp@47 = j|quicksort int- lconst@1
-push arr|quicksort
-push first|quicksort
-push tmp@47
-None = func_call quicksort
-pop tmp@47
-pop first|quicksort
-pop arr|quicksort
-tmp@48 = j|quicksort int+ lconst@1
-push arr|quicksort
-push tmp@48
-push last|quicksort
-None = func_call quicksort
-pop last|quicksort
-pop tmp@48
-pop arr|quicksort
+tmp@14 = mid|binary_search int+ lconst@1
+push arr|binary_search
+push tmp@14
+push r|binary_search
+push a|binary_search
+tmp@15 = func_call binary_search
+pop a|binary_search
+pop r|binary_search
+pop tmp@14
+pop arr|binary_search
+return tmp@15
 EndFunc
 main:
 BeginFunc
-tmp@50 = sconst@%ld
-tmp@49 = addr(n|main)
-push tmp@50
-push tmp@49
-tmp@51 = func_call scanf
-pop tmp@49
-pop tmp@50
-tmp@52 = n|main int>= lconst@50
-ifz tmp@52 goto label#9
-tmp@53 = sconst@array size should be less than 50
-push tmp@53
-tmp@54 = func_call printf1
-pop tmp@53
-label#9:
-i|main = lconst@0
-label#10:
-tmp@55 = i|main int< n|main
-ifz tmp@55 goto label#12
-tmp@61 = sconst@%ld
-tmp@58 = addr(arr|main)
-tmp@59 = i|main long* lconst@8
-tmp@60 = tmp@58 long+ tmp@59
-push tmp@61
-push tmp@60
-tmp@62 = func_call scanf
-pop tmp@60
-pop tmp@61
-label#11:
-tmp@56 = i|main
-tmp@57 = i|main long+ lconst@1
-i|main = tmp@57
-goto label#10
-label#12:
-tmp@63 = addr(arr|main)
-tmp@64 = n|main int- lconst@1
-push tmp@63
-push lconst@0
-push tmp@64
-None = func_call quicksort
-pop tmp@64
-pop lconst@0
-pop tmp@63
-i|main = lconst@0
-label#13:
-tmp@65 = i|main int< n|main
-ifz tmp@65 goto label#15
-tmp@72 = sconst@%ld 
-tmp@68 = addr(arr|main)
-tmp@69 = i|main long* lconst@8
-tmp@70 = tmp@68 long+ tmp@69
-tmp@71 = load(tmp@70)
-push tmp@72
-push tmp@71
-tmp@73 = func_call printf
-pop tmp@71
-pop tmp@72
-label#14:
-tmp@66 = i|main
-tmp@67 = i|main long+ lconst@1
-i|main = tmp@67
-goto label#13
-label#15:
-tmp@74 = sconst@
+tmp@17 = sconst@%ld
+tmp@16 = addr(n|main)
+push tmp@17
+push tmp@16
+tmp@18 = func_call scanf
+pop tmp@16
+pop tmp@17
+tmp@19 = n|main int>= lconst@50
+ifz tmp@19 goto label#3
+tmp@20 = sconst@array size should be less than 50
 
-push tmp@74
-tmp@75 = func_call printf1
-pop tmp@74
-return lconst@0
+push tmp@20
+tmp@21 = func_call printf1
+pop tmp@20
+return lconst@-1
+label#3:
+tmp@22 = sconst@Enter array in sorted order
+
+push tmp@22
+tmp@23 = func_call printf1
+pop tmp@22
+i|main = lconst@0
+label#4:
+tmp@24 = i|main int< n|main
+ifz tmp@24 goto label#6
+tmp@30 = sconst@%ld
+tmp@27 = addr(arr|main)
+tmp@28 = i|main long* lconst@8
+tmp@29 = tmp@27 long+ tmp@28
+push tmp@30
+push tmp@29
+tmp@31 = func_call scanf
+pop tmp@29
+pop tmp@30
+label#5:
+tmp@25 = i|main
+tmp@26 = i|main long+ lconst@1
+i|main = tmp@26
+goto label#4
+label#6:
+tmp@32 = sconst@Enter element to search: 
+push tmp@32
+tmp@33 = func_call printf1
+pop tmp@32
+tmp@35 = sconst@%ld
+tmp@34 = addr(a|main)
+push tmp@35
+push tmp@34
+tmp@36 = func_call scanf
+pop tmp@34
+pop tmp@35
+tmp@37 = addr(arr|main)
+tmp@38 = n|main int- lconst@1
+push tmp@37
+push lconst@0
+push tmp@38
+push a|main
+tmp@39 = func_call binary_search
+pop a|main
+pop tmp@38
+pop lconst@0
+pop tmp@37
+index|main = tmp@39
+tmp@40 = index|main int== lconst@-1
+ifz tmp@40 goto label#7
+tmp@41 = sconst@Element not found
+
+push tmp@41
+tmp@42 = func_call printf1
+pop tmp@41
+goto label#8
+label#7:
+tmp@44 = sconst@Element found at position %ld
+
+tmp@43 = index|main int+ lconst@1
+push tmp@44
+push tmp@43
+tmp@45 = func_call printf
+pop tmp@43
+pop tmp@44
+label#8:
 EndFunc

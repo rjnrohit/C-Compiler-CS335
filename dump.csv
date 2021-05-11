@@ -1,21 +1,28 @@
 
 symbol table id,symbol table name,table off
-0,global,77
+0,global,192
 name,type,offset,offset+base,width
 printf,"int function([pointer of (char), int])",0,0,24
 printf1,int function([pointer of (char)]),0,0,16
 scanf,"int function([pointer of (char), pointer of (int)])",0,0,24
-quicksort,"void function([pointer of (int), int, int])",0,0,24
-lconst@8,long,8,8,8
-lconst@1,long,16,16,8
-lconst@0,long,24,24,8
-main,int function(None),24,24,8
-sconst@%ld,"pointer of (char), array of:char",28,28,4
-lconst@50,long,36,36,8
-sconst@array size should be less than 50,"pointer of (char), array of:char",70,70,34
-sconst@%ld ,"pointer of (char), array of:char",75,75,5
-"sconst@
-","pointer of (char), array of:char",77,77,2
+binary_search,"int function([pointer of (int), int, int, int])",0,0,40
+lconst@-1,long,8,8,8
+lconst@2,long,16,16,8
+lconst@8,long,24,24,8
+lconst@1,long,32,32,8
+main,int function(None),32,32,8
+sconst@%ld,"pointer of (char), array of:char",36,36,4
+lconst@50,long,44,44,8
+"sconst@array size should be less than 50
+","pointer of (char), array of:char",79,79,35
+"sconst@Enter array in sorted order
+","pointer of (char), array of:char",108,108,29
+lconst@0,long,116,116,8
+sconst@Enter element to search: ,"pointer of (char), array of:char",142,142,26
+"sconst@Element not found
+","pointer of (char), array of:char",161,161,19
+"sconst@Element found at position %ld
+","pointer of (char), array of:char",192,192,31
 
 symbol table id,symbol table name,parent id,table off
 1,printf,0,24
@@ -35,115 +42,77 @@ s,pointer of (char),16,16,8
 a,pointer of (int),24,24,8
 
 symbol table id,symbol table name,parent id,table off
-4,quicksort,0,303
+4,binary_search,0,155
 name,type,offset,offset+base,width
-arr,pointer of (int),8,8,8
-first,int,16,16,8
-last,int,24,24,8
-i,int,32,32,8
-j,int,40,40,8
-pivot,int,48,48,8
-temp,int,56,56,8
-tmp@0,bool,57,57,1
-tmp@1,bool,58,58,1
-tmp@35,long,199,199,8
-tmp@36,long,207,207,8
-tmp@37,int,215,215,8
-tmp@38,long,223,223,8
-tmp@39,long,231,231,8
-tmp@40,long,239,239,8
-tmp@41,long,247,247,8
-tmp@42,int,255,255,8
-tmp@43,int,263,263,8
-tmp@44,long,271,271,8
-tmp@45,long,279,279,8
-tmp@46,int,287,287,8
-tmp@47,int,295,295,8
-tmp@48,int,303,303,8
+arr,pointer of (int),16,16,8
+l,int,24,24,8
+r,int,32,32,8
+a,int,40,40,8
+tmp@0,bool,41,41,1
+tmp@1,int,49,49,8
+tmp@2,int,57,57,8
+tmp@3,int,65,65,8
+mid,int,73,73,8
+tmp@4,long,81,81,8
+tmp@5,long,89,89,8
+tmp@6,int,97,97,8
+tmp@7,bool,98,98,1
+tmp@8,long,106,106,8
+tmp@9,long,114,114,8
+tmp@10,int,122,122,8
+tmp@11,bool,123,123,1
+tmp@12,int,131,131,8
+tmp@13,int,139,139,8
+tmp@14,int,147,147,8
+tmp@15,int,155,155,8
 
 symbol table id,symbol table name,parent id,table off
-7,main,0,628
+5,main,0,747
 name,type,offset,offset+base,width
 n,int,16,16,8
 arr,"pointer of (int), array of:int",416,416,400
-tmp@49,long,424,424,8
-tmp@50,"pointer of (char), array of:char",428,428,4
-tmp@51,int,436,436,8
-tmp@52,bool,437,437,1
-i,int,487,487,8
-tmp@55,bool,488,488,1
-tmp@56,int,496,496,8
-tmp@57,long,504,504,8
-tmp@63,long,548,548,8
-tmp@64,int,556,556,8
-tmp@65,bool,557,557,1
-tmp@66,int,565,565,8
-tmp@67,long,573,573,8
-tmp@74,"pointer of (char), array of:char",620,620,2
-tmp@75,int,628,628,8
+tmp@16,long,424,424,8
+tmp@17,"pointer of (char), array of:char",428,428,4
+tmp@18,int,436,436,8
+tmp@19,bool,437,437,1
+tmp@22,"pointer of (char), array of:char",509,509,29
+tmp@23,int,517,517,8
+i,int,525,525,8
+tmp@24,bool,526,526,1
+tmp@25,int,534,534,8
+tmp@26,long,542,542,8
+tmp@32,"pointer of (char), array of:char",604,604,26
+tmp@33,int,612,612,8
+a,int,620,620,8
+tmp@34,long,628,628,8
+tmp@35,"pointer of (char), array of:char",632,632,4
+tmp@36,int,640,640,8
+tmp@37,long,648,648,8
+tmp@38,int,656,656,8
+tmp@39,int,664,664,8
+index,int,672,672,8
+tmp@40,bool,673,673,1
+tmp@43,int,708,708,8
+tmp@44,"pointer of (char), array of:char",739,739,31
+tmp@45,int,747,747,8
 
 symbol table id,symbol table name,parent id,table off
-5,scope@5,4,229
+6,scope@6,5,43
 name,type,offset,offset+base,width
-tmp@2,long,8,66,8
-tmp@3,long,16,74,8
-tmp@4,long,24,82,8
-tmp@5,long,32,90,8
-tmp@6,int,40,98,8
-tmp@7,int,48,106,8
-tmp@8,bool,49,107,1
-tmp@9,bool,50,108,1
-tmp@10,bool,51,109,1
-tmp@11,int,59,117,8
-tmp@12,long,67,125,8
-tmp@13,long,75,133,8
-tmp@14,long,83,141,8
-tmp@15,long,91,149,8
-tmp@16,long,99,157,8
-tmp@17,int,107,165,8
-tmp@18,int,115,173,8
-tmp@19,bool,116,174,1
-tmp@20,int,124,182,8
-tmp@21,long,132,190,8
-tmp@22,bool,133,191,1
+tmp@20,"pointer of (char), array of:char",35,472,35
+tmp@21,int,43,480,8
 
 symbol table id,symbol table name,parent id,table off
-8,scope@8,7,42
+7,scope@7,5,36
 name,type,offset,offset+base,width
-tmp@53,"pointer of (char), array of:char",34,471,34
-tmp@54,int,42,479,8
+tmp@27,long,8,550,8
+tmp@28,long,16,558,8
+tmp@29,long,24,566,8
+tmp@30,"pointer of (char), array of:char",28,570,4
+tmp@31,int,36,578,8
 
 symbol table id,symbol table name,parent id,table off
-9,scope@9,7,36
+8,scope@8,5,27
 name,type,offset,offset+base,width
-tmp@58,long,8,512,8
-tmp@59,long,16,520,8
-tmp@60,long,24,528,8
-tmp@61,"pointer of (char), array of:char",28,532,4
-tmp@62,int,36,540,8
-
-symbol table id,symbol table name,parent id,table off
-10,scope@10,7,45
-name,type,offset,offset+base,width
-tmp@68,long,8,581,8
-tmp@69,long,16,589,8
-tmp@70,long,24,597,8
-tmp@71,int,32,605,8
-tmp@72,"pointer of (char), array of:char",37,610,5
-tmp@73,int,45,618,8
-
-symbol table id,symbol table name,parent id,table off
-6,scope@6,5,96
-name,type,offset,offset+base,width
-tmp@23,long,8,199,8
-tmp@24,long,16,207,8
-tmp@25,int,24,215,8
-tmp@26,long,32,223,8
-tmp@27,long,40,231,8
-tmp@28,long,48,239,8
-tmp@29,long,56,247,8
-tmp@30,int,64,255,8
-tmp@31,int,72,263,8
-tmp@32,long,80,271,8
-tmp@33,long,88,279,8
-tmp@34,int,96,287,8
+tmp@41,"pointer of (char), array of:char",19,692,19
+tmp@42,int,27,700,8
