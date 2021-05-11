@@ -47,6 +47,7 @@ tmp@37 = func_call printf
 pop tmp@35
 pop tmp@32
 pop tmp@36
+return d|addDistance
 EndFunc
 printDistance:
 BeginFunc
@@ -85,7 +86,7 @@ tmp@55 = tmp@54 long+ lconst@8
 tmp@55 eq lconst@2
 tmp@56 = load(tmp@55)
 tmp@57 = addr(d2|main)
-tmp@58 = tmp@57 long+ lconst@8
+tmp@58 = tmp@57 long+ lconst@16
 tmp@58 eq lconst@600
 tmp@59 = load(tmp@58)
 tmp@60 = addr(d3|main)
@@ -93,7 +94,7 @@ tmp@61 = tmp@60 long+ lconst@8
 tmp@61 eq lconst@1
 tmp@62 = load(tmp@61)
 tmp@63 = addr(d3|main)
-tmp@64 = tmp@63 long+ lconst@8
+tmp@64 = tmp@63 long+ lconst@16
 tmp@64 eq lconst@200
 tmp@65 = load(tmp@64)
 tmp@72 = sconst@%ldkm %ldm

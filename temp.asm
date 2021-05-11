@@ -238,6 +238,11 @@ call printf
 mov qword[rbp-372], rax
 add rsp,8
 pop rax
+;copy return value at addr in rax
+mov r10, qword[rbp-64+0]
+mov qword[rax+0], r10
+mov r10, qword[rbp-64+8]
+mov qword[rax+8], r10
 leave
 ret
 global printDistance@func
@@ -354,7 +359,7 @@ mov qword[rbp-128], r11
 lea r10, [rbp-40]
 mov qword [rbp-136], r10
 mov r10, qword [rbp-136]
-mov r11, qword [const0]
+mov r11, qword [const1]
 add r10, r11
 mov qword[rbp-144], r10
 mov r10, qword [const8]
@@ -378,7 +383,7 @@ mov qword[rbp-176], r11
 lea r10, [rbp-56]
 mov qword [rbp-184], r10
 mov r10, qword [rbp-184]
-mov r11, qword [const0]
+mov r11, qword [const1]
 add r10, r11
 mov qword[rbp-192], r10
 mov r10, qword [const9]
