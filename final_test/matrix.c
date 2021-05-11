@@ -1,3 +1,7 @@
+// matrix multiplication
+// passing multi dimension array as input to function
+//looping multi dimension array
+
 int printf(char s[20],int a);
 int printf1(char s[20],int a,int b);
 int printf2(char s[30]);
@@ -20,7 +24,7 @@ int main(){
     scanf("%ld",&m);
     scanf("%ld",&n);
     scanf("%ld",&p);
-    
+
     if(m>=100 || n>=100 || p>=100){
         printf2("Invalid size\n");
     }
