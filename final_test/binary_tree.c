@@ -1,71 +1,75 @@
-// binary search tree
-// using malloc
 
-int printf(char s[20],int a);
-int printf1(char s[20]);
-int scanf(char s[20],int *a);
-void *malloc(int size);
 
-struct Node{
+
+struct node {
     int data;
-    struct Node *left, *right;
+    struct node* left;
+    struct node* right;
 };
 
-struct Node *root = NULL;
+void printf(char a[100], int b);
+void printfs(char a[100]);
+void *malloc(int s);
 
-void push(struct Node *root,int data){
-    if (root == NULL){
-        root = (struct Node*)malloc(sizeof(struct Node));
-        root->data = data;
-        root->left = NULL;
-        root->right = NULL;
-    }
-    if(root->data > data){
-        insert(root->left,data);
-    }
-    else insert(root->right,data);
+struct node* newNode(int data)
+{
+    struct node* node
+        = (struct node*)malloc(sizeof(struct node));
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
+ 
+    return (node);
+}
+ 
+void printPostorder(struct node* node)
+{
+    if (node == NULL)
+        return;
+    printPostorder(node->left);
+ 
+    printPostorder(node->right);
+ 
+    printf("%ld ", node->data);
+}
+ 
+void printInorder(struct node* node)
+{
+    if (node == NULL)
+        return;
+ 
+    printInorder(node->left);
+    printf("%ld ", node->data);
+    printInorder(node->right);
+}
+ 
+void printPreorder(struct node* node)
+{
+    if (node == NULL)
+        return;
+ 
+    printf("%ld ", node->data);
+    printPreorder(node->left);
+    printPreorder(node->right);
 }
 
-void inorder(struct Node *root){
-    if(root == NULL) return;
-    inorder(root->left);
-    printf("%ld ",root->data);
-    inorder(root->right);
-}
-void preorder(struct Node *root){
-    if(root == NULL) return;
-    printf("%ld ",root->data);
-    inorder(root->left);
-    inorder(root->right);
-}
-void postorder(struct Node *root){
-    if(root == NULL) return;
-    inorder(root->left);
-    inorder(root->right);
-    printf("%ld ",root->data);
-}
-
-// struct Node* foo(struct Node *root){
-//     if(root== NULL){
-//         struct Node *node = (struct Node*)malloc(sizeof(struct Node));
-//     }
-//     // return node;
-// }
-
-int main(){
-    printf1("Enter number to insert in BST (stop at -1)\n");
-    int n;
-    do{
-        scanf("%ld",&n);
-        if(n == -1) break;
-        push(root,n);
-
-    }while(true);
-    printf("%ld\n", root);
-    inorder(root);
-    printf1("\n");
-    preorder(root);
-    printf1("\n");
-    postorder(root);
-    printf1("\n");
+int main()
+{
+    struct node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+ 
+    printfs("Preorder traversal of binary tree is \n");
+    printPreorder(root);
+ 
+    printfs("\nInorder traversal of binary tree is \n");
+    printInorder(root);
+ 
+    printfs("\nPostorder traversal of binary tree is \n");
+    printPostorder(root);
+    printfs("\n");
+ 
+    return 0;
 }

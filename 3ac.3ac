@@ -1,301 +1,137 @@
+newNode:
+BeginFunc
+push lconst@24
+tmp@0 = func_call malloc
+pop lconst@24
+node|newNode = tmp@0
+tmp@1 = node|newNode long+ lconst@8
+tmp@1 eq data|newNode
+tmp@2 = load(tmp@1)
+tmp@3 = node|newNode long+ lconst@16
+tmp@3 eq lconst@0
+tmp@4 = load(tmp@3)
+tmp@5 = node|newNode long+ lconst@24
+tmp@5 eq lconst@0
+tmp@6 = load(tmp@5)
+return node|newNode
+EndFunc
+printInorder:
+BeginFunc
+tmp@7 = node|printInorder long== lconst@0
+ifz tmp@7 goto label#0
+return
+label#0:
+tmp@8 = node|printInorder long+ lconst@16
+tmp@9 = load(tmp@8)
+push tmp@9
+None = func_call printInorder
+pop tmp@9
+tmp@12 = sconst@%ld 
+tmp@10 = node|printInorder long+ lconst@8
+tmp@11 = load(tmp@10)
+push tmp@12
+push tmp@11
+None = func_call printf
+pop tmp@11
+pop tmp@12
+tmp@13 = node|printInorder long+ lconst@24
+tmp@14 = load(tmp@13)
+push tmp@14
+None = func_call printInorder
+pop tmp@14
+EndFunc
+insert:
+BeginFunc
+ifz root|insert goto label#2
+tmp@15 = root|insert long+ lconst@8
+tmp@16 = load(tmp@15)
+tmp@17 = b|insert int>= tmp@16
+ifz tmp@17 goto label#1
+tmp@18 = root|insert long+ lconst@24
+tmp@19 = root|insert long+ lconst@24
+tmp@20 = load(tmp@19)
+push tmp@20
+push b|insert
+tmp@21 = func_call insert
+pop b|insert
+pop tmp@20
+tmp@18 eq tmp@21
+tmp@22 = load(tmp@18)
+return root|insert
+label#1:
+tmp@23 = root|insert long+ lconst@16
+tmp@24 = root|insert long+ lconst@16
+tmp@25 = load(tmp@24)
+push tmp@25
+push b|insert
+tmp@26 = func_call insert
+pop b|insert
+pop tmp@25
+tmp@23 eq tmp@26
+tmp@27 = load(tmp@23)
+return root|insert
+label#2:
+push b|insert
+tmp@28 = func_call newNode
+pop b|insert
+root|insert = tmp@28
+return root|insert
+EndFunc
 main:
 BeginFunc
-tmp@0 = sconst@Enter operator in {+,-,/,*,%%,&,|,^,>,<,!,~} or 1-8 for {<<,>>,<=,>=,!=,==,&&,||}: 
-push tmp@0
-tmp@1 = func_call printf1
-pop tmp@0
-tmp@3 = sconst@%c
-tmp@2 = addr(op|main)
-push tmp@3
-push tmp@2
-tmp@4 = func_call scanf
-pop tmp@2
-pop tmp@3
-tmp@5 = sconst@Enter 2 numbers
-
-push tmp@5
-tmp@6 = func_call printf1
-pop tmp@5
-tmp@8 = sconst@%ld
-tmp@7 = addr(a|main)
-push tmp@8
-push tmp@7
-tmp@9 = func_call scanf
-pop tmp@7
-pop tmp@8
-tmp@11 = sconst@%ld
-tmp@10 = addr(b|main)
-push tmp@11
-push tmp@10
-tmp@12 = func_call scanf
-pop tmp@10
-pop tmp@11
-tmp@13 = op|main char== lconst@43
-ifz tmp@13 goto label#0
-tmp@15 = sconst@ans: %ld
-
-tmp@14 = a|main int+ b|main
-push tmp@15
-push tmp@14
-tmp@16 = func_call printf
-pop tmp@14
-pop tmp@15
-goto label#24
-label#0:
-tmp@17 = op|main char== lconst@45
-ifz tmp@17 goto label#1
-tmp@19 = sconst@ans: %ld
-
-tmp@18 = a|main int- b|main
-push tmp@19
-push tmp@18
-tmp@20 = func_call printf
-pop tmp@18
-pop tmp@19
-goto label#24
-label#1:
-tmp@21 = op|main char== lconst@47
-ifz tmp@21 goto label#2
-tmp@23 = sconst@ans: %ld
-
-tmp@22 = a|main int/ b|main
-push tmp@23
-push tmp@22
-tmp@24 = func_call printf
-pop tmp@22
-pop tmp@23
-goto label#24
-label#2:
-tmp@25 = op|main char== lconst@42
-ifz tmp@25 goto label#3
-tmp@27 = sconst@ans: %ld
-
-tmp@26 = a|main int* b|main
-push tmp@27
-push tmp@26
-tmp@28 = func_call printf
-pop tmp@26
-pop tmp@27
-goto label#24
-label#3:
-tmp@29 = op|main char== lconst@37
-ifz tmp@29 goto label#4
-tmp@31 = sconst@ans: %ld
-
-tmp@30 = a|main int% b|main
+tmp@29 = sconst@enter number of elements in tree: 
+push tmp@29
+None = func_call printfs
+pop tmp@29
+tmp@31 = sconst@%ld
+tmp@30 = addr(n|main)
 push tmp@31
 push tmp@30
-tmp@32 = func_call printf
+None = func_call scanf
 pop tmp@30
 pop tmp@31
-goto label#24
+tmp@32 = sconst@enter %ld 
+push tmp@32
+push n|main
+None = func_call printf
+pop n|main
+pop tmp@32
+tmp@33 = sconst@numbers
+
+push tmp@33
+None = func_call printfs
+pop tmp@33
+root|main = lconst@0
+label#3:
+tmp@34 = n|main
+tmp@35 = n|main long- lconst@1
+n|main = tmp@35
+ifz tmp@34 goto label#4
+tmp@37 = sconst@%ld
+tmp@36 = addr(i|scope@12)
+push tmp@37
+push tmp@36
+None = func_call scanf
+pop tmp@36
+pop tmp@37
+push root|main
+push i|scope@12
+tmp@38 = func_call insert
+pop i|scope@12
+pop root|main
+root|main = tmp@38
+goto label#3
 label#4:
-tmp@33 = op|main char== lconst@38
-ifz tmp@33 goto label#5
-tmp@35 = sconst@ans: %ld
-
-tmp@34 = a|main int& b|main
-push tmp@35
-push tmp@34
-tmp@36 = func_call printf
-pop tmp@34
-pop tmp@35
-goto label#24
-label#5:
-tmp@37 = op|main char== lconst@124
-ifz tmp@37 goto label#6
-tmp@39 = sconst@ans: %ld
-
-tmp@38 = a|main int| b|main
+tmp@39 = sconst@tree: 
 push tmp@39
-push tmp@38
-tmp@40 = func_call printf
-pop tmp@38
+None = func_call printfs
 pop tmp@39
-goto label#24
-label#6:
-tmp@41 = op|main char== lconst@94
-ifz tmp@41 goto label#7
-tmp@43 = sconst@ans: %ld
+push root|main
+None = func_call printInorder
+pop root|main
+tmp@40 = sconst@
 
-tmp@42 = a|main int^ b|main
-push tmp@43
-push tmp@42
-tmp@44 = func_call printf
-pop tmp@42
-pop tmp@43
-goto label#24
-label#7:
-tmp@45 = op|main char== lconst@62
-ifz tmp@45 goto label#8
-tmp@47 = sconst@ans: %ld
-
-tmp@46 = a|main int> b|main
-tmp@48 = bool_to_int tmp@46
-push tmp@47
-push tmp@48
-tmp@49 = func_call printf
-pop tmp@48
-pop tmp@47
-goto label#24
-label#8:
-tmp@50 = op|main char== lconst@60
-ifz tmp@50 goto label#9
-tmp@52 = sconst@ans: %ld
-
-tmp@51 = a|main int< b|main
-tmp@53 = bool_to_int tmp@51
-push tmp@52
-push tmp@53
-tmp@54 = func_call printf
-pop tmp@53
-pop tmp@52
-goto label#24
-label#9:
-tmp@55 = op|main char== lconst@33
-ifz tmp@55 goto label#10
-tmp@57 = sconst@ans: %ld
-
-tmp@56 = not_bool a|main
-tmp@58 = bool_to_int tmp@56
-push tmp@57
-push tmp@58
-tmp@59 = func_call printf
-pop tmp@58
-pop tmp@57
-goto label#24
-label#10:
-tmp@60 = op|main char== lconst@126
-ifz tmp@60 goto label#11
-tmp@62 = sconst@ans: %ld
-
-tmp@61 = int~ a|main
-push tmp@62
-push tmp@61
-tmp@63 = func_call printf
-pop tmp@61
-pop tmp@62
-goto label#24
-label#11:
-tmp@64 = op|main char== lconst@49
-ifz tmp@64 goto label#12
-tmp@66 = sconst@ans: %ld
-
-tmp@65 = a|main int<< b|main
-push tmp@66
-push tmp@65
-tmp@67 = func_call printf
-pop tmp@65
-pop tmp@66
-goto label#24
-label#12:
-tmp@68 = op|main char== lconst@50
-ifz tmp@68 goto label#13
-tmp@70 = sconst@ans: %ld
-
-tmp@69 = a|main int>> b|main
-push tmp@70
-push tmp@69
-tmp@71 = func_call printf
-pop tmp@69
-pop tmp@70
-goto label#24
-label#13:
-tmp@72 = op|main char== lconst@51
-ifz tmp@72 goto label#14
-tmp@74 = sconst@ans: %ld
-
-tmp@73 = a|main int<= b|main
-tmp@75 = bool_to_int tmp@73
-push tmp@74
-push tmp@75
-tmp@76 = func_call printf
-pop tmp@75
-pop tmp@74
-goto label#24
-label#14:
-tmp@77 = op|main char== lconst@52
-ifz tmp@77 goto label#15
-tmp@79 = sconst@ans: %ld
-
-tmp@78 = a|main int>= b|main
-tmp@80 = bool_to_int tmp@78
-push tmp@79
-push tmp@80
-tmp@81 = func_call printf
-pop tmp@80
-pop tmp@79
-goto label#24
-label#15:
-tmp@82 = op|main char== lconst@53
-ifz tmp@82 goto label#16
-tmp@84 = sconst@ans: %ld
-
-tmp@83 = a|main int!= b|main
-tmp@85 = bool_to_int tmp@83
-push tmp@84
-push tmp@85
-tmp@86 = func_call printf
-pop tmp@85
-pop tmp@84
-goto label#24
-label#16:
-tmp@87 = op|main char== lconst@54
-ifz tmp@87 goto label#17
-tmp@89 = sconst@ans: %ld
-
-tmp@88 = a|main int== b|main
-tmp@90 = bool_to_int tmp@88
-push tmp@89
-push tmp@90
-tmp@91 = func_call printf
-pop tmp@90
-pop tmp@89
-goto label#24
-label#17:
-tmp@92 = op|main char== lconst@55
-ifz tmp@92 goto label#20
-tmp@94 = sconst@ans: %ld
-
-ifz a|main goto label#18
-ifz b|main goto label#18
-tmp@93 = lconst@1
-goto label#19
-label#18:
-tmp@93 = lconst@0
-label#19:
-tmp@95 = bool_to_int tmp@93
-push tmp@94
-push tmp@95
-tmp@96 = func_call printf
-pop tmp@95
-pop tmp@94
-goto label#24
-label#20:
-tmp@97 = op|main char== lconst@56
-ifz tmp@97 goto label#23
-tmp@99 = sconst@ans: %ld
-
-ifnz a|main goto label#21
-ifnz b|main goto label#21
-tmp@98 = lconst@0
-goto label#22
-label#21:
-tmp@98 = lconst@1
-label#22:
-tmp@100 = bool_to_int tmp@98
-push tmp@99
-push tmp@100
-tmp@101 = func_call printf
-pop tmp@100
-pop tmp@99
-goto label#24
-label#23:
-tmp@102 = sconst@Wrong operator
-
-push tmp@102
-tmp@103 = func_call printf1
-pop tmp@102
-label#24:
-return lconst@0
+push tmp@40
+None = func_call printfs
+pop tmp@40
 EndFunc
