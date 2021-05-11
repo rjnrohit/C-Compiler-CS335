@@ -722,16 +722,17 @@ def add_relational_code(gen_obj):
     width = typ.width
     get_size = size_type[width]
     code += load_var(gen_obj.place1, gen_obj.place2)
-    if 'float' in code[-1]:
-        code += ["cmp xmm0, xmm1"]
+    if 'xmm' in code[-1]:
+        code += ["ucomiss xmm0, xmm1"]
     else:
         code += ["cmp r10, r11"]
     label1 = get_newlabel()
     opd= {'==':'je', '!=':'jne','<':'jl','<=':'jle','>':'jg','>=':'jge'}
+    opdf = {'==':'je', '!=':'jne','<':'jb','<=':'jbe','>':'ja','>=':'jae'}
     if (gen_obj.op[-1] != '>' and gen_obj.op[-1] != '<'):
-        op = opd[gen_obj.op[-2:]]
+        op = opd[gen_obj.op[-2:]] if 'float' not in gen_obj.op else opdf[gen_obj.op[-2:]]
     else:
-        op = opd[gen_obj.op[-1]]
+        op = opd[gen_obj.op[-1:]] if 'float' not in gen_obj.op else opdf[gen_obj.op[-1:]]
     code += [op + " " + label1]
     code += ["mov r10,0"]
     label2 = get_newlabel()
