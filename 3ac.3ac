@@ -1,5 +1,6 @@
-insert:
+func:
 BeginFunc
+<<<<<<< HEAD
 tmp@0 = root|insert long== lconst@0
 ifz tmp@0 goto label#0
 tmp@1 = sconst@%ld
@@ -59,9 +60,18 @@ tmp@20 eq tmp@23
 tmp@24 = load(tmp@20)
 label#2:
 return root|insert
+=======
+tmp@0 = x|func float* x|func
+tmp@1 = tmp@0 float* x|func
+tmp@2 = x|func float* x|func
+tmp@3 = tmp@1 float- tmp@2
+tmp@4 = tmp@3 float+ fconst@2
+return tmp@4
+>>>>>>> bc613a19a7a5b2fdec916e30b2069aa1e94bd781
 EndFunc
-inorder:
+deriv:
 BeginFunc
+<<<<<<< HEAD
 tmp@25 = root|inorder long== lconst@0
 ifz tmp@25 goto label#3
 return
@@ -202,4 +212,113 @@ pop root|main
 push root|main
 None = func_call postorder
 pop root|main
+=======
+tmp@5 = fconst@3 float* x|deriv
+tmp@6 = tmp@5 float* x|deriv
+tmp@7 = fconst@2 float* x|deriv
+tmp@8 = tmp@6 float- tmp@7
+return tmp@8
+EndFunc
+newton_raphson:
+BeginFunc
+tmp@9 = sconst@%f
+
+push tmp@9
+push epsilon|newton_raphson
+tmp@10 = func_call printf
+pop epsilon|newton_raphson
+pop tmp@9
+tmp@12 = sconst@%f
+
+tmp@11 = ufloat- epsilon|newton_raphson
+push tmp@12
+push tmp@11
+tmp@13 = func_call printf
+pop tmp@11
+pop tmp@12
+i|newton_raphson = lconst@0
+label#0:
+tmp@14 = i|newton_raphson int< max_itr|newton_raphson
+ifz tmp@14 goto label#6
+push x|newton_raphson
+tmp@17 = func_call func
+pop x|newton_raphson
+push x|newton_raphson
+tmp@18 = func_call deriv
+pop x|newton_raphson
+tmp@19 = tmp@17 float/ tmp@18
+h|scope@6 = tmp@19
+push x|newton_raphson
+tmp@20 = func_call func
+pop x|newton_raphson
+a|scope@6 = tmp@20
+push x|newton_raphson
+tmp@21 = func_call deriv
+pop x|newton_raphson
+b|scope@6 = tmp@21
+tmp@22 = i|newton_raphson int< lconst@10
+ifz tmp@22 goto label#1
+tmp@26 = sconst@%f %f %f %f
+
+push x|newton_raphson
+tmp@23 = func_call func
+pop x|newton_raphson
+push x|newton_raphson
+tmp@24 = func_call deriv
+pop x|newton_raphson
+tmp@25 = a|scope@6 float/ b|scope@6
+push tmp@26
+push tmp@23
+push tmp@24
+push h|scope@6
+push tmp@25
+tmp@27 = func_call printf1
+pop tmp@25
+pop h|scope@6
+pop tmp@24
+pop tmp@23
+pop tmp@26
+label#1:
+tmp@28 = h|scope@6 float< epsilon|newton_raphson
+ifz tmp@28 goto label#2
+tmp@29 = ufloat- epsilon|newton_raphson
+tmp@30 = h|scope@6 float> tmp@29
+ifz tmp@30 goto label#2
+tmp@31 = lconst@1
+goto label#3
+label#2:
+tmp@31 = lconst@0
+label#3:
+ifz tmp@31 goto label#4
+return x|newton_raphson
+label#4:
+tmp@32 = x|newton_raphson float- h|scope@6
+x|newton_raphson = tmp@32
+label#5:
+tmp@15 = i|newton_raphson
+tmp@16 = i|newton_raphson long+ lconst@1
+i|newton_raphson = tmp@16
+goto label#0
+label#6:
+return x|newton_raphson
+EndFunc
+main:
+BeginFunc
+a|main = fconst@2
+tmp@34 = sconst@root: %f
+
+push fconst@-20
+push fconst@0.001
+push lconst@100
+tmp@33 = func_call newton_raphson
+pop lconst@100
+pop fconst@0.001
+pop fconst@-20
+push tmp@34
+push tmp@33
+tmp@35 = func_call printf
+pop tmp@33
+pop tmp@34
+return lconst@0
+>>>>>>> bc613a19a7a5b2fdec916e30b2069aa1e94bd781
 EndFunc
