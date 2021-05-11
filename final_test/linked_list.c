@@ -1,5 +1,6 @@
 // push,pop,search in linked list
 // using malloc
+// support for NULL
 int printf(char s[20],int a);
 int printf1(char s[20]);
 int scanf(char s[20],int *a);
