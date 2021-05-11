@@ -35,6 +35,7 @@ extern malloc
 extern sqrt
 extern exit
 extern puts
+extern gets
 extern atoi
 extern atol
 extern strlen
@@ -81,6 +82,10 @@ extern fscanf
 extern fread
 extern fwrite
 extern fseek
+extern tan
+extern log2
+extern trunc
+extern round
 section .text
 global addDistance@func
 addDistance@func:
@@ -89,11 +94,19 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 16; adjust rsp for return entry
 ; copying data in stack of struct_distance
-push qword [rbp+16+0]
-push qword [rbp+16+8]
+sub rsp,8
+mov r10, qword[rbp+16+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp+16+8]
+mov qword[rsp], r10
 ; copying data in stack of struct_distance
-push qword [rbp+32+0]
-push qword [rbp+32+8]
+sub rsp,8
+mov r10, qword[rbp+32+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp+32+8]
+mov qword[rsp], r10
 ;add space for symbols
 sub rsp, 256
 lea r10, [rbp-64]
@@ -216,8 +229,12 @@ mov    rbp,rsp
 ; saving the arguments values in the stack
 sub rsp, 0; adjust rsp for return entry
 ; copying data in stack of struct_distance
-push qword [rbp+16+0]
-push qword [rbp+16+8]
+sub rsp,8
+mov r10, qword[rbp+16+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp+16+8]
+mov qword[rsp], r10
 ;add space for symbols
 sub rsp, 87
 mov r10, qword[const3+0]
@@ -468,11 +485,19 @@ lea rsp, [rsp+16]
 lea rax, [rsp]
 ; saving arguments for call
 ; copying data in stack of struct_distance
-push qword [rbp-40+0]
-push qword [rbp-40+8]
+sub rsp,8
+mov r10, qword[rbp-40+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-40+8]
+mov qword[rsp], r10
 ; copying data in stack of struct_distance
-push qword [rbp-24+0]
-push qword [rbp-24+8]
+sub rsp,8
+mov r10, qword[rbp-24+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-24+8]
+mov qword[rsp], r10
 call addDistance@func
 ;copy return value from addr in rax
 mov r10, qword[rax+0]
@@ -488,11 +513,19 @@ lea rsp, [rsp+16]
 lea rax, [rsp]
 ; saving arguments for call
 ; copying data in stack of struct_distance
-push qword [rbp-56+0]
-push qword [rbp-56+8]
+sub rsp,8
+mov r10, qword[rbp-56+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-56+8]
+mov qword[rsp], r10
 ; copying data in stack of struct_distance
-push qword [rbp-420+0]
-push qword [rbp-420+8]
+sub rsp,8
+mov r10, qword[rbp-420+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-420+8]
+mov qword[rsp], r10
 call addDistance@func
 ;copy return value from addr in rax
 mov r10, qword[rax+0]
@@ -506,8 +539,12 @@ mov r10, qword[rbp-452+8]
 mov qword[rbp-420+8], r10
 ; saving arguments for call
 ; copying data in stack of struct_distance
-push qword [rbp-420+0]
-push qword [rbp-420+8]
+sub rsp,8
+mov r10, qword[rbp-420+0]
+mov qword[rsp], r10
+sub rsp,8
+mov r10, qword[rbp-420+8]
+mov qword[rsp], r10
 call printDistance@func
 add rsp,16
 leave

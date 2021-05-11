@@ -1,3 +1,5 @@
+//binary tree with dynamic memory allocation
+//different traversal inorder, postorder, preorder
 struct node {
     int data;
     struct node* left;
