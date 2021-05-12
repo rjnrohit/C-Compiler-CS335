@@ -38,8 +38,8 @@ optional arguments:
   -s           output symbol table
   -t           output 3 address code
   -l           output lexeme table
-  -stdc        linker method
-  -n           only create till asm
+  -stdc        linker method, if specified it'll uses custom elf entry else from standard X86-64-linux.so
+  -n           only create till asm, do not create executable 
 ```
 
 
@@ -76,10 +76,4 @@ argument no.1 is ./a.out
 argument no.2 is wah
 argument no.3 is modiji
 argument no.4 is wah
-```
-
-To draw the AST
-we can run command
-```
-dot -Tps graph1.dot -o graph1.ps
 ```
