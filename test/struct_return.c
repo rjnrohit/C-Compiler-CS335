@@ -12,9 +12,6 @@ struct distance addDistance(struct distance d1, struct distance d2){
     struct distance d;
     d.km = d1.km+d2.km+(d1.m+d2.m)/1000;
     d.m = (d1.m+d2.m)%1000;
-    // printf("d1 %ldkm %ldm\n",d1.km,d1.m);
-    // printf("d2 %ldkm %ldm\n",d2.km,d2.m);
-    // printf("%ldkm %ldm\n",d.km,d.m);
     return d;
 }
 

@@ -605,7 +605,7 @@ def p_postfix_expression_4(p):
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     p[0].code = p[1].code
-    const_place = get_const(const=success.offset,type="long")
+    const_place = get_const(const=success.offset-success.width,type="long")
     tmp,code = get_opcode(op="long+",place1=p[1].place,place2=const_place,type="long")
     p[0].code += [code]
     p[0].place = "load$"+tmp
@@ -1119,6 +1119,13 @@ def p_auto_declarator(p):
         Errors(
                 errorType='DeclarationError',
                 errorText="cannot declare auto variable with array",
+                token_object= p.slice[1]
+        )
+        return
+    if p[3].type.class_type == "FunctionType":
+        Errors(
+                errorType='DeclarationError',
+                errorText="cannot declare auto variable with function",
                 token_object= p.slice[1]
         )
         return
@@ -1769,6 +1776,11 @@ def p_error(t):
         print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
     exit(-1)
 
+def get_grammar(source_code,debug=1):
+    parser = yacc.yacc(debug=debug)
+    lexer.lexer.filename = source_code
+    result = parser.parse(source_code, lexer = lexer.lexer)
+    return result
 
 
 def main():

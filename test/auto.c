@@ -1,4 +1,4 @@
-// auto variable
+// auto variable support basic,pointer,structure type
 // sizeof working
 int printf(char s[20],int a);
 int printf1(char s[20],int a,int b);
@@ -28,7 +28,7 @@ int main(){
     struct A a1;
     a1.a = 2;
     a1.b=4;
-    auto f = a1;
+    auto f = a1; //( = also support struct type)
     // struct of size 16
     printf("size %ld\n",sizeof(f));
     

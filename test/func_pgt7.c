@@ -1,4 +1,5 @@
 //function with grater than 7 parameters
+// support for large expression
 
 void printfi(char a[200], int b);
 void printff(char a[200], float b);
