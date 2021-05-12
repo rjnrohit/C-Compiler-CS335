@@ -19,5 +19,4 @@ int main(){
     // float size of 4
     printf("size %ld\n",sizeof(d));
     printf2("a:%c b:%ld c:%ld d:%f\n",a,b,c,d);
-
 }

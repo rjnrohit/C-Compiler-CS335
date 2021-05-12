@@ -1,3 +1,6 @@
+// supprot for global variables and declaring with constant value
+// support global scope resolution 
+
 // constant folding
 // implemented constant folding optimization
 // where most of the constant expression are evaluated ares resolved at run time and no extra memory and register is used
@@ -7,6 +10,7 @@
 // constant folding is handle in binary operator,unary operator and ternary operator
 // also handled for typecaseing if float a = 5*3 then only fconst@15 is allocated
 // created special place for this (fconst@value , lconst@value, scont@value)
+// constant folding also helps in declaring variable with some expression using only constant (3*5+2)
 // maintaining alloc list
 
 // show 3ac and asm file
@@ -14,9 +18,13 @@
 int printf(char s[20],int a);
 int printf1(char s[20],float a);
 
+int a = 2*3+5/2;
+
 int main(){
+    printf("global: %ld\n",a);
     int a = 2*3.1+5/2-1+21+(1<3);
-    printf("%ld\n",a);
+    printf("local: %ld\n",a);
+    printf("global using scope resolution: %ld\n",::a);
     a = 2*3.2;
     printf("%ld\n",a);
     float b = 3*11;

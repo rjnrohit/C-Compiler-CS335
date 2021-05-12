@@ -204,6 +204,7 @@ def p_func_rparen_2(p):
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
+                       | COLON COLON IDENTIFIER
                        | INT_CONSTANT
                        | HEX_CONSTANT
                        | OCTAL_CONSTANT
@@ -216,6 +217,18 @@ def p_primary_expression(p):
                        | FALSE
                        | NULL
     '''
+    if p[1] == ":":
+        success = sym_table._look_up(name=p[3],token_object=p.slice[-1])
+        if success:
+                p[0] = Node(name="id",value="global: "+p[3],type=success.type)
+                p[0].place = p[3]+"|"+"global"
+                if success.type.class_type == "PointerType" and success.type.is_array == True:
+                    tmp = get_newtmp()
+                    p[0].code += [gen(op="addr",place1=p[0].place,place3=tmp,code=tmp+" = "+"addr("+p[0].place+")")]
+                    p[0].place = tmp
+        else:
+            p[0] = Node(name="id",type='error')
+        return
     if len(p) == 2:
         if p.slice[-1].type == "IDENTIFIER":
             #looking for id
