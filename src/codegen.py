@@ -223,28 +223,27 @@ def add_data():
     code += add_init_global_variables()
     return code
 
-def add_start(gcode):
+def add_start():
     code = ['global _start']
     code += ['_start:']
     code += ['mov r12,  [rsp]']     #argc
     code += ['lea r13, [rsp+8]']    #starting address of argv
-
-    assert not gcode, "Not supported exp outside functions"
-
     code += ['mov rdi, r12']
     code += ['mov rsi, r13']
     code += ['call main']
     code += ['end:']
-    code += ['call exit']
-    code += [';mov rax, SYS_exit ; Call code for exit']
-    code += [';mov rdi, EXIT_SUCCESS ; Exit program with success']
-    code += [';syscall']
+    code += [';call exit']
+    code += ['mov rax, SYS_exit ; Call code for exit']
+    code += ['mov rdi, EXIT_SUCCESS ; Exit program with success']
+    code += ['syscall']
 
     return code
 
-def add_text(gcode, func_codes):
+def add_text(stdc, func_codes):
     code = ['section .text']
-    #code += add_start(gcode)
+    
+    if stdc:
+        code += add_start()
     
     for func in func_codes:
         code += add_func_code(func)
@@ -1128,7 +1127,7 @@ def add_extern():
 
     
 
-def generate(tac_code):
+def generate(tac_code, stdc):
     func_name =""
     gcode = []
     funcs =[]
@@ -1160,13 +1159,13 @@ def generate(tac_code):
     code += add_bss()
     code += [';add extern symbols']
     code += add_extern()
-    code += add_text(gcode, funcs)
+    code += add_text(stdc, funcs)
 
     return code
 
 
 def print_asm(tac_code,file="temp.asm",stdc=None):
-    code = generate(tac_code)
+    code = generate(tac_code, stdc)
     f = open(file, 'w')
     for string in code:
         print(string, file = f)
