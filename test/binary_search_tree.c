@@ -1,6 +1,7 @@
 //binary search tree with dynamic memory allocation
 //sort given inputs using BST
 // return type pointer working
+// padding for malloc (inbuilt)
 struct node {
     int data;
     struct node* left;

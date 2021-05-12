@@ -31,7 +31,7 @@ positional arguments:
 optional arguments:
   -h, --help   show this help message and exit
   -o O         output file name ,default 'a.out'
-  -f F         name of file for additional files default 'a'
+  -f F         name of file for additional files, default 'a'
   -c           output object file
   -d           output assembly
   -a           output ast

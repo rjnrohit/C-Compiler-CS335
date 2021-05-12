@@ -17,16 +17,16 @@ def main():
     #read source code provided by user
     arg_parser = argparse.ArgumentParser(description="C compiler for x86_64")
     arg_parser.add_argument('source_code',help="location of source code file")
-    arg_parser.add_argument('-o',help="output file name \{default a.out\}", default="a.out")
-    arg_parser.add_argument('-f',help="name of file for additional files \{default a\}",default="a")
+    arg_parser.add_argument('-o',help="output file name, \{default a.out\}", default="a.out")
+    arg_parser.add_argument('-f',help="name of file for additional files, \{default a\}",default="a")
     arg_parser.add_argument('-c',action='store_true',help="output object file")
     arg_parser.add_argument('-d',action='store_true',help="output assembly")
     arg_parser.add_argument('-a',action='store_true',help="output ast")
     arg_parser.add_argument('-s',action='store_true',help="output symbol table")
     arg_parser.add_argument('-t',action='store_true',help="output 3 address code")
     arg_parser.add_argument('-l',action='store_true',help="output lexeme table")
-    arg_parser.add_argument('-stdc',action='store_true',help="linker method")
-    arg_parser.add_argument('-n',action="store_false",help="only create till asm")
+    arg_parser.add_argument('-stdc',action='store_true',help="linker method, if specified it'll uses custom elf entry else from standard X86-64-linux.so")
+    arg_parser.add_argument('-n',action="store_false",help="only create till asm, , do not create executable")
     args = arg_parser.parse_args()
 
     try:
@@ -68,7 +68,7 @@ def main():
         Graph.draw(file_name+'.png', format='png')
     # symbol table
     if args.s:
-        print_csv(sym_table=sym_table,file_name=file_name+".csv")
+        print_csv(sym_table=sym_table,filename=file_name+".csv")
     # 3AC
     if args.t:
         print_code(tac_code,filename =file_name+".3ac")

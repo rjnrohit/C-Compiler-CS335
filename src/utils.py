@@ -50,6 +50,12 @@ def draw_ast(node):
 
     return G
 
+def add_backslash(string):
+    s = string
+    s = string.replace("\n","\\n")
+    s = s.replace("\t","\\t")
+    return s
+
 def print_csv(sym_table =None , filename = None):
     queue = [sym_table]
     csv_file = open(filename,'w', newline='')
@@ -83,7 +89,7 @@ def print_csv_sym_table(sym_table, writer):
         if entry_key == 'return':
             continue
         #print(sym_table.table[entry_key].name, sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].width)
-        writer.writerow([sym_table.table[entry_key].name, sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].offset + sym_table.base,sym_table.table[entry_key].width])
+        writer.writerow([add_backslash(sym_table.table[entry_key].name), sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].offset + sym_table.base,sym_table.table[entry_key].width])
 
 # csv_file.close()
 
@@ -91,4 +97,4 @@ def print_code(code_list, filename):
     file = open(filename, 'w')
     for obj in code_list:
         if obj.code:
-            print(obj.code,file = file)
+            print(add_backslash(obj.code),file = file)

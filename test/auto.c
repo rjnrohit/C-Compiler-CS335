@@ -3,6 +3,7 @@
 int printf(char s[20],int a);
 int printf1(char s[20],int a,int b);
 int printf2(char s[20],int a,int b,int c,float d,int e);
+
 struct A{
     int a;
     int b;
