@@ -49,7 +49,7 @@ def main():
     if args.n: 
         print_asm(tac_code,stdc=args.stdc)
         asm_file = "temp.asm"
-        os.system('yasm -g dwarf2 -f elf64 temp.asm')
+        os.system('yasm -g dwarf2 -f elf64 temp.asm 2> temp')
         os.system('touch temp')
         if args.c:
             os.system("cp temp.o "+file_name+".o")
