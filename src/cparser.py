@@ -1436,7 +1436,8 @@ def p_labeled_statement(p):
 
         p[0] = Node("case",children=[p[2],p[4]],type="ok")
         p[0].data['expr'] = p[2]
-        const_use(p[2].place)
+        if "const@" in p[2].place:
+            const_use(p[2].place)
         p[0].data['stmt'] = p[4]
         p[0].data['token'] = p.slice[1]
     else:

@@ -18,21 +18,20 @@
 int printf(char s[20],int a);
 int printf1(char s[20],float a);
 
-int a = 2*3+5/2;
-int arr[10];
+int a = 2*3+5/2; //value 8
 
 int main(){
     printf("global: %ld\n",a);
-    int a = 2*3.1+5/2-1+21+(1<3);
+    int a = 2*3.1+5/2-1+21+(1<3); //value 29
     printf("local: %ld\n",a);
     printf("global using scope resolution: %ld\n",::a);
-    a = 2*3.2;
+    a = 2*3.2; //value 6 (const of 6.4 not created)
     printf("%ld\n",a);
-    float b = 3*11;
+    float b = 3*11; //value 33.0 (const of 33 not created)
     printf1("%f\n",b);
-    bool c = 23*10+(5&&2);
+    bool c = 23*10+(5&&2); //only const of 1 used
     printf("%ld\n",c);
-    int d = (4%2)?100:200;
+    int d = 4%2?100:200; //only const 200
     printf("%ld\n",d);
 
 }
