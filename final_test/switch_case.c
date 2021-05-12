@@ -1,3 +1,6 @@
+// switch case can use with variable, expression
+// break in switch case
+
 int printf(char s[50]);
 int printf1(char s[50],int a);
 

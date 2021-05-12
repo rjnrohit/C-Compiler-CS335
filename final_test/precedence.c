@@ -1,3 +1,5 @@
+// checking precedence of operator
+// diff b/w postfix and prefix ++
 int printf(char s[20],int a);
 int printf1(char s[20]);
 int scanf(char s[20],int *a);
@@ -12,5 +14,10 @@ int main(){
     printf("%ld\n",d/c*a);
     // value should be 13
     printf("%ld\n",a+b*b-a/b%a);
-
+    // difference b/w postfix and prefix ++
+    a = 1;
+    // output 1
+    printf("%ld\n",a++);
+    // output 3
+    printf("%ld\n",++a);
 }

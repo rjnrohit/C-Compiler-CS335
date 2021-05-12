@@ -10,7 +10,7 @@
 // constant folding is handle in binary operator,unary operator and ternary operator
 // also handled for typecaseing if float a = 5*3 then only fconst@15 is allocated
 // created special place for this (fconst@value , lconst@value, scont@value)
-// constant folding also helps in declaring variable with some expression using only constant (3*5+2)
+// constant folding also helps in declaring global variable with some expression using only constant (3*5+2)
 // maintaining alloc list
 
 // show 3ac and asm file
