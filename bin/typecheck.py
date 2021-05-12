@@ -1,6 +1,7 @@
 from structure import Errors, Node
 from structure import sym_table, BasicType, FunctionType, PointerType, Type
 from threeaddr import *
+import copy
          
 
 #multiplication, division, modulus
@@ -17,32 +18,47 @@ def type_check_unary(node1,op,token,is_typename=False):
     if (op == "++" or op == "--"):
         if const:
             error_const = True
-        elif node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
+        elif (node1.type.class_type == "BasicType" and node1.type.type in allowed_base) or node1.type.class_type == "PointerType":
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
-            node.code = node1.code
-            const_place = get_const(const=1,type=node1.type,use=True)
-            node.code += [gen(op=node1.type.stype+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
             node.place = node1.place
+            const_place = get_const(const=1,type=BasicType("long"))
+            node_1 = Node(type=BasicType("long"))
+            node_1.place = const_place
+            node_assign = type_check_assign_op(node1,node_1,op=op[0]+"=",token=token)
+            if node_assign.type == "error":
+                return Node(type="error")
+            node.code = node_assign.code
             return node
-        elif node1.type.class_type == "PointerType":
-            node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
-            node.code = node1.code
-            width = node1.type.type_size
-            const_place = get_const(const=width,type="long",use=True)
-            node.code += [gen(op="long"+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
-            node.place = node1.place
-            return node
+        # elif node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
+        #     node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+        #     node.code = node1.code
+        #     const_place = get_const(const=1,type=node1.type,use=True)
+        #     node.code += [gen(op=node1.type.stype+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
+        #     node.place = node1.place
+        #     return node
+        # elif node1.type.class_type == "PointerType":
+        #     node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+        #     node.code = node1.code
+        #     width = node1.type.type_size
+        #     const_place = get_const(const=width,type="long",use=True)
+        #     node.code += [gen(op="long"+op[0],place1=node1.place,place2=const_place,place3=node1.place)]
+        #     node.place = node1.place
+        #     return node
         else: error = True
     elif op == "+" or op == "-":
+        node1 = load_place(node1)
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base:
             node =  Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
+            if op == "+":
+                node.place = node1.place
+                return node
             if "const@" in node1.place:
                 neg = -1 if op == "-" else 1
                 node.place = get_const(neg*get_const_value(node1.place),type=node1.type)
                 return node
             node.code = node1.code
             node.place = get_newtmp(type=node1.type)
-            node.code += [gen(op=node1.type.stype+op,place1=node1.place,place3=node.place)]
+            node.code += [gen(op="u"+node1.type.stype+op,place1=node1.place,place3=node.place)]
             return node
         error = True
     elif op == "&":
@@ -51,10 +67,14 @@ def type_check_unary(node1,op,token,is_typename=False):
         else:
             node =  Node(name="unary_op",value=op,children=[node1],type=PointerType(node1.type))
             node.code = node1.code
+            if "load$" in node1.place:
+                node.place = node1.place.split("load$")[-1]
+                return node
             node.place = get_newtmp()
             node.code += [gen(op="addr",place1=node1.place,place3=node.place,code=node.place+" = "+"addr("+node1.place+")")]
             return node
     elif op == "*":
+        node1 = load_place(node1)
         if const:
             error_const = True
         elif node1.type.class_type == "PointerType":
@@ -62,8 +82,9 @@ def type_check_unary(node1,op,token,is_typename=False):
             if node.type.class_type == "PointerType":
                 node.type.array_size = node1.type.array_size[1:]
             node.code = node1.code
-            node.place = get_newtmp(node1.type.type)
-            node.code += [gen(op="load",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]
+            # node.place = get_newtmp(node1.type.type)
+            # node.code += [gen(op="load",place1=node1.place,place3=node.place,code=node.place+" = "+"load("+node1.place+")")]
+            node.place = "load$"+node1.place
             return node
         else:
             Errors(
@@ -73,6 +94,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             )
             return Node(type="error")
     elif op == "~":
+        node1 = load_place(node1)
         if node1.type.class_type == "BasicType" and node1.type.type in allowed_base_1:
             node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=node1.type)
             if "const@" in node1.place:
@@ -84,6 +106,7 @@ def type_check_unary(node1,op,token,is_typename=False):
             return node
         error = True
     elif op == "!":
+        node1 = load_place(node1)
         if node1.type.is_convertible_to(BasicType('bool')):
             node = Node(name="unary_op",value=node1.type.stype+op,children=[node1],type=BasicType('bool'))
             if "const@" in node1.place:
@@ -93,14 +116,6 @@ def type_check_unary(node1,op,token,is_typename=False):
             node.code = node1.code
             node.place = get_newtmp(type=BasicType('bool'))
             node.code += [gen(op="not_bool",place1=node1.place,place3=node.place)]
-            # label1 = get_newlabel()
-            # label2 = get_newlabel()
-            # node.code += [gen(op="ifz",place1=node1.place,place2=label1)]
-            # node.code += [gen(op="=",place3=node.place,place1=get_const(1,'bool',True))]
-            # node.code += [gen("goto",place1=label2)]
-            # node.code += [gen("label",place1=label1)]
-            # node.code += [gen(op="=",place3=node.place,place1=get_const(0,'bool',True))]
-            # node.code += [gen("label",place1=label2)]
             return node
         error = True
     elif op == "sizeof":
@@ -375,10 +390,10 @@ def type_check_logical(node1,node2,op,token):
         node.code += [gen(op="ifz",place1=node1.place,place2=label1)]
         node.code += node2.code
         node.code += [gen(op="ifz",place1=node2.place,place2=label1)]
-        node.code += [gen(op="=",place1=get_const(1,type='bool',use=True),place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(1,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="goto",place1=label2)]
         node.code += [gen(op="label",place1=label1)]
-        node.code += [gen(op="=",place1=get_const(0,type='bool',use=True),place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(0,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="label",place1=label2)]
     else:
         if "const@" in node1.place and "const@" in node2.place:
@@ -396,10 +411,10 @@ def type_check_logical(node1,node2,op,token):
         node.code += [gen(op="ifnz",place1=node1.place,place2=label1)]
         node.code += node2.code
         node.code += [gen(op="ifnz",place1=node2.place,place2=label1)]
-        node.code += [gen(op="=",place1="get_const(0,type='bool',use=True)",place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(0,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="goto",place1=label2)]
         node.code += [gen(op="label",place1=label1)]
-        node.code += [gen(op="=",place1=get_const(1,type='bool',use=True),place3=node.place)]
+        node.code += [gen(op="bool=",place1=get_const(1,type='bool',use=True),place3=node.place)]
         node.code += [gen(op="label",place1=label2)]
     return node
 
@@ -421,14 +436,26 @@ def type_check_assign(node1,node2,token):
                 token_object= token
         )
         return Node(type="error")
+    if node1.type.class_type == "PointerType" and node1.type.is_array == True:
+        Errors(
+                errorType='TypeError',
+                errorText="cannot asign to array",
+                token_object= token
+        )
+        return Node(type="error")
     if node2.type.is_convertible_to(node1.type):
         node2 = typecast(node2,type=node1.type)
         node = Node("binary_op",node1.type.stype+"=",children = [node1,node2],type=node1.type)
         node.code = node1.code + node2.code
-        node.code += [gen(op="=",place1=node2.place,place3=node1.place)]
+        if "load$" in node1.place:
+            place = node1.place.split("load$")[-1]
+            node.code += [gen(op=get_type(node2)+"_eq",place1=node2.place,place3=place)]
+        else:
+            node.code += [gen(op=get_type(node2)+"=",place1=node2.place,place3=node1.place)]
         if "const@" in node2.place:
             const_use(node2.place)
         node.place = node1.place
+        node = load_place(node)
         return node
     Errors(
         errorType='TypeError',
@@ -444,6 +471,9 @@ def type_check_assign_op(node1,node2,op,token):
     if op == "=":
         return type_check_assign(node1,node2,token)
     op = op[:-1]
+    eq_node = copy.copy(node1)
+    eq_node.code = list()
+    node1 = load_place(node1)
     if op == "+" or op == "-":
         node = type_check_add(node1,node2,op,token)
     elif op == "/" or op == "*":
@@ -459,17 +489,20 @@ def type_check_assign_op(node1,node2,op,token):
             token_object= token
         )
         return Node(type="error")
-    return type_check_assign(node1,node,token)
+    return type_check_assign(eq_node,node,token)
     
 
-def typecast(node1,type,token=None):
+def typecast(node1,type,token=None,hard=False):
+    node1 = load_place(node1)
     assert isinstance(type,Type), "not of class Type"
-    assert type.class_type in {"BasicType","PointerType"}, "not valid type"
+    assert type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
     # assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
     # assert "sconst@" not in node1.place, "string in typecast"
-    if str(node1.type) == str(type):
+    if node1.type.stype == type.stype:
+        if hard: node1.type = type
         return node1
     elif "sconst@" in node1.place:
+        # print(str(node1.type.stype),str(type.stype))
         if token:
             Errors(
                 errorType='TypeError',
@@ -493,6 +526,8 @@ def typecast(node1,type,token=None):
             type2 = node1.type.type
         
         if type1 == type2:
+            return node
+        if type1 in {"long","int"} and type2 in {"long","int"}:
             return node
         if "const@" in node1.place:
             node.place = get_const(const=get_const_value(node1.place),type=BasicType(type1))
@@ -520,3 +555,28 @@ def implicit_casting(node1,node2):
         else:
             new_node = typecast(node1,node2.type)
             return new_node,node2,node2.type
+
+def get_type(node):
+    assert node.type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
+    if "sconst@" in node.place:
+        return "str"
+    if node.type.class_type == "StructType":
+        return node.type.stype
+    if node.type.class_type == "PointerType":
+        return "long"
+    return node.type.type
+
+def load_place(node):
+    if node.type == "error":
+        return node
+    if "load$" not in node.place:
+        return node
+    if node.type.class_type == "PointerType" and node.type.is_array == True:
+        node.place = node.place.split("load$")[-1]
+        return node
+    tmp = get_newtmp(type=node.type)
+    place = node.place.split("load$")[-1]
+    # print(tmp)
+    node.code += [gen(op="load",place1=place,place3=tmp,code=tmp + " = " + "load("+place+")")]
+    node.place = tmp
+    return node

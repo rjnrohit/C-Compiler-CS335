@@ -1776,9 +1776,9 @@ def p_error(t):
         print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
     exit(-1)
 
-def get_grammar(source_code,debug=1):
+def get_grammar(code_file,source_code,debug=1):
     parser = yacc.yacc(debug=debug)
-    lexer.lexer.filename = source_code
+    lexer.lexer.filename = code_file
     result = parser.parse(source_code, lexer = lexer.lexer)
     return result
 

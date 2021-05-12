@@ -279,7 +279,7 @@ def find_column(token, input):
 lexer = lex.lex()
 ###################################
 
-def print_lexeme(code):
+def print_lexeme(code,file_name):
     
     lexer.input(code)                   #read input from file
     print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))

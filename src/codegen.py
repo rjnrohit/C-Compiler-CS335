@@ -1165,9 +1165,9 @@ def generate(tac_code):
     return code
 
 
-def print_asm(tac_code):
+def print_asm(tac_code,file="temp.asm",stdc=None):
     code = generate(tac_code)
-    f = open('temp.asm', 'w')
+    f = open(file, 'w')
     for string in code:
         print(string, file = f)
         
