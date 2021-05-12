@@ -4,7 +4,7 @@
 void printfi(char a[200], int b);
 void printff(char a[200], float b);
 
-//functions with 28 parameter
+//functions with 21 parameter
 float many_sum(int a,int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, float l, float m, float n, float o, float p, float q, float r , float s, float t, float u){
     float sum =  a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u;
     printfi("a:%ld\n", a);

@@ -46,5 +46,6 @@ int main() {
     }else{
         puts("string1 and string2 are not same");
     }
+    printf("%ld\n",atol("1234"));
     return 0;
 }

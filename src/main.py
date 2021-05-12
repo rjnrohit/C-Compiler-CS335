@@ -46,8 +46,11 @@ def main():
     tac_code = remove_none(tac_code)
     #to remove redundant labels
     tac_code = remove_label(tac_code)
+    print_asm(tac_code,stdc=args.stdc)
+    #assembly
+    if args.d:
+        os.system("cp temp.asm {}.asm".format(file_name))
     if args.n: 
-        print_asm(tac_code,stdc=args.stdc)
         asm_file = "temp.asm"
         os.system('yasm -g dwarf2 -f elf64 temp.asm 2> temp')
         os.system('touch temp')
@@ -58,10 +61,9 @@ def main():
         else:
             os.system("ld -o {} -dynamic-linker /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/crt1.o /usr/lib/x86_64-linux-gnu/crti.o -lc temp.o /usr/lib/x86_64-linux-gnu/crtn.o -lm 2> temp".format(args.o))
         os.system("rm -rf temp.asm temp.o temp")
+    else:
+        os.system("rm -rf temp.asm")
         
-    #assembly
-    if args.d:
-        print_asm(tac_code,file_name+".asm",args.stdc)
     # ast
     if args.a:
         Graph = draw_ast(grammar)
