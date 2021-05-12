@@ -671,6 +671,10 @@ def add_typecast_code(gen_obj, not_bool = False):
     width = typ.width
     get_size = size_type[width]
     if 'to_float' in gen_obj.op:
+        pwidth = get_var_type(gen_obj.place1).width
+        assert pwidth <=8, "typecast variable not possible for >8 size"
+        if pwidth <4:
+            code += ["movsx {},{}".format(temp_regs[0][4], temp_regs[0][pwidth])]
         code += ["cvtsi2ss {},{}".format('xmm0', temp_regs[0][4])]
         code += ["movss " + get_size + "[" + addr+"], xmm0"]
     elif 'float_to' in gen_obj.op:
@@ -696,7 +700,7 @@ def add_typecast_code(gen_obj, not_bool = False):
     else:
         pwidth = get_var_type(gen_obj.place1).width
         assert pwidth <=8, "typecast variable not possible for >8 size"
-        if pwidth != width:
+        if pwidth < width:
             if pwidth !=4:
                 code += ["movsx {},{}".format(temp_regs[0][width], temp_regs[0][pwidth])]
             else:
