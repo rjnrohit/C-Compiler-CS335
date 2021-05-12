@@ -281,15 +281,16 @@ lexer = lex.lex()
 
 def print_lexeme(code,file_name):
     
+    f = open(file_name, 'w')
     lexer.input(code)                   #read input from file
-    print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"))
+    print('{:20s}  {:30s}  {:5s}  {:7s}'.format("Token","Lexeme","Line#","Column#"),file=f)
     for tok in lexer:
         if not tok:
             continue
         if tok.lexeme:
-            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,code))))
+            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.lexeme, str(tok.lineno), str(find_column(tok,code))),file=f)
         else:
-            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok,code))))
+            print('{:20s}  {:30s}  {:5s}  {:7s}'.format(tok.type,tok.value, str(tok.lineno), str(find_column(tok,code))),file=f)
 
 
 

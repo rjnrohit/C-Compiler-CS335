@@ -50,7 +50,7 @@ def main():
         print_asm(tac_code,stdc=args.stdc)
         asm_file = "temp.asm"
         os.system('yasm -g dwarf2 -f elf64 temp.asm')
-        if args.d:
+        if args.c:
             os.system("cp temp.o "+file_name+".o")
         if args.stdc:
             os.system("ld -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o {} temp.o -lc -lm".format(args.o))
