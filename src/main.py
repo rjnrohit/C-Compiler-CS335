@@ -50,13 +50,14 @@ def main():
         print_asm(tac_code,stdc=args.stdc)
         asm_file = "temp.asm"
         os.system('yasm -g dwarf2 -f elf64 temp.asm')
+        os.system('touch temp')
         if args.c:
             os.system("cp temp.o "+file_name+".o")
         if args.stdc:
-            os.system("ld -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o {} temp.o -lc -lm".format(args.o))
+            os.system("ld -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o {} temp.o -lc -lm 2> temp".format(args.o))
         else:
-            os.system("ld -o {} -dynamic-linker /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/crt1.o /usr/lib/x86_64-linux-gnu/crti.o -lc temp.o /usr/lib/x86_64-linux-gnu/crtn.o -lm".format(args.o))
-        os.system("rm -rf temp.asm temp.o")
+            os.system("ld -o {} -dynamic-linker /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/crt1.o /usr/lib/x86_64-linux-gnu/crti.o -lc temp.o /usr/lib/x86_64-linux-gnu/crtn.o -lm 2> temp".format(args.o))
+        os.system("rm -rf temp.asm temp.o temp")
         
     #assembly
     if args.d:
