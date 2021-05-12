@@ -47,11 +47,11 @@ gp_regsf = ['xmm' + str(i) for i in range(16)]
 
 arg_regs = [
         {8:'rdi', 4:'edi',2:'di', 1:'dil'},
-        {8:'rsi', 4:'esi',2:'si', 2:'sil'},
-        {8:'rdx', 4:'edx',2:'dx', 2:'dl'},
-        {8:'rcx', 4:'ecx',2:'cx', 2:'cl'},
-        {8:'r8', 4:'r8d',2:'r8w', 2:'r8b'},
-        {8:'r9', 4:'r9d',2:'r9w', 2:'r9b'}
+        {8:'rsi', 4:'esi',2:'si', 1:'sil'},
+        {8:'rdx', 4:'edx',2:'dx', 1:'dl'},
+        {8:'rcx', 4:'ecx',2:'cx', 1:'cl'},
+        {8:'r8', 4:'r8d',2:'r8w', 1:'r8b'},
+        {8:'r9', 4:'r9d',2:'r9w', 1:'r9b'}
     ]
 temp_regs= [
         {8:'r10', 4:'r10d',2:'r10w', 1:'r10b'},

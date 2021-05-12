@@ -605,7 +605,7 @@ def p_postfix_expression_4(p):
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     p[0].code = p[1].code
-    const_place = get_const(const=success.offset,type="long")
+    const_place = get_const(const=success.offset-success.width,type="long")
     tmp,code = get_opcode(op="long+",place1=p[1].place,place2=const_place,type="long")
     p[0].code += [code]
     p[0].place = "load$"+tmp
