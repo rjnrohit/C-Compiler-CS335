@@ -1,0 +1,1 @@
+alias kurkure="python3 src/main.py"
