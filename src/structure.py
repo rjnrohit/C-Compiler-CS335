@@ -11,7 +11,7 @@ class Node:
         Node.nodes.append(self)
         self.type = type #type of node
         self.name = name #name of node (or class of node)
-        self.constan = constant
+        self.constant = constant
 
         self.place = ""
         self.code = []
@@ -63,7 +63,7 @@ class Node:
 
 class Type:
     size_dict = {
-        'int':4,
+        'int':8,
         'long':8,
         'char':1,
         'float':4,
@@ -101,6 +101,9 @@ class Type:
     def update_width(self):
         return self._width
     
+    def is_convertible_to(self, t):
+        return False
+
     @property
     def width(self):
         return self.update_width()
@@ -150,7 +153,7 @@ class BasicType(Type):
             return False
         
         if t.type == 'void':
-            return True
+            return False
         
         if self.type == 'void':
             return False
@@ -172,18 +175,22 @@ class PointerType(Type):
         assert not isinstance(array_size,str), "array_size can't be string, provided: " + str(array_size)
         self.array_size = array_size
         self.array_type = array_type
+        self.is_array = True if array_type else False
         self._width = self.update_width()
         self.type_size = 8 if self.type.class_type =="PointerType" else type.width
 
     def __str__(self) -> str:
         res = "pointer of (" + str(self.type) + ")"
+        if self.is_array:
+            res += ", array of:" + str(self.array_type)
         return res
     
     def __repr__(self) -> str:
         return self.__str__()
     
     def update_width(self):
-        if len(self.array_size) == 0:
+        # if len(self.array_size) == 0:
+        if self.is_array == False or len(self.array_size) == 0:
             return 8
         matrix_size = 1
         # print(self.array_size)
@@ -239,15 +246,13 @@ class StructType(Type):
 
     def is_same(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        if t.class_type == 'StructType':
-            if t.name == self.name and self.symbol_table == t.symbol_table:
-                return True
+        if t.class_type == 'StructType' and t.name == self.name:
+            return True
         return False
     
     def is_convertible_to(self, t):
         assert isinstance(t, Type), "please pass Type object"
-        # return self.is_same(t)
-        return False
+        return self.is_same(t)
 
 class FunctionType(Type):
 
@@ -366,7 +371,7 @@ class SymbolTable:
         else:
             self.name = 'scope@' + str(self.id)
 
-        SymbolTable.symbol_table_dict[id] = self
+        SymbolTable.symbol_table_dict[self.name] = self
 
         #TODO add dict for every type class
 
@@ -405,7 +410,7 @@ class SymbolTable:
 
         if type.class_type != "FunctionType":
             #update offset
-            self._update_offset(self.table[name])
+            self.table[name].offset = self._update_offset(self.table[name])
             
             #update width
             self._update_width(self.table[name])
@@ -519,10 +524,13 @@ class SymbolTable:
             name = name,
             scope_type = scope_type,
             parent = SymbolTable.curr_symbol_table, 
-            base = SymbolTable.curr_symbol_table.offset,
+            base = SymbolTable.curr_symbol_table.offset + SymbolTable.curr_symbol_table.base,
             unused = unused
             )
-        #print('structure.py 446 start scope request no: ', new_symbol_table.id, new_symbol_table.name, self.curr_symbol_table.id)
+        
+        if name:
+            new_symbol_table.base = 0
+
         if not unused:
             self.add_scope(symbol_table = new_symbol_table)
 
@@ -533,6 +541,9 @@ class SymbolTable:
     def close_scope(self):
         SymbolTable.next_symbol_table = SymbolTable.curr_symbol_table
         SymbolTable.curr_symbol_table = SymbolTable.curr_symbol_table.parent
+
+        if 'scope@' in SymbolTable.next_symbol_table.name:
+            SymbolTable.curr_symbol_table.offset += SymbolTable.next_symbol_table.width
 
         return SymbolTable.curr_symbol_table
     
@@ -609,10 +620,15 @@ class Errors:
 
 
     def __str__(self):
-        res = self.filename + " "
-        res += "at line no: "+ str(self.lineno)
-        res += ", "+self.errorType +": " + self.errorText
-        return res
+        if self.token_object:
+            res = self.filename + " "
+            res += "at line no: "+ str(self.lineno)+", "
+            res = "\033[94m {}\033[00m".format(res)
+            res += "\033[91m {}\033[00m".format(self.errorType +": ")
+            res += self.errorText
+            return res
+        return "\033[91m {}\033[00m".format(self.errorType +": ")+self.errorText
+
 
 def getMutliPointerType(type = None, level = 0):
     levObj = PointerType(type = type)

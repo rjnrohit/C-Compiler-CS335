@@ -8,6 +8,7 @@ import ply.yacc as yacc
 import clexer as lexer
 import argparse
 import pygraphviz as pgv
+import copy
 
 
 from utils import draw_ast
@@ -18,6 +19,7 @@ from structure import getMutliPointerType
 from typecheck import *
 from utils import print_csv, print_code
 from threeaddr import *
+from codegen import print_asm
 #####################Grammar section #################
 # print(temp_cnt)
 
@@ -158,6 +160,7 @@ def p_func_rparen_1(p):
             #removing sym table of decl
             success.type.symbol_table.unused = True
             success.type.symbol_table = sym_table.curr_symbol_table
+            success.type.defined = True
     else:
         sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
@@ -196,9 +199,12 @@ def p_func_rparen_2(p):
     # sym_table.curr_symbol_table.parent._add_entry(name=func_name,type=func_type,token_object=token)
 
 
+
+
 def p_primary_expression(p):
     '''
     primary_expression : IDENTIFIER
+                       | COLON COLON IDENTIFIER
                        | INT_CONSTANT
                        | HEX_CONSTANT
                        | OCTAL_CONSTANT
@@ -211,6 +217,18 @@ def p_primary_expression(p):
                        | FALSE
                        | NULL
     '''
+    if p[1] == ":":
+        success = sym_table._look_up(name=p[3],token_object=p.slice[-1])
+        if success:
+                p[0] = Node(name="id",value="global: "+p[3],type=success.type)
+                p[0].place = p[3]+"|"+"global"
+                if success.type.class_type == "PointerType" and success.type.is_array == True:
+                    tmp = get_newtmp()
+                    p[0].code += [gen(op="addr",place1=p[0].place,place3=tmp,code=tmp+" = "+"addr("+p[0].place+")")]
+                    p[0].place = tmp
+        else:
+            p[0] = Node(name="id",type='error')
+        return
     if len(p) == 2:
         if p.slice[-1].type == "IDENTIFIER":
             #looking for id
@@ -218,6 +236,10 @@ def p_primary_expression(p):
             if success:
                 p[0] = Node(name="id",value=p[1],type=success.type)
                 p[0].place = p[1]+"|"+success.symbol_table.name
+                if success.type.class_type == "PointerType" and success.type.is_array == True:
+                    tmp = get_newtmp()
+                    p[0].code += [gen(op="addr",place1=p[0].place,place3=tmp,code=tmp+" = "+"addr("+p[0].place+")")]
+                    p[0].place = tmp
             else:
                 p[0] = Node(name="id",type='error')
             return
@@ -227,28 +249,32 @@ def p_primary_expression(p):
                 p[0] = Node(name="constant",value=p[1],type=BasicType('int'))
             else:
                 p[0] = Node(name="constant",value=p[1],type=BasicType('long'))
+            p[0].constant = p[1]
                 
         
         elif p.slice[-1].type in ["EXPONENT_CONSTANT","REAL_CONSTANT"]:
             p[0] = Node(name="constant",value=p[1],type=BasicType('float'))
+            p[0].constant = p[1]
         
         elif p.slice[-1].type == "CHAR_CONSTANT":
             p[0] = Node(name="constant",value=p[1],type=BasicType('char'))
+            p[0].constant = ord(remove_backslash(p[1][1]))
 
         elif p.slice[-1].type == "STR_CONSTANT":
-            str_type = PointerType(type=BasicType('char'),array_size=[len(p[1])],array_type=BasicType('char'))
+            string = remove_backslash(p[1][1:-1])
+            str_type = PointerType(type=BasicType('char'),array_size=[len(string)+1],array_type=BasicType('char'))
             p[0] = Node(name="constant",value=p[1],type=str_type)
+            #string is assigned as tmp not const
+            p[0].place = get_str_const(string)
+            return
         elif p.slice[-1].type == "NULL":
             p[0] = Node(name="constant",value=p[1],type=PointerType(type=Type()))
+            p[0].constant = 0
         else:
             p[0] = Node(name="constant",value=p[1],type=BasicType('bool'))
-        p[0].constant = p[0].value
-        if p[0].constant == "false" or p[0].constant == "NULL":
-            p[0].constant = 0
-        elif p[0].constant == "true":
-            p[0].constant = 1
-        p[0].place = get_newtmp(type=p[0].type)
-        p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=str(p[0].constant),place3=p[0].place)]
+            p[0].constant = 1 if p[1] == "true" else 0
+        p[0].place = get_const(const=p[0].constant,type=p[0].type)
+        # p[0].code = [gen(op="eqc_"+p[0].type.stype,place1=str(p[0].constant),place3=p[0].place)]
     
     else:
         p[0] = p[2]
@@ -264,24 +290,58 @@ def p_postfix_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        # p[1] = load_place(p[1])
         allowed_base = {'int','float','char','long'}
         allowed_class = {'PointerType'}
         if p[1].type == 'error':
             p[0] = p[1]
-        elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
+        elif 'const@' in p[1].place:
+            Errors(
+            errorType='TypeError',
+            errorText=p[2] + " not valid on constant",
+            token_object= p.slice[-1]
+            )
+            p[0] = Node(type="error")
+        elif (p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base) or p[1].type.class_type in allowed_class:
             p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
             p[0].place = get_newtmp(type=p[1].type)
-            p[0].code = p[1].code
-            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
-            p[0].code += [gen(op=str(p[1].type)+p[2][0]+"_c",place1=p[1].place,place2="1",place3=p[1].place)]
-        elif p[1].type.class_type in allowed_class:
-            p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
-            p[0].place = get_newtmp(type=p[1].type)
-            p[0].code = p[1].code
-            p[0].code += [gen(op="=",place1=p[1].place,place3=p[0].place)]
-            width = p[1].type.type_size
-            p[0].code += [gen(op="long"+p[2][0]+"_c",place1=p[1].place,place2=str(width),place3=p[1].place)]
-
+            # print(p[1].place+"1")
+            node_assign = type_check_assign(p[0],copy.copy(p[1]),token=p.slice[-1])
+            if node_assign.type == "error":
+                p[0] = Node(type="error")
+                return
+            # print(p[1].place+"1")
+            p[0].code = node_assign.code
+            const_place = get_const(const=1,type=BasicType("long"))
+            node_1 = Node(type=BasicType("long"))
+            node_1.place = const_place
+            p[1].code = list()
+            node_op = type_check_assign_op(p[1],node_1,op=p[2][0]+"=",token=p.slice[-1])
+            if node_op.type == "error":
+                p[0] = Node(type="error")
+                return
+            p[0].code += node_op.code
+            #print(p[0].code)
+        
+        # elif p[1].type.class_type == 'BasicType' and p[1].type.type in allowed_base:
+        #     p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+        #     p[0].place = get_newtmp(type=p[1].type)
+        #     p[0].code = p[1].code
+        #     p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
+        #     #print(p[0].code)
+        #     const_place = get_const(const=1,type=p[1].type,use=True)
+        #     #add type conversion
+        #     p[0].code += [gen(op=str(p[1].type)+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
+        #     #print(p[0].code)
+        # elif p[1].type.class_type in allowed_class:
+        #     p[0] = Node(name="unary_op",value=str(p[1].type)+': p'+p[2],children=[p[1]],type=p[1].type)
+        #     p[0].place = get_newtmp(type=p[1].type)
+        #     p[0].code = p[1].code
+        #     p[0].code += [gen(op=str(p[1].type)+"=",place1=p[1].place,place3=p[0].place)]
+        #     width = p[1].type.type_size
+        #     const_place = get_const(const=width,type="long",use=True)
+        #     p[0].code += [gen(op="long"+p[2][0],place1=p[1].place,place2=const_place,place3=p[1].place)]
+        #     #print(p[0].code)
         else:
             p[0] = p[1]
             p[0].type = 'error'
@@ -295,12 +355,22 @@ def p_postfix_expression(p):
 def p_postfix_expression_1(p):
     # Array ref
     ''' 
-    postfix_expression : postfix_expression L_SQBR expression R_SQBR
+    postfix_expression : postfix_expression L_SQBR constant_expression R_SQBR
     '''
+    # p[3] = load_place(p[3])
+    p[1] = load_place(p[1])
     allowed_class = {'BasicType'}
     allowd_base = {'int','long'}
     check1 = True
     check2 = True
+    if "const@" in p[1].place:
+        Errors(
+            errorType='TypeError',
+            errorText="array ref not valid on constant",
+            token_object= p.slice[-1]
+            )
+        p[0] = Node(type="error")
+        return
     if p[3].type == "error":
         check1 = False
         p[0] = Node(type="error")
@@ -330,17 +400,38 @@ def p_postfix_expression_1(p):
         #type_casting
         p[0] = Node(name="array_ref",value = "[]",type=p[1].type.type,children=[p[1],p[3]])
         p[0].code = p[1].code + p[3].code
+        #when pointer
         if len(p[1].type.array_size) == 0:
-            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=p[1].type.type_size,type="long")
+            const_place = get_const(p[1].type.type_size,type="long")
+            tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
+            p[0].code += [code]
+            tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
+            p[0].place = "load$"+tmp
+            p[0].code += [code]
+        #when array
         else:
             p[0].type.array_size = p[1].type.array_size[1:]
             width = 1
             for i in p[1].type.array_size[1:]:
                 width = width*i
             width = width*p[1].type.array_type.width
-            tmp,code = get_opcode(op="long*_c",place1=p[3].place,place2=width,type="long")
-        p[0].place = get_newtmp(BasicType("long"))
-        p[0].code += [code] + [gen(op="long+",place1=p[1].place,place2=tmp,place3=p[0].place)]
+            const_place = get_const(width,type="long")
+            tmp,code = get_opcode(op="long*",place1=p[3].place,place2=const_place,type="long")
+            p[0].code += [code]
+            # tmp1 = get_newtmp(BasicType("long"))
+            #addr of array
+            # if "load$" in p[1].place:
+            #     addr = p[1].place.split("$")[1]
+            # else:
+            #     addr = get_newtmp(BasicType("long"))
+            #     p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
+            # tmp,code = get_opcode(op="long+",place1=addr,place2=tmp,type="long")
+            tmp,code = get_opcode(op="long+",place1=p[1].place,place2=tmp,type="long")
+            if p[0].type.class_type == "PointerType" and p[0].type.is_array == True:
+                p[0].place = tmp
+            else:
+                p[0].place = "load$"+tmp
+            p[0].code += [code]
 
 
 
@@ -352,6 +443,7 @@ def p_postfix_expression_2(p):
                        | postfix_expression L_PAREN argument_expression_list R_PAREN
     
     '''
+    p[1] = load_place(p[1])
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
@@ -364,7 +456,7 @@ def p_postfix_expression_2(p):
             token_object= p.slice[-1]
         )
         return
-    
+
     param_list = p[1].type.param_list
     return_type = p[1].type.return_type
 
@@ -378,9 +470,9 @@ def p_postfix_expression_2(p):
             )
         else:
             p[0] = Node(name="func_call",type=return_type,children=[p[1]])
-            p[0].place = get_newtmp(type=return_type)
             p[0].code = p[1].code
-            p[0].code += [gen(op="func_call",place1=p[1].value,place3=p[0].place)]
+            p[0].place = get_newtmp(type=return_type) if return_type.stype != "void" else "None"
+            p[0].code += [gen(op="func_call",place1=p[1].value,place2 = list(),place3=p[0].place)]
     else:
         arg_list = p[3].children
         if len(arg_list) != len(param_list):
@@ -396,22 +488,32 @@ def p_postfix_expression_2(p):
         push_code = []
         pop_code = []
         for i in range(len(arg_list)):
+            if arg_list[i].type == "error" or param_list[i] == "error":
+                p[0] = Node(type="error")
+                return
             if arg_list[i].type.is_convertible_to(param_list[i]) == False:
                 p[0] = Node(type="error")
                 Errors(
                     errorType='TypeError',
-                    errorText="cannot convert "+arg_list[i].types.stype+" to "+param_list[i].stype,
+                    errorText="cannot convert "+arg_list[i].type.stype+" to "+param_list[i].stype,
                     token_object= p.slice[-1]
                 )
                 return
-            node = typecast(arg_list[i],param_list[i])
+            node = typecast(arg_list[i],param_list[i],p.slice[-1])
+            if "sconst@" in node.place:
+                tmp = get_newtmp(type=node.type)
+                node.code += [gen(op="str=",place1=node.place,place3=tmp)]
+                const_use(node.place,sconst=True)
+                node.place = tmp
             arg_places.append(node.place)
+            if "const@" in node.place:
+                const_use(node.place)
             code += node.code
             push_code += [gen(op = "push",place1=node.place,code="push "+node.place)]
             pop_code += [gen(op = "pop",place1=node.place,code="pop "+node.place)]
         
         p[0] = Node(name="func_call",type=return_type,children=[p[1],p[3]])
-        p[0].place = get_newtmp(type=return_type)
+        p[0].place = get_newtmp(type=return_type) if return_type.stype != "void" else "None"
         p[0].code = p[1].code+code+push_code + [gen(op="func_call",place1=p[1].value,place2=arg_places,place3=p[0].place)] + pop_code[::-1]
 
         
@@ -452,12 +554,19 @@ def p_postfix_expression_3(p):
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     p[0].code = p[1].code
-    tmp = get_newtmp()
-    p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
-    tmp1,code = get_opcode(op="long+_c",place1=tmp,place2=success.offset,type="long")
+    # tmp = get_newtmp()
+    # p[0].code += [gen(op="addr",place1=p[1].place,place3=tmp,code=tmp+" = "+"addr("+p[1].place+")")]
+    #addr of struct
+    if "load$" in p[1].place:
+        addr = p[1].place.split("$")[1]
+    else:
+        addr = get_newtmp()
+        p[0].code += [gen(op="addr",place1=p[1].place,place3=addr)]
+    # print(success.offset)
+    const_place = get_const(const=success.offset-success.width,type="long")
+    tmp1,code = get_opcode(op="long+",place1=addr,place2=const_place,type="long")
     p[0].code += [code]
-    p[0].code += [gen(op="*",place1=tmp1,place3=tmp1,code=tmp1+" = "+"load("+tmp1+")")]
-    p[0].place = tmp1
+    p[0].place = "load$"+tmp1
 
     
 
@@ -468,6 +577,7 @@ def p_postfix_expression_4(p):
     postfix_expression : postfix_expression ARROW IDENTIFIER
     
     '''
+    p[1] = load_place(p[1])
     if p[1].type == "error":
         p[0] = Node(type="error")
         return
@@ -495,10 +605,10 @@ def p_postfix_expression_4(p):
     p[3] = Node(name="id",value=p[3])
     p[0] = Node(name="struct ref",value=p[2],type=success.type,children=[p[1],p[3]])
     p[0].code = p[1].code
-    tmp,code = get_opcode(op="long+_c",place1=p[1].place,place2=success.offset,type="long")
+    const_place = get_const(const=success.offset-success.width,type="long")
+    tmp,code = get_opcode(op="long+",place1=p[1].place,place2=const_place,type="long")
     p[0].code += [code]
-    p[0].code += [gen(op="*",place1=tmp,place3=tmp,code=tmp+" = "+"load("+tmp+")")]
-    p[0].place = tmp
+    p[0].place = "load$"+tmp
 
 
 
@@ -510,11 +620,13 @@ def p_argument_expression_list(p):
 	                         | argument_expression_list COMMA assignment_expression
     '''
     if len(p) == 2:
+        # p[1] = load_place(p[1])
         p[0] = Node("argument_expression_list",children=[p[1]])
         p[0].data['args_type'] = [p[1].type]
         p[0].place = [p[1].place]
         p[0].code += p[1].code
     else:
+        # p[3] = load_place(p[3])
         p[1].addChild(p[3])
         p[1].data['args_type'] += [p[3].type]
         p[1].code += p[3].code
@@ -535,6 +647,7 @@ def p_unary_expression_1(p):
     unary_expression : INCREMENT unary_expression
                      | DECREMENT unary_expression
     '''
+    # p[2] = load_place(p[2])
     p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
 
 #Node
@@ -542,6 +655,7 @@ def p_unary_expression_2(p):
     '''
     unary_expression : unary_operator cast_expression
     '''    
+    # p[2] = load_place(p[2]) 
     p[0] = type_check_unary(node1=p[2],op=p[1]['op'],token=p[1]['token'])
 
 #Node
@@ -550,7 +664,9 @@ def p_unary_expression_3(p):
     unary_expression : SIZEOF unary_expression
                      | SIZEOF L_PAREN type_name R_PAREN
     '''
+   
     if len(p) == 3:
+        p[2] = load_place(p[2])
         p[0] = type_check_unary(node1=p[2],op=p[1],token=p.slice[1])
     else:
         p[0] = type_check_unary(node1=p[3],op=p[1],token=p.slice[1],is_typename=True)
@@ -580,7 +696,7 @@ def p_cast_expression(p):
             p[0] = Node(type='error')
         else:
             if p[4].type.is_convertible_to(p[2].type):
-                p[0] = typecast(p[4],p[2].type)
+                p[0] = typecast(p[4],p[2].type,token=p.slice[1],hard=True)
             else:
                 Errors(
                     errorType='TypeError',
@@ -600,12 +716,16 @@ def p_multiplicative_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_multi(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 def p_multiplicative_expression_1(p):
     '''
     multiplicative_expression : multiplicative_expression MODULUS cast_expression
     '''
+    p[1] = load_place(p[1])
+    p[3] = load_place(p[3])
     p[0] = type_check_multi(node1=p[1],node2=p[3],op=p[2],token=p.slice[2],decimal=False)
 
 
@@ -619,6 +739,8 @@ def p_additive_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_add(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
@@ -632,6 +754,8 @@ def p_shift_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
@@ -647,6 +771,8 @@ def p_relational_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
         
 #Node
@@ -660,6 +786,8 @@ def p_equality_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_relational(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 #Node
 def p_and_expression(p):
@@ -670,6 +798,8 @@ def p_and_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
     
@@ -684,6 +814,8 @@ def p_exclusive_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 
@@ -698,6 +830,8 @@ def p_inclusive_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0] = type_check_bit(node1=p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 
@@ -711,7 +845,9 @@ def p_logical_and_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-       p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
+        p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
 
 #Node
 def p_logical_or_expression(p):
@@ -723,6 +859,8 @@ def p_logical_or_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
         p[0]=type_check_logical(node1 = p[1],node2=p[3],op=p[2],token=p.slice[2])
         
     
@@ -731,12 +869,15 @@ def p_logical_or_expression(p):
 def p_conditional_expression(p):
     '''
     conditional_expression : logical_or_expression
-	                       | logical_or_expression QUES_MARK expression COLON conditional_expression
+	                       | logical_or_expression QUES_MARK assignment_expression COLON conditional_expression
     '''
 
     if len(p) == 2:
         p[0] = p[1]
     else:
+        p[1] = load_place(p[1])
+        p[3] = load_place(p[3])
+        p[5] = load_place(p[5])
         if p[1].type == "error" or p[3].type == "error" or p[5].type == "error":
             p[0] = Node(type="error")
             return
@@ -759,7 +900,14 @@ def p_conditional_expression(p):
             p[0] = Node(type="error")
             return
         p[0] = Node("ternary_op",children = [p[1],p[3],p[5]],type=p[3].type)
-
+        if "const@" in p[1].place:
+            if get_const_value(p[1].place):
+                p[0].place = p[3].place
+                p[0].code = p[3].code
+            else:
+                p[0].place = p[5].place
+                p[0].code = p[5].code
+            return
         p[0].place = get_newtmp()
         label = get_newlabel()
         label1 = get_newlabel()
@@ -767,11 +915,11 @@ def p_conditional_expression(p):
         p[0].code = p[1].code
         p[0].code += [gen(op='ifz', place1=p[1].place, place2 = label)]
         p[0].code += p[3].code
-        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[3].place)]
+        p[0].code += [gen(op=get_type(p[0].place)+'=', place3 = p[0].place, place1 = p[3].place)]
         p[0].code += [gen(op='goto', place1=label1)]
         p[0].code += [gen(op = 'label', place1 = label)]
         p[0].code += p[5].code
-        p[0].code += [gen(op='=', place3 = p[0].place, place1 = p[5].place)]
+        p[0].code += [gen(op=get_type(p[0].place)+'=', place3 = p[0].place, place1 = p[5].place)]
         p[0].code += [gen(op = 'label', place1 = label1)]
 
 
@@ -783,8 +931,10 @@ def p_assignment_expression(p):
     '''
 
     if len(p) == 2:
+        p[1] = load_place(p[1])
         p[0] = p[1]
     else:
+        p[3] = load_place(p[3])
         p[0] = type_check_assign_op(node1=p[1],node2=p[3],op=p[2]['op'],token=p[2]['token'])
 
 
@@ -813,6 +963,8 @@ def p_expression(p):
     ''' 
     if len(p) == 2:
         p[0] = p[1]
+        if "const@" in p[1].place:
+            const_use(p[1].place)
     else:
         if p[1].type == "error" or p[3].type == "error":
             p[0] = Node(type="error")
@@ -828,7 +980,10 @@ def p_constant_expression(p):
     '''
     constant_expression : conditional_expression
     '''
+    p[1] = load_place(p[1])
     p[0] = p[1]
+    # if "const@" in p[1].place:
+    #     const_use(p[1].place)
 
 
 #List
@@ -879,13 +1034,59 @@ def p_init_declarator(p):
                 token_object= p.slice[2]
             )
             return
-        node = typecast(node1=p[3],type=p[1].type)
+        if p[1].type.class_type == "PointerType" and len(p[1].type.array_size) != 0:
+            if len(p[1].type.array_size) > 1:
+                Errors(
+                    errorType='DeclarationError',
+                    errorText="cannot initialize array with multiple dimension", 
+                    token_object= p.slice[2]
+                )
+                return
+            if p[1].type.array_type.stype != "char":
+                Errors(
+                    errorType='DeclarationError',
+                    errorText="cannot initialize array of type "+p[1].type.array_type.stype, 
+                    token_object= p.slice[2]
+                )
+                return
+            if "sconst@" not in p[3].place:
+                Errors(
+                    errorType='DeclarationError',
+                    errorText="cannot initialize array of type char with non-string value", 
+                    token_object= p.slice[2]
+                )
+                return
+
+        node = typecast(node1=p[3],type=p[1].type,token=p.slice[2])
+        if node.type == "error":
+            return
+        if "sconst@" in node.place and len(p[1].type.array_size) == 0:
+            string = node.place.split("@")[-1]
+            p[1].type = PointerType(type=BasicType("char"),array_type=BasicType("char"),array_size=[len(string)+1])
         success = sym_table.add_entry(name=p[1].value,type=p[1].type,token_object=p[1].data['token'])
         if success:
             p[0] = Node(name="binary_op",value=p[1].type.stype+"=",children = [p[1],node],type="ok")
             p[0].code = node.code
             p[0].place = p[1].value+"|"+success.symbol_table.name
-            p[0].code += [gen(op="=",place1=node.place,place3=p[0].place)]
+            if success.symbol_table.name == "global":
+                if "const@" not in node.place:
+                    Errors(
+                        errorType='DeclarationError',
+                        errorText="can declare global variable with only constant value",
+                        token_object= p.slice[2]
+                    )
+                    p[0] = [None]
+                    return 
+                else:
+                    if "sconst@" in  node.place:
+                        alloc[p[0].place] = node.place.split("@")[-1]
+                    else:
+                        alloc[p[0].place] = get_const_value(node.place)   
+                    p[0] = [p[0]]
+                    return
+            p[0].code += [gen(op=get_type(node)+"=",place1=node.place,place3=p[0].place)]
+            if "const@" in node.place:
+                const_use(node.place,sconst=True)
             p[0] = [p[0]]
         else:
             p[0] = [None]
@@ -914,13 +1115,45 @@ def p_auto_declarator(p):
         return
     if p[3].type == "error":
         return
+    if p[3].type.class_type == "PointerType" and p[3].type.is_array == True:
+        Errors(
+                errorType='DeclarationError',
+                errorText="cannot declare auto variable with array",
+                token_object= p.slice[1]
+        )
+        return
+    if p[3].type.class_type == "FunctionType":
+        Errors(
+                errorType='DeclarationError',
+                errorText="cannot declare auto variable with function",
+                token_object= p.slice[1]
+        )
+        return
     success = sym_table.add_entry(name=p[1],type=p[3].type,token_object=p.slice[1])
     node = Node(name="id",value=p[1],type=p[3].type)
     if success:
         p[0] = Node(name="binary_op",value=p[3].type.stype+"=",children = [node,p[3]],type="ok")
         p[0].code = p[3].code
         p[0].place = p[1]+"|"+success.symbol_table.name
-        p[0].code += [gen(op="=",place1=p[3].place,place3=p[0].place)]
+        if success.symbol_table.name == "global":
+            if "const@" not in node.place:
+                Errors(
+                    errorType='DeclarationError',
+                    errorText="can declare global variable with only global value",
+                    token_object= p.slice[2]
+                )
+                p[0] = [None]
+                return 
+            else:
+                if "sconst@" in  node.place:
+                    alloc[p[0].place] = node.place.split("@")[-1]
+                else:
+                    alloc[p[0].place] = get_const_value(node.place)   
+                p[0] = [p[0]]
+                return
+        p[0].code += [gen(op=get_type(p[3])+"=",place1=p[3].place,place3=p[0].place)]
+        if "const@" in p[3].place:
+                const_use(p[3].place)
         p[0] = [p[0]]
 
 # Node
@@ -956,9 +1189,7 @@ def p_struct_specifier(p):
     '''
     struct_specifier : STRUCT IDENTIFIER add_sym_struct struct_declaration_list pop_sym R_BRACES
     '''
-    
-    # todo dict
-    # sym_table.add_struct_entry(name=p[2],symbol_table=p[6],token_object=p.slice[2],arg_dict=p[5])
+
 
 
 def p_add_sym_struct(p):
@@ -1032,32 +1263,6 @@ def p_struct_declarator_list(p):
             p[0].update({p[3].value:p[3].type})
         else:
             p[0] = p[1]
-
-
-
-#string
-# def p_enum_specifier(p):
-#     '''
-#     enum_specifier : ENUM IDENTIFIER L_BRACES enumerator_list R_BRACES
-#     '''
-#     # p[0] = p[1]
-
-# None
-# def p_enumerator_list(p):
-#     '''
-#     enumerator_list : enumerator
-# 	                | enumerator_list COMMA enumerator
-#     '''
-#     # p[0] = None
-
-# None
-# def p_enumerator(p):
-#     '''
-#     enumerator : IDENTIFIER
-# 	           | IDENTIFIER ASSIGNMENT constant_expression
-#     '''
-#     # p[0] = None
-
 
 # Node
 def p_declarator(p):
@@ -1169,7 +1374,9 @@ def p_parameter_declaration(p):
     '''
     parameter_declaration : type_specifier declarator
     '''
-
+    if p[2].type.class_type == "PointerType" and len(p[2].type.array_size) !=0 :
+        p[2].type.is_array = False
+        p[2].type._width = 8
     success = sym_table.add_entry(name=p[2].value,type=p[2].type,token_object=p[2].data['token'])
     if success:
         p[0] = [p[2].type]
@@ -1190,32 +1397,6 @@ def p_type_name(p):
         p[0] = p[2]
 
 
-
-# List or Node
-# def p_initializer(p):
-#     '''
-#     initializer : assignment_expression
-# 	            | L_BRACES initializer_list R_BRACES
-# 	            | L_BRACES initializer_list COMMA R_BRACES
-#     '''
-#     if len(p) == 2:
-#         p[0] = p[1]
-#     else:
-#         p[0] = p[2]
-
-# #List
-# def p_initializer_list(p):
-#     '''
-#     initializer_list : initializer
-# 	                 | initializer_list COMMA initializer
-#     '''
-#     # p[0] = [p[1]] if len(p) == 2 else p[1]+[p[3]]
-#     if len(p) == 2:
-#         p[0] = [p[1]]
-#     else:
-#         p[0] = p[1]+[p[3]]
-
-        
 
 
 # Node
@@ -1262,6 +1443,8 @@ def p_labeled_statement(p):
 
         p[0] = Node("case",children=[p[2],p[4]],type="ok")
         p[0].data['expr'] = p[2]
+        if "const@" in p[2].place:
+            const_use(p[2].place)
         p[0].data['stmt'] = p[4]
         p[0].data['token'] = p.slice[1]
     else:
@@ -1405,7 +1588,16 @@ def p_selection_statement(p):
                 p[0].code += labels.data["stmt"].code
                 p[0].code += [gen("label",place1=new_label)]
         p[0].code += [gen("label",place1=end_label)]
-        p[0].code = break_continue(p[0].code,break_label=end_label,continue_label=None)
+        code = break_only(p[0].code,break_label=end_label)
+        if code == False:
+            Errors(
+                errorType='SyntaxError',
+                errorText='invalid continue in switch case',
+                token_object= p.slice[1],
+            )
+            p[0] = Node(type="error")
+            return
+        p[0].code = code
 
 # Node
 def p_iteration_statement(p):
@@ -1540,6 +1732,8 @@ def p_jump_statement_1(p):
                 node = typecast(p[2],success.type)    
                 p[0] = Node(name="return",type="ok",children=[node])
                 p[0].code = node.code
+                if "const@" in node.place:
+                    const_use(node.place)
                 p[0].code += [gen(op = 'return', place1 = node.place, code = 'return ' + node.place)]
                 return
 
@@ -1562,10 +1756,10 @@ def p_add_sym(p):
         add_sym :
     '''
     # print("start_scope", p, p.stack, p.slice)
-    name = None
-    if p.stack[-2].type == 'IDENTIFIER':
-        name = p.stack[-2].value
-    sym_table.start_scope(name)
+    # name = None
+    # if p.stack[-2].type == 'IDENTIFIER':
+    #     name = p.stack[-2].value
+    sym_table.start_scope()
     p[0] = None
 
 def p_pop_sym(p):
@@ -1578,9 +1772,15 @@ def p_pop_sym(p):
 def p_error(t):
     if t is None:
         print("End of File Reached. More Input required")    
-    print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
+    else:
+        print("syntax error at line no.{0} in file {1}, erroneous lexeme:'{2}'".format(t.lineno, t.lexer.filename,t.value))
     exit(-1)
 
+def get_grammar(code_file,source_code,debug=1):
+    parser = yacc.yacc(debug=debug)
+    lexer.lexer.filename = code_file
+    result = parser.parse(source_code, lexer = lexer.lexer)
+    return result
 
 
 def main():
@@ -1636,10 +1836,13 @@ def main():
     # print(args.d)
     print_csv(sym_table = sym_table, filename = args.d)
     tac_code = result.code
+    tac_code = remove_none(tac_code)
     #to remove redundant labels
     #can also add as args for optimization
-    # tac_code = remove_label(tac_code)
+    tac_code = remove_label(tac_code)
     print_code(tac_code, filename = args.t)
+    # print(alloc)
+    print_asm(tac_code)
 if __name__ == "__main__":
     main()
 

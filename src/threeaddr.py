@@ -5,11 +5,12 @@ from structure import sym_table, BasicType, FunctionType, PointerType, Type, Ent
 from structure import getMutliPointerType
 from typecheck import *
 
+
 temp_cnt = 0
 lable_cnt = 0
-label_list = []
-
-
+label_list = list()
+alloc = dict()
+temp_dict = {}
 
 class gen:
 
@@ -41,7 +42,9 @@ class gen:
         
         if op == "goto":
             return "goto "+place1
-        
+        if op == "addr":
+            return self.place3+" = "+"addr("+self.place1+")"
+            
         if op == 'if' or op == 'ifz':
             return self.ifcode(self.place1, self.place2)
 
@@ -49,10 +52,10 @@ class gen:
             return self.ifncode(self.place1, self.place2)
 
         assert place3, "please provide variable to assign final value"
-
-        if op == 'assign' or op == '=' or op[:2] == "eq":
+        assign_op = ["long=","int=","char=","float=","str=","bool="]
+        if op == 'assign' or op in assign_op or ("struct" in op and "=" in op) or op[-2:] == "eq":
             assert place2 is None, "extra operand given for assignment"
-            return self.assign(place1, place3)
+            return self.assign(place1, place3,op)
 
         if not place2 or op == "func_call":
             return self.unary_opcode(op, place1, place3)
@@ -72,11 +75,13 @@ class gen:
         code = "ifnz " + place + " goto " + label1
         return code
 
-    def assign(self,place1, place3):
+    def assign(self,place1, place3,op):
         assert place1, "cannot assign with single operand"
         assert place3, "cannot assign with single operand"
-
-        code = place3 +' = ' + place1
+        if "eq" in op:
+            code = place3 +' eq ' + place1
+            return code
+        code = place3 +' = ' + place1 #+ "({})".format(op.replace("=",""))
 
         return code
     
@@ -86,6 +91,11 @@ class gen:
     # def goto(self, label):
     #     assert label , "goto None not possible"
     #     return "goto " + label
+    def __str__(self) -> str:
+        return self.code
+    
+    def __repr__(self) -> str:
+        return self.code
 
 
 
@@ -95,6 +105,7 @@ def get_newtmp(type = BasicType("long")):
     name = "tmp@"+str(temp_cnt)
     temp_cnt += 1
     sym_table.add_entry(name  = name, type = type)
+    temp_dict[name] = sym_table.curr_symbol_table
     return name
 
 def get_newlabel():
@@ -105,13 +116,82 @@ def get_newlabel():
     label_list.append(label)
     return label
 
+def get_const(const,type,use=False):
+    assert isinstance(type,str) or isinstance(type,Type)
+    if isinstance(type,str):
+        assert type in {"bool","long","char","int","float"}
+    if isinstance(type,Type):
+        assert type.class_type in ["PointerType","BasicType"]
+        if type.class_type == "PointerType":
+            type = "long"
+        else:
+            assert type.type in {"bool","long","char","int","float"}
+            type = type.type
+    #long const
+    if type == "bool":
+        value = "0" if const == 0 else "1"
+        name = "lconst@"+value
+    elif type != "float":
+        name = "lconst@"+str(int(const))
+    #float
+    else:
+        name = "fconst@"+str(const)
+    if use: const_use(name)
+    return name
+
+def remove_backslash(string):
+    s = string
+    s = "\0".join(s.split("\\0"))
+    s = "\b".join(s.split("\\b"))
+    s = "\t".join(s.split("\\t"))
+    s = "\n".join(s.split("\\n"))
+    s = "\r".join(s.split("\\r"))
+    s = "\v".join(s.split("\\v"))
+    # print(len(s),str(s))
+    return s
+
+def get_str_const(string):
+    assert isinstance(string,str)
+    place = "sconst@"+string
+    # if place not in alloc.keys():
+    #     type = PointerType(type=BasicType("char"),array_size=len(string)+1,array_type=BasicType("char"))
+    #     sym_table._add_entry(name=place,type=type)
+    #     alloc[place] = string+"\0"
+    return place
+
+def const_use(place,sconst=False):
+    if "sconst@" in place:
+        if sconst and place not in alloc.keys():
+            string = remove_backslash(place.split("@")[-1])
+            # print(string,len(string))
+            node_type = PointerType(type=BasicType("char"),array_size=[len(string)+1],array_type=BasicType("char"))
+            sym_table._add_entry(name=place,type=node_type)
+            alloc[place] = string
+        return
+    if place not in alloc.keys():
+        node_type = BasicType("long") if place[0] == "l" else BasicType("float") 
+        sym_table._add_entry(name=place,type=node_type)
+        alloc[place] = get_const_value(place)
+
+def get_const_value(place):
+    global const_list
+    assert "const@" in place
+    if "sconst@" in place:
+        return 1
+    value = place.split("@")[-1]
+    if "fconst@" in place:
+        return float(value)
+    else:
+        return int(value)
 
 
 def break_continue(input, break_label, continue_label):
     assert break_label, "label1 not given"
-    # assert continue_label, "label2 not given"
+    assert continue_label, "label2 not given"
 
     for gens in input:
+        if gens == None:
+            continue
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == 'continue':
             gens.op = 'goto'
@@ -124,6 +204,20 @@ def break_continue(input, break_label, continue_label):
 
     return input
 
+def break_only(input,break_label):
+    assert break_label, "label1 not given"
+    for gens in input:
+        if gens == None:
+            continue
+        assert isinstance(gens, gen), "input must list of gen's"
+        if gens.op == 'continue':
+            return False
+        if gens.op == "break":
+            gens.op = 'goto'
+            gens.place1 = break_label
+            gens.code = 'goto ' + break_label
+    return input
+
 def fill_return(input, label):
     assert label, "wrong label"
     input = input.replace("return", "goto " + label)
@@ -133,27 +227,76 @@ def add_scope_info(entry):
     assert isinstance(entry, Entry), "entry object is of wrong class"
     return '|' + entry.symbol_table.name
 
-    
+def op_on_const(op,place1,place2):
+    value1 = get_const_value(place1)
+    value2 = get_const_value(place2)
+    #length 2 op <= , => , == , >> , << , !=
+    if op[-2:] == "<=": return int(value1<=value2)
+    if op[-2:] == ">=": return int(value1>=value2)
+    if op[-2:] == "==": return int(value1==value2)
+    if op[-2:] == "!=": return int(value1!=value2)
+    if op[-2:] == ">>": return value1>>value2
+    if op[-2:] == "<<": return value1<<value2
+    #length 1 +,-,/,*,%,^,&,|
+    if op[-1] == "+": return value1+value2
+    if op[-1] == "-": return value1-value2
+    if op[-1] == "/":
+        if value2 == 0:
+            Errors(
+                errorType='RuntimeError',
+                errorText='division by zero',
+            )
+            return 0 
+        return value1 / value2 
+    if op[-1] == "*": return value1*value2
+    if op[-1] == "%": return value1%value2
+    if op[-1] == "^": return value1^value2
+    if op[-1] == "&": return value1&value2
+    if op[-1] == "|": return value1|value2
+    if op[-1] == ">": return int(value1>value2)
+    if op[-1] == "<": return int(value1<value2)
+    assert False, op + "not in list"
+
+
+
 def get_opcode(op=None,place1=None,place2=None,type=None):
     if isinstance(type,str):
         type = BasicType(type)
+    assert "sconst@" not in place1 and "sconst@" not in place2, "string"
+    if "const@" in place1 and "const@" in place2:
+        return get_const(op_on_const(op,place1,place2),type=type), None
     tmp = get_newtmp(type)
     place1 = str(place1)
     place2 = str(place2)
     if op != "=":
         code = gen(op=op,place1=place1,place2=place2,place3=tmp)
+        if "const@" in place1:
+            const_use(place1)
+        if "const@" in place2:
+            const_use(place2)
     else:
         code = gen(op=op,place1=place1,place3=tmp)
+        if "const@" in place1:
+            const_use(place1)
     return tmp,code
 
 
 
 def has_break_continue(input):
     for gens in input:
+        if gens == None:
+            continue
         assert isinstance(gens, gen), "input must list of gen's"
         if gens.op == "break" or gens.op == "continue":
             return True
     return False
+
+def remove_none(code_list):
+    new_code_list = []
+    for code in code_list:
+        if code != None:
+            new_code_list.append(code)
+    return new_code_list
 
 def remove_label(code_list):
     global label_list
@@ -185,6 +328,9 @@ def remove_label(code_list):
         elif code.op == "ifz" or code.op == "ifnz":
             label = new_label.get(code.place2,code.place2)
             new_code_list.append(gen(op=code.op,place1=code.place1,place2=label))
+        elif "if_not_cmp_" in code.op:
+            label = new_label.get(code.place3,code.place3)
+            new_code_list.append(gen(op=code.op,place1=code.place1,place2=code.place2,place3=label,code="if "+code.place1+" <> "+code.place2+" goto "+label))
         else:
             new_code_list.append(code)
     return new_code_list

@@ -50,6 +50,12 @@ def draw_ast(node):
 
     return G
 
+def add_backslash(string):
+    s = string
+    s = string.replace("\n","\\n")
+    s = s.replace("\t","\\t")
+    return s
+
 def print_csv(sym_table =None , filename = None):
     queue = [sym_table]
     csv_file = open(filename,'w', newline='')
@@ -70,18 +76,20 @@ def print_csv_sym_table(sym_table, writer):
     writer.writerow([])
     
     if sym_table.parent:
-        writer.writerow(["symbol table id" , "symbol table name", "parent id"])
-        writer.writerow([sym_table.id, sym_table.name, sym_table.parent.id])
+        writer.writerow(["symbol table id" , "symbol table name", "parent id","table off"])
+        writer.writerow([sym_table.id, sym_table.name, sym_table.parent.id, sym_table.offset])
     else:
-        writer.writerow(["symbol table id" , "symbol table name"])
-        writer.writerow([sym_table.id, sym_table.name])
+        writer.writerow(["symbol table id" , "symbol table name","table off"])
+        writer.writerow([sym_table.id, sym_table.name, sym_table.offset])
 
-    writer.writerow(["name", "type", "offset","width"])
+    writer.writerow(["name", "type", "offset","offset+base","width"])
     for entry_key in sym_table.table:
-        if entry_key == 'return' or "@" in entry_key:
+        # if entry_key == 'return' or "@" in entry_key:
+        #     continue
+        if entry_key == 'return':
             continue
         #print(sym_table.table[entry_key].name, sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].width)
-        writer.writerow([sym_table.table[entry_key].name, sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].width])
+        writer.writerow([add_backslash(sym_table.table[entry_key].name), sym_table.table[entry_key].type, sym_table.table[entry_key].offset,sym_table.table[entry_key].offset + sym_table.base,sym_table.table[entry_key].width])
 
 # csv_file.close()
 
@@ -89,4 +97,4 @@ def print_code(code_list, filename):
     file = open(filename, 'w')
     for obj in code_list:
         if obj.code:
-            print(obj.code,file = file)
+            print(add_backslash(obj.code),file = file)
