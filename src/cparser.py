@@ -696,7 +696,7 @@ def p_cast_expression(p):
             p[0] = Node(type='error')
         else:
             if p[4].type.is_convertible_to(p[2].type):
-                p[0] = typecast(p[4],p[2].type,token=p.slice[1])
+                p[0] = typecast(p[4],p[2].type,token=p.slice[1],hard=True)
             else:
                 Errors(
                     errorType='TypeError',
@@ -1114,6 +1114,13 @@ def p_auto_declarator(p):
         )
         return
     if p[3].type == "error":
+        return
+    if p[3].type.class_type == "PointerType" and p[3].type.is_array == True:
+        Errors(
+                errorType='DeclarationError',
+                errorText="cannot declare auto variable with array",
+                token_object= p.slice[1]
+        )
         return
     success = sym_table.add_entry(name=p[1],type=p[3].type,token_object=p.slice[1])
     node = Node(name="id",value=p[1],type=p[3].type)

@@ -492,13 +492,14 @@ def type_check_assign_op(node1,node2,op,token):
     return type_check_assign(eq_node,node,token)
     
 
-def typecast(node1,type,token=None):
+def typecast(node1,type,token=None,hard=False):
     node1 = load_place(node1)
     assert isinstance(type,Type), "not of class Type"
     assert type.class_type in {"BasicType","PointerType","StructType"}, "not valid type"
     # assert node1.type.class_type in {"BasicType","PointerType"}, "not valid type"
     # assert "sconst@" not in node1.place, "string in typecast"
     if node1.type.stype == type.stype:
+        if hard: node1.type = type
         return node1
     elif "sconst@" in node1.place:
         # print(str(node1.type.stype),str(type.stype))

@@ -19,6 +19,7 @@ int printf(char s[20],int a);
 int printf1(char s[20],float a);
 
 int a = 2*3+5/2;
+int arr[10];
 
 int main(){
     printf("global: %ld\n",a);
