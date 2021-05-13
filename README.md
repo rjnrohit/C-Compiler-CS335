@@ -45,9 +45,14 @@ optional arguments:
 
 Run tests from test/
 ```
-arcx86 test/${file_name} 
-./a.out
+chmod +x test.sh
+./test.sh [flags]   (flags same as arcx86)
 ```
+create output in output folder, to run test
+```
+./output/${file_name}
+```
+
 
 sample source_code with name arg.c:
 ```
