@@ -1,6 +1,3 @@
-add CONST
-add Signed Unsigned
-
 To run the assembly
 yasm -g dwarf2 -f elf64 temp.asm
 ld -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o temp temp.o -lc -lm
@@ -9,6 +6,3 @@ ld -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o temp temp.o -lc -lm
 another:
 yasm -g dwarf2 -f elf64 temp.asm;ld -o temp -dynamic-linker /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/crt1.o /usr/lib/x86_64-linux-gnu/crti.o -lc temp.o /usr/lib/x86_64-linux-gnu/crtn.o -lm;./temp
 
-// different printf, scanf support
-// color error
-// main file, bash script
