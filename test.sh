@@ -12,7 +12,7 @@ do
     if [ test/$fname.c  = $file ]
     then
         echo "executing... $fname"
-        arcx86 test/$fname.c -o output/$fname -f output/$fname -c -d -a -s -t -l
+        arcx86 test/$fname.c -o output/$fname -f output/$fname -c -d -a -s -t -l $*
         if [ -e input/$fname.in ]
         then
             ./output/$fname < input/$fname.in > output/$fname.txt
