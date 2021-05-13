@@ -1,27 +1,20 @@
 #!/bin/bash
-# ./test.sh
+# ./test.sh [flags] (eg. ./test.sh -t -n)
 source install.sh
 rm -rf output
 mkdir output
 
-for file in test/*
+cd test/
+for test in *
 do
-    fname=${file##*/}
-    fname=${fname%.*}
-    # echo $fname
-    if [ test/$fname.c  = $file ]
+    fname=${test%.*}
+    echo $fname
+    if [ $fname.c  = $test ]
     then
-        echo "executing... $fname"
-        arcx86 test/$fname.c -o output/$fname -f output/$fname -c -d -a -s -t -l $*
-        if [ -e input/$fname.in ]
-        then
-            ./output/$fname < input/$fname.in > output/$fname.txt
-        else
-            ./output/$fname > output/$fname.txt
-        fi
+        arcx86 $test -o ../output/$fname.o -f ../output/$fname $*
     else 
         continue
     fi
     
 done
-
+cd ..

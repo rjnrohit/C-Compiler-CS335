@@ -1,0 +1,96 @@
+
+symbol table id,symbol table name,table off
+0,global,129
+name,type,offset,offset+base,width
+printf,"int function([pointer of (char), int])",0,0,24
+printf1,"int function([pointer of (char), int, int])",0,0,32
+printf2,"int function([pointer of (char), int, int, int, float, int])",0,0,52
+main,int function(None),0,0,8
+lconst@67,long,8,8,8
+sconst@size %ld\n,"pointer of (char), array of:char",18,18,10
+lconst@1,long,26,26,8
+lconst@3,long,34,34,8
+lconst@8,long,42,42,8
+fconst@3.4,float,46,46,4
+lconst@4,long,54,54,8
+lconst@0,long,62,62,8
+lconst@2,long,70,70,8
+lconst@16,long,78,78,8
+"sconst@struct a:%ld, b:%ld\n","pointer of (char), array of:char",99,99,21
+sconst@a:%c b:%ld c:%ld d:%f *e:%ld\n,"pointer of (char), array of:char",129,129,30
+
+symbol table id,symbol table name,parent id,table off
+1,printf,0,24
+name,type,offset,offset+base,width
+s,pointer of (char),16,16,8
+a,int,24,24,8
+
+symbol table id,symbol table name,parent id,table off
+2,printf1,0,32
+name,type,offset,offset+base,width
+s,pointer of (char),16,16,8
+a,int,24,24,8
+b,int,32,32,8
+
+symbol table id,symbol table name,parent id,table off
+3,printf2,0,52
+name,type,offset,offset+base,width
+s,pointer of (char),16,16,8
+a,int,24,24,8
+b,int,32,32,8
+c,int,40,40,8
+d,float,44,44,4
+e,int,52,52,8
+
+symbol table id,symbol table name,parent id,table off
+4,A,0,16
+name,type,offset,offset+base,width
+a,int,8,8,8
+b,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+5,main,0,389
+name,type,offset,offset+base,width
+a,char,9,9,1
+tmp@0,"pointer of (char), array of:char",19,19,10
+tmp@1,int,27,27,8
+b,bool,28,28,1
+tmp@2,"pointer of (char), array of:char",38,38,10
+tmp@3,int,46,46,8
+tmp@4,int,54,54,8
+tmp@5,int,62,62,8
+c,int,70,70,8
+tmp@6,"pointer of (char), array of:char",80,80,10
+tmp@7,int,88,88,8
+tmp@8,float,92,92,4
+tmp@9,float,96,96,4
+d,float,100,100,4
+tmp@10,"pointer of (char), array of:char",110,110,10
+tmp@11,int,118,118,8
+tmp@12,long,126,126,8
+e,pointer of (int),134,134,8
+tmp@13,"pointer of (char), array of:char",144,144,10
+tmp@14,int,152,152,8
+a1,struct A,168,168,16
+tmp@15,long,176,176,8
+tmp@16,long,184,184,8
+tmp@17,int,192,192,8
+tmp@18,long,200,200,8
+tmp@19,long,208,208,8
+tmp@20,int,216,216,8
+f,struct A,232,232,16
+tmp@21,"pointer of (char), array of:char",242,242,10
+tmp@22,int,250,250,8
+tmp@23,long,258,258,8
+tmp@24,long,266,266,8
+tmp@25,int,274,274,8
+tmp@26,long,282,282,8
+tmp@27,long,290,290,8
+tmp@28,int,298,298,8
+tmp@29,"pointer of (char), array of:char",319,319,21
+tmp@30,int,327,327,8
+tmp@31,int,335,335,8
+tmp@32,"pointer of (char), array of:char",365,365,30
+tmp@33,int,373,373,8
+tmp@34,int,381,381,8
+tmp@35,int,389,389,8

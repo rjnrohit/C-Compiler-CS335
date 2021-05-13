@@ -1,0 +1,135 @@
+newNode:
+BeginFunc
+push lconst@24
+tmp@0 = func_call malloc
+pop lconst@24
+node|newNode = tmp@0
+tmp@1 = node|newNode long+ lconst@0
+tmp@1 eq data|newNode
+tmp@2 = load(tmp@1)
+tmp@3 = node|newNode long+ lconst@8
+tmp@3 eq lconst@0
+tmp@4 = load(tmp@3)
+tmp@5 = node|newNode long+ lconst@16
+tmp@5 eq lconst@0
+tmp@6 = load(tmp@5)
+return node|newNode
+EndFunc
+printInorder:
+BeginFunc
+tmp@7 = node|printInorder long== lconst@0
+ifz tmp@7 goto label#0
+return
+label#0:
+tmp@8 = node|printInorder long+ lconst@8
+tmp@9 = load(tmp@8)
+push tmp@9
+None = func_call printInorder
+pop tmp@9
+tmp@12 = sconst@%ld 
+tmp@10 = node|printInorder long+ lconst@0
+tmp@11 = load(tmp@10)
+push tmp@12
+push tmp@11
+None = func_call printf
+pop tmp@11
+pop tmp@12
+tmp@13 = node|printInorder long+ lconst@16
+tmp@14 = load(tmp@13)
+push tmp@14
+None = func_call printInorder
+pop tmp@14
+EndFunc
+insert:
+BeginFunc
+ifz root|insert goto label#2
+tmp@15 = root|insert long+ lconst@0
+tmp@16 = load(tmp@15)
+tmp@17 = b|insert int>= tmp@16
+ifz tmp@17 goto label#1
+tmp@18 = root|insert long+ lconst@16
+tmp@19 = root|insert long+ lconst@16
+tmp@20 = load(tmp@19)
+push tmp@20
+push b|insert
+tmp@21 = func_call insert
+pop b|insert
+pop tmp@20
+tmp@18 eq tmp@21
+tmp@22 = load(tmp@18)
+return root|insert
+label#1:
+tmp@23 = root|insert long+ lconst@8
+tmp@24 = root|insert long+ lconst@8
+tmp@25 = load(tmp@24)
+push tmp@25
+push b|insert
+tmp@26 = func_call insert
+pop b|insert
+pop tmp@25
+tmp@23 eq tmp@26
+tmp@27 = load(tmp@23)
+return root|insert
+label#2:
+push b|insert
+tmp@28 = func_call newNode
+pop b|insert
+root|insert = tmp@28
+return root|insert
+EndFunc
+main:
+BeginFunc
+tmp@29 = sconst@enter number of elements in tree: 
+push tmp@29
+None = func_call printfs
+pop tmp@29
+tmp@31 = sconst@%ld
+tmp@30 = addr(n|main)
+push tmp@31
+push tmp@30
+None = func_call scanf
+pop tmp@30
+pop tmp@31
+tmp@32 = sconst@enter %ld 
+push tmp@32
+push n|main
+None = func_call printf
+pop n|main
+pop tmp@32
+tmp@33 = sconst@numbers\n
+push tmp@33
+None = func_call printfs
+pop tmp@33
+root|main = lconst@0
+label#3:
+tmp@34 = n|main
+tmp@35 = n|main long- lconst@1
+n|main = tmp@35
+ifz tmp@34 goto label#4
+tmp@37 = sconst@%ld
+tmp@36 = addr(i|scope@12)
+push tmp@37
+push tmp@36
+None = func_call scanf
+pop tmp@36
+pop tmp@37
+push root|main
+push i|scope@12
+tmp@38 = func_call insert
+pop i|scope@12
+pop root|main
+root|main = tmp@38
+goto label#3
+label#4:
+tmp@39 = sconst@tree: 
+push tmp@39
+None = func_call printfs
+pop tmp@39
+push root|main
+None = func_call printInorder
+pop root|main
+tmp@40 = sconst@\n
+push tmp@40
+None = func_call printfs
+pop tmp@40
+EndFunc

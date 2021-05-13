@@ -1,0 +1,2 @@
+Enter array in sorted order
+Enter element to search: Element found at position 7

@@ -1,0 +1,211 @@
+dfs:
+BeginFunc
+tmp@0 = p|dfs int== lconst@-1
+ifz tmp@0 goto label#0
+tmp@2 = sconst@Node %ld: new tree\n
+tmp@1 = u|dfs int+ lconst@1
+push tmp@2
+push tmp@1
+tmp@3 = func_call printf
+pop tmp@1
+pop tmp@2
+goto label#1
+label#0:
+tmp@6 = sconst@Node %ld: Parent: %ld\n
+tmp@4 = u|dfs int+ lconst@1
+tmp@5 = p|dfs int+ lconst@1
+push tmp@6
+push tmp@4
+push tmp@5
+tmp@7 = func_call printf2
+pop tmp@5
+pop tmp@4
+pop tmp@6
+label#1:
+i|dfs = lconst@0
+label#2:
+tmp@8 = i|dfs int< n|dfs
+ifz tmp@8 goto label#6
+tmp@11 = u|dfs long* lconst@88
+tmp@12 = adj|dfs long+ tmp@11
+tmp@13 = i|dfs long* lconst@8
+tmp@14 = tmp@12 long+ tmp@13
+tmp@15 = load(tmp@14)
+tmp@16 = tmp@15 int== lconst@1
+ifz tmp@16 goto label#3
+tmp@17 = i|dfs long* lconst@8
+tmp@18 = visited|dfs long+ tmp@17
+tmp@19 = load(tmp@18)
+tmp@20 = tmp@19 int== lconst@0
+ifz tmp@20 goto label#3
+tmp@21 = lconst@1
+goto label#4
+label#3:
+tmp@21 = lconst@0
+label#4:
+ifz tmp@21 goto label#5
+tmp@22 = i|dfs long* lconst@8
+tmp@23 = visited|dfs long+ tmp@22
+tmp@23 eq lconst@1
+tmp@24 = load(tmp@23)
+push adj|dfs
+push visited|dfs
+push i|dfs
+push n|dfs
+push u|dfs
+None = func_call dfs
+pop u|dfs
+pop n|dfs
+pop i|dfs
+pop visited|dfs
+pop adj|dfs
+label#5:
+tmp@9 = i|dfs
+tmp@10 = i|dfs long+ lconst@1
+i|dfs = tmp@10
+goto label#2
+label#6:
+EndFunc
+main:
+BeginFunc
+i|main = lconst@0
+label#7:
+tmp@25 = i|main int< lconst@11
+ifz tmp@25 goto label#11
+tmp@28 = addr(visited|main)
+tmp@29 = i|main long* lconst@8
+tmp@30 = tmp@28 long+ tmp@29
+tmp@30 eq lconst@0
+tmp@31 = load(tmp@30)
+j|main = lconst@0
+label#8:
+tmp@32 = j|main int< lconst@11
+ifz tmp@32 goto label#10
+tmp@35 = addr(adj|main)
+tmp@36 = i|main long* lconst@88
+tmp@37 = tmp@35 long+ tmp@36
+tmp@38 = j|main long* lconst@8
+tmp@39 = tmp@37 long+ tmp@38
+tmp@39 eq lconst@0
+tmp@40 = load(tmp@39)
+label#9:
+tmp@33 = j|main
+tmp@34 = j|main long+ lconst@1
+j|main = tmp@34
+goto label#8
+label#10:
+tmp@26 = i|main
+tmp@27 = i|main long+ lconst@1
+i|main = tmp@27
+goto label#7
+label#11:
+tmp@41 = sconst@Enter number of vertice (<=10)\n
+push tmp@41
+tmp@42 = func_call printf1
+pop tmp@41
+tmp@44 = sconst@%ld
+tmp@43 = addr(n|main)
+push tmp@44
+push tmp@43
+tmp@45 = func_call scanf
+pop tmp@43
+pop tmp@44
+tmp@46 = n|main int> lconst@10
+ifnz tmp@46 goto label#12
+tmp@47 = n|main int< lconst@1
+ifnz tmp@47 goto label#12
+tmp@48 = lconst@0
+goto label#13
+label#12:
+tmp@48 = lconst@1
+label#13:
+ifz tmp@48 goto label#14
+tmp@49 = sconst@invalid number\n
+push tmp@49
+tmp@50 = func_call printf1
+pop tmp@49
+return lconst@-1
+label#14:
+i|main = lconst@0
+label#15:
+tmp@51 = i|main int< n|main
+ifz tmp@51 goto label#23
+label#16:
+tmp@55 = sconst@%ld
+tmp@54 = addr(v|scope@12)
+push tmp@55
+push tmp@54
+tmp@56 = func_call scanf
+pop tmp@54
+pop tmp@55
+tmp@57 = v|scope@12 int== lconst@-1
+ifz tmp@57 goto label#17
+goto label#22
+label#17:
+tmp@58 = v|scope@12 int> n|main
+ifnz tmp@58 goto label#18
+tmp@59 = v|scope@12 int<= lconst@0
+ifnz tmp@59 goto label#18
+tmp@60 = lconst@0
+goto label#19
+label#18:
+tmp@60 = lconst@1
+label#19:
+ifz tmp@60 goto label#20
+tmp@61 = sconst@invalid number\n
+push tmp@61
+tmp@62 = func_call printf1
+pop tmp@61
+return lconst@-1
+label#20:
+tmp@63 = addr(adj|main)
+tmp@64 = i|main long* lconst@88
+tmp@65 = tmp@63 long+ tmp@64
+tmp@66 = v|scope@12 int- lconst@1
+tmp@67 = tmp@66 long* lconst@8
+tmp@68 = tmp@65 long+ tmp@67
+tmp@68 eq lconst@1
+tmp@69 = load(tmp@68)
+label#21:
+ifnz lconst@1 goto label#16
+label#22:
+tmp@52 = i|main
+tmp@53 = i|main long+ lconst@1
+i|main = tmp@53
+goto label#15
+label#23:
+i|main = lconst@0
+label#24:
+tmp@70 = i|main int< n|main
+ifz tmp@70 goto label#26
+tmp@73 = addr(visited|main)
+tmp@74 = i|main long* lconst@8
+tmp@75 = tmp@73 long+ tmp@74
+tmp@76 = load(tmp@75)
+tmp@77 = not_bool tmp@76
+ifz tmp@77 goto label#25
+tmp@78 = addr(visited|main)
+tmp@79 = i|main long* lconst@8
+tmp@80 = tmp@78 long+ tmp@79
+tmp@80 eq lconst@1
+tmp@81 = load(tmp@80)
+tmp@82 = addr(adj|main)
+tmp@83 = addr(visited|main)
+push tmp@82
+push tmp@83
+push i|main
+push n|main
+push lconst@-1
+None = func_call dfs
+pop lconst@-1
+pop n|main
+pop i|main
+pop tmp@83
+pop tmp@82
+label#25:
+tmp@71 = i|main
+tmp@72 = i|main long+ lconst@1
+i|main = tmp@72
+goto label#24
+label#26:
+EndFunc

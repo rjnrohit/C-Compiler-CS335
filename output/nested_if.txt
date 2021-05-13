@@ -1,0 +1,5 @@
+enter a integer: given number is even
+given no is divisible by 2,3
+given no is divisible by 2,3,5
+given no is divisible by 2,3,5,7
+given no is div by 2,3,5,7 but not by 11

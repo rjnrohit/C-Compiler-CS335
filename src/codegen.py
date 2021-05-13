@@ -881,7 +881,6 @@ def add_func_call(gen_obj):
     other_args = 0
     shift = 0
 
-    code += ["push rax"]
 
     if ret_type.width > 8 or ret_type.type.class_type == 'StructType':
         shift += ret_type.width
@@ -954,7 +953,6 @@ def add_func_call(gen_obj):
     code += ["call " + gen_obj.place1 + '@func']
     code += add_post_call(place3)
     code += ["add rsp," + str(shift)]
-    code += ["pop rax"]
     return code
 
 def add_extern_code(gen_obj):

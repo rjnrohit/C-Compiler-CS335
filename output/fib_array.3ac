@@ -1,0 +1,71 @@
+main:
+BeginFunc
+tmp@1 = sconst@%ld
+tmp@0 = addr(n|main)
+push tmp@1
+push tmp@0
+tmp@2 = func_call scanf
+pop tmp@0
+pop tmp@1
+tmp@3 = n|main int< lconst@0
+ifz tmp@3 goto label#0
+tmp@4 = sconst@Enter a postive number\n
+push tmp@4
+tmp@5 = func_call printf1
+pop tmp@4
+return lconst@-1
+label#0:
+tmp@6 = n|main int> lconst@50
+ifz tmp@6 goto label#1
+tmp@7 = sconst@Number is too large\n
+push tmp@7
+tmp@8 = func_call printf1
+pop tmp@7
+return lconst@-1
+label#1:
+tmp@9 = addr(fib|main)
+tmp@10 = tmp@9 long+ lconst@0
+tmp@10 eq lconst@0
+tmp@11 = load(tmp@10)
+tmp@12 = addr(fib|main)
+tmp@13 = tmp@12 long+ lconst@8
+tmp@13 eq lconst@1
+tmp@14 = load(tmp@13)
+i|main = lconst@2
+label#2:
+tmp@15 = i|main int<= n|main
+ifz tmp@15 goto label#4
+tmp@18 = addr(fib|main)
+tmp@19 = i|main long* lconst@8
+tmp@20 = tmp@18 long+ tmp@19
+tmp@21 = addr(fib|main)
+tmp@22 = i|main int- lconst@1
+tmp@23 = tmp@22 long* lconst@8
+tmp@24 = tmp@21 long+ tmp@23
+tmp@29 = load(tmp@24)
+tmp@25 = addr(fib|main)
+tmp@26 = i|main int- lconst@2
+tmp@27 = tmp@26 long* lconst@8
+tmp@28 = tmp@25 long+ tmp@27
+tmp@30 = load(tmp@28)
+tmp@31 = tmp@29 int+ tmp@30
+tmp@20 eq tmp@31
+tmp@32 = load(tmp@20)
+label#3:
+tmp@16 = i|main
+tmp@17 = i|main long+ lconst@1
+i|main = tmp@17
+goto label#2
+label#4:
+tmp@37 = sconst@%ld\n
+tmp@33 = addr(fib|main)
+tmp@34 = n|main long* lconst@8
+tmp@35 = tmp@33 long+ tmp@34
+tmp@36 = load(tmp@35)
+push tmp@37
+push tmp@36
+tmp@38 = func_call printf
+pop tmp@36
+pop tmp@37
+return lconst@0
+EndFunc

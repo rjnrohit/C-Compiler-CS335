@@ -1,0 +1,14 @@
+enter string1:
+enter string2:
+length of string1:
+5
+length of string2:
+8
+concatenated string: 
+cs335compiler
+copy of string1:
+cs335
+copy of string2:
+compiler
+string1 and string2 are not same
+1234

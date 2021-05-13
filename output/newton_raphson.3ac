@@ -1,0 +1,65 @@
+func:
+BeginFunc
+tmp@0 = x|func float* x|func
+tmp@1 = tmp@0 float* x|func
+tmp@2 = x|func float* x|func
+tmp@3 = tmp@1 float- tmp@2
+tmp@4 = tmp@3 float+ fconst@2
+return tmp@4
+EndFunc
+deriv:
+BeginFunc
+tmp@5 = fconst@3 float* x|deriv
+tmp@6 = tmp@5 float* x|deriv
+tmp@7 = fconst@2 float* x|deriv
+tmp@8 = tmp@6 float- tmp@7
+return tmp@8
+EndFunc
+newton_raphson:
+BeginFunc
+i|newton_raphson = lconst@0
+label#0:
+tmp@9 = i|newton_raphson int< max_itr|newton_raphson
+ifz tmp@9 goto label#3
+push x|newton_raphson
+tmp@12 = func_call func
+pop x|newton_raphson
+push x|newton_raphson
+tmp@13 = func_call deriv
+pop x|newton_raphson
+tmp@14 = tmp@12 float/ tmp@13
+h|scope@8 = tmp@14
+push h|scope@8
+tmp@15 = func_call fabs
+pop h|scope@8
+tmp@16 = tmp@15 float< epsilon|newton_raphson
+ifz tmp@16 goto label#1
+return x|newton_raphson
+label#1:
+tmp@17 = x|newton_raphson float- h|scope@8
+x|newton_raphson = tmp@17
+label#2:
+tmp@10 = i|newton_raphson
+tmp@11 = i|newton_raphson long+ lconst@1
+i|newton_raphson = tmp@11
+goto label#0
+label#3:
+return x|newton_raphson
+EndFunc
+main:
+BeginFunc
+tmp@19 = sconst@root: %.3f\n
+push fconst@-20
+push fconst@0.001
+push lconst@100
+tmp@18 = func_call newton_raphson
+pop lconst@100
+pop fconst@0.001
+pop fconst@-20
+push tmp@19
+push tmp@18
+tmp@20 = func_call printf
+pop tmp@18
+pop tmp@19
+return lconst@0
+EndFunc

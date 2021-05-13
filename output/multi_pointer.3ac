@@ -1,0 +1,78 @@
+main:
+BeginFunc
+push lconst@40
+tmp@0 = func_call malloc
+pop lconst@40
+ptr|main = tmp@0
+i|main = lconst@0
+label#0:
+tmp@1 = i|main int< lconst@5
+ifz tmp@1 goto label#4
+tmp@4 = i|main long* lconst@8
+tmp@5 = ptr|main long+ tmp@4
+push lconst@40
+tmp@6 = func_call malloc
+pop lconst@40
+tmp@5 eq tmp@6
+tmp@7 = load(tmp@5)
+j|main = lconst@0
+label#1:
+tmp@8 = j|main int< lconst@5
+ifz tmp@8 goto label#3
+tmp@11 = i|main long* lconst@8
+tmp@12 = ptr|main long+ tmp@11
+tmp@13 = load(tmp@12)
+tmp@14 = j|main long* lconst@8
+tmp@15 = tmp@13 long+ tmp@14
+tmp@16 = i|main int* lconst@10
+tmp@17 = tmp@16 int+ j|main
+tmp@15 eq tmp@17
+tmp@18 = load(tmp@15)
+label#2:
+tmp@9 = j|main
+tmp@10 = j|main long+ lconst@1
+j|main = tmp@10
+goto label#1
+label#3:
+tmp@2 = i|main
+tmp@3 = i|main long+ lconst@1
+i|main = tmp@3
+goto label#0
+label#4:
+i|main = lconst@0
+label#5:
+tmp@19 = i|main int< lconst@5
+ifz tmp@19 goto label#10
+j|main = lconst@0
+label#6:
+tmp@22 = j|main int< lconst@5
+ifz tmp@22 goto label#8
+tmp@31 = sconst@%ld 
+tmp@25 = i|main long* lconst@8
+tmp@26 = ptr|main long+ tmp@25
+tmp@27 = load(tmp@26)
+tmp@28 = j|main long* lconst@8
+tmp@29 = tmp@27 long+ tmp@28
+tmp@30 = load(tmp@29)
+push tmp@31
+push tmp@30
+tmp@32 = func_call printf
+pop tmp@30
+pop tmp@31
+label#7:
+tmp@23 = j|main
+tmp@24 = j|main long+ lconst@1
+j|main = tmp@24
+goto label#6
+label#8:
+tmp@33 = sconst@\n
+push tmp@33
+tmp@34 = func_call printf1
+pop tmp@33
+label#9:
+tmp@20 = i|main
+tmp@21 = i|main long+ lconst@1
+i|main = tmp@21
+goto label#5
+label#10:
+EndFunc

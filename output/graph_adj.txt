@@ -1,0 +1,6 @@
+Enter number of vertice (<=10)
+Node 1: new tree
+Node 4: Parent: 1
+Node 5: Parent: 4
+Node 3: Parent: 4
+Node 2: Parent: 3

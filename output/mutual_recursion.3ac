@@ -1,0 +1,55 @@
+main:
+BeginFunc
+n|main = lconst@0
+tmp@1 = sconst@%ld
+tmp@0 = addr(n|main)
+push tmp@1
+push tmp@0
+None = func_call scanf
+pop tmp@0
+pop tmp@1
+tmp@2 = n|main int< lconst@0
+ifz tmp@2 goto label#0
+tmp@3 = sconst@Enter a positive number\n
+push tmp@3
+push lconst@0
+None = func_call printf
+pop lconst@0
+pop tmp@3
+return lconst@0
+label#0:
+tmp@5 = sconst@%ld\n
+push n|main
+tmp@4 = func_call is_odd
+pop n|main
+tmp@6 = bool_to_int tmp@4
+push tmp@5
+push tmp@6
+None = func_call printf
+pop tmp@6
+pop tmp@5
+EndFunc
+is_odd:
+BeginFunc
+tmp@7 = n|is_odd int== lconst@0
+ifz tmp@7 goto label#1
+return lconst@0
+label#1:
+tmp@8 = n|is_odd int- lconst@1
+push tmp@8
+tmp@9 = func_call is_even
+pop tmp@8
+return tmp@9
+EndFunc
+is_even:
+BeginFunc
+tmp@10 = n|is_even int== lconst@0
+ifz tmp@10 goto label#2
+return lconst@1
+label#2:
+tmp@11 = n|is_even int- lconst@1
+push tmp@11
+tmp@12 = func_call is_odd
+pop tmp@11
+return tmp@12
+EndFunc
