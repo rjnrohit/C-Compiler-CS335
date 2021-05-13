@@ -1,0 +1,12 @@
+enter a number to output absolute: value: 2.340000
+enter a number, power to output pow: value: 14.372393
+enter a number to output square root of it: value: 2.024846
+enter a number to output ceil: value: 3.000000
+enter a number to output floor: value: 6.000000
+enter a number to output cos: value: 0.634693
+enter a number to output sin: value: -0.102228
+enter a number to output tan: value: 0.491488
+enter a number to output exp: value: 692.286560
+enter a number to output log: value: -1.078810
+enter a number to output log2: value: 2.155102
+enter a number to output log10: value: 2.324282

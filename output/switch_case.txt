@@ -1,0 +1,10 @@
+test1
+case 1: checking break
+test2
+case 2: checking expression in case
+case 4: checking without break case
+default
+test3
+case 3: checking variable in case and type cast
+test4
+default

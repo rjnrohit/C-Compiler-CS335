@@ -1,0 +1,7 @@
+global: 8
+local: 29
+global using scope resolution: 8
+6
+33.000000
+1
+200

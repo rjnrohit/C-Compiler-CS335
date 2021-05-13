@@ -1,0 +1,2 @@
+sc: 123
+enter a string to write in temp2.txt

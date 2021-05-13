@@ -1,0 +1,208 @@
+
+symbol table id,symbol table name,table off
+0,global,433
+name,type,offset,offset+base,width
+printf,void function([pointer of (char)]),0,0,8
+printfi,"void function([pointer of (char), int])",0,0,16
+printff,"void function([pointer of (char), float])",0,0,12
+scanf,"void function([pointer of (char), pointer of (float)])",0,0,16
+scanf1,"void function([pointer of (char), pointer of (float), pointer of (float)])",0,0,24
+fabs,float function([float]),0,0,8
+pow,"float function([float, float])",0,0,12
+sqrt,float function([float]),0,0,8
+ceil,float function([float]),0,0,8
+floor,float function([float]),0,0,8
+cos,float function([float]),0,0,8
+sin,float function([float]),0,0,8
+tan,float function([float]),0,0,8
+exp,float function([float]),0,0,8
+log,float function([float]),0,0,8
+log2,float function([float]),0,0,8
+log10,float function([float]),0,0,8
+trunc,int function([float]),0,0,12
+round,int function([float]),0,0,12
+main,int function(None),0,0,8
+sconst@enter a number to output absolute: ,"pointer of (char), array of:char",36,36,36
+sconst@%f,"pointer of (char), array of:char",39,39,3
+sconst@value: %f\n,"pointer of (char), array of:char",50,50,11
+"sconst@enter a number, power to output pow: ","pointer of (char), array of:char",88,88,38
+"sconst@%f, %f","pointer of (char), array of:char",95,95,7
+sconst@enter a number to output square root of it: ,"pointer of (char), array of:char",140,140,45
+sconst@enter a number to output ceil: ,"pointer of (char), array of:char",172,172,32
+sconst@enter a number to output floor: ,"pointer of (char), array of:char",205,205,33
+sconst@enter a number to output cos: ,"pointer of (char), array of:char",236,236,31
+sconst@enter a number to output sin: ,"pointer of (char), array of:char",267,267,31
+sconst@enter a number to output tan: ,"pointer of (char), array of:char",298,298,31
+sconst@enter a number to output exp: ,"pointer of (char), array of:char",329,329,31
+sconst@enter a number to output log: ,"pointer of (char), array of:char",360,360,31
+sconst@enter a number to output log2: ,"pointer of (char), array of:char",392,392,32
+sconst@enter a number to output log10: ,"pointer of (char), array of:char",425,425,33
+lconst@0,long,433,433,8
+
+symbol table id,symbol table name,parent id,table off
+1,printf,0,8
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+
+symbol table id,symbol table name,parent id,table off
+2,printfi,0,16
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+b,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+3,printff,0,12
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+b,float,12,12,4
+
+symbol table id,symbol table name,parent id,table off
+4,scanf,0,16
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+c,pointer of (float),16,16,8
+
+symbol table id,symbol table name,parent id,table off
+5,scanf1,0,24
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+c,pointer of (float),16,16,8
+d,pointer of (float),24,24,8
+
+symbol table id,symbol table name,parent id,table off
+6,fabs,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+7,pow,0,12
+name,type,offset,offset+base,width
+a,float,8,8,4
+b,float,12,12,4
+
+symbol table id,symbol table name,parent id,table off
+8,sqrt,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+9,ceil,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+10,floor,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+11,cos,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+12,sin,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+13,tan,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+14,exp,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+15,log,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+16,log2,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+17,log10,0,8
+name,type,offset,offset+base,width
+a,float,8,8,4
+
+symbol table id,symbol table name,parent id,table off
+18,trunc,0,12
+name,type,offset,offset+base,width
+a,float,12,12,4
+
+symbol table id,symbol table name,parent id,table off
+19,round,0,12
+name,type,offset,offset+base,width
+a,float,12,12,4
+
+symbol table id,symbol table name,parent id,table off
+20,main,0,744
+name,type,offset,offset+base,width
+n,float,12,12,4
+tmp@0,"pointer of (char), array of:char",48,48,36
+tmp@1,long,56,56,8
+tmp@2,"pointer of (char), array of:char",59,59,3
+tmp@3,float,63,63,4
+tmp@4,"pointer of (char), array of:char",74,74,11
+p,float,78,78,4
+tmp@5,"pointer of (char), array of:char",116,116,38
+tmp@6,long,124,124,8
+tmp@7,long,132,132,8
+tmp@8,"pointer of (char), array of:char",139,139,7
+tmp@9,float,143,143,4
+tmp@10,"pointer of (char), array of:char",154,154,11
+tmp@11,"pointer of (char), array of:char",199,199,45
+tmp@12,long,207,207,8
+tmp@13,"pointer of (char), array of:char",210,210,3
+tmp@14,float,214,214,4
+tmp@15,"pointer of (char), array of:char",225,225,11
+tmp@16,"pointer of (char), array of:char",257,257,32
+tmp@17,long,265,265,8
+tmp@18,"pointer of (char), array of:char",268,268,3
+tmp@19,float,272,272,4
+tmp@20,"pointer of (char), array of:char",283,283,11
+tmp@21,"pointer of (char), array of:char",316,316,33
+tmp@22,long,324,324,8
+tmp@23,"pointer of (char), array of:char",327,327,3
+tmp@24,float,331,331,4
+tmp@25,"pointer of (char), array of:char",342,342,11
+tmp@26,"pointer of (char), array of:char",373,373,31
+tmp@27,long,381,381,8
+tmp@28,"pointer of (char), array of:char",384,384,3
+tmp@29,float,388,388,4
+tmp@30,"pointer of (char), array of:char",399,399,11
+tmp@31,"pointer of (char), array of:char",430,430,31
+tmp@32,long,438,438,8
+tmp@33,"pointer of (char), array of:char",441,441,3
+tmp@34,float,445,445,4
+tmp@35,"pointer of (char), array of:char",456,456,11
+tmp@36,"pointer of (char), array of:char",487,487,31
+tmp@37,long,495,495,8
+tmp@38,"pointer of (char), array of:char",498,498,3
+tmp@39,float,502,502,4
+tmp@40,"pointer of (char), array of:char",513,513,11
+tmp@41,"pointer of (char), array of:char",544,544,31
+tmp@42,long,552,552,8
+tmp@43,"pointer of (char), array of:char",555,555,3
+tmp@44,float,559,559,4
+tmp@45,"pointer of (char), array of:char",570,570,11
+tmp@46,"pointer of (char), array of:char",601,601,31
+tmp@47,long,609,609,8
+tmp@48,"pointer of (char), array of:char",612,612,3
+tmp@49,float,616,616,4
+tmp@50,"pointer of (char), array of:char",627,627,11
+tmp@51,"pointer of (char), array of:char",659,659,32
+tmp@52,long,667,667,8
+tmp@53,"pointer of (char), array of:char",670,670,3
+tmp@54,float,674,674,4
+tmp@55,"pointer of (char), array of:char",685,685,11
+tmp@56,"pointer of (char), array of:char",718,718,33
+tmp@57,long,726,726,8
+tmp@58,"pointer of (char), array of:char",729,729,3
+tmp@59,float,733,733,4
+tmp@60,"pointer of (char), array of:char",744,744,11

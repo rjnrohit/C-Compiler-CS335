@@ -1,0 +1,2 @@
+Enter operator in {+,-,/,*,%,&,|,^,>,<,!,~} or 1-8 for {<<,>>,<=,>=,!=,==,&&,||}: Enter 2 numbers
+ans: 3

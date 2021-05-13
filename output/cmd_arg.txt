@@ -1,0 +1,2 @@
+no of args: 1
+argument no.1 is ./output/cmd_arg

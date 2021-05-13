@@ -1,0 +1,2 @@
+enter number of elements in tree: enter 5 numbers
+tree: -4 12 23 34 34 

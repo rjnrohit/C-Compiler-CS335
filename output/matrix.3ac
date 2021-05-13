@@ -1,0 +1,200 @@
+input_matrix:
+BeginFunc
+tmp@0 = sconst@give matrix input of size %ldx%ld\n
+push tmp@0
+push n|input_matrix
+push m|input_matrix
+tmp@1 = func_call printf1
+pop m|input_matrix
+pop n|input_matrix
+pop tmp@0
+i|input_matrix = lconst@0
+label#0:
+tmp@2 = i|input_matrix int< n|input_matrix
+ifz tmp@2 goto label#4
+j|input_matrix = lconst@0
+label#1:
+tmp@5 = j|input_matrix int< m|input_matrix
+ifz tmp@5 goto label#3
+tmp@12 = sconst@%ld
+tmp@8 = i|input_matrix long* lconst@800
+tmp@9 = matrix|input_matrix long+ tmp@8
+tmp@10 = j|input_matrix long* lconst@8
+tmp@11 = tmp@9 long+ tmp@10
+push tmp@12
+push tmp@11
+tmp@13 = func_call scanf
+pop tmp@11
+pop tmp@12
+label#2:
+tmp@6 = j|input_matrix
+tmp@7 = j|input_matrix long+ lconst@1
+j|input_matrix = tmp@7
+goto label#1
+label#3:
+tmp@3 = i|input_matrix
+tmp@4 = i|input_matrix long+ lconst@1
+i|input_matrix = tmp@4
+goto label#0
+label#4:
+EndFunc
+main:
+BeginFunc
+tmp@14 = sconst@Enter matrix size (less than 100)\n
+push tmp@14
+tmp@15 = func_call printf2
+pop tmp@14
+tmp@17 = sconst@%ld
+tmp@16 = addr(m|main)
+push tmp@17
+push tmp@16
+tmp@18 = func_call scanf
+pop tmp@16
+pop tmp@17
+tmp@20 = sconst@%ld
+tmp@19 = addr(n|main)
+push tmp@20
+push tmp@19
+tmp@21 = func_call scanf
+pop tmp@19
+pop tmp@20
+tmp@23 = sconst@%ld
+tmp@22 = addr(p|main)
+push tmp@23
+push tmp@22
+tmp@24 = func_call scanf
+pop tmp@22
+pop tmp@23
+tmp@25 = m|main int>= lconst@100
+ifnz tmp@25 goto label#5
+tmp@26 = n|main int>= lconst@100
+ifnz tmp@26 goto label#5
+tmp@27 = lconst@0
+goto label#6
+label#5:
+tmp@27 = lconst@1
+label#6:
+ifnz tmp@27 goto label#7
+tmp@28 = p|main int>= lconst@100
+ifnz tmp@28 goto label#7
+tmp@29 = lconst@0
+goto label#8
+label#7:
+tmp@29 = lconst@1
+label#8:
+ifz tmp@29 goto label#9
+tmp@30 = sconst@Invalid size\n
+push tmp@30
+tmp@31 = func_call printf2
+pop tmp@30
+label#9:
+tmp@32 = addr(a|main)
+push tmp@32
+push m|main
+push n|main
+None = func_call input_matrix
+pop n|main
+pop m|main
+pop tmp@32
+tmp@33 = addr(b|main)
+push tmp@33
+push n|main
+push p|main
+None = func_call input_matrix
+pop p|main
+pop n|main
+pop tmp@33
+i|main = lconst@0
+label#10:
+tmp@34 = i|main int< m|main
+ifz tmp@34 goto label#16
+j|main = lconst@0
+label#11:
+tmp@37 = j|main int< p|main
+ifz tmp@37 goto label#15
+tmp@40 = addr(c|main)
+tmp@41 = i|main long* lconst@800
+tmp@42 = tmp@40 long+ tmp@41
+tmp@43 = j|main long* lconst@8
+tmp@44 = tmp@42 long+ tmp@43
+tmp@44 eq lconst@0
+tmp@45 = load(tmp@44)
+k|main = lconst@0
+label#12:
+tmp@46 = k|main int< n|main
+ifz tmp@46 goto label#14
+tmp@49 = addr(c|main)
+tmp@50 = i|main long* lconst@800
+tmp@51 = tmp@49 long+ tmp@50
+tmp@52 = j|main long* lconst@8
+tmp@53 = tmp@51 long+ tmp@52
+tmp@67 = load(tmp@53)
+tmp@54 = addr(a|main)
+tmp@55 = i|main long* lconst@800
+tmp@56 = tmp@54 long+ tmp@55
+tmp@57 = k|main long* lconst@8
+tmp@58 = tmp@56 long+ tmp@57
+tmp@64 = load(tmp@58)
+tmp@59 = addr(b|main)
+tmp@60 = k|main long* lconst@800
+tmp@61 = tmp@59 long+ tmp@60
+tmp@62 = j|main long* lconst@8
+tmp@63 = tmp@61 long+ tmp@62
+tmp@65 = load(tmp@63)
+tmp@66 = tmp@64 int* tmp@65
+tmp@68 = tmp@67 int+ tmp@66
+tmp@53 eq tmp@68
+tmp@69 = load(tmp@53)
+label#13:
+tmp@47 = k|main
+tmp@48 = k|main long+ lconst@1
+k|main = tmp@48
+goto label#12
+label#14:
+tmp@38 = j|main
+tmp@39 = j|main long+ lconst@1
+j|main = tmp@39
+goto label#11
+label#15:
+tmp@35 = i|main
+tmp@36 = i|main long+ lconst@1
+i|main = tmp@36
+goto label#10
+label#16:
+i|main = lconst@0
+label#17:
+tmp@70 = i|main int< m|main
+ifz tmp@70 goto label#22
+j|main = lconst@0
+label#18:
+tmp@73 = j|main int< p|main
+ifz tmp@73 goto label#20
+tmp@82 = sconst@%ld 
+tmp@76 = addr(c|main)
+tmp@77 = i|main long* lconst@800
+tmp@78 = tmp@76 long+ tmp@77
+tmp@79 = j|main long* lconst@8
+tmp@80 = tmp@78 long+ tmp@79
+tmp@81 = load(tmp@80)
+push tmp@82
+push tmp@81
+tmp@83 = func_call printf
+pop tmp@81
+pop tmp@82
+label#19:
+tmp@74 = j|main
+tmp@75 = j|main long+ lconst@1
+j|main = tmp@75
+goto label#18
+label#20:
+tmp@84 = sconst@\n
+push tmp@84
+tmp@85 = func_call printf2
+pop tmp@84
+label#21:
+tmp@71 = i|main
+tmp@72 = i|main long+ lconst@1
+i|main = tmp@72
+goto label#17
+label#22:
+EndFunc

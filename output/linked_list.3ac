@@ -1,0 +1,153 @@
+push:
+BeginFunc
+push lconst@16
+tmp@0 = func_call malloc
+pop lconst@16
+node|push = tmp@0
+tmp@1 = node|push long+ lconst@0
+tmp@1 eq data|push
+tmp@2 = load(tmp@1)
+tmp@3 = node|push long+ lconst@8
+tmp@3 eq head|global
+tmp@4 = load(tmp@3)
+head|global = node|push
+EndFunc
+pop:
+BeginFunc
+tmp@5 = head|global long== lconst@0
+ifz tmp@5 goto label#0
+tmp@6 = sconst@linked list is empty\n
+push tmp@6
+tmp@7 = func_call printf1
+pop tmp@6
+return
+label#0:
+tmp@10 = sconst@removing node with data %ld\n
+tmp@8 = head|global long+ lconst@0
+tmp@9 = load(tmp@8)
+push tmp@10
+push tmp@9
+tmp@11 = func_call printf
+pop tmp@9
+pop tmp@10
+tmp@12 = head|global long+ lconst@8
+tmp@13 = load(tmp@12)
+head|global = tmp@13
+EndFunc
+print_list:
+BeginFunc
+tmp@14 = head|global long== lconst@0
+ifz tmp@14 goto label#1
+tmp@15 = sconst@linked list is empty\n
+push tmp@15
+tmp@16 = func_call printf1
+pop tmp@15
+return
+label#1:
+node|print_list = head|global
+label#2:
+tmp@17 = node|print_list long!= lconst@0
+ifz tmp@17 goto label#3
+tmp@20 = sconst@%ld 
+tmp@18 = node|print_list long+ lconst@0
+tmp@19 = load(tmp@18)
+push tmp@20
+push tmp@19
+tmp@21 = func_call printf
+pop tmp@19
+pop tmp@20
+tmp@22 = node|print_list long+ lconst@8
+tmp@23 = load(tmp@22)
+node|print_list = tmp@23
+goto label#2
+label#3:
+tmp@24 = sconst@\n
+push tmp@24
+tmp@25 = func_call printf1
+pop tmp@24
+EndFunc
+search:
+BeginFunc
+tmp@26 = head|global long== lconst@0
+ifz tmp@26 goto label#4
+tmp@27 = sconst@linked list is empty\n
+push tmp@27
+tmp@28 = func_call printf1
+pop tmp@27
+return
+label#4:
+node|search = head|global
+label#5:
+tmp@29 = node|search long!= lconst@0
+ifz tmp@29 goto label#7
+tmp@30 = node|search long+ lconst@0
+tmp@31 = load(tmp@30)
+tmp@32 = tmp@31 int== a|search
+ifz tmp@32 goto label#6
+tmp@33 = sconst@Element %ld is present in linked list\n
+push tmp@33
+push a|search
+tmp@34 = func_call printf
+pop a|search
+pop tmp@33
+return
+label#6:
+tmp@35 = node|search long+ lconst@8
+tmp@36 = load(tmp@35)
+node|search = tmp@36
+goto label#5
+label#7:
+tmp@37 = sconst@Element %ld is not in linked list\n
+push tmp@37
+push a|search
+tmp@38 = func_call printf
+pop a|search
+pop tmp@37
+EndFunc
+main:
+BeginFunc
+i|main = lconst@0
+label#8:
+tmp@39 = i|main int< lconst@10
+ifz tmp@39 goto label#10
+tmp@42 = i|main int* i|main
+push tmp@42
+None = func_call push
+pop tmp@42
+label#9:
+tmp@40 = i|main
+tmp@41 = i|main long+ lconst@1
+i|main = tmp@41
+goto label#8
+label#10:
+None = func_call print_list
+push lconst@49
+None = func_call search
+pop lconst@49
+i|main = lconst@0
+label#11:
+tmp@43 = i|main int< lconst@5
+ifz tmp@43 goto label#13
+None = func_call pop
+label#12:
+tmp@44 = i|main
+tmp@45 = i|main long+ lconst@1
+i|main = tmp@45
+goto label#11
+label#13:
+None = func_call print_list
+push lconst@49
+None = func_call search
+pop lconst@49
+label#14:
+tmp@46 = i|main int<= lconst@10
+ifz tmp@46 goto label#16
+None = func_call pop
+label#15:
+tmp@47 = i|main
+tmp@48 = i|main long+ lconst@1
+i|main = tmp@48
+goto label#14
+label#16:
+return lconst@0
+EndFunc

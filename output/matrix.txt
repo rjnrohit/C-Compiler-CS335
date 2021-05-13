@@ -1,0 +1,6 @@
+Enter matrix size (less than 100)
+give matrix input of size 3x3
+give matrix input of size 3x2
+4 5 
+10 11 
+16 17 
