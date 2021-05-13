@@ -45,8 +45,6 @@ optional arguments:
 
 Run tests from test/
 ```
-<!-- arcx86 test/${file_name} 
-./a.out -->
 chmod +x test.sh
 ./test.sh [flags]   (flags same as arcx86)
 ```
