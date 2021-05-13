@@ -20,7 +20,7 @@ int main(){
     // long type as long has higher than char
     // long sizeof 8
     printf("size %ld\n",sizeof(c));
-    auto d = 3.4;
+    auto d = 3.4+b;
     // float size of 4
     printf("size %ld\n",sizeof(d));
     auto e = &c;

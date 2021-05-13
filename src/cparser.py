@@ -974,7 +974,8 @@ def p_expression(p):
             p[0].code += p[3].code
         else:
             p[0] = Node(name="expression",children=[p[1],p[3]],type="ok")
-            p[0].code = p[1].code
+            p[0].code = p[1].code+p[3].code
+            p[0].place = p[1].place
 #Node
 def p_constant_expression(p):
     '''
