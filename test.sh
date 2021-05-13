@@ -1,19 +1,18 @@
 #!/bin/bash
 rm -rf output/*
-make clean;
-make
-cd test/
-for test in *
+source install.sh
+for file in test/*
 do
-    fname=${test%.*}
-    echo $fname
-    if [ $fname.c  = $test ]
+    fname=${file##*/}
+    fname=${fname%.*}
+    # echo $fname
+    if [ test/$fname.c  = $file ]
     then
-        python3 ../bin/lexer $test > ../output/$fname.txt
-        python3 ../bin/parser $test -f ../output/$fname.png -o ../output/$fname.dot -d ../output/$fname.csv -t ../output/$fname.3ac
+        arcx86 test/$fname.c
+        ./a.out < input/$fname.in > output/$fname.txt
     else 
         continue
     fi
     
 done
-cd ..
+

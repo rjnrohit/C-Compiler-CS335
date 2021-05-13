@@ -343,10 +343,14 @@ def add_args_copy_code(fname):
         if exclude:
             if typ.class_type == "PointerType":
                 off += 8
-                reserved += 8
             else:
                 off += typ.width
-                reserved += typ.width
+
+        
+        if typ.class_type == "PointerType":
+            reserved += 8
+        else:
+            reserved += typ.width
     
     required -= reserved
     code += [';add space for symbols']
@@ -359,7 +363,7 @@ def add_return_code(name, gen_obj):
     if gen_obj.place1:
         place1 = gen_obj.place1
         typ = SymbolTable.symbol_table_dict[name].table['return'].type
-        if typ == 'StructType' or typ.width > 8:
+        if typ.class_type == 'StructType' or typ.width > 8:
             code += [';copy return value at addr in rax']
             code += add_copy_data_code(typ.width, get_var_addr(place1), 'rax')
         elif typ.stype == 'float':
@@ -380,7 +384,7 @@ def add_post_call(place3, in_extern = False):
         return code
     typ = get_var_type(place3)
     addr = get_var_addr(place3)
-    if typ == 'StructType' or typ.width > 8:
+    if typ.class_type == 'StructType' or typ.width > 8:
         code += [';copy return value from addr in rax']
         code += add_copy_data_code(typ.width, 'rax', addr)
     elif typ.stype == 'float':
@@ -528,8 +532,8 @@ def add_tilde_code(gen_obj):
     width = typ.width
     get_size = size_type[width]
     if gen_obj.op != 'float~':
-        code += ["not {}".format(temp_regs[1][width])]
-        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[1][width]]
+        code += ["not {}".format(temp_regs[0][width])]
+        code += ["mov " + get_size + "[" +addr+"], " + temp_regs[0][width]]
     else:
         assert False, "can't invert(~) float pointing "
     return code
@@ -557,7 +561,7 @@ def add_shift_code(gen_obj):
     width = typ.width
     get_size = size_type[width]
     opd = {'>>':'shr', '<<':'shl'}
-    if gen_obj.op != 'float*':
+    if 'float' not in gen_obj.op :
         #! might do restrict for cl register
         code += ["mov {},{}".format(gp_regs[1][2],temp_regs[1][1])]
         code += ["{} {}, {}".format(opd[gen_obj.op[-2:]],temp_regs[0][width], 'cl')]
@@ -677,7 +681,7 @@ def add_typecast_code(gen_obj, not_bool = False):
             code += ["movsx {},{}".format(temp_regs[0][4], temp_regs[0][pwidth])]
         code += ["cvtsi2ss {},{}".format('xmm0', temp_regs[0][4])]
         code += ["movss " + get_size + "[" + addr+"], xmm0"]
-    elif 'float_to' in gen_obj.op:
+    elif 'float_to' in gen_obj.op and 'to_bool' not in gen_obj.op:
         #for rounding up we use cvtss2si
         code += ["cvttss2si {},{}".format(temp_regs[0][4], 'xmm0')]
         code += ["movsxd {},{}".format(temp_regs[0][8], temp_regs[0][4])]
@@ -877,7 +881,9 @@ def add_func_call(gen_obj):
     other_args = 0
     shift = 0
 
-    if ret_type.width > 8:
+    code += ["push rax"]
+
+    if ret_type.width > 8 or ret_type.type.class_type == 'StructType':
         shift += ret_type.width
         code += ["lea rsp, [rsp+"+str(ret_type.width)+"]"]
         code += ["lea rax, [rsp]"]
@@ -948,6 +954,7 @@ def add_func_call(gen_obj):
     code += ["call " + gen_obj.place1 + '@func']
     code += add_post_call(place3)
     code += ["add rsp," + str(shift)]
+    code += ["pop rax"]
     return code
 
 def add_extern_code(gen_obj):
@@ -970,10 +977,8 @@ def add_extern_code(gen_obj):
     byte8_args = 0
     shift = 0
 
-    if ret_type.width > 8:
-        shift += ret_type.width
-        code += ["lea rsp, [rsp+"+str(ret_type.width)+"]"]
-        code += ["lea rax, [rsp]"]
+    if ret_type.width > 8 or ret_type.type.class_type == 'StructType':
+        assert False, "variable size object is supported in extern function"
 
     for arg in args_val:
         typ = get_var_type(arg)
@@ -1014,10 +1019,10 @@ def add_extern_code(gen_obj):
                 code += ['movsd qword [rsp], xmm0']
                 shift += 8
             else:
-                float_used += 1
                 code += ['movss ' + arg_regsf[float_args-1] +', dword [' + addr + ']']
                 code += ['cvtss2sd {},{}'.format(arg_regsf[float_args-1], arg_regsf[float_args-1])]
             float_args -= 1
+            float_used += 1
         elif typ.class_type == "BasicType" or typ.class_type == "PointerType":
             if typ.class_type == "PointerType":
                 get_size = size_type[8]
@@ -1115,6 +1120,9 @@ def add_copy_data_code(count, addr, rax = None):
         off += dec
         if not rax:
             code += ["push " + get_size+ " [" + new_addr + "]"]
+            # code += ["sub rsp, 8"]
+            # code += ["mov " + temp_regs[0][dec] + ", " + get_size + "[" + new_addr+"]"]
+            # code += ["mov {}[rsp], {}".format(get_size, temp_regs[0][dec])]
         else:
             code += ["mov " + temp_regs[0][dec] + ", " + get_size + "[" + new_addr+"]"]
             code += ["mov " + get_size + "[" + rax +"+" + str(noff)+"], " + temp_regs[0][dec]]
