@@ -1,6 +1,9 @@
 #!/bin/bash
-rm -rf output/*
+# ./test.sh
 source install.sh
+rm -rf output
+mkdir output
+
 for file in test/*
 do
     fname=${file##*/}
@@ -8,8 +11,14 @@ do
     # echo $fname
     if [ test/$fname.c  = $file ]
     then
-        arcx86 test/$fname.c
-        ./a.out < input/$fname.in > output/$fname.txt
+        echo "executing... $fname"
+        arcx86 test/$fname.c -o output/$fname -f output/$fname -c -d -a -s -t -l
+        if [ -e input/$fname.in ]
+        then
+            ./a.out < input/$fname.in > output/$fname.txt
+        else
+            ./a.out > output/$fname.txt
+        fi
     else 
         continue
     fi

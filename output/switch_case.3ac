@@ -1,0 +1,72 @@
+main:
+BeginFunc
+tmp@0 = addr(arr|main)
+tmp@1 = tmp@0 long+ lconst@0
+tmp@1 eq lconst@1
+tmp@2 = load(tmp@1)
+tmp@3 = addr(arr|main)
+tmp@4 = tmp@3 long+ lconst@8
+tmp@4 eq lconst@99
+tmp@5 = load(tmp@4)
+tmp@6 = addr(arr|main)
+tmp@7 = tmp@6 long+ lconst@16
+tmp@7 eq lconst@3
+tmp@8 = load(tmp@7)
+tmp@9 = addr(arr|main)
+tmp@10 = tmp@9 long+ lconst@24
+tmp@10 eq lconst@9
+tmp@11 = load(tmp@10)
+i|main = lconst@0
+b|main = fconst@3.1
+label#0:
+tmp@12 = i|main int< lconst@4
+ifz tmp@12 goto label#6
+tmp@14 = sconst@test%ld\n
+tmp@13 = i|main int+ lconst@1
+push tmp@14
+push tmp@13
+tmp@15 = func_call printf1
+pop tmp@13
+pop tmp@14
+tmp@16 = addr(arr|main)
+tmp@17 = i|main long* lconst@8
+tmp@18 = tmp@16 long+ tmp@17
+tmp@19 = load(tmp@18)
+if tmp@19 <> lconst@1 goto label#1
+tmp@20 = sconst@case 1: checking break\n
+push tmp@20
+tmp@21 = func_call printf
+pop tmp@20
+goto label#5
+label#1:
+if tmp@19 <> lconst@99 goto label#2
+tmp@22 = sconst@case 2: checking expression in case\n
+push tmp@22
+tmp@23 = func_call printf
+pop tmp@22
+label#2:
+tmp@30 = float_to_int b|main
+if tmp@19 <> tmp@30 goto label#3
+tmp@24 = sconst@case 3: checking variable in case and type cast\n
+push tmp@24
+tmp@25 = func_call printf
+pop tmp@24
+goto label#5
+label#3:
+if tmp@19 <> lconst@99 goto label#4
+tmp@26 = sconst@case 4: checking without break case\n
+push tmp@26
+tmp@27 = func_call printf
+pop tmp@26
+label#4:
+tmp@28 = sconst@default\n
+push tmp@28
+tmp@29 = func_call printf
+pop tmp@28
+label#5:
+tmp@31 = i|main
+tmp@32 = i|main long+ lconst@1
+i|main = tmp@32
+goto label#0
+label#6:
+EndFunc

@@ -62,12 +62,6 @@ int main(){
     printf("enter a number to output log10: ");
     scanf("%f", &n);
     printff("value: %f\n", log10(n));
-    printf("enter a number to output trunc: ");
-    scanf("%f", &n);
-    printfi("value: %f\n", trunc(n));
-    printf("enter a number to output rounded: ");
-    scanf("%f", &n);
-    printfi("value: %f\n", round(n));
 
     return 0;
 }

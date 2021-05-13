@@ -1,0 +1,127 @@
+
+symbol table id,symbol table name,table off
+0,global,198
+name,type,offset,offset+base,width
+printf,"void function([pointer of (char), int])",0,0,16
+printfs,void function([pointer of (char)]),0,0,8
+malloc,pointer of (void) function([int]),0,0,16
+newNode,pointer of (struct node) function([int]),0,0,16
+lconst@24,long,8,8,8
+lconst@0,long,16,16,8
+lconst@8,long,24,24,8
+lconst@16,long,32,32,8
+printPostorder,void function([pointer of (struct node)]),32,32,8
+sconst@%ld ,"pointer of (char), array of:char",37,37,5
+printInorder,void function([pointer of (struct node)]),37,37,8
+printPreorder,void function([pointer of (struct node)]),37,37,8
+main,int function(None),37,37,8
+lconst@1,long,45,45,8
+lconst@2,long,53,53,8
+lconst@3,long,61,61,8
+lconst@4,long,69,69,8
+lconst@5,long,77,77,8
+sconst@Preorder traversal of binary tree is \n,"pointer of (char), array of:char",116,116,39
+sconst@\nInorder traversal of binary tree is \n,"pointer of (char), array of:char",155,155,39
+sconst@\nPostorder traversal of binary tree is \n,"pointer of (char), array of:char",196,196,41
+sconst@\n,"pointer of (char), array of:char",198,198,2
+
+symbol table id,symbol table name,parent id,table off
+1,node,0,24
+name,type,offset,offset+base,width
+data,int,8,8,8
+left,pointer of (struct node),16,16,8
+right,pointer of (struct node),24,24,8
+
+symbol table id,symbol table name,parent id,table off
+2,printf,0,16
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+b,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+3,printfs,0,8
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+
+symbol table id,symbol table name,parent id,table off
+4,malloc,0,16
+name,type,offset,offset+base,width
+s,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+5,newNode,0,80
+name,type,offset,offset+base,width
+data,int,16,16,8
+tmp@0,pointer of (void),24,24,8
+node,pointer of (struct node),32,32,8
+tmp@1,long,40,40,8
+tmp@2,int,48,48,8
+tmp@3,long,56,56,8
+tmp@4,pointer of (struct node),64,64,8
+tmp@5,long,72,72,8
+tmp@6,pointer of (struct node),80,80,8
+
+symbol table id,symbol table name,parent id,table off
+6,printPostorder,0,62
+name,type,offset,offset+base,width
+node,pointer of (struct node),8,8,8
+tmp@7,bool,9,9,1
+tmp@8,long,17,17,8
+tmp@9,pointer of (struct node),25,25,8
+tmp@10,long,33,33,8
+tmp@11,pointer of (struct node),41,41,8
+tmp@12,long,49,49,8
+tmp@13,int,57,57,8
+tmp@14,"pointer of (char), array of:char",62,62,5
+
+symbol table id,symbol table name,parent id,table off
+7,printInorder,0,62
+name,type,offset,offset+base,width
+node,pointer of (struct node),8,8,8
+tmp@15,bool,9,9,1
+tmp@16,long,17,17,8
+tmp@17,pointer of (struct node),25,25,8
+tmp@18,long,33,33,8
+tmp@19,int,41,41,8
+tmp@20,"pointer of (char), array of:char",46,46,5
+tmp@21,long,54,54,8
+tmp@22,pointer of (struct node),62,62,8
+
+symbol table id,symbol table name,parent id,table off
+8,printPreorder,0,62
+name,type,offset,offset+base,width
+node,pointer of (struct node),8,8,8
+tmp@23,bool,9,9,1
+tmp@24,long,17,17,8
+tmp@25,int,25,25,8
+tmp@26,"pointer of (char), array of:char",30,30,5
+tmp@27,long,38,38,8
+tmp@28,pointer of (struct node),46,46,8
+tmp@29,long,54,54,8
+tmp@30,pointer of (struct node),62,62,8
+
+symbol table id,symbol table name,parent id,table off
+9,main,0,273
+name,type,offset,offset+base,width
+tmp@31,pointer of (struct node),16,16,8
+root,pointer of (struct node),24,24,8
+tmp@32,long,32,32,8
+tmp@33,pointer of (struct node),40,40,8
+tmp@34,pointer of (struct node),48,48,8
+tmp@35,long,56,56,8
+tmp@36,pointer of (struct node),64,64,8
+tmp@37,pointer of (struct node),72,72,8
+tmp@38,long,80,80,8
+tmp@39,pointer of (struct node),88,88,8
+tmp@40,long,96,96,8
+tmp@41,pointer of (struct node),104,104,8
+tmp@42,pointer of (struct node),112,112,8
+tmp@43,long,120,120,8
+tmp@44,pointer of (struct node),128,128,8
+tmp@45,long,136,136,8
+tmp@46,pointer of (struct node),144,144,8
+tmp@47,pointer of (struct node),152,152,8
+tmp@48,"pointer of (char), array of:char",191,191,39
+tmp@49,"pointer of (char), array of:char",230,230,39
+tmp@50,"pointer of (char), array of:char",271,271,41
+tmp@51,"pointer of (char), array of:char",273,273,2

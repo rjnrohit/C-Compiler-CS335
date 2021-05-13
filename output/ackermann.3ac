@@ -1,0 +1,96 @@
+ackermann:
+BeginFunc
+tmp@0 = m|ackermann int== lconst@0
+ifz tmp@0 goto label#0
+tmp@1 = n|ackermann int+ lconst@1
+return tmp@1
+goto label#6
+label#0:
+tmp@2 = m|ackermann int> lconst@0
+ifz tmp@2 goto label#1
+tmp@3 = n|ackermann int== lconst@0
+ifz tmp@3 goto label#1
+tmp@4 = lconst@1
+goto label#2
+label#1:
+tmp@4 = lconst@0
+label#2:
+ifz tmp@4 goto label#3
+tmp@5 = m|ackermann int- lconst@1
+push tmp@5
+push lconst@1
+tmp@6 = func_call ackermann
+pop lconst@1
+pop tmp@5
+return tmp@6
+goto label#6
+label#3:
+tmp@7 = m|ackermann int> lconst@0
+ifz tmp@7 goto label#4
+tmp@8 = n|ackermann int> lconst@0
+ifz tmp@8 goto label#4
+tmp@9 = lconst@1
+goto label#5
+label#4:
+tmp@9 = lconst@0
+label#5:
+ifz tmp@9 goto label#6
+tmp@10 = m|ackermann int- lconst@1
+tmp@11 = n|ackermann int- lconst@1
+push m|ackermann
+push tmp@11
+tmp@12 = func_call ackermann
+pop tmp@11
+pop m|ackermann
+push tmp@10
+push tmp@12
+tmp@13 = func_call ackermann
+pop tmp@12
+pop tmp@10
+return tmp@13
+label#6:
+return lconst@-1
+EndFunc
+main:
+BeginFunc
+tmp@15 = sconst@%ld
+tmp@14 = addr(m|main)
+push tmp@15
+push tmp@14
+tmp@16 = func_call scanf
+pop tmp@14
+pop tmp@15
+tmp@18 = sconst@%ld
+tmp@17 = addr(n|main)
+push tmp@18
+push tmp@17
+tmp@19 = func_call scanf
+pop tmp@17
+pop tmp@18
+tmp@20 = m|main int< lconst@0
+ifnz tmp@20 goto label#7
+tmp@21 = n|main int< lconst@0
+ifnz tmp@21 goto label#7
+tmp@22 = lconst@0
+goto label#8
+label#7:
+tmp@22 = lconst@1
+label#8:
+ifz tmp@22 goto label#9
+tmp@23 = sconst@Enter positive number
+push tmp@23
+tmp@24 = func_call printf1
+pop tmp@23
+label#9:
+tmp@26 = sconst@%ld\n
+push m|main
+push n|main
+tmp@25 = func_call ackermann
+pop n|main
+pop m|main
+push tmp@26
+push tmp@25
+tmp@27 = func_call printf
+pop tmp@25
+pop tmp@26
+EndFunc

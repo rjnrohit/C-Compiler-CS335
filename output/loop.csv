@@ -1,0 +1,66 @@
+
+symbol table id,symbol table name,table off
+0,global,47
+name,type,offset,offset+base,width
+printf,int function([pointer of (char)]),0,0,16
+printf1,"int function([pointer of (char), int])",0,0,24
+main,int function(None),0,0,8
+lconst@0,long,8,8,8
+lconst@1,long,16,16,8
+lconst@5,long,24,24,8
+lconst@10,long,32,32,8
+sconst@%ld ,"pointer of (char), array of:char",37,37,5
+sconst@\n,"pointer of (char), array of:char",39,39,2
+lconst@7,long,47,47,8
+
+symbol table id,symbol table name,parent id,table off
+1,printf,0,16
+name,type,offset,offset+base,width
+s,pointer of (char),16,16,8
+
+symbol table id,symbol table name,parent id,table off
+2,printf1,0,24
+name,type,offset,offset+base,width
+s,pointer of (char),16,16,8
+a,int,24,24,8
+
+symbol table id,symbol table name,parent id,table off
+3,main,0,111
+name,type,offset,offset+base,width
+i,int,16,16,8
+tmp@6,"pointer of (char), array of:char",49,49,2
+tmp@7,int,57,57,8
+
+symbol table id,symbol table name,parent id,table off
+4,scope@4,3,31
+name,type,offset,offset+base,width
+tmp@0,int,8,24,8
+tmp@1,long,16,32,8
+tmp@2,bool,17,33,1
+tmp@3,bool,18,34,1
+tmp@4,"pointer of (char), array of:char",23,39,5
+tmp@5,int,31,47,8
+
+symbol table id,symbol table name,parent id,table off
+5,scope@5,3,73
+name,type,offset,offset+base,width
+tmp@10,int,17,74,8
+tmp@11,long,25,82,8
+tmp@12,"pointer of (char), array of:char",30,87,5
+tmp@13,int,38,95,8
+tmp@14,int,46,103,8
+tmp@15,bool,47,104,1
+tmp@18,int,65,122,8
+tmp@19,long,73,130,8
+
+symbol table id,symbol table name,parent id,table off
+6,scope@6,5,9
+name,type,offset,offset+base,width
+tmp@8,int,8,65,8
+tmp@9,bool,9,66,1
+
+symbol table id,symbol table name,parent id,table off
+7,scope@7,5,10
+name,type,offset,offset+base,width
+tmp@16,"pointer of (char), array of:char",2,106,2
+tmp@17,int,10,114,8

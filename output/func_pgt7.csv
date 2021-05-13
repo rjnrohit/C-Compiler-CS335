@@ -1,0 +1,134 @@
+
+symbol table id,symbol table name,table off
+0,global,241
+name,type,offset,offset+base,width
+printfi,"void function([pointer of (char), int])",0,0,16
+printff,"void function([pointer of (char), float])",0,0,12
+many_sum,"float function([int, int, int, int, int, int, int, int, int, int, int, float, float, float, float, float, float, float, float, float, float])",0,0,132
+sconst@a:%ld\n,"pointer of (char), array of:char",7,7,7
+sconst@b:%ld\n,"pointer of (char), array of:char",14,14,7
+sconst@c:%ld\n,"pointer of (char), array of:char",21,21,7
+sconst@d:%ld\n,"pointer of (char), array of:char",28,28,7
+sconst@e:%ld\n,"pointer of (char), array of:char",35,35,7
+sconst@f:%ld\n,"pointer of (char), array of:char",42,42,7
+sconst@g:%ld\n,"pointer of (char), array of:char",49,49,7
+sconst@h:%ld\n,"pointer of (char), array of:char",56,56,7
+sconst@i:%ld\n,"pointer of (char), array of:char",63,63,7
+sconst@j:%ld\n,"pointer of (char), array of:char",70,70,7
+sconst@k:%ld\n,"pointer of (char), array of:char",77,77,7
+sconst@l:%f\n,"pointer of (char), array of:char",83,83,6
+sconst@m:%f\n,"pointer of (char), array of:char",89,89,6
+sconst@n:%f\n,"pointer of (char), array of:char",95,95,6
+sconst@o:%f\n,"pointer of (char), array of:char",101,101,6
+sconst@p:%f\n,"pointer of (char), array of:char",107,107,6
+sconst@q:%f\n,"pointer of (char), array of:char",113,113,6
+sconst@r:%f\n,"pointer of (char), array of:char",119,119,6
+sconst@s:%f\n,"pointer of (char), array of:char",125,125,6
+sconst@t:%f\n,"pointer of (char), array of:char",131,131,6
+sconst@u:%f\n,"pointer of (char), array of:char",137,137,6
+main,int function(None),137,137,8
+lconst@1,long,145,145,8
+lconst@2,long,153,153,8
+lconst@3,long,161,161,8
+lconst@4,long,169,169,8
+lconst@5,long,177,177,8
+lconst@6,long,185,185,8
+lconst@7,long,193,193,8
+fconst@1.1,float,197,197,4
+fconst@0.99,float,201,201,4
+fconst@3,float,205,205,4
+fconst@1,float,209,209,4
+fconst@4.56,float,213,213,4
+fconst@99999.9,float,217,217,4
+fconst@9,float,221,221,4
+fconst@-32,float,225,225,4
+fconst@-11,float,229,229,4
+sconst@%f\n,"pointer of (char), array of:char",233,233,4
+lconst@0,long,241,241,8
+
+symbol table id,symbol table name,parent id,table off
+1,printfi,0,16
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+b,int,16,16,8
+
+symbol table id,symbol table name,parent id,table off
+2,printff,0,12
+name,type,offset,offset+base,width
+a,pointer of (char),8,8,8
+b,float,12,12,4
+
+symbol table id,symbol table name,parent id,table off
+3,many_sum,0,397
+name,type,offset,offset+base,width
+a,int,12,12,8
+b,int,20,20,8
+c,int,28,28,8
+d,int,36,36,8
+e,int,44,44,8
+f,int,52,52,8
+g,int,60,60,8
+h,int,68,68,8
+i,int,76,76,8
+j,int,84,84,8
+k,int,92,92,8
+l,float,96,96,4
+m,float,100,100,4
+n,float,104,104,4
+o,float,108,108,4
+p,float,112,112,4
+q,float,116,116,4
+r,float,120,120,4
+s,float,124,124,4
+t,float,128,128,4
+u,float,132,132,4
+tmp@0,int,140,140,8
+tmp@1,int,148,148,8
+tmp@2,int,156,156,8
+tmp@3,int,164,164,8
+tmp@4,int,172,172,8
+tmp@5,int,180,180,8
+tmp@6,int,188,188,8
+tmp@7,int,196,196,8
+tmp@8,int,204,204,8
+tmp@9,int,212,212,8
+tmp@10,float,216,216,4
+tmp@11,float,220,220,4
+tmp@12,float,224,224,4
+tmp@13,float,228,228,4
+tmp@14,float,232,232,4
+tmp@15,float,236,236,4
+tmp@16,float,240,240,4
+tmp@17,float,244,244,4
+tmp@18,float,248,248,4
+tmp@19,float,252,252,4
+tmp@20,float,256,256,4
+sum,float,260,260,4
+tmp@21,"pointer of (char), array of:char",267,267,7
+tmp@22,"pointer of (char), array of:char",274,274,7
+tmp@23,"pointer of (char), array of:char",281,281,7
+tmp@24,"pointer of (char), array of:char",288,288,7
+tmp@25,"pointer of (char), array of:char",295,295,7
+tmp@26,"pointer of (char), array of:char",302,302,7
+tmp@27,"pointer of (char), array of:char",309,309,7
+tmp@28,"pointer of (char), array of:char",316,316,7
+tmp@29,"pointer of (char), array of:char",323,323,7
+tmp@30,"pointer of (char), array of:char",330,330,7
+tmp@31,"pointer of (char), array of:char",337,337,7
+tmp@32,"pointer of (char), array of:char",343,343,6
+tmp@33,"pointer of (char), array of:char",349,349,6
+tmp@34,"pointer of (char), array of:char",355,355,6
+tmp@35,"pointer of (char), array of:char",361,361,6
+tmp@36,"pointer of (char), array of:char",367,367,6
+tmp@37,"pointer of (char), array of:char",373,373,6
+tmp@38,"pointer of (char), array of:char",379,379,6
+tmp@39,"pointer of (char), array of:char",385,385,6
+tmp@40,"pointer of (char), array of:char",391,391,6
+tmp@41,"pointer of (char), array of:char",397,397,6
+
+symbol table id,symbol table name,parent id,table off
+4,main,0,20
+name,type,offset,offset+base,width
+tmp@42,float,12,12,4
+sum,float,16,16,4
+tmp@43,"pointer of (char), array of:char",20,20,4
